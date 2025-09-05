@@ -3,9 +3,9 @@ import {addAccount} from 'actions/index';
 import {Account} from 'actions/interfaces';
 import QRCode from 'components/qr_code';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import {BarcodeScanningResult} from 'expo-camera';
 import React, {useState} from 'react';
 import {Text} from 'react-native';
-import {BarCodeReadEvent} from 'react-native-camera';
 import SimpleToast from 'react-native-root-toast';
 import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
@@ -25,7 +25,7 @@ const WalletQRScanner = () => {
   const [processingAccounts, setProcessingAccounts] = useState(false);
   const [qrDataAccounts, setQrDataAccounts] = useState<Account[]>([]);
   const [acctPageTotal, setAcctPageTotal] = useState(0);
-  const onSuccess = async ({data}: BarCodeReadEvent) => {
+  const onSuccess = async ({data}: BarcodeScanningResult) => {
     try {
       if (data.startsWith('keychain://add_accounts=')) {
         if (processingAccounts) {

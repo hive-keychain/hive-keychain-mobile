@@ -1,7 +1,7 @@
 import {RouteProp, useRoute} from '@react-navigation/native';
 import QRCode from 'components/qr_code';
+import {BarcodeScanningResult} from 'expo-camera';
 import React from 'react';
-import {BarCodeReadEvent} from 'react-native-camera';
 import SimpleToast from 'react-native-root-toast';
 import {handleAddAccountQR} from 'utils/linking';
 import {translate} from 'utils/localize';
@@ -13,7 +13,7 @@ type AnyScanQRRoute = RouteProp<
 
 const ScanQR = () => {
   const route = useRoute<AnyScanQRRoute>();
-  const onSuccess = async ({data}: BarCodeReadEvent) => {
+  const onSuccess = async ({data}: BarcodeScanningResult) => {
     try {
       if (!data.startsWith('keychain://add_account=')) {
         SimpleToast.show(translate('addAccountByQR.wrongQR'), {
