@@ -1,4 +1,4 @@
-import Crypto from 'crypto-js';
+import Crypto from 'crypto-es';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';

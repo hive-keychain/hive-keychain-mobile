@@ -1,11 +1,11 @@
-import { CommentOperation, VoteOperation } from "@hiveio/dhive";
-import { addWhitelistedOperationToSession } from "actions/hiveAuthenticationService";
-import { KeyTypes } from "actions/interfaces";
-import assert from "assert";
-import Crypto from "crypto-js";
-import SimpleToast from "react-native-root-toast";
-import { RootState, store } from "store";
-import { getRequiredWifType } from "utils/keychain";
+import {CommentOperation, VoteOperation} from '@hiveio/dhive';
+import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationService';
+import {KeyTypes} from 'actions/interfaces';
+import assert from 'assert';
+import Crypto from 'crypto-es';
+import SimpleToast from 'react-native-root-toast';
+import {RootState, store} from 'store';
+import {getRequiredWifType} from 'utils/keychain';
 import {
   KeychainKeyTypes,
   KeychainRequest,
@@ -15,58 +15,58 @@ import {
   RequestPost,
   RequestSuccess,
   RequestVote,
-} from "utils/keychain.types";
-import { translate } from "utils/localize";
-import { ModalComponent } from "utils/modal.enum";
-import { goBack, navigate } from "utils/navigation";
-import { requestWithoutConfirmation } from "utils/requestWithoutConfirmation";
-import HAS from "..";
+} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import {ModalComponent} from 'utils/modal.enum';
+import {goBack, navigate} from 'utils/navigation';
+import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
+import HAS from '..';
 import {
   answerFailedBroadcastReq,
   answerSuccessfulBroadcastReq,
   isNonceValid,
-} from "../helpers/sign";
+} from '../helpers/sign';
 import {
   HAS_BroadcastModalPayload,
   HAS_SignDecrypted,
   HAS_SignPayload,
-} from "../payloads.types";
-import { checkPayload, findSessionByToken } from "../static";
+} from '../payloads.types';
+import {checkPayload, findSessionByToken} from '../static';
 
 export const processSigningRequest = async (
   has: HAS,
-  payload: HAS_SignPayload
+  payload: HAS_SignPayload,
 ) => {
   try {
     checkPayload(payload);
     const session = findSessionByToken(payload.token);
-    assert(session, "This account has not been connected through HAS.");
+    assert(session, 'This account has not been connected through HAS.');
     const auth =
       session.token.token === payload.token &&
       session.token.expiration > Date.now()
         ? session.token
         : undefined;
 
-    assert(auth, "Token invalid or expired");
+    assert(auth, 'Token invalid or expired');
     // Decrypt the ops to sign with the encryption key associated to the token.
     const opsData: HAS_SignDecrypted = JSON.parse(
       Crypto.AES.decrypt(payload.data, session.auth_key).toString(
-        Crypto.enc.Utf8
-      )
+        Crypto.enc.Utf8,
+      ),
     );
 
     if (!(await isNonceValid(opsData.nonce)) || payload.expire < Date.now()) {
-      console.log("nonce already used or expired");
+      console.log('nonce already used or expired');
       return;
     }
 
-    const { ops, key_type } = opsData;
+    const {ops, key_type} = opsData;
     payload.decryptedData = opsData;
     let request: KeychainRequest;
     if (ops.length === 1) {
       let op = ops[0];
       switch (op[0]) {
-        case "vote":
+        case 'vote':
           const voteOperation = (op as VoteOperation)[1];
           request = {
             domain: auth.app,
@@ -77,7 +77,7 @@ export const processSigningRequest = async (
             weight: voteOperation.weight,
           } as RequestVote;
           break;
-        case "comment":
+        case 'comment':
           const commentOperation = (op as CommentOperation)[1];
           request = {
             domain: auth.app,
@@ -114,7 +114,7 @@ export const processSigningRequest = async (
       session.whitelist.includes(request.type) &&
       getRequiredWifType(request) !== KeyTypes.active
     ) {
-      SimpleToast.show(translate("wallet.has.toast.broadcast"), {
+      SimpleToast.show(translate('wallet.has.toast.broadcast'), {
         duration: SimpleToast.durations.SHORT,
       });
 
@@ -127,12 +127,12 @@ export const processSigningRequest = async (
         (obj: RequestError) => {
           answerFailedBroadcastReq(has, payload, obj.error);
         },
-        true
+        true,
       );
     } else {
       const data: HAS_BroadcastModalPayload = {
         expiration: payload.expire,
-        request: { ...request, has: true },
+        request: {...request, has: true},
         accounts: await store.getState().accounts,
         onForceCloseModal: () => {
           goBack();
@@ -145,20 +145,20 @@ export const processSigningRequest = async (
           answerSuccessfulBroadcastReq(has, payload, obj);
           if (keep) {
             store.dispatch(
-              addWhitelistedOperationToSession(session.uuid, request.type)
+              addWhitelistedOperationToSession(session.uuid, request.type),
             );
           }
         },
       };
 
-      navigate("ModalScreen", {
+      navigate('ModalScreen', {
         name: ModalComponent.BROADCAST,
         data,
       });
     }
   } catch (e) {
     console.log(e);
-    SimpleToast.show(e + "", {
+    SimpleToast.show(e + '', {
       duration: SimpleToast.durations.LONG,
     });
   }

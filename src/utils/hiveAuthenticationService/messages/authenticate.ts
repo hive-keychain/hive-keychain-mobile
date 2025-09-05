@@ -1,6 +1,6 @@
 import {removeHASSession} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
-import Crypto from 'crypto-js';
+import Crypto from 'crypto-es';
 import {store} from 'store';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';

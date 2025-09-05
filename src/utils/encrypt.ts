@@ -1,4 +1,4 @@
-import CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-es';
 import md5 from 'md5';
 import {Platform} from 'react-native';
 // AES implementation using cryptojs

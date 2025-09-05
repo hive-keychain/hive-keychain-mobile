@@ -1,6 +1,6 @@
 import {addSessionToken} from 'actions/hiveAuthenticationService';
 import {SessionTime} from 'components/hive_authentication_service/Auth';
-import Crypto from 'crypto-js';
+import Crypto from 'crypto-es';
 import uuid from 'react-native-uuid';
 import {store} from 'store';
 import HAS from '..';
