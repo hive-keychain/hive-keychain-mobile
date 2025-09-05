@@ -5,6 +5,7 @@ import {SignupNavigation} from 'navigators/Signup.types';
 import {UnlockNavigation} from 'navigators/Unlock.types';
 import React, {useEffect, useState} from 'react';
 import {
+  Linking,
   StyleProp,
   StyleSheet,
   View,
@@ -12,7 +13,6 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Text} from 'react-native-elements';
-import IntentLauncher from 'react-native-intent-launcher';
 import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
 import {
@@ -35,8 +35,8 @@ import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
 
 interface Props {
-  children: JSX.Element;
-  infoPin?: JSX.Element;
+  children: React.ReactNode;
+  infoPin?: React.ReactNode;
   infoPinContainerStyle?: StyleProp<ViewStyle>;
   signup?: boolean;
   title: string;
@@ -156,9 +156,7 @@ const PinCode = ({
                 'components.pinCode.unsupportedBiometrics.button',
               )}
               onPress={() => {
-                IntentLauncher.startActivity({
-                  action: 'android.settings.SECURITY_SETTINGS',
-                });
+                Linking.openSettings();
                 setVisible(false);
               }}
               style={[

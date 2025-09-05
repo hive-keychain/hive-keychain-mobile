@@ -1,14 +1,15 @@
 import BackspaceDark from 'assets/new_UI/backspace_dark_theme.svg';
 import BackspaceLight from 'assets/new_UI/backspace_light_theme.svg';
+import {LinearGradient} from 'expo-linear-gradient';
 import React, {useState} from 'react';
 import {
+  ColorValue,
   Pressable,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
@@ -72,7 +73,13 @@ const PinElement = ({
         style={styles.pinElements}
         start={{x: 1, y: 0.5}} //initially as {x: 1, y: 0.5}
         end={{x: 1, y: 1.8}} //initially as {x: 1, y: 1.8}
-        colors={getColors(theme).gradientShapes}>
+        colors={
+          getColors(theme).gradientShapes as unknown as readonly [
+            ColorValue,
+            ColorValue,
+            ...ColorValue[],
+          ]
+        }>
         {renderPinElements(pressed)}
       </LinearGradient>
     ) : (
@@ -118,7 +125,6 @@ const getStyles = (
       width: width * dimensionReducer,
       height: Math.round(width * dimensionReducer),
       borderRadius: width * dimensionReducer,
-      transition: 2,
     },
     pinElementPressed: {
       backgroundColor: getColors(theme).primaryRedShape,
