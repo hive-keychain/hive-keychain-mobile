@@ -13,7 +13,7 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useEffect, useState} from 'react';
 

@@ -2,15 +2,15 @@ import 'react-native-gesture-handler';
 import './global';
 
 import ErrorBoundary from 'components/errors/ErrorBoundary';
-import React, { useState } from 'react';
-import { AppRegistry, LogBox, StatusBar } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
+import {registerRootComponent} from 'expo';
+import React, {useState} from 'react';
+import {LogBox, StatusBar} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 import MultichainApp from 'src/MultichainApp';
-import { persistor, store } from 'store';
-import { name as appName } from './app.json';
+import {persistor, store} from 'store';
 const Root = () => {
   const [gateLifted, setGateLifted] = useState(false);
 
@@ -45,4 +45,4 @@ const Root = () => {
   );
 };
 
-AppRegistry.registerComponent(appName, () => Root);
+registerRootComponent(Root);

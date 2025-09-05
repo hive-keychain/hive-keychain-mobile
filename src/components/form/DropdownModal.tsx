@@ -1,7 +1,7 @@
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import React, {
   ReactElement,
   memo,

@@ -4,7 +4,7 @@ import AddKey from 'components/modals/AddKey';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import CustomToolTip from 'components/ui/CustomToolTip';
 import Separator from 'components/ui/Separator';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import {FormatUtils} from 'hive-keychain-commons';
 import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';

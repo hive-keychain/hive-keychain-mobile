@@ -1,5 +1,3 @@
-import analytics from '@react-native-firebase/analytics';
-
 let previousRouteName: string;
 
 export const logScreenView = async (routeName: string) => {
@@ -8,10 +6,10 @@ export const logScreenView = async (routeName: string) => {
       previousRouteName = routeName;
 
       routeName = routeName.replace('Screen', '');
-      await analytics().logScreenView({
-        screen_name: routeName,
-        screen_class: routeName,
-      });
+      // await analytics().logScreenView({
+      //   screen_name: routeName,
+      //   screen_class: routeName,
+      // });
     }
   } catch (e) {
     console.log('error analytics', e);

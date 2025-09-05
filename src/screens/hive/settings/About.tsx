@@ -2,7 +2,7 @@ import AboutBGLight from 'assets/new_UI/about_background_light.svg';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import Constants from 'expo-constants';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {AboutNavigation} from 'navigators/MainDrawer.types';

@@ -17,14 +17,14 @@ export default ({config}) => ({
       ios: {
         bundleIdentifier: 'com.mobilekeychain',
         supportsTablet: true,
-        googleServicesFile: './google-services.json',
+        // googleServicesFile: './google-services.json',
       },
       android: {
         package:
           process.env.APP_VARIANT !== 'prod'
             ? 'com.mobilekeychain.dev.expo'
             : 'com.mobilekeychain',
-        googleServicesFile: './google-services.json',
+        // googleServicesFile: './google-services.json',
         permissions: ['android.permission.CAMERA'],
         adaptiveIcon: {
           resizeMode: 'contain',
@@ -48,10 +48,13 @@ export default ({config}) => ({
         ],
       },
       plugins: [
-        'expo-camera',
-        {
-          cameraPermission: 'Allow $(PRODUCT_NAME) to access your camera',
-        },
+        'expo-localization',
+        [
+          'expo-camera',
+          {
+            cameraPermission: 'Allow $(PRODUCT_NAME) to access your camera',
+          },
+        ],
       ],
     },
   },

@@ -1,5 +1,5 @@
 import Icon from 'components/hive/Icon';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import {ISwap, SwapStatus} from 'hive-keychain-commons';
 import moment from 'moment';
 import React, {useState} from 'react';

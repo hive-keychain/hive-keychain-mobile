@@ -1,6 +1,6 @@
 import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import Loader from 'components/ui/Loader';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import {
   IStepHistory,
   ISwap,

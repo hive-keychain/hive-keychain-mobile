@@ -1,6 +1,6 @@
 import {ActionPayload, BrowserPayload, Page} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   KeyboardAvoidingView,

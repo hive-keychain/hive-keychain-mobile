@@ -1,5 +1,5 @@
 import Separator from 'components/ui/Separator';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import React from 'react';
 import {
   Linking,
