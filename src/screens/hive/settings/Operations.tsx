@@ -75,7 +75,7 @@ const Operations = ({
   }, [searchValue, domainList]);
 
   const renderCollapsibleSettings = useCallback(
-    ({item, index}) => (
+    ({item, index}: {item: DomainPreference; index: number}) => (
       <CollapsibleSettings
         username={active.name}
         key={item.domain}

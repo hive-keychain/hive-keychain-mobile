@@ -8,8 +8,8 @@ import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import Toast from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
-import {default as Toast} from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
@@ -28,7 +28,7 @@ import MyWitness from './myWitness/MyWitness';
 
 interface GovernanceToScreenToogleProps {
   menuLabels: string[];
-  components: JSX.Element[];
+  components: React.ReactNode[];
 }
 
 const Governance = ({

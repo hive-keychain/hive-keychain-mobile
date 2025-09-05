@@ -50,10 +50,8 @@ const Tokens = ({
   prices,
   tokensMarket,
 }: PropsFromRedux & TokensProps) => {
-  const [
-    filteredUserTokenBalanceList,
-    setFilteredUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
+  const [filteredUserTokenBalanceList, setFilteredUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
   const [search, setSearch] = useState<string>('');
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
 
@@ -119,7 +117,7 @@ const Tokens = ({
   const styles = getStyles(theme, useWindowDimensions());
 
   const renderEngineTokenDisplay = useCallback(
-    ({item}) => (
+    ({item}: {item: TokenBalance}) => (
       <EngineTokenDisplay
         token={item}
         tokensList={tokens}

@@ -18,10 +18,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {
-  default as SimpleToast,
-  default as Toast,
-} from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -68,9 +65,8 @@ const Witness = ({
   );
   const [filterValue, setFilterValue] = useState('');
   const [votedWitnesses, setVotedWitnesses] = useState<string[]>([]);
-  const [isVotingUnvotingForWitness, setIsVotingUnvotingForWitness] = useState(
-    '',
-  );
+  const [isVotingUnvotingForWitness, setIsVotingUnvotingForWitness] =
+    useState('');
 
   const [usingProxy, setUsingProxy] = useState<boolean>(false);
   const [isLoading, setLoading] = useState(true);
@@ -123,7 +119,7 @@ const Witness = ({
       return;
     }
     if (usingProxy) {
-      SimpleToast.show(translate('governance.witness.using_proxy'));
+      Toast.show(translate('governance.witness.using_proxy'));
       return;
     }
     const handleSubmit = async (options: TransactionOptions) => {
@@ -255,7 +251,8 @@ const Witness = ({
   };
 
   const renderWitnessItemCallback = useCallback(
-    ({item, index}) => renderWitnessItem(item, index),
+    ({item, index}: {item: WitnessInterface; index: number}) =>
+      renderWitnessItem(item, index),
     [renderWitnessItem],
   );
 

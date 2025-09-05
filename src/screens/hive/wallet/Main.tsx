@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsDrawerOpen} from '@react-navigation/drawer';
+import {useDrawerStatus} from '@react-navigation/drawer';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   setIsDrawerOpen,
@@ -116,22 +116,18 @@ const Main = ({
 
   const styles = getDimensionedStyles({width, height}, theme, insets);
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
-  const sectionListRef = useRef();
+  const sectionListRef = useRef<FlatList<TokenBalance>>(null);
   const [toggled, setToggled] = useState<number>(null);
-  const [
-    orderedUserTokenBalanceList,
-    setOrderedUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
-  const [
-    filteredUserTokenBalanceList,
-    setFilteredUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
+  const [orderedUserTokenBalanceList, setOrderedUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
+  const [filteredUserTokenBalanceList, setFilteredUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
   const [isHiveEngineLoading, setIsHiveEngineLoading] = useState(true);
-  const mainScrollRef = useRef();
+  const mainScrollRef = useRef<FlatList<TokenBalance>>(null);
 
   const [eventReceived, setEventReceived] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
@@ -264,7 +260,7 @@ const Main = ({
 
   const appState = useRef(AppState.currentState);
 
-  const isDrawerOpen: boolean = useIsDrawerOpen();
+  const isDrawerOpen: boolean = useDrawerStatus() == 'open';
 
   useEffect(() => {
     setIsDrawerOpen(isDrawerOpen);
@@ -298,9 +294,8 @@ const Main = ({
   );
 
   const initCheckVestingRoutes = async () => {
-    const tempVestingRoutesDifferences = await VestingRoutesUtils.getChangedVestingRoutes(
-      accounts,
-    );
+    const tempVestingRoutesDifferences =
+      await VestingRoutesUtils.getChangedVestingRoutes(accounts);
     setVestingRoutesDifferences(tempVestingRoutesDifferences);
   };
 
@@ -343,7 +338,7 @@ const Main = ({
   );
 
   const renderEngineTokenDisplay = useCallback(
-    ({item, index}) => {
+    ({item, index}: {item: TokenBalance; index: number}) => {
       const handleSetToggle = () => {
         if (toggled === item._id) setToggled(null);
         else setToggled(item._id);

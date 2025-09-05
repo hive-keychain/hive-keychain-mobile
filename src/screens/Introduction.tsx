@@ -41,7 +41,7 @@ import {translate} from 'utils/localize';
 const INTRO_STEPS = 3;
 
 const Introduction = ({navigation}: IntroductionNavProp) => {
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<ScrollView>(null);
   const {height, width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(
@@ -122,7 +122,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
         <IndicatorInactive {...indicatorProps} />
       );
     };
-    const circleArray: JSX.Element[] = [];
+    const circleArray: React.ReactNode[] = [];
     for (let i = 0; i < INTRO_STEPS; i++) {
       circleArray.push(createCircleAddKey(i, currentIndex === i));
     }
@@ -134,7 +134,10 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     );
   };
 
-  const renderCustomLayout = (pageIndex: number, textElements: JSX.Element) => {
+  const renderCustomLayout = (
+    pageIndex: number,
+    textElements: React.ReactNode,
+  ) => {
     return (
       <View style={[styles.layoutContainer]}>
         <View style={[styles.layoutTopContainer]}>

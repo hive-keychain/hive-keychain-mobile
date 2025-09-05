@@ -24,8 +24,9 @@ type Props = {
   additionalMainContainerStyle?: StyleProp<ViewStyle>;
   additionalClickeableAreaStyle?: StyleProp<ViewStyle>;
   modalPosition?: ModalPosition;
-  buttonElement?: JSX.Element;
+  buttonElement?: React.ReactNode;
   theme: Theme;
+  children: React.ReactNode;
 };
 type InnerProps = {height: number; width: number};
 

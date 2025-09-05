@@ -61,7 +61,7 @@ const Proposal = ({
   };
 
   const renderProposalItem = useCallback(
-    ({item: proposal, index}) => (
+    ({item: proposal, index}: {item: ProposalInterface; index: number}) => (
       <ProposalItem
         user={user}
         style={[

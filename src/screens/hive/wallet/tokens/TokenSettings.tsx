@@ -95,7 +95,7 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
   const colors = useSelector((state: RootState) => state.colors);
 
   const renderTokenSettingsItem = useCallback(
-    ({item}) => (
+    ({item}: {item: Token}) => (
       <TokenSettingsItem
         token={item}
         theme={theme}

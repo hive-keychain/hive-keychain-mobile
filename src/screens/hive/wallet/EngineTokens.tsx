@@ -43,18 +43,14 @@ const EngineTokens = ({
   showEngineTokenSettings,
 }: Props & PropsFromRedux) => {
   const [toggled, setToggled] = useState<number>(null);
-  const [
-    orderedUserTokenBalanceList,
-    setOrderedUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
-  const [
-    filteredUserTokenBalanceList,
-    setFilteredUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
+  const [orderedUserTokenBalanceList, setOrderedUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
+  const [filteredUserTokenBalanceList, setFilteredUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<TokenBalance>>(null);
 
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
@@ -121,7 +117,7 @@ const EngineTokens = ({
   };
 
   const renderEngineTokenDisplay = useCallback(
-    ({item}) => (
+    ({item}: {item: TokenBalance}) => (
       <EngineTokenDisplay
         addBackground
         token={item}
