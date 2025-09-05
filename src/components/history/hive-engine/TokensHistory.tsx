@@ -28,7 +28,7 @@ import {TokenHistoryItemComponent} from './TokenHistoryItem';
 
 export type TokenHistoryProps = {
   tokenBalance: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.JSX.Element;
   currency: string;
   theme: Theme;
 };
@@ -48,7 +48,7 @@ const TokensHistory = ({
   >([]);
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<TokenTransaction>>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -155,7 +155,7 @@ const TokensHistory = ({
   const styles = getStyles(theme);
 
   const renderTokenHistoryItem = useCallback(
-    ({item}) => (
+    ({item}: {item: TokenTransaction}) => (
       <TokenHistoryItemComponent
         theme={theme}
         transaction={item}

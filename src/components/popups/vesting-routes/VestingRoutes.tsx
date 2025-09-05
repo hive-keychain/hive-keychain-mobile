@@ -100,7 +100,7 @@ const VestingRoutes = ({
   };
 
   const renderCarouselItem = useCallback(
-    (item) => (
+    (item: AccountVestingRoutesDifferences) => (
       <VestingRoutesItemComponent
         accountVestingRouteDifference={item}
         nextCarouselSlide={() => {

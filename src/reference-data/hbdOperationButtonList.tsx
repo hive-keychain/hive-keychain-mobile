@@ -6,7 +6,7 @@ import {
   SavingOperationProps,
   SavingsOperations,
 } from 'components/operations/Savings';
-import {TransferOperationProps} from 'components/operations/Transfer';
+import {TransferOperationProps} from 'components/operations/transfer/Transfer';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import SquareButton from 'components/ui/SquareButton';
 import React from 'react';

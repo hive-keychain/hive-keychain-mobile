@@ -760,7 +760,7 @@ interface IconProps {
   theme?: Theme;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalPressedStyle?: StyleProp<ViewStyle>;
-  bgImage?: JSX.Element;
+  bgImage?: React.JSX.Element;
   width?: number;
   height?: number;
   color?: string;
@@ -769,7 +769,7 @@ interface IconProps {
 }
 
 const Icon = (props: IconProps) => {
-  let iconComponent: JSX.Element = getIconFilePath(
+  let iconComponent: React.JSX.Element = getIconFilePath(
     props.name,
     props.subType,
     styles.defaultIcon,

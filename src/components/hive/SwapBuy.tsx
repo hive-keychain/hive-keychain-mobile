@@ -14,7 +14,7 @@ import {translate} from 'utils/localize';
 
 interface SwapBuyToScreenToogleProps {
   menuLabels: string[];
-  components: JSX.Element[];
+  components: React.JSX.Element[];
 }
 
 const SwapBuy = () => {

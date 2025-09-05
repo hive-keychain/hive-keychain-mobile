@@ -4,7 +4,6 @@ import {ISwap, SwapStatus} from 'hive-keychain-commons';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Tooltip} from 'react-native-elements';
 import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Icons} from 'src/enums/icons.enums';
@@ -124,16 +123,16 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
             </Text>
           </View>
         </View>
-        <Tooltip
+        {/* <Tooltip
           containerStyle={{
             minHeight: 100,
           }}
           height={100}
           popover={
             <Text style={{textAlign: 'center'}}>{getTooltipMessage(swap)}</Text>
-          }>
-          <Icon name={getStatusIcon(swap.status) as Icons} />
-        </Tooltip>
+          }> */}
+        <Icon name={getStatusIcon(swap.status) as Icons} />
+        {/* </Tooltip> */}
       </View>
 
       {isOpen && (

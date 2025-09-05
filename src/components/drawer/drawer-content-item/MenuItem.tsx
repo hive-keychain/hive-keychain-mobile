@@ -26,9 +26,9 @@ interface PropsDrawerContentItem {
   labelTranslationKey: string;
   theme: Theme;
   onPress: () => void;
-  iconImage: JSX.Element;
+  iconImage: React.JSX.Element;
   iconName?: Icons;
-  leftSideComponent?: JSX.Element;
+  leftSideComponent?: React.JSX.Element;
   drawBottomLine?: boolean;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalPressedStyle?: StyleProp<ViewStyle>;

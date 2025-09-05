@@ -10,7 +10,7 @@ import {ExchangesUtils} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {default as Toast} from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -51,7 +51,7 @@ export type TransferOperationProps = {
   currency: string;
   engine: boolean;
   tokenBalance: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
 };
 type Props = PropsFromRedux & TransferOperationProps;
 const Transfer = ({
@@ -75,11 +75,10 @@ const Transfer = ({
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
 
-  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
-    AutoCompleteValues
-  >({
-    categories: [],
-  });
+  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] =
+    useState<AutoCompleteValues>({
+      categories: [],
+    });
   const [availableBalance, setAvailableBalance] = useState('');
   const [toggleIndex, setToggleIndex] = useState(0);
   const {theme} = useThemeContext();
@@ -89,11 +88,12 @@ const Transfer = ({
   }, []);
 
   const loadAutocompleteTransferUsernames = async () => {
-    const autoCompleteListByCategories: AutoCompleteValues = await FavoriteUserUtils.getAutocompleteListByCategories(
-      user.name!,
-      localAccounts,
-      {addExchanges: true, token: currency.toUpperCase()},
-    );
+    const autoCompleteListByCategories: AutoCompleteValues =
+      await FavoriteUserUtils.getAutocompleteListByCategories(
+        user.name!,
+        localAccounts,
+        {addExchanges: true, token: currency.toUpperCase()},
+      );
     setAutocompleteFavoriteUsers(autoCompleteListByCategories);
   };
 

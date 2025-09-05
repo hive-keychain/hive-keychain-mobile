@@ -25,8 +25,8 @@ import {CONTENT_MARGIN_PADDING} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
 
 interface OperationProps {
-  childrenTop?: JSX.Element;
-  childrenMiddle: JSX.Element;
+  childrenTop?: React.ReactNode;
+  childrenMiddle: React.ReactNode;
   additionalContentContainerStyle?: StyleProp<ViewStyle>;
   additionalSVGOpacity?: number;
   additionalBgSvgImageStyle?: StyleProp<ImageStyle>;

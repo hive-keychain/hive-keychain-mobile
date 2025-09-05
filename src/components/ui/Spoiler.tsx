@@ -10,7 +10,7 @@ import {title_primary_title_1} from 'src/styles/typography';
 type Props = {
   title: string;
   initiallyOpened?: boolean;
-  children: JSX.Element;
+  children: React.ReactNode;
 };
 const Spoiler = ({title, initiallyOpened, children}: Props) => {
   const [isOpened, setIsOpened] = useState(initiallyOpened || false);

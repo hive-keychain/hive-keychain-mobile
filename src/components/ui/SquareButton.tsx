@@ -18,7 +18,7 @@ import {
 } from 'src/styles/typography';
 
 interface Props {
-  icon: JSX.Element;
+  icon: React.ReactNode;
   primaryLabel: string;
   onPress: () => void;
   secondaryLabel?: string;

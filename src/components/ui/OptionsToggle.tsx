@@ -17,7 +17,7 @@ import {
 import {Dimensions} from 'utils/common.types';
 
 type Props = {
-  children: JSX.Element[] | JSX.Element;
+  children: React.ReactNode[] | React.ReactNode;
   title: string;
   callback: (toggled: boolean) => void;
   toggled: boolean;

@@ -65,7 +65,7 @@ const IncomingOutGoingRCDelegations = ({
   };
 
   const renderRcDelegationItem = useCallback(
-    ({item}) => (
+    ({item}: {item: RcDelegation}) => (
       <IncomingOutgoingRcDelegationItem
         theme={theme}
         type={type}

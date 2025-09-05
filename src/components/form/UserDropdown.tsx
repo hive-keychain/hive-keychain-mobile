@@ -1,6 +1,7 @@
 import {loadAccount, reorderAccounts} from 'actions/index';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React, {ComponentProps, useEffect, useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {RootState} from 'store';
@@ -67,7 +68,7 @@ const UserDropdown = ({
     />
   );
 };
-const styles = {
+const styles = StyleSheet.create({
   avatar: {width: 30, height: 30, borderRadius: 50},
   dropdownContainer: {
     width: '100%',
@@ -77,7 +78,7 @@ const styles = {
   dropdownOverlay: {
     paddingHorizontal: MARGIN_PADDING,
   },
-};
+});
 
 const connector = connect(
   (state: RootState) => {

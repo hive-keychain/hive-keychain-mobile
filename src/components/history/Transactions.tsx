@@ -5,6 +5,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
+import {Transaction} from 'src/interfaces/transaction.interface';
 import {RootState} from 'store';
 import {getMainLocale, translate} from 'utils/localize';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
@@ -33,7 +34,7 @@ const Transactions = ({
   const locale = getMainLocale();
   const {theme} = useThemeContext();
   const renderTransactionItem = useCallback(
-    ({item}) => (
+    ({item}: {item: Transaction}) => (
       <WalletHistoryItemComponent
         theme={theme}
         transaction={item}

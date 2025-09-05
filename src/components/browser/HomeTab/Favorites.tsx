@@ -26,7 +26,7 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
   };
 
   const renderFavoriteItem = useCallback(
-    ({item, drag, getIndex}) => (
+    ({item, drag, getIndex}: {item: Page; drag: any; getIndex: any}) => (
       <HistoryItem
         data={item}
         key={item.url}

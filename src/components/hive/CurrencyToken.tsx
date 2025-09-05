@@ -69,7 +69,7 @@ const CurrencyToken = ({
         return getHPButtonList(theme, user.name!);
     }
   };
-  const [buttons, setButtons] = useState<JSX.Element[]>(
+  const [buttons, setButtons] = useState<React.JSX.Element[]>(
     getButtons(currencyName),
   );
 

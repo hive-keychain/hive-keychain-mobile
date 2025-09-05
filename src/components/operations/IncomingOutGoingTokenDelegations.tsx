@@ -41,7 +41,7 @@ type Props = PropsFromRedux & {
   delegationType: TokenDelegationType;
   total: string;
   token: TokenBalance;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
   tokenInfo: Token;
   gobackAction?: () => void;
 };
@@ -82,7 +82,7 @@ const IncomingOutGoingTokenDelegations = ({
   const styles = getDimensionedStyles(color, theme, width);
 
   const renderListItem = useCallback(
-    ({item}) => (
+    ({item}: {item: TokenDelegation}) => (
       <IncomingOutGoingTokenDelegationItem
         tokenDelegation={item}
         delegationType={delegationType}

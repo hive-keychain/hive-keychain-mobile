@@ -49,8 +49,8 @@ const hiddenRoutesInMain = [
   'Help',
 ];
 
-const HeaderContent = (props: Props) => {
-  const {user, lock, navigation, itemStyle, state, addTab, ...rest} = props;
+const DrawerContent = (props: Props) => {
+  const {user, lock, navigation, state, addTab, ...rest} = props;
   const newState = {...state};
   newState.routes = newState.routes.filter(
     (route) => !hiddenRoutesInMain.includes(route.name),
@@ -151,7 +151,6 @@ const HeaderContent = (props: Props) => {
             ...newState,
           }}
           navigation={navigation}
-          itemStyle={itemStyle}
           {...rest}
         />
       </ScrollView>
@@ -167,6 +166,7 @@ const styles = StyleSheet.create({
     // marginTop: initialWindowMetrics.insets.top,
   },
   marginRight: {marginRight: 10},
+  item: {marginHorizontal: 0, borderRadius: 0, paddingLeft: 10},
 });
 const mapStateToProps = (state: RootState) => ({
   user: state.activeAccount,
@@ -175,4 +175,4 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps, {lock, closeAllTabs, addTab});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(HeaderContent);
+export default connector(DrawerContent);

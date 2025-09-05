@@ -24,7 +24,7 @@ interface Props {
   textLine2?: string;
   textLine3?: string;
   memo?: string;
-  icon?: JSX.Element;
+  icon?: React.ReactNode;
 }
 
 const ItemCardExpandable = ({

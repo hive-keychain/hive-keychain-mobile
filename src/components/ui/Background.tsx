@@ -1,4 +1,4 @@
-import {useHeaderHeight} from '@react-navigation/stack';
+import {useHeaderHeight} from '@react-navigation/elements';
 import React from 'react';
 import {
   ImageBackground,
@@ -20,7 +20,7 @@ const hexagonsLight = require('assets/new_UI/hexagons-bg-light.png');
 const hexagonsDark = require('assets/new_UI/hexagons-bg-dark.png');
 
 interface BackgroundProps {
-  children: JSX.Element;
+  children: React.ReactNode;
   theme: Theme;
   style?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;

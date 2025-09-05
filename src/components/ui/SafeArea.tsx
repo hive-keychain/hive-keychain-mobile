@@ -11,7 +11,7 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   skipTop?: boolean;
   skipBottom?: boolean;
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode | React.ReactNode[];
 };
 
 const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
@@ -25,11 +25,11 @@ const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
   }
 
   const isAndroid35 = Platform.OS === 'android' && Platform.Version >= 35;
-  const applyPadding = (child: JSX.Element) => {
+  const applyPadding = (child: React.ReactNode) => {
     if (!isAndroid35) {
-      return React.cloneElement(child, {
+      return React.cloneElement(child as React.ReactElement<any>, {
         style: [
-          child.props.style,
+          (child as React.ReactElement<any>).props.style,
           {
             paddingBottom: !skipBottom ? 0 : initialWindowMetrics.insets.bottom,
           },
@@ -54,10 +54,10 @@ const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
       ]}
       edges={edges}>
       {Array.isArray(children)
-        ? children.map((child, index) =>
+        ? children.map((child: React.ReactNode, index) =>
             index === children.length - 1 ? applyPadding(child) : child,
           )
-        : applyPadding(children)}
+        : applyPadding(children as React.ReactNode)}
     </SafeAreaView>
   );
 };

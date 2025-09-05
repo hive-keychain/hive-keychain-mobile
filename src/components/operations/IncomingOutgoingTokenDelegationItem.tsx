@@ -30,7 +30,7 @@ import {TokenDelegationType} from './IncomingOutGoingTokenDelegations';
 type Props = {
   tokenDelegation: TokenDelegation;
   delegationType: TokenDelegationType;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
   token: TokenBalance;
   tokenInfo: Token;
   theme: Theme;

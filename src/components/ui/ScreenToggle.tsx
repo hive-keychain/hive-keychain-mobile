@@ -19,7 +19,7 @@ import {
 import {Dimensions} from 'utils/common.types';
 
 type Props = {
-  components: JSX.Element[];
+  components: React.ReactNode[];
   menu: string[];
   toUpperCase: boolean;
   style?: StyleProp<ViewStyle>;

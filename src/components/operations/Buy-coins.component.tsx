@@ -36,7 +36,7 @@ type Props = PropsFromRedux & BuyCoinsprops;
 
 const BuyCoinsComponent = ({user, currency}: Props) => {
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const renderListItem = (item: any) => {
     const handleOnClick = () => {
@@ -148,10 +148,9 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
                     justifyContent: 'space-between',
                   },
                 ]}>
-                {getBuyCoinsListItem(
-                  currency,
-                  user.name!,
-                ).exchanges.map((exchange) => renderExchangeItem(exchange))}
+                {getBuyCoinsListItem(currency, user.name!).exchanges.map(
+                  (exchange) => renderExchangeItem(exchange),
+                )}
               </View>
             </View>
           </View>

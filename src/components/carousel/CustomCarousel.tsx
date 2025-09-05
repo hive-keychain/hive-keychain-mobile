@@ -87,7 +87,7 @@ const Carousel = ({
         <IndicatorInactive {...indicatorProps} />
       );
     };
-    const circleArray: JSX.Element[] = [];
+    const circleArray: React.JSX.Element[] = [];
     for (let i = 0; i < length; i++) {
       circleArray.push(createCircleAddKey(i, currentIndex === i));
     }

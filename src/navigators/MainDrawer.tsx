@@ -41,13 +41,12 @@ export default () => {
 
   return (
     <Drawer.Navigator
-      drawerStyle={styles.drawer}
+      // drawerStyle={styles.drawer}
       drawerPosition="left"
-      screenOptions={{swipeEnabled: false}}
+      screenOptions={{swipeEnabled: false, drawerItemStyle: styles.item}}
       drawerType="front"
       drawerContentOptions={{
         inactiveTintColor: getColors(theme).secondaryText,
-        itemStyle: styles.item,
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="WALLET" component={WalletStack} />

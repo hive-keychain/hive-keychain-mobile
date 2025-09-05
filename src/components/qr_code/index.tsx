@@ -1,4 +1,4 @@
-import {useHeaderHeight} from '@react-navigation/stack';
+import {useHeaderHeight} from '@react-navigation/elements';
 import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
@@ -10,7 +10,7 @@ import Marker from './MarkerQR';
 
 type Props = {
   onSuccess: (event: BarCodeReadEvent) => void;
-  topContent?: JSX.Element;
+  topContent?: React.ReactNode;
 };
 
 const QRCode = ({onSuccess, topContent}: Props) => {

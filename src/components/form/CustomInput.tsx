@@ -169,7 +169,7 @@ const getDimensionedStyles = ({
     inputContainer: {
       height: '100%',
       borderBottomWidth: 0,
-      textAlign: textAlign || 'left',
+      textAlign: (textAlign as any) || 'left',
     },
     flexRow: {
       width: '100%',

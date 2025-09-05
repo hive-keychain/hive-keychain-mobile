@@ -20,7 +20,7 @@ type Props = {
   globalProperties?: DynamicGlobalProperties;
   isHiveEngine?: boolean;
   tokenBalance?: string;
-  tokenLogo?: JSX.Element;
+  tokenLogo?: React.ReactNode;
   setAvailableBalance?: (value: string) => void;
   theme?: Theme;
 };

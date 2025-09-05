@@ -18,9 +18,9 @@ import {headlines_primary_headline_2} from 'src/styles/typography';
 import {goBack} from 'utils/navigation';
 
 type Props = {
-  children: JSX.Element;
+  children: React.ReactNode;
   title: string;
-  logo?: JSX.Element;
+  logo?: React.ReactNode;
   onClose?: () => void;
   additionalHeaderContainerStyle?: StyleProp<ViewStyle>;
   additionalHeaderTitleStyle?: StyleProp<TextStyle>;

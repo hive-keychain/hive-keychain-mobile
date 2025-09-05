@@ -54,7 +54,7 @@ const ConfirmationCard = ({
   colors: Colors;
   request?: KeychainRequest & RequestId;
   accounts?: Account[];
-  RequestUsername?: () => JSX.Element;
+  RequestUsername?: () => React.ReactNode;
 }) => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();

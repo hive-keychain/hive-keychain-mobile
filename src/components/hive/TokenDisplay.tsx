@@ -40,13 +40,13 @@ import Icon from './Icon';
 
 type Props = {
   name: string;
-  logo: JSX.Element;
+  logo: React.JSX.Element;
   currency: string;
   balance: number;
   totalValue: number;
   color: string;
   price?: HiveEngineCurrency;
-  buttons?: JSX.Element[];
+  buttons?: React.JSX.Element[];
   toggled: boolean;
   setToggle: () => void;
   onHandleGoToTokenHistory: () => void;
@@ -84,7 +84,7 @@ const TokenDisplay = ({
   const tokenTotalValue = totalValue ? formatBalance(totalValue) : 0;
 
   const renderAsSquareButton = (
-    icon: JSX.Element,
+    icon: React.JSX.Element,
     label: string,
     onPress: () => void,
   ) => (

@@ -60,7 +60,7 @@ const WallettHistory = ({
 
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<Transaction>>(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -163,7 +163,7 @@ const WallettHistory = ({
   const styles = getStyles(theme, useSafeAreaInsets());
 
   const renderWalletHistoryItem = useCallback(
-    ({item}) => (
+    ({item}: {item: Transaction}) => (
       <WalletHistoryItemComponent
         transaction={item}
         user={activeAccount}

@@ -28,7 +28,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<ISwap>>(null);
 
   useEffect(() => {
     initSwapHistory();
@@ -79,7 +79,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const styles = getStyles(theme);
 
   const renderSwapHistoryItem = useCallback(
-    ({item, index}) => (
+    ({item, index}: {item: ISwap; index: number}) => (
       <SwapHistoryItem theme={theme} item={item} currentIndex={index} />
     ),
     [theme],

@@ -17,7 +17,7 @@ export interface ContainerStylesProps {
 }
 
 interface SvgContainerProps {
-  svgFile: JSX.Element;
+  svgFile: React.ReactNode;
   containerStyles?: ContainerStylesProps;
 }
 const SvgContainer = (props: SvgContainerProps) => {
@@ -50,7 +50,7 @@ const getAppliedStyles = (containerStyles: ContainerStylesProps) =>
       alignItems: 'center',
     },
     svgContainer: {
-      width: containerStyles?.svgContainerWidth ?? '70%',
+      width: +(containerStyles?.svgContainerWidth ?? '70%'),
       height: 60,
       justifyContent: 'center',
       alignItems: 'center',
