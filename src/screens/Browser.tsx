@@ -16,7 +16,7 @@ import Browser from 'components/browser';
 import BrowserTutorial from 'components/popups/browser-tutorial/BrowserTutorial';
 import ProposalReminder from 'components/popups/proposal-reminder';
 import SafeArea from 'components/ui/SafeArea';
-import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {useEffect} from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
@@ -42,7 +42,7 @@ const BrowserScreen = ({
   showManagementScreen,
   getEcosystem,
   preferences,
-}: BrowserPropsFromRedux & BrowserNavigationProps) => {
+}: BrowserPropsFromRedux & BrowserScreenProps) => {
   const {chain} = useChainContext();
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {

@@ -1,5 +1,5 @@
 import {Tab as TabType} from 'actions/interfaces';
-import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import {KeyboardAvoidingView, ScrollView, StyleSheet, View} from 'react-native';
 import {captureRef} from 'react-native-view-shot';
@@ -34,7 +34,7 @@ const Browser = ({
   setBrowserFocus,
   showManagementScreen,
   theme,
-}: Partial<BrowserPropsFromRedux> & BrowserNavigationProps & Props) => {
+}: Partial<BrowserPropsFromRedux> & BrowserScreenProps & Props) => {
   const {showManagement, activeTab, tabs, history} = browser;
   const currentActiveTabData = tabs.find((t) => t.id === activeTab);
   const url = currentActiveTabData
@@ -141,7 +141,7 @@ const Browser = ({
             active={tab.id === activeTab}
             key={tab.id}
             updateTab={updateTab}
-            navigation={navigation}
+            navigation={navigation as any}
             addToHistory={addToHistory}
             isManagingTab={showManagement}
             preferences={preferences}

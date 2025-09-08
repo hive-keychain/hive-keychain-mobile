@@ -3,7 +3,7 @@ import {addTab} from 'actions/browser';
 import {updateShowProposalReminder} from 'actions/floatingBar';
 import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
-import {BrowserNavigation} from 'navigators/MainDrawer.types';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {useEffect} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import SimpleToast from 'react-native-root-toast';
@@ -19,7 +19,7 @@ import {toHP} from 'utils/format';
 import {getClient, updateProposalVote} from 'utils/hive';
 import {goBack, navigate} from 'utils/navigation';
 interface Props {
-  navigation: BrowserNavigation;
+  navigation: BrowserScreenProps['navigation'];
 }
 
 const KEYCHAIN_PROPOSAL = ProposalConfig.KEYCHAIN_PROPOSAL;
@@ -121,7 +121,7 @@ const ProposalReminder = ({
             }}
             onPress={() => {
               addTab(`https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`);
-              navigation.navigate('Browser');
+              navigate('Browser');
             }}>
             here
           </Text>

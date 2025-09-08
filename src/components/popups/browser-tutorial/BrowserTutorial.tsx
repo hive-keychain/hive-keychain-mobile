@@ -3,7 +3,7 @@ import EllipticButton from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
-import {BrowserNavigation} from 'navigators/MainDrawer.types';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {useEffect} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
@@ -15,7 +15,7 @@ import {getModalBaseStyle} from 'src/styles/modal';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
 interface Props {
-  navigation: BrowserNavigation;
+  navigation: BrowserScreenProps['navigation'];
 }
 
 const BrowserTutorial = ({navigation}: Props): null => {

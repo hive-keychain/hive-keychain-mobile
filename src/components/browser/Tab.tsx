@@ -8,7 +8,7 @@ import {
   Tab,
 } from 'actions/interfaces';
 import CustomRefreshControl from 'components/ui/CustomRefreshControl';
-import {BrowserNavigation} from 'navigators/MainDrawer.types';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {
   memo,
   MutableRefObject,
@@ -69,7 +69,7 @@ type Props = {
   accounts: Account[];
   updateTab: (id: number, data: Partial<Tab>) => ActionPayload<BrowserPayload>;
   addToHistory: (history: Page) => ActionPayload<BrowserPayload>;
-  navigation: BrowserNavigation;
+  navigation: BrowserScreenProps['navigation'];
   preferences: UserPreference[];
   addTab: (
     isManagingTab: boolean,
