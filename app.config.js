@@ -9,6 +9,7 @@ export default ({config}) => ({
       icon: './src/assets/ic_launcher-playstore.png',
       userInterfaceStyle: 'light',
       newArchEnabled: true,
+      assetBundlePatterns: ['src/assets/fonts/*'],
       splash: {
         image: './src/assets/new_UI/keychain_logo_powered_dark_theme.png',
         resizeMode: 'contain',
@@ -53,6 +54,22 @@ export default ({config}) => ({
           'expo-camera',
           {
             cameraPermission: 'Allow $(PRODUCT_NAME) to access your camera',
+          },
+        ],
+        [
+          'expo-font',
+          {
+            fonts: [
+              './src/assets/fonts/Poppins-Italic.ttf',
+              './src/assets/fonts/Poppins-SemiBold.ttf',
+              './src/assets/fonts/Poppins-Regular.ttf',
+              './src/assets/fonts/Poppins-Medium.ttf',
+              './src/assets/fonts/Poppins-Bold.ttf',
+              './src/assets/fonts/Poppins-Black.ttf',
+              './src/assets/fonts/JosefinSans-Bold.ttf',
+              './src/assets/fonts/JosefinSans-Regular.ttf',
+              './src/assets/fonts/JosefinSans-Medium.ttf',
+            ],
           },
         ],
       ],
