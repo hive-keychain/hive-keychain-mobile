@@ -62,7 +62,7 @@ const UrlModal = ({
   const onSubmitUrl = (url: string) => {
     toggle(false);
     // Add duckduck go search for url with no domain
-    if (url.includes(' ') || !url.includes('.')) {
+    if (url.includes(' ') || (!url.includes('.') && !url.includes(':'))) {
       onNewSearch(`https://duckduckgo.com/?q=${url.replace(/ /g, '+')}`);
     } else {
       const hasProtocol = url.match(/^[a-z]*:\/\//);

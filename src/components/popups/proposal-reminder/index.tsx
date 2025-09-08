@@ -2,10 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { addTab } from "actions/browser";
 import { updateShowProposalReminder } from "actions/floatingBar";
 import EllipticButton from "components/form/EllipticButton";
+import Separator from "components/ui/Separator";
 import { BrowserNavigation } from "navigators/MainDrawer.types";
 import React, { useEffect } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import SimpleToast from "react-native-root-toast";
+import { initialWindowMetrics } from "react-native-safe-area-context";
 import { ConnectedProps, connect } from "react-redux";
 import { Theme, useThemeContext } from "src/context/theme.context";
 import { KeychainStorageKeyEnum } from "src/reference-data/keychainStorageKeyEnum";
@@ -178,6 +180,7 @@ const ProposalReminder = ({
             }}
           />
         </View>
+        <Separator height={initialWindowMetrics.insets.bottom + 20} />
       </ScrollView>
     );
   };
@@ -189,6 +192,7 @@ const getStyles = (theme: Theme) =>
     rootContainer: {
       width: "100%",
       padding: 12,
+      paddingBottom: initialWindowMetrics.insets.bottom + 20,
     },
     title: {
       textAlign: "center",

@@ -6,6 +6,7 @@ import Separator from 'components/ui/Separator';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
@@ -116,6 +117,7 @@ const BrowserTutorial = ({navigation}: Props): null => {
             goBack();
           }}
         />
+        <Separator height={initialWindowMetrics.insets.bottom} />
       </ScrollView>
     );
   };
