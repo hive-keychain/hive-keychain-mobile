@@ -14,7 +14,6 @@ export type MainDrawerStackParam = {
   Operation: undefined;
   TemplateStack: undefined;
   SwapBuyStack: undefined;
-  SwapHistory: undefined;
   Help: undefined;
   TokenSettings: undefined;
   TokenDelegations: undefined;
@@ -22,7 +21,6 @@ export type MainDrawerStackParam = {
   PendingSavings: undefined;
   PendingConversions: undefined;
   RcDelegations: undefined;
-  SwapConfirm: undefined;
   ToggleWitness: undefined;
   CreateAccountConfirmationScreen: undefined;
 };

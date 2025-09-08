@@ -27,8 +27,9 @@ import PendingConversionsStack from './mainDrawerStacks/PendingConversionsStack'
 import PendingSavingsStack from './mainDrawerStacks/PendingSavingsStack';
 import RcDelegationsStack from './mainDrawerStacks/RcDelegationsStack';
 import SwapBuyStack from './mainDrawerStacks/SwapBuyStack';
-import SwapConfirmStack from './mainDrawerStacks/SwapConfirmStack';
-import SwapHistory from './mainDrawerStacks/SwapHistory';
+// Consolidated under SwapBuyStack
+// import SwapConfirmStack from './mainDrawerStacks/SwapConfirmStack';
+// import SwapHistory from './mainDrawerStacks/SwapHistory';
 import TokenDelegationsStack from './mainDrawerStacks/TokenDelegationsStack';
 import TokenSettingsStack from './mainDrawerStacks/TokenSettingsStack';
 import Tokens from './mainDrawerStacks/Tokens';
@@ -142,13 +143,7 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen
-        name="SwapHistory"
-        component={SwapHistory}
-        options={{
-          ...noHeader,
-        }}
-      />
+      {/* SwapHistory is now nested inside SwapBuyStack */}
       {/* Newly added logical screens reachable via navigate() */}
       <Drawer.Screen
         name="TokenDelegations"
@@ -185,13 +180,7 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen
-        name="SwapConfirm"
-        component={SwapConfirmStack}
-        options={{
-          ...noHeader,
-        }}
-      />
+      {/* SwapConfirm is now nested inside SwapBuyStack */}
       <Drawer.Screen
         name="CreateAccountConfirmationScreen"
         component={CreateAccountConfirmation}

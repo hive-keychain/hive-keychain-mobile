@@ -1,69 +1,67 @@
-import { loadTokensMarket } from "actions/index";
-import { KeyTypes } from "actions/interfaces";
-import { showModal } from "actions/message";
-import ErrorSvg from "assets/new_UI/error-mark.svg";
-import DropdownModal, {
-  DropdownModalItem,
-} from "components/form/DropdownModal";
-import OperationInput from "components/form/OperationInput";
-import CurrencyIcon from "components/hive/CurrencyIcon";
-import Icon from "components/hive/Icon";
-import TwoFaModal from "components/modals/TwoFaModal";
-import { Caption } from "components/ui/Caption";
-import Loader from "components/ui/Loader";
-import RotationIconAnimated from "components/ui/RotationIconAnimated";
-import Separator from "components/ui/Separator";
-import { IStep } from "hive-keychain-commons";
-import { useCheckForMultisig } from "hooks/useCheckForMultisig";
-import { ThrottleSettings, throttle } from "lodash";
+import {loadTokensMarket} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
+import {showModal} from 'actions/message';
+import ErrorSvg from 'assets/new_UI/error-mark.svg';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
+import OperationInput from 'components/form/OperationInput';
+import CurrencyIcon from 'components/hive/CurrencyIcon';
+import Icon from 'components/hive/Icon';
+import TwoFaModal from 'components/modals/TwoFaModal';
+import {Caption} from 'components/ui/Caption';
+import Loader from 'components/ui/Loader';
+import RotationIconAnimated from 'components/ui/RotationIconAnimated';
+import Separator from 'components/ui/Separator';
+import {IStep} from 'hive-keychain-commons';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
+import {ThrottleSettings, throttle} from 'lodash';
 // import {TemplateStackProps} from 'navigators/Root.types';
-import React, { useEffect, useMemo, useState } from "react";
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
-} from "react-native";
-import SimpleToast from "react-native-root-toast";
-import { ConnectedProps, connect } from "react-redux";
-import { Theme } from "src/context/theme.context";
-import { Icons } from "src/enums/icons.enums";
-import { MessageModalType } from "src/enums/messageModal.enums";
-import { TransactionOptions } from "src/interfaces/multisig.interface";
-import { SwapConfig } from "src/interfaces/swap-token.interface";
-import { Token } from "src/interfaces/tokens.interface";
+} from 'react-native';
+import SimpleToast from 'react-native-root-toast';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {SwapConfig} from 'src/interfaces/swap-token.interface';
+import {Token} from 'src/interfaces/tokens.interface';
 import {
   BACKGROUNDDARKBLUE,
   PRIMARY_RED_COLOR,
   getColors,
-} from "src/styles/colors";
-import { ICONMINDIMENSIONS } from "src/styles/icon";
-import { getHorizontalLineStyle } from "src/styles/line";
-import { MARGIN_PADDING } from "src/styles/spacing";
-import { getRotateStyle } from "src/styles/transform";
+} from 'src/styles/colors';
+import {ICONMINDIMENSIONS} from 'src/styles/icon';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {MARGIN_PADDING} from 'src/styles/spacing';
+import {getRotateStyle} from 'src/styles/transform';
 import {
   FontPoppinsName,
   body_primary_body_1,
   button_link_primary_medium,
   button_link_primary_small,
   getFontSizeSmallDevices,
-} from "src/styles/typography";
-import { RootState } from "store";
-import { Dimensions } from "utils/common.types";
-import { SwapsConfig } from "utils/config";
-import { capitalize, withCommas } from "utils/format";
-import { getCurrency } from "utils/hive";
-import { translate } from "utils/localize";
-import { ModalComponent } from "utils/modal.enum";
-import { goBackAndNavigate, navigate } from "utils/navigation";
-import { SwapTokenUtils } from "utils/swap-token.utils";
+} from 'src/styles/typography';
+import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
+import {SwapsConfig} from 'utils/config';
+import {capitalize, withCommas} from 'utils/format';
+import {getCurrency} from 'utils/hive';
+import {translate} from 'utils/localize';
+import {ModalComponent} from 'utils/modal.enum';
+import {goBackAndNavigate, navigate} from 'utils/navigation';
+import {SwapTokenUtils} from 'utils/swap-token.utils';
 import {
   getAllTokens,
   getHiveEngineTokenPrice,
   getTokenPrecision,
-} from "utils/tokens.utils";
-import OperationThemed from "./OperationThemed";
+} from 'utils/tokens.utils';
+import OperationThemed from './OperationThemed';
 
 export interface OptionItem {
   label: string;
@@ -95,7 +93,7 @@ const Swap = ({
   const [underMaintenance, setUnderMaintenance] = useState(false);
   const [swapConfig, setSwapConfig] = useState({} as SwapConfig);
   const [isAdvanceSettingOpen, setIsAdvanceSettingOpen] = useState(false);
-  const [amount, setAmount] = useState<string>("");
+  const [amount, setAmount] = useState<string>('');
   const [startToken, setStartToken] = useState<OptionItem>();
   const [endToken, setEndToken] = useState<OptionItem>();
   const [slippage, setSlippage] = useState(5);
@@ -103,7 +101,7 @@ const Swap = ({
     OptionItem[]
   >([]);
   const [endTokenListOptions, setEndTokenListOptions] = useState<OptionItem[]>(
-    []
+    [],
   );
   const [loadingEstimate, setLoadingEstimate] = useState(false);
   const [estimate, setEstimate] = useState<IStep[]>();
@@ -114,7 +112,7 @@ const Swap = ({
   const [disableProcessButton, setDisableProcessButton] = useState(false);
   const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultisig(
     KeyTypes.active,
-    activeAccount
+    activeAccount,
   );
   useEffect(() => {
     init();
@@ -134,20 +132,20 @@ const Swap = ({
       setSwapConfig(config);
       if (
         serverStatus.layerTwoDelayed &&
-        (!["HIVE", "HBD"].includes(endToken?.value.symbol) ||
-          !["HIVE", "HBD"].includes(startToken?.value.symbol))
+        (!['HIVE', 'HBD'].includes(endToken?.value.symbol) ||
+          !['HIVE', 'HBD'].includes(startToken?.value.symbol))
       ) {
         setLayerTwoDelayed(true);
         SimpleToast.show(
-          translate("wallet.operations.swap.swap_layer_two_delayed"),
+          translate('wallet.operations.swap.swap_layer_two_delayed'),
           {
             duration: SimpleToast.durations.LONG,
-          }
+          },
         );
       }
       setSlippage(config.slippage.default);
     } catch (err) {
-      console.log("Error Swap tokens", { err });
+      console.log('Error Swap tokens', {err});
       setServiceUnavailable(true);
     } finally {
       await tokenInitialization;
@@ -162,19 +160,19 @@ const Swap = ({
     ]);
     let list = startList.map((token) => {
       const tokenInfo = allTokens.find((t) => t.symbol === token.symbol);
-      let img = "";
-      let imgBackup = "";
+      let img = '';
+      let imgBackup = '';
       if (tokenInfo) {
         img =
           tokenInfo.metadata.icon && tokenInfo.metadata.icon.length > 0
             ? tokenInfo.metadata.icon
-            : "src/assets/new_UI/hive-currency-logo.svg";
-        imgBackup = "src/assets/new_UI/hive-engine.svg";
+            : 'src/assets/new_UI/hive-currency-logo.svg';
+        imgBackup = 'src/assets/new_UI/hive-engine.svg';
       } else {
         img =
-          token.symbol === getCurrency("HIVE")
-            ? "src/assets/new_UI/hive-currency-logo.svg"
-            : "src/assets/new_UI/hbd-currency-logo.svg";
+          token.symbol === getCurrency('HIVE')
+            ? 'src/assets/new_UI/hive-currency-logo.svg'
+            : 'src/assets/new_UI/hbd-currency-logo.svg';
       }
       return {
         value: token,
@@ -185,23 +183,23 @@ const Swap = ({
     });
     let endList: OptionItem[] = [
       {
-        value: { symbol: getCurrency("HIVE"), precision: 3 },
-        label: getCurrency("HIVE"),
-        img: "will_fire_default",
+        value: {symbol: getCurrency('HIVE'), precision: 3},
+        label: getCurrency('HIVE'),
+        img: 'will_fire_default',
       },
       {
-        value: { symbol: getCurrency("HBD"), precision: 3 },
-        label: getCurrency("HBD"),
-        img: "will_fire_default",
+        value: {symbol: getCurrency('HBD'), precision: 3},
+        label: getCurrency('HBD'),
+        img: 'will_fire_default',
       },
       ...allTokens
         .filter((token: Token) => token.precision !== 0) // Remove token that doesn't allow decimals
         .map((token: Token) => {
-          let img = "";
+          let img = '';
           img =
             token.metadata.icon && token.metadata.icon.trim().length > 0
               ? token.metadata.icon
-              : "will_fire_default";
+              : 'will_fire_default';
           return {
             value: token,
             label: token.symbol,
@@ -214,12 +212,12 @@ const Swap = ({
     setStartToken(
       lastUsed.from
         ? list.find((t) => t.value.symbol === lastUsed.from.symbol) || list[0]
-        : list[0]
+        : list[0],
     );
     setStartTokenListOptions(list);
     const findDifferentToken = (start: OptionItem) => {
       return endList.find(
-        (endItem) => endItem.value.symbol !== start.value.symbol
+        (endItem) => endItem.value.symbol !== start.value.symbol,
       );
     };
     const endTokenToSet = lastUsed.to
@@ -233,16 +231,16 @@ const Swap = ({
     amount: string,
     startToken: OptionItem,
     endToken: OptionItem,
-    swapConfig: SwapConfig
+    swapConfig: SwapConfig,
   ) => {
     if (startToken === endToken) {
       SimpleToast.show(
         translate(
-          "wallet.operations.swap.swap_start_end_token_should_be_different"
+          'wallet.operations.swap.swap_start_end_token_should_be_different',
         ),
         {
           duration: SimpleToast.durations.LONG,
-        }
+        },
       );
       return;
     }
@@ -257,12 +255,12 @@ const Swap = ({
         amount,
         () => {
           setAutoRefreshCountdown(null);
-        }
+        },
       );
 
       if (result.length) {
         const precision = await getTokenPrecision(
-          result[result.length - 1].endToken
+          result[result.length - 1].endToken,
         );
         const value = Number(result[result.length - 1].estimate);
         const fee =
@@ -282,7 +280,7 @@ const Swap = ({
         }),
         {
           duration: SimpleToast.durations.LONG,
-        }
+        },
       );
     } finally {
       setLoadingEstimate(false);
@@ -298,7 +296,7 @@ const Swap = ({
         }
       },
       1000,
-      { leading: false } as ThrottleSettings
+      {leading: false} as ThrottleSettings,
     );
   }, []);
 
@@ -334,14 +332,14 @@ const Swap = ({
 
   const getTokenUSDPrice = (
     estimateValue: string | undefined,
-    symbol: string
+    symbol: string,
   ) => {
     if (!estimateValue) return undefined;
     else {
       let tokenPrice;
-      if (symbol === getCurrency("HIVE")) {
+      if (symbol === getCurrency('HIVE')) {
         tokenPrice = price.hive.usd!;
-      } else if (symbol === getCurrency("HBD")) {
+      } else if (symbol === getCurrency('HBD')) {
         tokenPrice = price.hive_dollar.usd!;
       } else {
         tokenPrice =
@@ -349,12 +347,12 @@ const Swap = ({
             {
               symbol,
             },
-            tokenMarket
+            tokenMarket,
           ) * price.hive.usd!;
       }
       const tokenPriceUSD = `≈ $${withCommas(
-        Number.parseFloat(estimateValue) * tokenPrice + "",
-        2
+        Number.parseFloat(estimateValue) * tokenPrice + '',
+        2,
       )}`;
       return tokenPriceUSD;
     }
@@ -362,7 +360,7 @@ const Swap = ({
 
   const swapStartAndEnd = () => {
     const option = startTokenListOptions.find(
-      (option) => option.value.symbol === endToken?.value.symbol
+      (option) => option.value.symbol === endToken?.value.symbol,
     );
     if (option) {
       const tmp = startToken;
@@ -370,12 +368,12 @@ const Swap = ({
       setEndToken(tmp);
     } else {
       SimpleToast.show(
-        translate("wallet.operations.swap.swap_cannot_switch_tokens", {
+        translate('wallet.operations.swap.swap_cannot_switch_tokens', {
           symbol: endToken.value.symbol,
         }),
         {
           duration: SimpleToast.durations.LONG,
-        }
+        },
       );
     }
   };
@@ -390,30 +388,30 @@ const Swap = ({
           parseFloat(amount),
           activeAccount,
           swapConfig.account,
-          options
+          options,
         );
         if (result) {
           await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
           await SwapTokenUtils.setAsInitiated(estimateId);
           if (!isMultisig)
             showModal(
-              "common.swap_sending_token_successful",
-              MessageModalType.SUCCESS
+              'common.swap_sending_token_successful',
+              MessageModalType.SUCCESS,
             );
-          goBackAndNavigate("SwapHistory");
+          goBackAndNavigate('SwapHistory');
         } else {
           if (!isMultisig)
             SimpleToast.show(
-              translate("common.swap_error_sending_token", {
+              translate('common.swap_error_sending_token', {
                 to: swapConfig.account,
               }),
               {
                 duration: SimpleToast.durations.LONG,
-              }
+              },
             );
         }
       } catch (err) {
-        console.log("Swap error", { err });
+        console.log('Swap error', {err});
         SimpleToast.show(err.message, {
           duration: SimpleToast.durations.LONG,
         });
@@ -422,7 +420,7 @@ const Swap = ({
       }
     };
     if (Object.entries(twoFABots).length > 0) {
-      navigate("ModalScreen", {
+      navigate('ModalScreen', {
         name: `2FA`,
         modalContent: (
           <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
@@ -439,37 +437,37 @@ const Swap = ({
   const gotoConfirmationStack = async () => {
     if (!estimate) {
       SimpleToast.show(
-        translate("wallet.operations.swap.swap_no_estimate_error"),
+        translate('wallet.operations.swap.swap_no_estimate_error'),
         {
           duration: SimpleToast.durations.LONG,
-        }
+        },
       );
       return;
     }
     if (slippage < swapConfig.slippage.min) {
       SimpleToast.show(
-        translate("wallet.operations.swap.swap_min_slippage_error", {
+        translate('wallet.operations.swap.swap_min_slippage_error', {
           min: swapConfig.slippage.min.toString(),
         }),
         {
           duration: SimpleToast.durations.LONG,
-        }
+        },
       );
       return;
     }
     if (startToken?.value.symbol === endToken?.value.symbol) {
       SimpleToast.show(
         translate(
-          "wallet.operations.swap.swap_start_end_token_should_be_different"
+          'wallet.operations.swap.swap_start_end_token_should_be_different',
         ),
         {
           duration: SimpleToast.durations.LONG,
-        }
+        },
       );
       return;
     }
     if (!amount || amount.length === 0) {
-      SimpleToast.show(translate("common.need_positive_amount"), {
+      SimpleToast.show(translate('common.need_positive_amount'), {
         duration: SimpleToast.durations.LONG,
       });
       return;
@@ -477,12 +475,12 @@ const Swap = ({
 
     if (parseFloat(amount) > parseFloat(startToken?.value.balance)) {
       SimpleToast.show(
-        translate("common.overdraw_balance_error", {
+        translate('common.overdraw_balance_error', {
           currency: startToken?.label!,
         }),
         {
           duration: SimpleToast.durations.LONG,
-        }
+        },
       );
       return;
     }
@@ -497,14 +495,14 @@ const Swap = ({
         startToken?.value.symbol,
         endToken?.value.symbol,
         parseFloat(amount),
-        activeAccount.name!
+        activeAccount.name!,
       );
     } catch (err) {
       SimpleToast.show(
         translate(`wallet.operations.swap.${err.reason.template}`),
         {
           duration: SimpleToast.durations.LONG,
-        }
+        },
       );
       return;
     } finally {
@@ -512,27 +510,28 @@ const Swap = ({
     }
 
     const getShortenedId = (id: string) => {
-      return id.substring(0, 6) + "..." + id.slice(-6);
+      return id.substring(0, 6) + '...' + id.slice(-6);
     };
 
     const onHandleBackButton = async () =>
       await SwapTokenUtils.cancelSwap(estimateId);
 
-    navigate("SwapConfirm", {
+    navigate('SwapConfirm', {
       estimateId,
       slippage,
       amount,
       startToken: startToken.value,
       endToken: endToken.value,
+      estimateValue,
       processSwap,
     });
   };
 
-  const { width, height } = useWindowDimensions();
-  const styles = getStyles(theme, { width, height });
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height});
 
   return (
-    <View style={[{ width: "100%" }]}>
+    <View style={[{width: '100%'}]}>
       {!underMaintenance && !loading && !serviceUnavailable && (
         <OperationThemed
           additionalSVGOpacity={1}
@@ -545,14 +544,14 @@ const Swap = ({
               <Caption text="wallet.operations.swap.disclaimer" hideSeparator />
               <View style={[styles.flexRowbetween, styles.marginHorizontal]}>
                 <Text style={[styles.textBase, styles.opaque]}>
-                  {translate("wallet.operations.swap.swap_fee_title")}{" "}
+                  {translate('wallet.operations.swap.swap_fee_title')}{' '}
                   {swapConfig.fee.amount} %
                 </Text>
                 <Icon
                   theme={theme}
                   name={Icons.BACK_TIME}
                   additionalContainerStyle={[styles.squareButton]}
-                  onPress={() => navigate("SwapHistory")}
+                  onPress={() => navigate('SwapHistory')}
                   color={PRIMARY_RED_COLOR}
                 />
               </View>
@@ -566,15 +565,14 @@ const Swap = ({
                 style={[
                   styles.flexRowbetween,
                   {
-                    width: "100%",
+                    width: '100%',
                   },
-                ]}
-              >
+                ]}>
                 <DropdownModal
                   enableSearch
                   dropdownTitle="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
-                  additionalDropdowContainerStyle={{ paddingHorizontal: 8 }}
+                  additionalDropdowContainerStyle={{paddingHorizontal: 8}}
                   showSelectedIcon
                   selected={
                     {
@@ -587,7 +585,7 @@ const Swap = ({
                           currencyName={startToken.value.symbol}
                           colors={colors}
                           tokenInfo={tokens.find(
-                            (token) => token.symbol === startToken.value.symbol
+                            (token) => token.symbol === startToken.value.symbol,
                           )}
                         />
                       ),
@@ -595,7 +593,7 @@ const Swap = ({
                   }
                   onSelected={(item) => {
                     const selectedItem = startTokenListOptions.find(
-                      (token) => token.value.symbol === item.value
+                      (token) => token.value.symbol === item.value,
                     );
                     setStartToken(selectedItem);
                   }}
@@ -610,30 +608,30 @@ const Swap = ({
                           currencyName={startToken.value.symbol}
                           colors={colors}
                           tokenInfo={tokens.find(
-                            (token) => token.symbol === startToken.value.symbol
+                            (token) => token.symbol === startToken.value.symbol,
                           )}
                         />
                       ),
                     } as DropdownModalItem;
                   })}
                   additionalMainContainerDropdown={{
-                    width: "44%",
+                    width: '44%',
                     top: 0,
                   }}
                   bottomLabelInfo={`${translate(
-                    "common.available"
+                    'common.available',
                   )}: ${withCommas(startToken.value.balance)}`}
                   drawLineBellowSelectedItem
                   additionalLineStyle={styles.bottomLineDropdownItem}
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
-                  labelInput={capitalize(translate("common.amount"))}
-                  placeholder={"0"}
+                  labelInput={capitalize(translate('common.amount'))}
+                  placeholder={'0'}
                   value={amount}
                   onChangeText={setAmount}
                   additionalOuterContainerStyle={{
-                    width: "54%",
+                    width: '54%',
                   }}
                   rightIcon={
                     <View style={styles.flexRowCenter}>
@@ -643,15 +641,14 @@ const Swap = ({
                           theme,
                           1,
                           35,
-                          16
+                          16,
                         )}
                       />
                       <TouchableOpacity
                         activeOpacity={1}
-                        onPress={() => setAmount(startToken.value.balance)}
-                      >
+                        onPress={() => setAmount(startToken.value.balance)}>
                         <Text style={[styles.textBase, styles.redText]}>
-                          {translate("common.max").toUpperCase()}
+                          {translate('common.max').toUpperCase()}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -672,7 +669,7 @@ const Swap = ({
                   enableSearch
                   dropdownTitle="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
-                  additionalDropdowContainerStyle={{ paddingHorizontal: 8 }}
+                  additionalDropdowContainerStyle={{paddingHorizontal: 8}}
                   selected={
                     {
                       value: endToken.value.symbol,
@@ -684,7 +681,7 @@ const Swap = ({
                           currencyName={endToken.value.symbol}
                           colors={colors}
                           tokenInfo={tokens.find(
-                            (token) => token.symbol === endToken.value.symbol
+                            (token) => token.symbol === endToken.value.symbol,
                           )}
                         />
                       ),
@@ -693,8 +690,8 @@ const Swap = ({
                   onSelected={(item) =>
                     setEndToken(
                       endTokenListOptions.find(
-                        (token) => token.value.symbol === item.value
-                      )
+                        (token) => token.value.symbol === item.value,
+                      ),
                     )
                   }
                   list={endTokenListOptions.map((endToken) => {
@@ -708,14 +705,14 @@ const Swap = ({
                           currencyName={endToken.value.symbol}
                           colors={colors}
                           tokenInfo={tokens.find(
-                            (token) => token.symbol === endToken.value.symbol
+                            (token) => token.symbol === endToken.value.symbol,
                           )}
                         />
                       ),
                     } as DropdownModalItem;
                   })}
                   additionalMainContainerDropdown={{
-                    width: "44%",
+                    width: '44%',
                   }}
                   drawLineBellowSelectedItem
                   showSelectedIcon
@@ -724,12 +721,12 @@ const Swap = ({
                 <OperationInput
                   disabled
                   keyboardType="decimal-pad"
-                  labelInput={capitalize(translate("common.amount"))}
-                  placeholder={"0"}
-                  value={estimateValue ? withCommas(estimateValue) : ""}
+                  labelInput={capitalize(translate('common.amount'))}
+                  placeholder={'0'}
+                  value={estimateValue ? withCommas(estimateValue) : ''}
                   onChangeText={(text) => {}}
                   additionalOuterContainerStyle={{
-                    width: "54%",
+                    width: '54%',
                   }}
                   rightIcon={
                     <View style={styles.flexRowCenter}>
@@ -739,7 +736,7 @@ const Swap = ({
                           theme,
                           1,
                           35,
-                          16
+                          16,
                         )}
                       />
                       <RotationIconAnimated
@@ -752,7 +749,7 @@ const Swap = ({
                   }
                   labelExtraInfo={getTokenUSDPrice(
                     estimateValue,
-                    endToken.value.symbol
+                    endToken.value.symbol,
                   )}
                 />
               </View>
@@ -760,16 +757,14 @@ const Swap = ({
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => setIsAdvanceSettingOpen(!isAdvanceSettingOpen)}
-                style={[styles.flexRowbetween, { marginBottom: 12 }]}
-              >
+                style={[styles.flexRowbetween, {marginBottom: 12}]}>
                 <Text
                   style={[
                     styles.textBase,
-                    { ...body_primary_body_1 },
-                    { fontSize: getFontSizeSmallDevices(width, 16) },
-                  ]}
-                >
-                  {translate("wallet.operations.swap.advanced_settings_title")}
+                    {...body_primary_body_1},
+                    {fontSize: getFontSizeSmallDevices(width, 16)},
+                  ]}>
+                  {translate('wallet.operations.swap.advanced_settings_title')}
                 </Text>
                 <Icon
                   theme={theme}
@@ -777,8 +772,8 @@ const Swap = ({
                   {...styles.dropdownIcon}
                   additionalContainerStyle={
                     isAdvanceSettingOpen
-                      ? getRotateStyle("0")
-                      : getRotateStyle("180")
+                      ? getRotateStyle('0')
+                      : getRotateStyle('180')
                   }
                   color={PRIMARY_RED_COLOR}
                 />
@@ -787,13 +782,13 @@ const Swap = ({
                 <OperationInput
                   keyboardType="decimal-pad"
                   infoIconAction={() =>
-                    navigate("ModalScreen", {
+                    navigate('ModalScreen', {
                       name: ModalComponent.SWAP_INFO,
                       fixedHeight: 0.35,
                     })
                   }
-                  labelInput={translate("wallet.operations.swap.slippage")}
-                  placeholder={translate("wallet.operations.swap.slippage")}
+                  labelInput={translate('wallet.operations.swap.slippage')}
+                  placeholder={translate('wallet.operations.swap.slippage')}
                   value={slippage.toString()}
                   onChangeText={(text) =>
                     setSlippage(text.trim().length === 0 ? 0 : parseFloat(text))
@@ -803,7 +798,7 @@ const Swap = ({
               <Separator height={16} />
             </View>
           }
-          buttonTitle={"wallet.operations.swap.title"}
+          buttonTitle={'wallet.operations.swap.title'}
           onNext={gotoConfirmationStack}
         />
       )}
@@ -816,15 +811,14 @@ const Swap = ({
               styles.biggerText,
               styles.marginHorizontal,
               styles.textCentered,
-            ]}
-          >
-            {translate("wallet.operations.swap.swap_under_maintenance")}
+            ]}>
+            {translate('wallet.operations.swap.swap_under_maintenance')}
           </Text>
         </View>
       )}
       {loading && (
         <View style={styles.flexCentered}>
-          <Loader animating size={"large"} />
+          <Loader animating size={'large'} />
         </View>
       )}
       {!underMaintenance && !loading && serviceUnavailable && (
@@ -836,9 +830,8 @@ const Swap = ({
               styles.biggerText,
               styles.marginHorizontal,
               styles.textCentered,
-            ]}
-          >
-            {translate("wallet.operations.swap.service_unavailable_message")}
+            ]}>
+            {translate('wallet.operations.swap.service_unavailable_message')}
           </Text>
         </View>
       )}
@@ -846,46 +839,46 @@ const Swap = ({
   );
 };
 
-const getStyles = (theme: Theme, { width, height }: Dimensions) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     textBase: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_small,
       fontSize: getFontSizeSmallDevices(
         width,
-        button_link_primary_small.fontSize
+        button_link_primary_small.fontSize,
       ),
     },
     opaque: {
       opacity: 0.8,
     },
-    marginHorizontal: { marginHorizontal: MARGIN_PADDING },
+    marginHorizontal: {marginHorizontal: MARGIN_PADDING},
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).cardBorderColorContrast,
       borderWidth: 0,
       borderRadius: 50,
-      width: "15%",
+      width: '15%',
       paddingHorizontal: 0,
       paddingVertical: 10,
     },
     flexRowbetween: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
     flexRowCenter: {
-      flexDirection: "row",
-      alignItems: "center",
-      alignContent: "center",
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
     },
     currencySelector: {
-      width: "40%",
+      width: '40%',
     },
     flexCentered: {
       flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     icon: {
       width: 45,
@@ -895,17 +888,17 @@ const getStyles = (theme: Theme, { width, height }: Dimensions) =>
       fontSize: 17,
     },
     textCentered: {
-      textAlign: "center",
+      textAlign: 'center',
     },
-    button: { marginBottom: 20 },
+    button: {marginBottom: 20},
     dropdownIcon: {
       width: 15,
       height: 15,
     },
     positionAbsolute: {
-      position: "absolute",
+      position: 'absolute',
       bottom: -20,
-      alignSelf: "center",
+      alignSelf: 'center',
     },
     smallerText: {
       fontSize: 12,
@@ -914,15 +907,15 @@ const getStyles = (theme: Theme, { width, height }: Dimensions) =>
       fontFamily: FontPoppinsName.ITALIC,
     },
     autoWidthCentered: {
-      width: "auto",
-      alignSelf: "center",
+      width: 'auto',
+      alignSelf: 'center',
     },
     operationButton: {
-      width: "48%",
+      width: '48%',
       marginHorizontal: 0,
     },
     operationButtonConfirmation: {
-      backgroundColor: "#FFF",
+      backgroundColor: '#FFF',
     },
     buttonTextColorDark: {
       color: BACKGROUNDDARKBLUE,
@@ -931,7 +924,7 @@ const getStyles = (theme: Theme, { width, height }: Dimensions) =>
       ...button_link_primary_medium,
     },
     bottomLine: {
-      width: "100%",
+      width: '100%',
       borderColor: getColors(theme).secondaryLineSeparatorStroke,
       margin: 0,
       marginTop: 12,
@@ -944,9 +937,9 @@ const getStyles = (theme: Theme, { width, height }: Dimensions) =>
     },
     bottomLineDropdownItem: {
       borderWidth: 1,
-      width: "85%",
+      width: '85%',
       borderColor: getColors(theme).lineSeparatorStroke,
-      alignSelf: "center",
+      alignSelf: 'center',
     },
   });
 
@@ -960,7 +953,7 @@ const connector = connect(
       colors: state.colors,
     };
   },
-  { loadTokensMarket, showModal }
+  {loadTokensMarket, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

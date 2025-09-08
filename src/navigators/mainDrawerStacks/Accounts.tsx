@@ -39,6 +39,7 @@ export default () => {
           headerTitle: () => <NavigatorTitle title={'common.account'} />,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
+          animation: 'none',
           headerRight: () => (
             <CloseButton
               theme={theme}
@@ -85,6 +86,7 @@ export default () => {
         component={ScanQR}
         options={({navigation}) => ({
           title: '',
+          animation: 'none',
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
@@ -139,6 +141,7 @@ export default () => {
         name="CreateAccountFromWalletScreenPageOne"
         component={CreateAccountStepOne as any}
         options={({navigation}) => ({
+          animation: 'none',
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => (
@@ -170,6 +173,7 @@ export default () => {
         name="AccountManagementScreen"
         component={AccountManagement}
         options={({navigation}) => ({
+          animation: 'none',
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'navigation.manage'} />,
