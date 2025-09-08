@@ -78,7 +78,25 @@ export default () => {
       />
       <Stack.Screen
         name="CreateAccountConfirmationScreen"
-        options={{...noHeader, animation: 'none'}}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTintColor: 'white',
+          headerBackTitle: translate('navigation.create_an_account'),
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title="navigation.create_an_account" />
+          ),
+          animation: 'none',
+          headerLeft: () => (
+            <Icon
+              name={Icons.ARROW_LEFT}
+              theme={theme}
+              additionalContainerStyle={[styles.marginLeft]}
+              onPress={() => navigation.goBack()}
+              color={getColors(theme).iconBW}
+            />
+          ),
+        })}
         component={CreateAccountConfirmation}
       />
       <Stack.Screen
