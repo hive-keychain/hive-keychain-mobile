@@ -68,7 +68,7 @@ const NotificationsModal = ({
   const handleClick = useCallback(
     (notification: Notification) => {
       addTab(notification.externalUrl || notification.txUrl);
-      navigate('BrowserScreen');
+      navigate('Browser');
     },
     [addTab],
   );

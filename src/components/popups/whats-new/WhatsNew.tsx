@@ -102,7 +102,7 @@ const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
       addTab(`${content.url}#${feature.anchor}`);
     }
     await finish();
-    navigation.navigate('BrowserScreen');
+    navigation.navigate('Browser');
   };
 
   const renderItem = useCallback(

@@ -98,7 +98,7 @@ const Message = ({
               <TouchableOpacity
                 onPress={() => {
                   addTab(`https://hivehub.dev/tx/${messageModal.params.txId}`);
-                  navigate('BrowserScreen');
+                  navigate('Browser');
                   resetModal();
                 }}>
                 <Text

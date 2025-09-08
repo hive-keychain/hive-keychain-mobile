@@ -427,7 +427,7 @@ const Main = ({
                         theme={theme}
                         iconName={Icons.SEND_SQUARE}
                         bgColor={BACKGROUNDITEMDARKISH}
-                        secondary={`$$${
+                        secondary={`$${
                           getVotingDollarsPerAccount(
                             100,
                             properties,

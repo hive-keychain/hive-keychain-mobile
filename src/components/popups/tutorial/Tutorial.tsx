@@ -73,7 +73,7 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
     if (option === 'show') {
       addTab(tutorialBaseUrl + '/#/mobile');
       await hidePopup();
-      return navigation.navigate('BrowserScreen');
+      return navigation.navigate('Browser');
     }
     await hidePopup();
     navigation.goBack();

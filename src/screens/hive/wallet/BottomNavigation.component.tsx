@@ -116,7 +116,10 @@ const BottomNavigation = ({
         };
         break;
       case BottomBarLink.Browser:
-        screen = 'BrowserScreen';
+        screen = 'Browser';
+        nestedScreenOrParams = {
+          screen: 'BrowserScreen',
+        };
         break;
       case BottomBarLink.ScanQr:
         screen = 'WALLET';

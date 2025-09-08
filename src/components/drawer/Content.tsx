@@ -27,7 +27,7 @@ const hiddenRoutesInMain = [
   'AccountManagementScreen',
   'ExportAccountsQRScreen',
   'WALLET',
-  'BrowserScreen',
+  'Browser',
   'Governance',
   'SettingsScreen',
   'ABOUT',

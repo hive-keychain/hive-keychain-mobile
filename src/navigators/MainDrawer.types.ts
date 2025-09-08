@@ -3,7 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 export type MainDrawerStackParam = {
   WALLET: undefined;
-  BrowserScreen: {icon: string};
+  Browser: {icon: string};
   Accounts: undefined;
   // Consolidated: related screens live under Accounts stack now
   SettingsScreen: undefined;
@@ -27,9 +27,9 @@ export type MainDrawerStackParam = {
 
 export type BrowserNavigation = StackNavigationProp<
   MainDrawerStackParam,
-  'BrowserScreen'
+  'Browser'
 >;
-type BrowserNavigationRoute = RouteProp<MainDrawerStackParam, 'BrowserScreen'>;
+type BrowserNavigationRoute = RouteProp<MainDrawerStackParam, 'Browser'>;
 
 export type BrowserNavigationProps = {
   navigation: BrowserNavigation;
@@ -48,15 +48,6 @@ export type GovernanceNavigation = StackNavigationProp<
 
 export type WalletNavigationProps = {
   navigation: WalletNavigation;
-};
-
-export type MgtNavigation = StackNavigationProp<
-  MainDrawerStackParam,
-  'AccountManagementScreen'
->;
-
-export type MgtNavigationProps = {
-  navigation: MgtNavigation;
 };
 
 export type AboutNavigation = StackNavigationProp<

@@ -55,7 +55,7 @@ export default () => {
       drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="WALLET" component={WalletStack} options={noHeader} />
       <Drawer.Screen
-        name="BrowserScreen"
+        name="Browser"
         options={{
           title: translate('navigation.browser'),
           ...noHeader,

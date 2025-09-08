@@ -110,7 +110,7 @@ export default ({
         <Pressable
           onPress={() => {
             addTab(`https://peakd.com/@keychain`);
-            navigate('BrowserScreen');
+            navigate('Browser');
           }}
           style={({pressed}) => [
             styles.footerIconContainer,

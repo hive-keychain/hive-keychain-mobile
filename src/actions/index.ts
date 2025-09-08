@@ -34,7 +34,7 @@ export const unlock =
         BackGroundUtils.init(accounts.list);
       }
       if (getState().browser.shouldFocus) {
-        navigate('BrowserScreen');
+        navigate('Browser');
       }
     } catch (e) {
       if (e.message === 'Wrapped error: User not authenticated') {

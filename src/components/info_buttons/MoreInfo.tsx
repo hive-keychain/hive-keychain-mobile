@@ -68,7 +68,7 @@ export default ({
             getModalBaseStyle(theme).roundedTop,
             styles.moreInfoModal,
           ],
-          fixedHeight: 0.35,
+          fixedHeight: 0.45,
         } as ModalScreenProps)
       }
       color={getColors(theme).iconBW}
