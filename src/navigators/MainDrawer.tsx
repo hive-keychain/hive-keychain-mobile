@@ -95,7 +95,13 @@ export default () => {
         }}
         component={Help}
       />
-      <Drawer.Screen name="Accounts" component={Accounts} />
+      <Drawer.Screen
+        name="Accounts"
+        component={Accounts}
+        options={{
+          ...noHeader,
+        }}
+      />
       <Drawer.Screen
         name="AccountManagementScreen"
         component={AccountManagementStack}
@@ -111,7 +117,13 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen name="AddAccountStack" component={AddAccount} />
+      <Drawer.Screen
+        name="AddAccountStack"
+        component={AddAccount}
+        options={{
+          ...noHeader,
+        }}
+      />
       <Drawer.Screen
         name="CreateAccountScreen"
         component={CreateAccount}
@@ -120,13 +132,26 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen name="Tokens" component={Tokens} />
-      <Drawer.Screen name="TokensHistory" component={TokensHistory} />
+      <Drawer.Screen
+        name="Tokens"
+        component={Tokens}
+        options={{
+          ...noHeader,
+        }}
+      />
+      <Drawer.Screen
+        name="TokensHistory"
+        component={TokensHistory}
+        options={{
+          ...noHeader,
+        }}
+      />
       <Drawer.Screen
         name="Operation"
         component={Operation}
         options={{
           popToTopOnBlur: true,
+          ...noHeader,
         }}
       />
       <Drawer.Screen
@@ -135,7 +160,7 @@ export default () => {
         options={{
           popToTopOnBlur: true,
           ...noHeader,
-          }}
+        }}
       />
       <Drawer.Screen
         name="SwapBuyStack"
@@ -145,7 +170,13 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen name="SwapHistory" component={SwapHistory} />
+      <Drawer.Screen
+        name="SwapHistory"
+        component={SwapHistory}
+        options={{
+          ...noHeader,
+        }}
+      />
       {/* Newly added logical screens reachable via navigate() */}
       <Drawer.Screen
         name="TokenDelegations"
@@ -154,11 +185,17 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen name="HPDelegations" component={HPDelegationsStack} options={{
+      <Drawer.Screen
+        name="HPDelegations"
+        component={HPDelegationsStack}
+        options={{
           ...noHeader,
         }}
       />
-      <Drawer.Screen name="PendingSavings" component={PendingSavingsStack} options={{
+      <Drawer.Screen
+        name="PendingSavings"
+        component={PendingSavingsStack}
+        options={{
           ...noHeader,
         }}
       />
@@ -169,11 +206,17 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen name="RcDelegations" component={RcDelegationsStack} options={{
+      <Drawer.Screen
+        name="RcDelegations"
+        component={RcDelegationsStack}
+        options={{
           ...noHeader,
         }}
       />
-      <Drawer.Screen name="SwapConfirm" component={SwapConfirmStack} options={{
+      <Drawer.Screen
+        name="SwapConfirm"
+        component={SwapConfirmStack}
+        options={{
           ...noHeader,
         }}
       />

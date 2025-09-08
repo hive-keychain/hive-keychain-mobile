@@ -155,6 +155,7 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     myWitnessContainer: {
       padding: 16,
+      paddingBottom: 0,
       flexGrow: 1,
     },
     witnessInfoContainer: {flexGrow: 1},
