@@ -31,7 +31,7 @@ export default () => {
   return (
     <Stack.Navigator id={undefined}>
       <Stack.Screen
-        name="SwapBuyStack"
+        name="SwapBuy"
         component={SwapBuy}
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,

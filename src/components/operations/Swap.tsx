@@ -398,7 +398,7 @@ const Swap = ({
               'common.swap_sending_token_successful',
               MessageModalType.SUCCESS,
             );
-          goBackAndNavigate('SwapHistory');
+          goBackAndNavigate('SwapBuyStack', {screen: 'SwapHistory'});
         } else {
           if (!isMultisig)
             SimpleToast.show(
@@ -516,15 +516,19 @@ const Swap = ({
     const onHandleBackButton = async () =>
       await SwapTokenUtils.cancelSwap(estimateId);
 
-    navigate('SwapConfirm', {
-      estimateId,
-      slippage,
-      amount,
-      startToken: startToken.value,
-      endToken: endToken.value,
-      estimateValue,
-      processSwap,
+    navigate('SwapBuyStack', {
+      screen: 'SwapConfirm',
+      params: {
+        estimateId,
+        slippage,
+        amount,
+        startToken: startToken.value,
+        endToken: endToken.value,
+        estimateValue,
+        processSwap,
+      },
     });
+    setDisableProcessButton(false);
   };
 
   const {width, height} = useWindowDimensions();
