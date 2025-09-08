@@ -1,39 +1,39 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { addTab } from "actions/browser";
-import { updateShowProposalReminder } from "actions/floatingBar";
-import EllipticButton from "components/form/EllipticButton";
-import Separator from "components/ui/Separator";
-import { BrowserNavigation } from "navigators/MainDrawer.types";
-import React, { useEffect } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import SimpleToast from "react-native-root-toast";
-import { initialWindowMetrics } from "react-native-safe-area-context";
-import { ConnectedProps, connect } from "react-redux";
-import { Theme, useThemeContext } from "src/context/theme.context";
-import { KeychainStorageKeyEnum } from "src/reference-data/keychainStorageKeyEnum";
-import { getColors } from "src/styles/colors";
-import { getModalBaseStyle } from "src/styles/modal";
-import { RootState } from "store";
-import { ProposalConfig } from "utils/config";
-import { toHP } from "utils/format";
-import { getClient, updateProposalVote } from "utils/hive";
-import { goBack, navigate } from "utils/navigation";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {addTab} from 'actions/browser';
+import {updateShowProposalReminder} from 'actions/floatingBar';
+import EllipticButton from 'components/form/EllipticButton';
+import Separator from 'components/ui/Separator';
+import {BrowserNavigation} from 'navigators/MainDrawer.types';
+import React, {useEffect} from 'react';
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import SimpleToast from 'react-native-root-toast';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {getColors} from 'src/styles/colors';
+import {getModalBaseStyle} from 'src/styles/modal';
+import {RootState} from 'store';
+import {ProposalConfig} from 'utils/config';
+import {toHP} from 'utils/format';
+import {getClient, updateProposalVote} from 'utils/hive';
+import {goBack, navigate} from 'utils/navigation';
 interface Props {
   navigation: BrowserNavigation;
 }
 
 const KEYCHAIN_PROPOSAL = ProposalConfig.KEYCHAIN_PROPOSAL;
 const IMAGE_URI =
-  "https://images.hive.blog/0x0/https://files.peakd.com/file/peakd-hive/stoodkev/23wXG62TYT2yVFnmLB3hwg9hsL9jmEHYow667J1bVk1ebowRwEnNu3ckaHxHohcatE5v8.png";
+  'https://images.hive.blog/0x0/https://files.peakd.com/file/peakd-hive/stoodkev/23wXG62TYT2yVFnmLB3hwg9hsL9jmEHYow667J1bVk1ebowRwEnNu3ckaHxHohcatE5v8.png';
 
 const hasVotedForProposal = async (
   username: string,
-  proposalId?: number
+  proposalId?: number,
 ): Promise<boolean> => {
   const listProposalVotes = await getClient().call(
-    "condenser_api",
-    "list_proposal_votes",
-    [[proposalId, username], 1, "by_proposal_voter", "ascending", "all"]
+    'condenser_api',
+    'list_proposal_votes',
+    [[proposalId, username], 1, 'by_proposal_voter', 'ascending', 'all'],
   );
   return listProposalVotes[0].voter === username;
 };
@@ -41,7 +41,7 @@ const getNotifiedVoters = async (): Promise<string[]> => {
   // await AsyncStorage.removeItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED);
   const voters = JSON.parse(
     (await AsyncStorage.getItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED)) ||
-      "[]"
+      '[]',
   );
   try {
     if (!Array.isArray(voters)) return [];
@@ -56,7 +56,7 @@ const addNotifiedVoter = async (name: string) => {
   array.push(name);
   await AsyncStorage.setItem(
     KeychainStorageKeyEnum.PROPOSAL_NOTIFIED,
-    JSON.stringify(array)
+    JSON.stringify(array),
   );
 };
 
@@ -67,7 +67,7 @@ const ProposalReminder = ({
   addTab,
   updateFloatingBar,
 }: Props & PropsFromRedux): null => {
-  const { theme } = useThemeContext();
+  const {theme} = useThemeContext();
 
   useEffect(() => {
     checkIfShouldNotify();
@@ -83,8 +83,8 @@ const ProposalReminder = ({
     ) {
       updateFloatingBar(true);
       Image.prefetch(IMAGE_URI).then((val) => {
-        navigate("ModalScreen", {
-          name: "ProposalPopup",
+        navigate('ModalScreen', {
+          name: 'ProposalPopup',
           modalContent: renderContent(),
           modalContainerStyle: getModalBaseStyle(theme).roundedTop,
           onForceCloseModal: () => {},
@@ -113,57 +113,53 @@ const ProposalReminder = ({
           vote.
         </Text>
         <Text style={styles.text}>
-          Read more{" "}
+          Read more{' '}
           <Text
             style={{
               color: getColors(theme).secondaryText,
-              fontWeight: "bold",
+              fontWeight: 'bold',
             }}
             onPress={() => {
               addTab(`https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`);
-              navigation.navigate("BrowserScreen");
-            }}
-          >
+              navigation.navigate('Browser');
+            }}>
             here
           </Text>
           .
         </Text>
         <View
           style={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             marginTop: 10,
-          }}
-        >
+          }}>
           <View
             style={{
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: 'center',
+              justifyContent: 'center',
 
               width: 100,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 14,
-                textAlign: "center",
-                fontWeight: "bold",
+                textAlign: 'center',
+                fontWeight: 'bold',
                 color: getColors(theme).secondaryText,
                 textDecorationColor: getColors(theme).secondaryText,
-                textDecorationLine: "underline",
+                textDecorationLine: 'underline',
               }}
               onPress={() => {
                 addNotifiedVoter(user.name);
                 goBack();
                 updateFloatingBar(false);
-              }}
-            >
+              }}>
               I won't support
             </Text>
           </View>
           <EllipticButton
-            style={{ width: 170 }}
+            style={{width: 170}}
             title="Vote for Proposal"
             onPress={() => {
               addNotifiedVoter(user.name);
@@ -173,7 +169,7 @@ const ProposalReminder = ({
                 approve: true,
                 extensions: [],
               }).then(() => {
-                SimpleToast.show("Thanks for your support!");
+                SimpleToast.show('Thanks for your support!');
                 updateFloatingBar(false);
                 goBack();
               });
@@ -190,15 +186,15 @@ const ProposalReminder = ({
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     rootContainer: {
-      width: "100%",
+      width: '100%',
       padding: 12,
       paddingBottom: initialWindowMetrics.insets.bottom + 20,
     },
     title: {
-      textAlign: "center",
+      textAlign: 'center',
       color: getColors(theme).secondaryText,
       fontSize: 20,
-      fontWeight: "bold",
+      fontWeight: 'bold',
       marginBottom: 10,
     },
     text: {
@@ -209,8 +205,8 @@ const getStyles = (theme: Theme) =>
     image: {
       marginBottom: 30,
       aspectRatio: 1.6,
-      alignSelf: "center",
-      width: "100%",
+      alignSelf: 'center',
+      width: '100%',
     },
   });
 

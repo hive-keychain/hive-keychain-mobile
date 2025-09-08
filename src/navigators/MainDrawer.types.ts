@@ -17,10 +17,7 @@ export type MainDrawerStackParam = {
   Help: undefined;
   TokenSettings: undefined;
   TokenDelegations: undefined;
-  HPDelegations: undefined;
-  PendingSavings: undefined;
-  PendingConversions: undefined;
-  RcDelegations: undefined;
+  // nested under Operation stack
   ToggleWitness: undefined;
   CreateAccountConfirmationScreen: undefined;
 };

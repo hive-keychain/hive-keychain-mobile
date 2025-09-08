@@ -1,6 +1,8 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import PendingConversions from 'components/hive/PendingConversions';
+import PendingSavingsWithdrawalPageComponent from 'components/hive/PendingSavingsWithdrawalPage.component';
 import ConfirmationPage from 'components/operations/Confirmation';
 import Convert, {ConvertOperationProps} from 'components/operations/Convert';
 import DelegateToken, {
@@ -9,6 +11,8 @@ import DelegateToken, {
 import Delegation, {
   DelegationOperationProps,
 } from 'components/operations/Delegation';
+import DelegationsList from 'components/operations/DelegationsList';
+import IncomingOutGoingRCDelegations from 'components/operations/IncomingOutGoingRCDelegations';
 import PowerDown, {
   PowerDownOperationProps,
 } from 'components/operations/PowerDown';
@@ -149,6 +153,117 @@ export default ({navigation, route}: OperationNavigationProps) => {
         {() => renderOperation()}
       </Stack.Screen>
       <Stack.Screen
+        name="HPDelegations"
+        options={({navigation, route}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          animation: 'none',
+          headerTitle: () => (
+            <NavigatorTitle title={`common.${(route.params as any)?.type}`} />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+        children={({route}) => (
+          <DelegationsList type={(route.params as any).type} theme={theme} />
+        )}
+      />
+      <Stack.Screen
+        name="RcDelegations"
+        options={({navigation, route}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          animation: 'none',
+          headerTitle: () => (
+            <NavigatorTitle
+              title={(route.params as any)?.type}
+              skipTranslation
+            />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+        children={({route}) => (
+          <IncomingOutGoingRCDelegations
+            type={(route.params as any).type}
+            total={(route.params as any).total}
+            available={(route.params as any).available}
+          />
+        )}
+      />
+      <Stack.Screen
+        name="PendingSavings"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          animation: 'none',
+          headerTitle: () => (
+            <NavigatorTitle title={'wallet.operations.savings.pending'} />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+        children={({route}) => (
+          <PendingSavingsWithdrawalPageComponent
+            currency={(route.params as any).currency}
+            operation={(route.params as any).operation}
+            currentWithdrawingList={
+              (route.params as any).currentWithdrawingList
+            }
+            onUpdate={(route.params as any).onUpdate}
+          />
+        )}
+      />
+      <Stack.Screen
+        name="PendingConversions"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          animation: 'none',
+          headerTitle: () => (
+            <NavigatorTitle title={'wallet.operations.convert.pending'} />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+        children={({route}) => (
+          <PendingConversions
+            currency={(route.params as any).currency}
+            currentPendingConversionList={
+              (route.params as any).currentPendingConversionList
+            }
+          />
+        )}
+      />
+      <Stack.Screen
         name="ReceiveTransfer"
         options={({navigation}) => ({
           headerStyle: styles.header,
@@ -225,9 +340,9 @@ const getStyles = (
       backgroundColor: getColors(theme).primaryBackground,
     },
     headerRightContainer: {
-      marginRight: HEADER_ICON_MARGIN,
+      paddingRight: HEADER_ICON_MARGIN,
     },
     headerLeftContainer: {
-      marginLeft: HEADER_ICON_MARGIN,
+      paddingLeft: HEADER_ICON_MARGIN,
     },
   });

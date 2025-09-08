@@ -20,12 +20,8 @@ import Accounts from './mainDrawerStacks/Accounts';
 // import ExportAccountsQR from './mainDrawerStacks/ExportAccountsQR';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import GovernanceToggleWitnessStack from './mainDrawerStacks/GovernanceToggleWitnessStack';
-import HPDelegationsStack from './mainDrawerStacks/HPDelegationsStack';
 import Help from './mainDrawerStacks/Help';
 import Operation from './mainDrawerStacks/Operation';
-import PendingConversionsStack from './mainDrawerStacks/PendingConversionsStack';
-import PendingSavingsStack from './mainDrawerStacks/PendingSavingsStack';
-import RcDelegationsStack from './mainDrawerStacks/RcDelegationsStack';
 import SwapBuyStack from './mainDrawerStacks/SwapBuyStack';
 // Consolidated under SwapBuyStack
 // import SwapConfirmStack from './mainDrawerStacks/SwapConfirmStack';
@@ -152,34 +148,7 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen
-        name="HPDelegations"
-        component={HPDelegationsStack}
-        options={{
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="PendingSavings"
-        component={PendingSavingsStack}
-        options={{
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="PendingConversions"
-        component={PendingConversionsStack}
-        options={{
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="RcDelegations"
-        component={RcDelegationsStack}
-        options={{
-          ...noHeader,
-        }}
-      />
+      {/* HP/RC Delegations and Pending screens are now nested in Operation */}
       {/* SwapConfirm is now nested inside SwapBuyStack */}
       <Drawer.Screen
         name="CreateAccountConfirmationScreen"

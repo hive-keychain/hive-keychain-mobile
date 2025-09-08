@@ -85,7 +85,9 @@ export default () => {
         name="ScanQRScreen"
         component={ScanQR}
         options={({navigation}) => ({
-          title: '',
+          headerTitle: () => (
+            <NavigatorTitle title={'navigation.add_account'} />
+          ),
           animation: 'none',
           headerLeft: () => (
             <CustomIconButton
