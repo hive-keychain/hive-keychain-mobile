@@ -7,7 +7,6 @@ import WalletStack from 'navigators/mainDrawerStacks/Wallet';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
-import CreateAccountConfirmation from 'screens/hive/createAccounts/CreateAccountConfirmation';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
@@ -135,10 +134,6 @@ export default () => {
         options={{
           ...noHeader,
         }}
-      />
-      <Drawer.Screen
-        name="CreateAccountConfirmationScreen"
-        component={CreateAccountConfirmation}
       />
     </Drawer.Navigator>
   );

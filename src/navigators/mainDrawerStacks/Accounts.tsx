@@ -13,6 +13,7 @@ import ExportQRAccounts from 'screens/hive/accounts/ExportQRAccounts';
 import AddAccountByAuth from 'screens/hive/addAccounts/AddAccountByAuth';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
+import CreateAccountConfirmation from 'screens/hive/createAccounts/CreateAccountConfirmation';
 import CreateAccountStepOne from 'screens/hive/createAccounts/CreateAccountForm';
 import AccountManagement from 'screens/hive/settings/AccountManagement';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -195,6 +196,34 @@ export default () => {
       <Stack.Screen
         name="ExportAccountsQRScreen"
         component={ExportQRAccounts}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          animation: 'none',
+          headerTitle: () => (
+            <NavigatorTitle title={'navigation.export_accounts_qr'} />
+          ),
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('WALLET')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="CreateAccountConfirmationScreen"
+        component={CreateAccountConfirmation}
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
