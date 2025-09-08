@@ -124,7 +124,7 @@ const WrongKeyPopup = ({
     loadAccount(
       accounts.find((account: Account) => account.name === accountFound!).name!,
     );
-    navigate('AccountManagementScreen');
+    navigate('Accounts', {screen: 'AccountManagementScreen'});
   };
 
   const handleClose = () => {

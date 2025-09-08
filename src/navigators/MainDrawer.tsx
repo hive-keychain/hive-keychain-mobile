@@ -13,11 +13,11 @@ import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {MainDrawerStackParam} from './MainDrawer.types';
-import AccountManagementStack from './mainDrawerStacks/AccountManagement';
+// Consolidated into AddAccount stack
+// import AccountManagementStack from './mainDrawerStacks/AccountManagement';
 import Accounts from './mainDrawerStacks/Accounts';
-import AddAccount from './mainDrawerStacks/AddAccount';
-import CreateAccount from './mainDrawerStacks/CreateAccount';
-import ExportAccountsQR from './mainDrawerStacks/ExportAccountsQR';
+// Consolidated into AddAccount stack
+// import ExportAccountsQR from './mainDrawerStacks/ExportAccountsQR';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import GovernanceToggleWitnessStack from './mainDrawerStacks/GovernanceToggleWitnessStack';
 import HPDelegationsStack from './mainDrawerStacks/HPDelegationsStack';
@@ -102,36 +102,8 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen
-        name="AccountManagementScreen"
-        component={AccountManagementStack}
-        options={{
-          popToTopOnBlur: true,
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="ExportAccountsQRScreen"
-        component={ExportAccountsQR}
-        options={{
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="AddAccountStack"
-        component={AddAccount}
-        options={{
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="CreateAccountScreen"
-        component={CreateAccount}
-        options={{
-          popToTopOnBlur: true,
-          ...noHeader,
-        }}
-      />
+      {/* AccountManagement and ExportAccountsQR are now nested under AddAccountStack */}
+      {/* AddAccount and CreateAccount now live under Accounts stack */}
       <Drawer.Screen
         name="Tokens"
         component={Tokens}

@@ -5,6 +5,13 @@ export type AddAccountFromWalletParamList = {
   ScanQRScreen: {wallet: boolean};
   AddAccountFromWalletScreen: {wallet: boolean};
   AddAccountFromWalletScreenByAuth: {wallet: boolean};
+  // Consolidated screens into AddAccount stack
+  CreateAccountFromWalletScreenPageOne: {
+    wallet: boolean;
+    newPeerToPeerData?: any;
+  };
+  AccountManagementScreen: undefined;
+  ExportAccountsQRScreen: undefined;
 };
 
 export type AddAccFromWalletNavigation = StackNavigationProp<

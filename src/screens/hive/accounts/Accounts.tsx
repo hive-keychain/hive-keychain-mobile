@@ -21,14 +21,14 @@ const Accounts = () => {
       <MenuItem
         labelTranslationKey={'navigation.add_account'}
         theme={theme}
-        onPress={() => navigate('AddAccountStack')}
+        onPress={() => navigate('AddAccountFromWalletScreen')}
         iconImage={<AddAccountIcon />}
         drawBottomLine={true}
       />
       <MenuItem
         labelTranslationKey={'navigation.create_account'}
         theme={theme}
-        onPress={() => navigate('CreateAccountScreen')}
+        onPress={() => navigate('CreateAccountFromWalletScreenPageOne')}
         iconImage={<CreateAccountIcon />}
         drawBottomLine={true}
       />

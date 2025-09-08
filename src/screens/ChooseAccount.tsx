@@ -61,6 +61,8 @@ const ChooseAccountOption = ({navigation}: SignupNavProp) => {
           <EllipticButton
             title={translate('intro.createAccount')}
             onPress={() => {
+              // Route to AddAccount stack's CreateAccount screen within drawer context
+              // For signup flow we still route to local CreateAccountScreen
               navigation.navigate('CreateAccountScreen');
             }}
             style={styles.warningProceedButton}

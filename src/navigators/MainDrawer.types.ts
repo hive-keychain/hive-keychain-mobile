@@ -5,11 +5,7 @@ export type MainDrawerStackParam = {
   WALLET: undefined;
   BrowserScreen: {icon: string};
   Accounts: undefined;
-  AccountManagementScreen: undefined;
-  ExportAccountsQRScreen: undefined;
-  AddAccountStack: undefined;
-  AddAccountByAuth: undefined;
-  CreateAccountScreen: undefined;
+  // Consolidated: related screens live under Accounts stack now
   SettingsScreen: undefined;
   ABOUT: undefined;
   Governance: undefined;
