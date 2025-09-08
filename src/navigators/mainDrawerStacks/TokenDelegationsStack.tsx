@@ -90,7 +90,7 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
       height: STACK_HEADER_HEIGHT + insets.top,
     },
     headerLeftContainer: {
-      marginLeft: HEADER_ICON_MARGIN,
+      paddingLeft: HEADER_ICON_MARGIN,
     },
   });
 

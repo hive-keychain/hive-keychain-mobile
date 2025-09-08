@@ -395,6 +395,7 @@ const Savings = ({
               }
             />
           </View>
+          <Separator />
         </View>
       }
       buttonTitle={`wallet.operations.savings.${operationType}_button`}

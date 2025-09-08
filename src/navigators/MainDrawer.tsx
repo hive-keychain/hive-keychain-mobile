@@ -13,19 +13,12 @@ import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {MainDrawerStackParam} from './MainDrawer.types';
-// Consolidated into AddAccount stack
-// import AccountManagementStack from './mainDrawerStacks/AccountManagement';
 import Accounts from './mainDrawerStacks/Accounts';
-// Consolidated into AddAccount stack
-// import ExportAccountsQR from './mainDrawerStacks/ExportAccountsQR';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import GovernanceToggleWitnessStack from './mainDrawerStacks/GovernanceToggleWitnessStack';
 import Help from './mainDrawerStacks/Help';
 import Operation from './mainDrawerStacks/Operation';
 import SwapBuyStack from './mainDrawerStacks/SwapBuyStack';
-// Consolidated under SwapBuyStack
-// import SwapConfirmStack from './mainDrawerStacks/SwapConfirmStack';
-// import SwapHistory from './mainDrawerStacks/SwapHistory';
 import TokenDelegationsStack from './mainDrawerStacks/TokenDelegationsStack';
 import TokenSettingsStack from './mainDrawerStacks/TokenSettingsStack';
 import Tokens from './mainDrawerStacks/Tokens';
@@ -99,8 +92,6 @@ export default () => {
           ...noHeader,
         }}
       />
-      {/* AccountManagement and ExportAccountsQR are now nested under AddAccountStack */}
-      {/* AddAccount and CreateAccount now live under Accounts stack */}
       <Drawer.Screen
         name="Tokens"
         component={Tokens}
@@ -139,8 +130,6 @@ export default () => {
           ...noHeader,
         }}
       />
-      {/* SwapHistory is now nested inside SwapBuyStack */}
-      {/* Newly added logical screens reachable via navigate() */}
       <Drawer.Screen
         name="TokenDelegations"
         component={TokenDelegationsStack}
@@ -148,8 +137,6 @@ export default () => {
           ...noHeader,
         }}
       />
-      {/* HP/RC Delegations and Pending screens are now nested in Operation */}
-      {/* SwapConfirm is now nested inside SwapBuyStack */}
       <Drawer.Screen
         name="CreateAccountConfirmationScreen"
         component={CreateAccountConfirmation}

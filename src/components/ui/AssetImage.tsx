@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Pressable} from 'react-native';
 import Binance from 'src/assets/buy/binance.svg';
 import GateioDark from 'src/assets/buy/dark/gateio.svg';
 import HuobiDark from 'src/assets/buy/dark/huobi.svg';
@@ -87,9 +87,9 @@ const AssetImage = (props: AssetImageprops) => {
   };
 
   return props.onClick ? (
-    <TouchableOpacity activeOpacity={1} onPress={props.onClick}>
+    <Pressable onPress={props.onClick}>
       {getImageFilePath(props.nameImage)}
-    </TouchableOpacity>
+    </Pressable>
   ) : (
     <>{getImageFilePath(props.nameImage)}</>
   );
