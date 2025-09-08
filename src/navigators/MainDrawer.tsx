@@ -15,7 +15,6 @@ import {noHeader} from 'utils/navigation';
 import {MainDrawerStackParam} from './MainDrawer.types';
 import Accounts from './mainDrawerStacks/Accounts';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
-import GovernanceToggleWitnessStack from './mainDrawerStacks/GovernanceToggleWitnessStack';
 import Help from './mainDrawerStacks/Help';
 import Operation from './mainDrawerStacks/Operation';
 import SwapBuyStack from './mainDrawerStacks/SwapBuyStack';
@@ -140,13 +139,6 @@ export default () => {
       <Drawer.Screen
         name="CreateAccountConfirmationScreen"
         component={CreateAccountConfirmation}
-      />
-      <Drawer.Screen
-        name="ToggleWitness"
-        component={GovernanceToggleWitnessStack}
-        options={{
-          ...noHeader,
-        }}
       />
     </Drawer.Navigator>
   );

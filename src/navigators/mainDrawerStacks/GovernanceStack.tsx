@@ -8,6 +8,7 @@ import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Governance from 'screens/hive/governance/Governance';
+import DisableEnableMyWitness from 'screens/hive/governance/myWitness/DisableEnableMyWitness';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
@@ -16,6 +17,11 @@ import {Dimensions} from 'utils/common.types';
 
 const Stack = createStackNavigator();
 
+type Params = {
+  title: string;
+  mode: 'enable' | 'disable';
+  witnessInfo: any;
+};
 export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
@@ -47,6 +53,39 @@ export default () => {
             />
           ),
         })}
+      />
+      <Stack.Screen
+        name="ToggleWitness"
+        options={({navigation, route}) => ({
+          animation: 'none',
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle
+              title={(route.params as Params).title}
+              skipTranslation
+            />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+        children={({route}) => {
+          const {title, mode, witnessInfo} = route.params as Params;
+          return (
+            <DisableEnableMyWitness
+              mode={mode}
+              theme={theme}
+              witnessInfo={witnessInfo}
+            />
+          );
+        }}
       />
     </Stack.Navigator>
   );
