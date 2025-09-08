@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, StyleProp, ViewStyle} from 'react-native';
+import {Platform, StyleProp, View, ViewStyle} from 'react-native';
 import {
   Edge,
   initialWindowMetrics,
@@ -25,20 +25,8 @@ const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
   }
 
   const isAndroid35 = Platform.OS === 'android' && Platform.Version >= 35;
-  const applyPadding = (child: React.ReactNode) => {
-    if (!isAndroid35) {
-      return React.cloneElement(child as React.ReactElement<any>, {
-        style: [
-          (child as React.ReactElement<any>).props.style,
-          {
-            paddingBottom: !skipBottom ? 0 : initialWindowMetrics.insets.bottom,
-          },
-        ],
-      });
-    } else {
-      return child;
-    }
-  };
+  const bottomSpacerHeight =
+    !isAndroid35 && skipBottom ? initialWindowMetrics.insets.bottom : 0;
 
   return (
     <SafeAreaView
@@ -53,11 +41,10 @@ const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
         style,
       ]}
       edges={edges}>
-      {Array.isArray(children)
-        ? children.map((child: React.ReactNode, index) =>
-            index === children.length - 1 ? applyPadding(child) : child,
-          )
-        : applyPadding(children as React.ReactNode)}
+      {children}
+      {bottomSpacerHeight > 0 ? (
+        <View style={{height: bottomSpacerHeight}} />
+      ) : null}
     </SafeAreaView>
   );
 };

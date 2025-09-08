@@ -4,11 +4,14 @@ import {translate} from './localize';
 
 export const saveOnKeychain = async (radix: string, string: string) => {
   const biometrics = await Keychain.getSupportedBiometryType();
-  const chunks = chunkArray(string.split(''), 300).map((e) => e.join(''));
+  const chunks = chunkArray(string.split(''), 200).map((e) => e.join(''));
+  console.log(radix, string, chunks);
   await Keychain.setGenericPassword(radix, chunks.length.toString(), {
     service: radix,
   });
+  console.log('here');
   for (const [i, chunk] of chunks.entries()) {
+    console.log('here2');
     const options: Keychain.Options = {
       service: `${radix}_${i}`,
       storage: Keychain.STORAGE_TYPE.FB,
@@ -21,7 +24,9 @@ export const saveOnKeychain = async (radix: string, string: string) => {
         Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS;
       options.accessible = Keychain.ACCESSIBLE.WHEN_UNLOCKED;
     }
+    console.log('here3');
     await Keychain.setGenericPassword(radix, chunk, options);
+    console.log('here4');
   }
 };
 

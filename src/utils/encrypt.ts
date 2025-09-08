@@ -17,8 +17,10 @@ interface EncryptionJson {
 }
 // We add an md5 hash to check if decryption is successful later on.
 export const encryptJson = (json: EncryptionJson, pwd: string) => {
+  console.log('json', json, pwd);
   json.hash = md5(json.list);
   var msg = encrypt(JSON.stringify(json), pwd);
+  console.log('msg', msg);
   return msg;
 };
 

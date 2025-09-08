@@ -11,6 +11,7 @@ import CreateAccountConfirmation from 'screens/hive/createAccounts/CreateAccount
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
+import {noHeader} from 'utils/navigation';
 import {MainDrawerStackParam} from './MainDrawer.types';
 import AccountManagementStack from './mainDrawerStacks/AccountManagement';
 import Accounts from './mainDrawerStacks/Accounts';
@@ -36,7 +37,7 @@ import TokensHistory from './mainDrawerStacks/TokensHistory';
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 
 export default () => {
-  const {theme} = useThemeContext();
+  const theme = useThemeContext()?.theme || Theme.LIGHT;
   const styles = getStyles(theme);
 
   return (
@@ -51,11 +52,12 @@ export default () => {
         drawerInactiveTintColor: getColors(theme).secondaryText,
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
-      <Drawer.Screen name="WALLET" component={WalletStack} />
+      <Drawer.Screen name="WALLET" component={WalletStack} options={noHeader} />
       <Drawer.Screen
         name="BrowserScreen"
         options={{
           title: translate('navigation.browser'),
+          ...noHeader,
         }}
         component={BrowserStack}
       />

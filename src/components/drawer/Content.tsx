@@ -50,19 +50,39 @@ const hiddenRoutesInMain = [
 ];
 
 const DrawerContent = (props: Props) => {
-  const {user, lock, navigation, state, addTab, ...rest} = props;
-  const newState = {...state};
-  newState.routes = newState.routes.filter(
+  const {user, lock, navigation, state, addTab, descriptors} =
+    props || ({} as Props);
+
+  // guard against undefined state (v7 can sometimes pass undefined)
+  if (!state) return null;
+
+  // Filter out hidden routes and ensure the index points to a valid route
+  const filteredRoutes = state.routes.filter(
     (route) => !hiddenRoutesInMain.includes(route.name),
   );
+
+  const currentRoute = state.routes[state.index];
+  let newIndex = filteredRoutes.findIndex((r) => r.key === currentRoute?.key);
+  if (newIndex === -1) newIndex = 0;
+
+  const newState = {
+    ...state,
+    routes: filteredRoutes,
+    index: newIndex,
+  };
+
   const {theme, toggleTheme} = useContext(ThemeContext);
+
+  const filteredDescriptors = Object.fromEntries(
+    filteredRoutes.map((r) => [r.key, descriptors[r.key]]),
+  ) as typeof descriptors;
 
   return (
     <DrawerContentScrollView
       {...props}
-      contentContainerStyle={[styles.contentContainer]}>
+      contentContainerStyle={styles.contentContainer}>
       <DrawerHeader theme={theme} props={props} />
-      <ScrollView style={[{flex: 1, marginTop: 10}]}>
+      <ScrollView style={{flex: 1, marginTop: 10}}>
         <MenuItem
           labelTranslationKey="navigation.accounts"
           theme={theme}
@@ -85,7 +105,6 @@ const DrawerContent = (props: Props) => {
           }
           drawBottomLine
         />
-
         <MenuItem
           labelTranslationKey="navigation.governance"
           theme={theme}
@@ -146,18 +165,21 @@ const DrawerContent = (props: Props) => {
             <Icon name={Icons.LOGOUT} theme={theme} color={PRIMARY_RED_COLOR} />
           }
         />
-        <DrawerItemList
-          state={{
-            ...newState,
-          }}
-          navigation={navigation}
-          {...rest}
-        />
+
+        {/* Pass full drawer props with overridden state so descriptors match filtered routes */}
+        {newState.routes.length > 0 && (
+          <DrawerItemList
+            {...props}
+            state={newState}
+            descriptors={filteredDescriptors}
+          />
+        )}
       </ScrollView>
       <DrawerFooter user={user} theme={theme} addTab={addTab} />
     </DrawerContentScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   contentContainer: {
     height: '100%',
@@ -168,6 +190,7 @@ const styles = StyleSheet.create({
   marginRight: {marginRight: 10},
   item: {marginHorizontal: 0, borderRadius: 0, paddingLeft: 10},
 });
+
 const mapStateToProps = (state: RootState) => ({
   user: state.activeAccount,
 });
