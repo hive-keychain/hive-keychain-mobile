@@ -18,6 +18,10 @@ export default ({config}) => ({
       ios: {
         bundleIdentifier: 'com.mobilekeychain',
         supportsTablet: true,
+        infoPlist: {
+          NSLocationWhenInUseUsageDescription:
+            'We need your location for maps.',
+        },
         // googleServicesFile: './google-services.json',
       },
       android: {
@@ -26,7 +30,11 @@ export default ({config}) => ({
             ? 'com.mobilekeychain.dev.expo'
             : 'com.mobilekeychain',
         // googleServicesFile: './google-services.json',
-        permissions: ['android.permission.CAMERA'],
+        permissions: [
+          'android.permission.CAMERA',
+          'ACCESS_FINE_LOCATION',
+          'ACCESS_COARSE_LOCATION',
+        ],
         adaptiveIcon: {
           resizeMode: 'contain',
           foregroundImage:
