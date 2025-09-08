@@ -86,7 +86,11 @@ export default ({
                   />
                 </TouchableOpacity>
               </View>
-              <Image style={styles.screenshot} source={{uri: image}} />
+              <Image
+                style={styles.screenshot}
+                source={{uri: image}}
+                contentFit="cover"
+              />
             </TouchableOpacity>
           ))}
         </View>
@@ -140,7 +144,6 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     },
     screenshot: {
       flex: 1,
-      resizeMode: 'cover',
     },
     icon: {width: 16, height: 16},
     name: {

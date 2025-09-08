@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Platform,
   StyleProp,
   StyleSheet,
   TextStyle,
@@ -13,6 +12,7 @@ import {Theme} from 'src/context/theme.context';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
 import {button_link_primary_small} from 'src/styles/typography';
+import {translate} from 'utils/localize';
 import CustomInput from './CustomInput';
 
 interface Props {
@@ -37,7 +37,7 @@ const CustomSearchBar = ({
 
   return (
     <CustomInput
-      placeholder="Search"
+      placeholder={translate('common.search_box_placeholder')}
       rightIcon={rightIcon}
       leftIcon={leftIcon}
       containerStyle={[styles.container, additionalContainerStyle]}
@@ -70,11 +70,12 @@ const getStyles = (theme: Theme, width: number) =>
       ...button_link_primary_small,
       color: getColors(theme).secondaryText,
       fontSize: inputStyle(theme, width).input.fontSize,
-      textAlignVertical: 'bottom',
-      lineHeight:
-        Platform.OS === 'android'
-          ? inputStyle(theme, width).input.fontSize
-          : undefined,
+      verticalAlign: 'middle',
+      paddingBottom: 3,
+      // lineHeight:
+      //   Platform.OS === 'android'
+      //     ? inputStyle(theme, width).input.fontSize
+      //     : undefined,
       marginLeft: 5,
     },
     noMarginHorizontal: {
