@@ -1,4 +1,5 @@
 import Icon from 'components/hive/Icon';
+import CustomToolTip from 'components/ui/CustomToolTip';
 import * as Clipboard from 'expo-clipboard';
 import {ISwap, SwapStatus} from 'hive-keychain-commons';
 import moment from 'moment';
@@ -123,16 +124,14 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
             </Text>
           </View>
         </View>
-        {/* <Tooltip
-          containerStyle={{
-            minHeight: 100,
-          }}
+        <CustomToolTip
+          containerStyle={{minHeight: 100}}
           height={100}
-          popover={
-            <Text style={{textAlign: 'center'}}>{getTooltipMessage(swap)}</Text>
-          }> */}
-        <Icon name={getStatusIcon(swap.status) as Icons} />
-        {/* </Tooltip> */}
+          width={260}
+          message={getTooltipMessage(swap)}
+          textStyle={{textAlign: 'center'}}>
+          <Icon name={getStatusIcon(swap.status) as Icons} />
+        </CustomToolTip>
       </View>
 
       {isOpen && (

@@ -1,12 +1,14 @@
 import Icon from 'components/hive/Icon';
-import React from 'react';
-import {StyleProp, ViewStyle} from 'react-native';
+import React, {memo} from 'react';
+import {StyleProp, Text, TextStyle, ViewStyle} from 'react-native';
+import {Tooltip} from 'react-native-elements';
 import {Icons} from 'src/enums/icons.enums';
+import {translate} from 'utils/localize';
 
 type Props = {
   skipTranslation?: boolean;
   message: string;
-  textStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   width?: number;
   height?: number;
@@ -15,6 +17,7 @@ type Props = {
   iconColor?: string;
   overlayColor?: string;
   pointerColor?: string;
+  children?: React.ReactNode;
 };
 
 const CustomToolTip = ({
@@ -22,35 +25,42 @@ const CustomToolTip = ({
   message,
   textStyle,
   containerStyle,
-  width,
-  height,
-  iconHeight,
-  iconWidth,
+  width = 150,
+  height = 40,
+  iconHeight = 18,
+  iconWidth = 18,
   iconColor,
-  overlayColor,
+  overlayColor = 'transparent',
   pointerColor,
+  children,
 }: Props) => {
+  const ElementsTooltip = Tooltip as unknown as React.ComponentType<any>;
+
   return (
-    // <Tooltip
-    //   skipAndroidStatusBar
-    //   popover={
-    //     <Text style={textStyle}>
-    //       {skipTranslation ? message : translate(message)}
-    //     </Text>
-    //   }
-    //   width={width ?? 150}
-    //   height={height ?? 40}
-    //   containerStyle={containerStyle}
-    //   overlayColor={overlayColor}
-    //   pointerColor={pointerColor}>
-    <Icon
-      name={Icons.INFO}
-      color={iconColor}
-      width={iconWidth}
-      height={iconHeight}
-    />
-    // </Tooltip>
+    <ElementsTooltip
+      skipAndroidStatusBar
+      popover={
+        <Text style={textStyle}>
+          {skipTranslation ? message : translate(message)}
+        </Text>
+      }
+      width={width}
+      height={height}
+      containerStyle={containerStyle}
+      {...(overlayColor ? {overlayColor} : {})}
+      {...(pointerColor ? {pointerColor} : {})}>
+      {children ? (
+        children
+      ) : (
+        <Icon
+          name={Icons.INFO}
+          color={iconColor}
+          width={iconWidth}
+          height={iconHeight}
+        />
+      )}
+    </ElementsTooltip>
   );
 };
 
-export default CustomToolTip;
+export default memo(CustomToolTip);
