@@ -223,9 +223,6 @@ export default () => {
       <Drawer.Screen
         name="CreateAccountConfirmationScreen"
         component={CreateAccountConfirmation}
-        options={{
-          ...noHeader,
-        }}
       />
       <Drawer.Screen
         name="ToggleWitness"

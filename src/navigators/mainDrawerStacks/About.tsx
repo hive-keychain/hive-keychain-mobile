@@ -63,9 +63,9 @@ const getStyles = (
       height: STACK_HEADER_HEIGHT + insets.top,
     },
     headerRightContainer: {
-      marginRight: HEADER_ICON_MARGIN,
+      paddingRight: HEADER_ICON_MARGIN,
     },
     headerLeftContainer: {
-      marginLeft: HEADER_ICON_MARGIN,
+      paddingLeft: HEADER_ICON_MARGIN,
     },
   });
