@@ -15,6 +15,7 @@ import {IStep} from 'hive-keychain-commons';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import {ThrottleSettings, throttle} from 'lodash';
 // import {TemplateStackProps} from 'navigators/Root.types';
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
@@ -54,7 +55,7 @@ import {capitalize, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
-import {goBackAndNavigate, navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 import {
   getAllTokens,
@@ -86,6 +87,7 @@ const Swap = ({
   tokens,
 }: PropsFromRedux & Props) => {
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation<any>();
   const [loadingSwap, setLoadingSwap] = useState(false);
   const [loadingConfirmationSwap, setLoadingConfirmationSwap] = useState(false);
   const [layerTwoDelayed, setLayerTwoDelayed] = useState(false);
@@ -398,7 +400,7 @@ const Swap = ({
               'common.swap_sending_token_successful',
               MessageModalType.SUCCESS,
             );
-          goBackAndNavigate('SwapBuyStack', {screen: 'SwapHistory'});
+          navigation.navigate('SwapHistory');
         } else {
           if (!isMultisig)
             SimpleToast.show(
@@ -516,17 +518,14 @@ const Swap = ({
     const onHandleBackButton = async () =>
       await SwapTokenUtils.cancelSwap(estimateId);
 
-    navigate('SwapBuyStack', {
-      screen: 'SwapConfirm',
-      params: {
-        estimateId,
-        slippage,
-        amount,
-        startToken: startToken.value,
-        endToken: endToken.value,
-        estimateValue,
-        processSwap,
-      },
+    navigation.navigate('SwapConfirm', {
+      estimateId,
+      slippage,
+      amount,
+      startToken: startToken.value,
+      endToken: endToken.value,
+      estimateValue,
+      processSwap,
     });
     setDisableProcessButton(false);
   };

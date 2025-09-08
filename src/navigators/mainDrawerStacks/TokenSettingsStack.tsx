@@ -63,6 +63,6 @@ const getStyles = (
       backgroundColor: getColors(theme).primaryBackground,
     },
     headerLeftContainer: {
-      marginLeft: HEADER_ICON_MARGIN,
+      paddingLeft: HEADER_ICON_MARGIN,
     },
   });
