@@ -198,6 +198,7 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
+          animation: 'none',
           headerTitle: () => (
             <NavigatorTitle title={'navigation.export_accounts_qr'} />
           ),
