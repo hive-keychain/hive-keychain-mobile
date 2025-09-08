@@ -418,7 +418,7 @@ const Main = ({
                 }
                 renderItem={renderEngineTokenDisplay}
                 ListHeaderComponent={
-                  <React.Fragment>
+                  <View>
                     <View style={styles.rowWrapper}>
                       <PercentageDisplay
                         name={translate('wallet.vp')}
@@ -524,10 +524,10 @@ const Main = ({
                         </View>
                       </View>
                     </View>
-                  </React.Fragment>
+                  </View>
                 }
                 ListEmptyComponent={
-                  <React.Fragment>
+                  <View>
                     {isHiveEngineLoading ? (
                       <View style={styles.extraContainerMiniLoader}>
                         <Loader size={'small'} animating />
@@ -549,7 +549,7 @@ const Main = ({
                         </Text>
                       </View>
                     ) : null}
-                  </React.Fragment>
+                  </View>
                 }
                 ListFooterComponent={
                   <View style={[getCardStyle(theme).filledWrapper]} />
