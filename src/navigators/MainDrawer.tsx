@@ -47,7 +47,7 @@ export default () => {
         swipeEnabled: false,
         drawerItemStyle: styles.item,
         drawerPosition: 'left',
-        drawerContentStyle: styles.drawer,
+        drawerStyle: styles.drawer,
         drawerType: 'front',
         drawerInactiveTintColor: getColors(theme).secondaryText,
       }}
@@ -67,6 +67,7 @@ export default () => {
         options={{
           title: translate('navigation.governance'),
           popToTopOnBlur: true,
+          ...noHeader,
         }}
         component={GovernanceStack}
       />
@@ -75,12 +76,14 @@ export default () => {
         component={SettingsStack}
         options={{
           title: translate('navigation.settings'),
+          ...noHeader,
         }}
       />
       <Drawer.Screen
         name="ABOUT"
         options={{
           title: translate('navigation.about'),
+          ...noHeader,
         }}
         component={AboutStack}
       />
@@ -88,6 +91,7 @@ export default () => {
         name="Help"
         options={{
           title: translate('navigation.help'),
+          ...noHeader,
         }}
         component={Help}
       />
@@ -97,11 +101,15 @@ export default () => {
         component={AccountManagementStack}
         options={{
           popToTopOnBlur: true,
+          ...noHeader,
         }}
       />
       <Drawer.Screen
         name="ExportAccountsQRScreen"
         component={ExportAccountsQR}
+        options={{
+          ...noHeader,
+        }}
       />
       <Drawer.Screen name="AddAccountStack" component={AddAccount} />
       <Drawer.Screen
@@ -109,6 +117,7 @@ export default () => {
         component={CreateAccount}
         options={{
           popToTopOnBlur: true,
+          ...noHeader,
         }}
       />
       <Drawer.Screen name="Tokens" component={Tokens} />
@@ -125,13 +134,15 @@ export default () => {
         component={TokenSettingsStack}
         options={{
           popToTopOnBlur: true,
-        }}
+          ...noHeader,
+          }}
       />
       <Drawer.Screen
         name="SwapBuyStack"
         component={SwapBuyStack}
         options={{
           popToTopOnBlur: true,
+          ...noHeader,
         }}
       />
       <Drawer.Screen name="SwapHistory" component={SwapHistory} />
@@ -139,22 +150,46 @@ export default () => {
       <Drawer.Screen
         name="TokenDelegations"
         component={TokenDelegationsStack}
+        options={{
+          ...noHeader,
+        }}
       />
-      <Drawer.Screen name="HPDelegations" component={HPDelegationsStack} />
-      <Drawer.Screen name="PendingSavings" component={PendingSavingsStack} />
+      <Drawer.Screen name="HPDelegations" component={HPDelegationsStack} options={{
+          ...noHeader,
+        }}
+      />
+      <Drawer.Screen name="PendingSavings" component={PendingSavingsStack} options={{
+          ...noHeader,
+        }}
+      />
       <Drawer.Screen
         name="PendingConversions"
         component={PendingConversionsStack}
+        options={{
+          ...noHeader,
+        }}
       />
-      <Drawer.Screen name="RcDelegations" component={RcDelegationsStack} />
-      <Drawer.Screen name="SwapConfirm" component={SwapConfirmStack} />
+      <Drawer.Screen name="RcDelegations" component={RcDelegationsStack} options={{
+          ...noHeader,
+        }}
+      />
+      <Drawer.Screen name="SwapConfirm" component={SwapConfirmStack} options={{
+          ...noHeader,
+        }}
+      />
       <Drawer.Screen
         name="CreateAccountConfirmationScreen"
         component={CreateAccountConfirmation}
+        options={{
+          ...noHeader,
+        }}
       />
       <Drawer.Screen
         name="ToggleWitness"
         component={GovernanceToggleWitnessStack}
+        options={{
+          ...noHeader,
+        }}
       />
     </Drawer.Navigator>
   );
@@ -167,8 +202,11 @@ const getStyles = (theme: Theme) =>
       borderTopRightRadius: 20,
       borderBottomRightRadius: 20,
       width: '70%',
-      top: initialWindowMetrics.insets.top,
-      bottom: initialWindowMetrics.insets.bottom,
+      top: initialWindowMetrics.insets.top + 10,
+      bottom: initialWindowMetrics.insets.bottom + 20,
     },
     item: {marginHorizontal: 0, borderRadius: 0, paddingLeft: 10},
+    contentContainer: {
+      flexGrow: 1,
+    },
   });

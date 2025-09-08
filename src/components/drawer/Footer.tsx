@@ -167,8 +167,6 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       width: '100%',
       alignItems: 'center',
       justifyContent: 'center',
-      bottom: 0,
-      top: undefined,
     },
     footerText: {
       ...button_link_primary_medium,
