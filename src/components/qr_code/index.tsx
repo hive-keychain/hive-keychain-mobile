@@ -5,6 +5,7 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import Marker from './MarkerQR';
 
 type Props = {
   onSuccess: (event: BarcodeScanningResult) => void;
@@ -42,7 +43,9 @@ const QRCode = ({onSuccess, topContent}: Props) => {
         // reactivate={true}
         // reactivateTimeout={2000}
         // customMarker={<Marker />}
-      />
+      >
+        <Marker />
+      </CameraView>
     </View>
   );
 };

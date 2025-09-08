@@ -5,11 +5,18 @@ import {Width} from 'utils/common.types';
 const Marker = () => {
   const styles = getStyles(useWindowDimensions());
   return (
-    <View style={styles.marker}>
-      <View style={[styles.markerSide, styles.topLeft]}></View>
-      <View style={[styles.markerSide, styles.topRight]}></View>
-      <View style={[styles.markerSide, styles.bottomLeft]}></View>
-      <View style={[styles.markerSide, styles.bottomRight]}></View>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <View style={styles.marker}>
+        <View style={[styles.markerSide, styles.topLeft]}></View>
+        <View style={[styles.markerSide, styles.topRight]}></View>
+        <View style={[styles.markerSide, styles.bottomLeft]}></View>
+        <View style={[styles.markerSide, styles.bottomRight]}></View>
+      </View>
     </View>
   );
 };
