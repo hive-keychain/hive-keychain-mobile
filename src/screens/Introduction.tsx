@@ -108,18 +108,19 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
 
   const drawPageIndicators = (currentIndex: number) => {
     const createCircleAddKey = (index: number, active?: boolean) => {
-      const key = `${index}-circle-${Math.random().toFixed(5).toString()}`;
+      const circleKey = `${index}-circle-${Math.random()
+        .toFixed(5)
+        .toString()}`;
       const indicatorProps = {
-        key: key,
         style: {marginRight: 6},
         ...styles.indicatorCircle,
       };
       return active ? (
-        <IndicatorActive {...indicatorProps} />
+        <IndicatorActive key={circleKey} {...indicatorProps} />
       ) : theme === Theme.LIGHT ? (
-        <IndicatorInactiveLight {...indicatorProps} />
+        <IndicatorInactiveLight key={circleKey} {...indicatorProps} />
       ) : (
-        <IndicatorInactive {...indicatorProps} />
+        <IndicatorInactive key={circleKey} {...indicatorProps} />
       );
     };
     const circleArray: React.ReactNode[] = [];
