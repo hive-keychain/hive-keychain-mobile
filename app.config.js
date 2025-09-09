@@ -35,6 +35,7 @@ export default ({config}) => ({
           'ACCESS_FINE_LOCATION',
           'ACCESS_COARSE_LOCATION',
         ],
+        softwareKeyboardLayoutMode: 'pan',
         adaptiveIcon: {
           resizeMode: 'contain',
           foregroundImage:
