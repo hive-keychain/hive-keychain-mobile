@@ -84,11 +84,11 @@ const EngineTokens = ({
   }, [searchValue]);
 
   useEffect(() => {
-    if (!userTokens.loading) {
+    if (!userTokens.loading && user?.name) {
       loadHiddenTokens();
       loadUserTokens(user.name);
     }
-  }, [properties, user.name]);
+  }, [user.name]);
 
   const loadHiddenTokens = async () => {
     let customHiddenTokens = null;

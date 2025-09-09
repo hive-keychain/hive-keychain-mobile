@@ -28,13 +28,21 @@ const get = async <T>(params: TokenRequestParams): Promise<T> => {
       signal: controller.signal,
     })
       .then((res) => {
-        if (res && res.status === 200) {
-          return res.json();
+        if (!res) {
+          throw new Error('No response from Hive Engine API');
         }
+        if (res.status !== 200) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
       })
       .then((res: any) => {
         clearTimeout(id);
-        resolve((res.result as unknown) as T);
+        if (!res || typeof res.result === 'undefined') {
+          reject(new Error('Invalid response: missing result'));
+          return;
+        }
+        resolve(res.result as unknown as T);
         // console.log(`hiveEngineGet Resolved after: ${Date.now() - start} ms`);
       })
       .catch((reason: any) => {
@@ -47,6 +55,8 @@ const get = async <T>(params: TokenRequestParams): Promise<T> => {
         ) {
           console.log('HE Node Timeout', HiveEngineConfigUtils.getApi());
           reject(new Error('tokens timeout'));
+        } else {
+          reject(reason);
         }
       });
   });
