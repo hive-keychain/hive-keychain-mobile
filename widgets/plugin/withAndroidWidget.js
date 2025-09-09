@@ -1,7 +1,9 @@
 const {
+  AndroidConfig,
   withAndroidManifest,
   withAppBuildGradle,
   withDangerousMod,
+  withMainApplication,
 } = require('@expo/config-plugins');
 const fs = require('fs');
 const path = require('path');
@@ -159,8 +161,24 @@ const withAndroidWidget = (config, options) => {
     }
     return gradle;
   });
-  console.log('withSourceFiles', options);
   config = withSourceFiles(config, options);
+
+  // Register WidgetBridgePackage in MainApplication.kt so NativeModules.WidgetBridge is available
+  config = withMainApplication(config, (mod) => {
+    const packageName =
+      AndroidConfig.Package.getPackage(config) || 'com.mobilekeychain';
+    let contents = mod.modResults.contents;
+    const fqcn = `${packageName}.WidgetBridgePackage()`;
+    const addLine = `packages.add(${fqcn})`;
+    if (!contents.includes('WidgetBridgePackage()')) {
+      contents = contents.replace(
+        /(\n\s*return packages)/m,
+        `\n    ${addLine}\n$1`,
+      );
+      mod.modResults.contents = contents;
+    }
+    return mod;
+  });
 
   return config;
 };

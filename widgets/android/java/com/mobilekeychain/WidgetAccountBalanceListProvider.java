@@ -30,7 +30,9 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
             // Configure button intents
             Intent configureIntent = new Intent(context, WidgetAccountBalanceListProvider.class);
             configureIntent.setAction(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST);
-            PendingIntent configurePendingIntent = PendingIntent.getBroadcast(context, 0, configureIntent, flag);
+            configureIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            configureIntent.setData(Uri.parse(configureIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            PendingIntent configurePendingIntent = PendingIntent.getBroadcast(context, appWidgetId, configureIntent, flag);
             views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_configure, configurePendingIntent);
             views.setOnClickPendingIntent(R.id.widget_account_balance_list_stack_empty_view, configurePendingIntent);
 
@@ -51,34 +53,51 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
-        if (ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST.equals(intent.getAction())) {
-            try {
-                WritableMap params = Arguments.createMap();
-                params.putString("configureWidgets", "true");
+        if (!ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST.equals(intent.getAction())) {
+            return; // Ignore system broadcasts like APPWIDGET_UPDATE
+        }
 
-                ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
-                ReactContext reactContext = rnApp.getReactNativeHost()
-                                                .getReactInstanceManager()
-                                                .getCurrentReactContext();
+        try {
+            WritableMap params = Arguments.createMap();
+            params.putString("configureWidgets", "true");
 
-                if (reactContext instanceof ReactApplicationContext) {
-                    // Fire event to JS
-                    WidgetBridge.emitCommandEvent((ReactApplicationContext) reactContext, "command_event", params);
-                } else {
-                    Log.w("WidgetBridge", "ReactContext not ready or not ReactApplicationContext, cannot emit event");
-                }
-            } catch (Exception e) {
-                Log.e("WidgetBridge", "Error sending command event: " + e.getMessage());
+            ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
+            ReactContext reactContext = rnApp.getReactNativeHost()
+                                            .getReactInstanceManager()
+                                            .getCurrentReactContext();
+
+            if (reactContext instanceof ReactApplicationContext) {
+                // Fire event to JS
+                WidgetBridge.emitCommandEvent((ReactApplicationContext) reactContext, "command_event", params);
+            } else {
+                Log.w("WidgetBridge", "ReactContext not ready or not ReactApplicationContext, cannot emit event");
             }
+        } catch (Exception e) {
+            Log.e("WidgetBridge", "Error sending command event: " + e.getMessage());
+        }
 
-            // Launch MainActivity to bring app to foreground
-            Intent i = new Intent();
-            i.setClassName(context.getPackageName(), "com.mobilekeychain.MainActivity");
-            // Pass a hint to the Activity so it can forward to JS when RN is ready
+        // Persist the command via SharedPreferences, to be read by the app on startup/resume
+        try {
+            android.content.SharedPreferences prefs = context.getSharedPreferences("KeychainWidget", Context.MODE_PRIVATE);
+            prefs.edit().putString("pendingCommand", "configureWidgets").apply();
+        } catch (Exception e) {
+            Log.w("WidgetBridge", "Failed writing pendingCommand to SharedPreferences: " + e.getMessage());
+        }
+
+        // Launch app using the package's main launch intent (handles dev/prod package names)
+        try {
+            Intent i = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+            if (i == null) {
+                // Fallback to explicit MainActivity within current package
+                i = new Intent();
+                i.setClassName(context.getPackageName(), context.getPackageName() + ".MainActivity");
+            }
+            // Pass a hint to the Activity and ensure reuse when possible
             i.putExtra("configureWidgets", true);
-            // Ensure we reuse existing activity when possible so onNewIntent is called
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(i);
+        } catch (Exception e) {
+            Log.e("WidgetBridge", "Failed to start MainActivity: " + e.getMessage());
         }
     }
 }

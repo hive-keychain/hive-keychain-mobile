@@ -1,12 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {WidgetAccountBalanceToShow} from 'components/popups/widget-configuration/WidgetConfiguration';
 import {NativeModules} from 'react-native';
-import {
-  WidgetAsyncStorageItem,
-  WidgetSharedDataCommand,
-} from 'src/enums/widgets.enum';
+import {WidgetAsyncStorageItem} from 'src/enums/widgets.enum';
 
-const SharedStorage = NativeModules.SharedStorage;
+const WidgetBridge = NativeModules.WidgetBridge;
 
 export type WidgetToUpdate =
   | 'account_balance_list'
@@ -25,11 +22,8 @@ const sendWidgetData = async (toUpdateWidget: WidgetToUpdate) => {
         account_balance_list: accountsToShow,
       });
 
-      SharedStorage.setData(data);
-      SharedStorage.setCommand(
-        WidgetSharedDataCommand.UPDATE_WIDGETS,
-        toUpdateWidget,
-      );
+      await WidgetBridge?.setWidgetData?.(data);
+      await WidgetBridge?.refreshWidgets?.(toUpdateWidget);
     }
 
     // IOS //TODO

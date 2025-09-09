@@ -144,15 +144,27 @@ const Main = ({
 
   useEffect(() => {
     if (Platform.OS === 'ios') return;
-    console.log('NativeModules', NativeModules);
     const eventEmitter = new NativeEventEmitter(NativeModules.WidgetBridge);
-    console.log('registering event');
     let eventListener = eventEmitter.addListener('command_event', (event) => {
-      console.log('event', event);
       if (event && Object.values(event).length >= 1) {
         setEventReceived(event);
       }
     });
+    // Fallback: read any pending command persisted by the widget
+    const readPending = async () => {
+      try {
+        if (NativeModules.WidgetBridge?.readAndClearPendingCommand) {
+          const pending =
+            await NativeModules.WidgetBridge.readAndClearPendingCommand();
+          if (pending && Object.values(pending).length >= 1) {
+            setEventReceived(pending);
+          }
+        }
+      } catch (e) {
+        console.log('readAndClearPendingCommand error', e);
+      }
+    };
+    readPending();
     if (eventReceived) {
       if (eventReceived.currency) {
         const {currency: command} = eventReceived;
@@ -285,6 +297,21 @@ const Main = ({
           ) {
             restartHASSockets();
           }
+          // Also check for any pending widget command when app becomes active
+          try {
+            if (
+              Platform.OS === 'android' &&
+              NativeModules.WidgetBridge?.readAndClearPendingCommand
+            ) {
+              NativeModules.WidgetBridge.readAndClearPendingCommand().then(
+                (pending: any) => {
+                  if (pending && Object.values(pending).length >= 1) {
+                    setEventReceived(pending);
+                  }
+                },
+              );
+            }
+          } catch (e) {}
         }
 
         appState.current = nextAppState;
