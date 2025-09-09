@@ -84,13 +84,26 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
     }
     //@ts-ignore
     store.dispatch(addTabFromLinking(url));
-  } else if (url.startsWith('keychain://add_account='))
-    [handleAddAccountQR(url)];
-  else [handleAddAccountQR(url)];
+  } else if (url.startsWith('keychain://add_account=')) {
+    try {
+      await handleAddAccountQR(url);
+    } catch (error) {
+      console.log('Error processing add account link', {error});
+    }
+  } else {
+    // Unrecognized URL scheme for Keychain, ignore
+  }
 };
 
 export const handleAddAccountQR = async (data: string, wallet = true) => {
-  const obj = JSON.parse(data.replace('keychain://add_account=', ''));
+  let obj: any;
+  try {
+    const jsonCandidate = data.replace('keychain://add_account=', '');
+    obj = JSON.parse(jsonCandidate);
+  } catch (error) {
+    console.log('Invalid add_account payload, expected JSON', {error, data});
+    return;
+  }
   let keys = {};
   if (
     (obj.keys.activePubkey &&
