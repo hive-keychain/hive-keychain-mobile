@@ -56,9 +56,7 @@ export default ({
   }, [user]);
 
   const showVoteForWitness = () => {
-    const account = user.account.witness_votes?.includes('stoodkev')
-      ? 'cedricguillas'
-      : 'stoodkev';
+    const account = 'stoodkev';
     return (
       <EllipticButton
         title={translate('drawerFooter.vote', {account})}
@@ -84,11 +82,11 @@ export default ({
               witness: account,
               approve: true,
             });
-            //@ts-ignore
-            store.dispatch(loadAccount(user.name));
             Toast.show(translate('drawerFooter.thanks'), {
               duration: Toast.durations.LONG,
             });
+            //@ts-ignore
+            store.dispatch(loadAccount(user.name));
           } catch (e) {
             Toast.show(translate('drawerFooter.error') + JSON.stringify(e), {
               duration: Toast.durations.LONG,

@@ -6,6 +6,7 @@ import {registerRootComponent} from 'expo';
 import React, {useState} from 'react';
 import {LogBox, StatusBar} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {RootSiblingParent} from 'react-native-root-siblings';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -34,11 +35,13 @@ const Root = () => {
       <SafeAreaProvider>
         <Provider store={store}>
           <StatusBar backgroundColor="black" />
-          <PersistGate persistor={persistor} onBeforeLift={onBeforeLift}>
-            <GestureHandlerRootView style={{flex: 1}}>
-              {gateLifted ? <MultichainApp /> : null}
-            </GestureHandlerRootView>
-          </PersistGate>
+          <RootSiblingParent>
+            <PersistGate persistor={persistor} onBeforeLift={onBeforeLift}>
+              <GestureHandlerRootView style={{flex: 1}}>
+                {gateLifted ? <MultichainApp /> : null}
+              </GestureHandlerRootView>
+            </PersistGate>
+          </RootSiblingParent>
         </Provider>
       </SafeAreaProvider>
     </ErrorBoundary>
