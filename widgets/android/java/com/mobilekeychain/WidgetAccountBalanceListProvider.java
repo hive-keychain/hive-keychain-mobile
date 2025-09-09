@@ -74,7 +74,10 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
             // Launch MainActivity to bring app to foreground
             Intent i = new Intent();
             i.setClassName(context.getPackageName(), "com.mobilekeychain.MainActivity");
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            // Pass a hint to the Activity so it can forward to JS when RN is ready
+            i.putExtra("configureWidgets", true);
+            // Ensure we reuse existing activity when possible so onNewIntent is called
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             context.startActivity(i);
         }
     }

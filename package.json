@@ -15,6 +15,7 @@
     "crowdin:push": "crowdin upload sources"
   },
   "dependencies": {
+    "@bittingz/expo-widgets": "^3.0.2",
     "@expo/metro-config": "0.20.0",
     "@expo/vector-icons": "14.1.0",
     "@hiveio/dhive": "1.3.2",
@@ -39,6 +40,7 @@
     "expo-splash-screen": "0.30.10",
     "expo-status-bar": "2.2.3",
     "fs": "^0.0.1-security",
+    "fs-extra": "^11.3.1",
     "fuse.js": "7.1.0",
     "hive-keychain-commons": "1.9.7",
     "hive-tx": "github:hive-keychain/hive-tx-js",
@@ -83,6 +85,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/crypto-js": "^4.2.2",
+    "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.20",
     "@types/md5": "^2.3.5",
     "@types/react": "~19.0.10",

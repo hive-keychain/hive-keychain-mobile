@@ -1,14 +1,12 @@
 const {
   withAndroidManifest,
-  withDangerousMod,
   withAppBuildGradle,
+  withDangerousMod,
 } = require('@expo/config-plugins');
 const fs = require('fs');
 const path = require('path');
+const {withSourceFiles} = require('./withSourceFiles');
 
-/**
- * Add <receiver> and <service> entries for widgets
- */
 function addWidgets(androidManifest) {
   const app = androidManifest.manifest.application[0];
 
@@ -96,7 +94,7 @@ function addWidgets(androidManifest) {
  * Copy only PNG resources & Java into prebuild Android project
  */
 function copyWidgetFiles(projectRoot) {
-  const src = path.join(projectRoot, 'widgets/android');
+  const src = path.join(projectRoot, './widgets/android');
   const dest = path.join(projectRoot, 'android', 'app', 'src', 'main');
 
   if (!fs.existsSync(src)) {
@@ -132,7 +130,7 @@ function copyWidgetFiles(projectRoot) {
   console.log('✅ Widget native files copied into android/app/src/main');
 }
 
-const withAndroidWidget = (config) => {
+const withAndroidWidget = (config, options) => {
   // Inject manifest entries
   config = withAndroidManifest(config, (mod) => {
     mod.modResults = addWidgets(mod.modResults);
@@ -140,13 +138,13 @@ const withAndroidWidget = (config) => {
   });
 
   // Copy Java + resources **after prebuild**
-  config = withDangerousMod(config, [
-    'android',
-    async (config) => {
-      copyWidgetFiles(config.modRequest.projectRoot);
-      return config;
-    },
-  ]);
+  // config = withDangerousMod(config, [
+  //   'android',
+  //   async (config) => {
+  //     copyWidgetFiles(config.modRequest.projectRoot);
+  //     return config;
+  //   },
+  // ]);
 
   config = withAppBuildGradle(config, (gradle) => {
     if (
@@ -161,6 +159,8 @@ const withAndroidWidget = (config) => {
     }
     return gradle;
   });
+  console.log('withSourceFiles', options);
+  config = withSourceFiles(config, options);
 
   return config;
 };
