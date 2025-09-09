@@ -1,6 +1,6 @@
 import {useHeaderHeight} from '@react-navigation/elements';
 import {BarcodeScanningResult, Camera, CameraView} from 'expo-camera';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useThemeContext} from 'src/context/theme.context';
@@ -14,9 +14,23 @@ type Props = {
 
 const QRCode = ({onSuccess, topContent}: Props) => {
   const {theme} = useThemeContext();
+  const [scanned, setScanned] = useState(false);
+  const lastScannedTimestampRef = useRef(0);
   useEffect(() => {
     Camera.requestCameraPermissionsAsync();
   }, []);
+
+  const handleBarcodeScanned = (event: BarcodeScanningResult) => {
+    const timestamp = Date.now();
+
+    if (scanned || timestamp - lastScannedTimestampRef.current < 2000) {
+      //change that 2000 (2 seconds) for whatever value you want
+      return;
+    }
+    lastScannedTimestampRef.current = timestamp;
+    setScanned(true);
+    onSuccess(event);
+  };
   return (
     <View style={{flex: 1}}>
       {topContent ? (
@@ -37,7 +51,7 @@ const QRCode = ({onSuccess, topContent}: Props) => {
         barcodeScannerSettings={{
           barcodeTypes: ['qr'],
         }}
-        onBarcodeScanned={onSuccess}
+        onBarcodeScanned={handleBarcodeScanned}
         style={{flex: 1}}
 
         // reactivate={true}
