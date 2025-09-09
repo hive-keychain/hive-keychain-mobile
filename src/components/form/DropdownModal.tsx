@@ -11,11 +11,12 @@ import React, {
   useState,
 } from 'react';
 import {
+  Pressable,
+  FlatList as RNFlatList,
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
-  TouchableOpacity,
   View,
   ViewStyle,
   useWindowDimensions,
@@ -23,7 +24,7 @@ import {
 import DraggableFlatList, {
   DragEndParams,
 } from 'react-native-draggable-flatlist';
-import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-root-toast';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -103,6 +104,9 @@ const DropdownModal = ({
   const [filteredDropdownList, setFilteredDropdownList] =
     useState<DropdownModalItem[]>(list);
   const [isDragging, setIsDragging] = useState(false);
+  const [pendingSelect, setPendingSelect] = useState<DropdownModalItem | null>(
+    null,
+  );
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
 
@@ -128,14 +132,21 @@ const DropdownModal = ({
 
   const onHandleSelectedItem = useCallback(
     (item: DropdownModalItem) => {
-      setTimeout(() => {
-        setIsListExpanded(false);
-        onReorder?.([...filteredDropdownList]);
-        setTimeout(() => onSelected(item), 100);
-      }, 300);
+      setPendingSelect(item);
+      setIsListExpanded(false);
+      onReorder?.([...filteredDropdownList]);
     },
     [onSelected, onReorder, filteredDropdownList],
   );
+
+  // After overlay closes, apply pending selection
+  useEffect(() => {
+    if (!isListExpanded && pendingSelect) {
+      const toSelect = pendingSelect;
+      setPendingSelect(null);
+      setTimeout(() => onSelected(toSelect), 0);
+    }
+  }, [isListExpanded, pendingSelect, onSelected]);
 
   const onHandleCopyValue = (username: string) => {
     Clipboard.setStringAsync(username);
@@ -211,7 +222,7 @@ const DropdownModal = ({
             />
           )}
           {drag && canBeReordered && (
-            <TouchableOpacity onPressIn={dragCb(drag)}>
+            <Pressable onPressIn={dragCb(drag)}>
               <Icon
                 name={Icons.DRAG}
                 theme={theme}
@@ -221,7 +232,7 @@ const DropdownModal = ({
                 strokeWidth={2}
                 color={PRIMARY_RED_COLOR}
               />
-            </TouchableOpacity>
+            </Pressable>
           )}
         </View>
       ) : null;
@@ -285,9 +296,9 @@ const DropdownModal = ({
 
     return (
       <View style={[{paddingVertical: 4}]}>
-        <TouchableOpacity
-          activeOpacity={1}
+        <Pressable
           onPress={onHandleSelectedItem.bind(null, item)}
+          hitSlop={{top: 10, bottom: 10, left: 8, right: 8}}
           style={[styles.dropdownItem, bgStyle]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
             {item.icon}
@@ -310,7 +321,7 @@ const DropdownModal = ({
             )}
           </View>
           {typeof item === 'object' ? renderIcons(item, drag) : null}
-        </TouchableOpacity>
+        </Pressable>
         {index !== listLength - 1 && (
           <Separator
             additionalLineStyle={{
@@ -358,12 +369,14 @@ const DropdownModal = ({
           </GestureHandlerRootView>
         );
       }
+      // Use RN FlatList for better press reliability
       return (
-        <FlatList
+        <RNFlatList
           {...props}
           data={filteredDropdownList}
           renderItem={renderFlatItem}
           keyExtractor={(item) => item.value}
+          keyboardShouldPersistTaps="always"
         />
       );
     },
@@ -438,8 +451,7 @@ const DropdownModal = ({
   );
 
   const renderSelectedValue = (showOpened?: boolean) => (
-    <TouchableOpacity
-      activeOpacity={1}
+    <Pressable
       onPress={() => {
         setIsListExpanded(!isListExpanded);
       }}
@@ -488,7 +500,7 @@ const DropdownModal = ({
         {...dropdownIconScaledSize}
         color={PRIMARY_RED_COLOR}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
@@ -517,55 +529,57 @@ const DropdownModal = ({
           </Text>
         )}
       </View>
-      <SlidingOverlay
-        showOverlay={isListExpanded}
-        setShowOverlay={(isOpen) => {
-          setIsListExpanded(isOpen);
-          if (!isOpen) {
-            onReorder?.([...filteredDropdownList]);
-          }
-        }}
-        title={dropdownTitle}>
-        {enableSearch && (
-          <CustomSearchBar
-            theme={theme}
-            value={searchValue}
-            onChangeText={(text) => setSearchValue(text)}
-            additionalContainerStyle={styles.searchContainer}
-          />
-        )}
-        <PossiblyDraggableFlatList
-          canBeReordered={canBeReordered}
-          keyboardDismissMode="none"
-          keyboardShouldPersistTaps="handled"
-          scrollEnabled={true}
-          ListHeaderComponent={<Separator />}
-          ListFooterComponent={<Separator />}
-          ListEmptyComponent={
-            <View
-              style={[
-                {
-                  flexGrow: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: 16,
-                },
-              ]}>
-              <Text style={[inputStyle(theme, width).label]}>
-                {translate('wallet.operations.token_settings.empty_results')}
-              </Text>
-            </View>
-          }
-          data={[...filteredDropdownList]}
-          filteredDropdownList={filteredDropdownList}
-          scrollToOverflowEnabled
-          onDragEnd={({data}) => {
-            setFilteredDropdownList([...data]);
+      {isListExpanded ? (
+        <SlidingOverlay
+          showOverlay={isListExpanded}
+          setShowOverlay={(isOpen) => {
+            setIsListExpanded(isOpen);
+            if (!isOpen) {
+              onReorder?.([...filteredDropdownList]);
+            }
           }}
-          renderDraggableItem={renderDraggableItem}
-          renderFlatItem={renderFlatItem}
-        />
-      </SlidingOverlay>
+          title={dropdownTitle}>
+          {enableSearch && (
+            <CustomSearchBar
+              theme={theme}
+              value={searchValue}
+              onChangeText={(text) => setSearchValue(text)}
+              additionalContainerStyle={styles.searchContainer}
+            />
+          )}
+          <PossiblyDraggableFlatList
+            canBeReordered={canBeReordered}
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps="always"
+            scrollEnabled={true}
+            ListHeaderComponent={<Separator />}
+            ListFooterComponent={<Separator />}
+            ListEmptyComponent={
+              <View
+                style={[
+                  {
+                    flexGrow: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 16,
+                  },
+                ]}>
+                <Text style={[inputStyle(theme, width).label]}>
+                  {translate('wallet.operations.token_settings.empty_results')}
+                </Text>
+              </View>
+            }
+            data={[...filteredDropdownList]}
+            filteredDropdownList={filteredDropdownList}
+            scrollToOverflowEnabled
+            onDragEnd={({data}) => {
+              setFilteredDropdownList([...data]);
+            }}
+            renderDraggableItem={renderDraggableItem}
+            renderFlatItem={renderFlatItem}
+          />
+        </SlidingOverlay>
+      ) : null}
     </>
   );
 };

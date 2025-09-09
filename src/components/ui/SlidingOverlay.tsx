@@ -24,6 +24,7 @@ type Props = {
   title: string;
   maxHeightPercent?: number;
   minHeightPercent?: number;
+  onDismiss?: () => void;
 };
 
 const SafeSlidingOverlay = ({
@@ -33,6 +34,7 @@ const SafeSlidingOverlay = ({
   title,
   maxHeightPercent = 0.6,
   minHeightPercent = 0.4,
+  onDismiss,
 }: Props) => {
   const {theme} = useThemeContext();
   const {height, width} = useWindowDimensions();
@@ -53,10 +55,11 @@ const SafeSlidingOverlay = ({
 
   return (
     <Modal
-      animationType="fade"
+      animationType="none"
       transparent
       visible={showOverlay}
-      onRequestClose={() => setShowOverlay(false)}>
+      onRequestClose={() => setShowOverlay(false)}
+      onDismiss={onDismiss}>
       <TouchableWithoutFeedback onPress={() => setShowOverlay(false)}>
         <View style={styles.backdrop} />
       </TouchableWithoutFeedback>
