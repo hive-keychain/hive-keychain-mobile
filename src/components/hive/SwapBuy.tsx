@@ -56,6 +56,7 @@ const SwapBuy = () => {
   );
 };
 
+
 export default SwapBuy;
 
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>

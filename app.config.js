@@ -27,7 +27,7 @@ export default ({config}) => ({
       android: {
         package:
           process.env.APP_VARIANT !== 'prod'
-            ? 'com.mobilekeychain.dev.expo'
+            ? 'com.mobilekeychain'
             : 'com.mobilekeychain',
         // googleServicesFile: './google-services.json',
         permissions: [
@@ -59,6 +59,7 @@ export default ({config}) => ({
       },
       plugins: [
         'expo-localization',
+        './widgets/withAndroidWidget',
         [
           'expo-camera',
           {

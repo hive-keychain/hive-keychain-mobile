@@ -20,6 +20,9 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
+  "[java]": {
+    "editor.formatOnSave": false,
+  },
   "eslint.run": "onSave",
   "liveServer.settings.port": 1337,
   "liveServer.settings.donotShowInfoMsg": true,
@@ -49,5 +52,6 @@
   "editor.inlineSuggest.enabled": true,
   "thunder-client.saveToWorkspace": true,
   "editor.minimap.enabled": false,
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.format.settings.url": "eclipse-formatter.xml"
 }

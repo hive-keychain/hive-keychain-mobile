@@ -33,5 +33,5 @@
     },
     "types": ["react"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "./node_modules/redux-persist/types"]
+  "include": ["**/*.ts", "**/*.tsx", "./node_modules/redux-persist/types", "withAndroidWidget.js"]
 }

@@ -144,8 +144,11 @@ const Main = ({
 
   useEffect(() => {
     if (Platform.OS === 'ios') return;
-    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
+    console.log('NativeModules', NativeModules);
+    const eventEmitter = new NativeEventEmitter(NativeModules.WidgetBridge);
+    console.log('registering event');
     let eventListener = eventEmitter.addListener('command_event', (event) => {
+      console.log('event', event);
       if (event && Object.values(event).length >= 1) {
         setEventReceived(event);
       }
