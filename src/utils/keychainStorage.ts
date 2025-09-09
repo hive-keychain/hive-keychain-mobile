@@ -5,7 +5,6 @@ import {translate} from './localize';
 export const saveOnKeychain = async (radix: string, string: string) => {
   const biometrics = await Keychain.getSupportedBiometryType();
   const chunks = chunkArray(string.split(''), 200).map((e) => e.join(''));
-  console.log(radix, string, chunks);
   await Keychain.setGenericPassword(radix, chunks.length.toString(), {
     service: radix,
   });

@@ -9,13 +9,18 @@ export const setNavigator = (
 };
 
 export const navigate = (name: string, params?: object) => {
-  if (navigator.isReady()) {
+  if (navigator && 'isReady' in navigator && navigator.isReady()) {
     navigator.dispatch(CommonActions.navigate({name, params}));
   }
 };
 
 export const goBack = () => {
-  if (navigator.isReady() && navigator.canGoBack()) {
+  if (
+    navigator &&
+    'isReady' in navigator &&
+    navigator.isReady() &&
+    navigator.canGoBack()
+  ) {
     navigator.goBack();
   }
 };
@@ -26,11 +31,17 @@ export const goBackAndNavigate = (name: string, params?: object) => {
 };
 
 export const resetStackAndNavigate = (name: string) => {
-  if (navigator.isReady()) {
+  if (navigator && 'isReady' in navigator && navigator.isReady()) {
     navigator.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{name}],
+        routes: [
+          {
+            name: 'Main',
+            // Ensure nested navigation to drawer route like 'WALLET'
+            params: {screen: name},
+          },
+        ],
       }),
     );
   }

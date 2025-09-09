@@ -52,7 +52,6 @@ const AccountManagement = ({
   useLockedPortrait(navigation);
 
   const username = account.name;
-  if (!username) return null;
 
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -61,6 +60,9 @@ const AccountManagement = ({
   const [check1, setCheck1] = useState<boolean>(false);
   const [check2, setCheck2] = useState<boolean>(false);
   const [showQR, setShowQR] = useState<boolean>(false);
+
+  // Avoid returning before hooks are called to keep hook order stable
+  if (!username) return null;
   useEffect(() => {
     initCheckKeysOnAccount(account.name);
   }, [account, username]);
@@ -111,7 +113,7 @@ const AccountManagement = ({
         modalContent: (
           <ConfirmationPage
             route={
-              ({params: confirmationData} as unknown) as ConfirmationPageRoute
+              {params: confirmationData} as unknown as ConfirmationPageRoute
             }
           />
         ),
