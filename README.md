@@ -1,12 +1,13 @@
 # Hive Keychain for Mobile
 
 React Native wallet for the Hive Blockchain
+Built with expo
 
-# Install
+# Install and prebuild
 
 - `npm i`
-- `cp android/gradle.properties.example android/gradle.properties`
-- `cd ios; pod install`
+- Create a `firebase` folder at the root with the required files, or disable all analytics from the project
+- `npx expo prebuild`
 
 # Run in dev environment
 
@@ -17,18 +18,3 @@ React Native wallet for the Hive Blockchain
 ## iOS:
 
 `npm run ios`
-
-# Test production
-
-## Android:
-
-Bundle : `npm run android-bundle`
-Test Production Release : `npm run android-release`
-
-## iOS:
-
-Coming soon
-
-## Troubleshooting
-
-- SHA1 error : `watchman watch-del-all && npm run clean`
