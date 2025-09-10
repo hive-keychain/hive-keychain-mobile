@@ -49,9 +49,9 @@ function copyResourceFiles(widgetFolderPath, platformRoot) {
     return;
   }
 
-  console.debug(
-    `Copying resources from ${resourcesFolder} to ${destinationFolder}`,
-  );
+  // console.debug(
+  //   `Copying resources from ${resourcesFolder} to ${destinationFolder}`,
+  // );
 
   safeCopy(resourcesFolder, destinationFolder);
 }
@@ -92,9 +92,9 @@ function copySourceFiles(widgetFolderPath, platformRoot, packageName) {
     fs.mkdirSync(destinationFolder);
   }
 
-  console.debug(
-    `Copying source files from ${originalSourceFolder} to ${destinationFolder}`,
-  );
+  // console.debug(
+  //   `Copying source files from ${originalSourceFolder} to ${destinationFolder}`,
+  // );
 
   const paths = fs.readdirSync(originalSourceFolder);
 
@@ -116,7 +116,7 @@ function copySourceFiles(widgetFolderPath, platformRoot, packageName) {
       continue;
     }
 
-    console.debug(`Copying file ${sourcePath} to ${destinationPath}`);
+    // console.debug(`Copying file ${sourcePath} to ${destinationPath}`);
     fs.copySync(sourcePath, destinationPath);
     sourceFiles.push(destinationPath);
   }
@@ -143,9 +143,9 @@ function modifySourceFiles(distPlaceholder, sourceFiles, packageName) {
     return;
   }
 
-  console.debug(
-    `Modifying source files with placeholder ${distPlaceholder} to package ${packageName}`,
-  );
+  // console.debug(
+  //   `Modifying source files with placeholder ${distPlaceholder} to package ${packageName}`,
+  // );
 
   const packageSearchStr = `package ${distPlaceholder}`;
   const packageReplaceStr = `package ${packageName}`;
@@ -155,7 +155,7 @@ function modifySourceFiles(distPlaceholder, sourceFiles, packageName) {
 
   for (const filePath of sourceFiles) {
     const contents = fs.readFileSync(filePath, {encoding: 'utf-8'});
-    console.debug(contents);
+    // console.debug(contents);
 
     const withModulesFixed = replaceAll(
       contents,

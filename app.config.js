@@ -4,7 +4,7 @@ export default ({config}) => ({
     expo: {
       name: 'Hive Keychain',
       slug: 'hive-keychain',
-      version: '1.0.0',
+      version: '2.9.0',
       orientation: 'portrait',
       icon: './src/assets/ic_launcher-playstore.png',
       userInterfaceStyle: 'light',
@@ -22,14 +22,14 @@ export default ({config}) => ({
           NSLocationWhenInUseUsageDescription:
             'We need your location for maps.',
         },
-        // googleServicesFile: './google-services.json',
+        googleServicesFile: './firebase/GoogleService-Info.plist',
       },
       android: {
         package:
           process.env.APP_VARIANT !== 'prod'
-            ? 'com.mobilekeychain.dev.expo'
+            ? 'com.mobilekeychain.dev'
             : 'com.mobilekeychain',
-        // googleServicesFile: './google-services.json',
+        googleServicesFile: './firebase/google-services.json',
         permissions: [
           'android.permission.CAMERA',
           'ACCESS_FINE_LOCATION',
@@ -90,6 +90,14 @@ export default ({config}) => ({
             ],
           },
         ],
+        [
+          'expo-build-properties',
+          {
+            ios: {useFrameworks: 'static'},
+          },
+        ],
+        '@react-native-firebase/app',
+        '@react-native-firebase/crashlytics',
       ],
     },
   },

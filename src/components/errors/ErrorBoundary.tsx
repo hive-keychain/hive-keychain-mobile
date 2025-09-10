@@ -1,3 +1,4 @@
+import crashlytics from '@react-native-firebase/crashlytics';
 import React, {type ComponentType, type ReactNode} from 'react';
 
 import FallbackComponent, {
@@ -27,7 +28,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, info: {componentStack: string}) {
     console.log(' ========================= sending error', error);
-    // crashlytics().recordError(error,error.name);
+    crashlytics().recordError(error, error.name);
     if (typeof this.props.onError === 'function') {
       this.props.onError(error, info?.componentStack);
     }

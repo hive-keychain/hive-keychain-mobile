@@ -37,7 +37,8 @@ yarn-error.*
 *.tsbuildinfo
 
 # google services
-google-services.json
+firebase
+
 .git2
 
 /android/*
