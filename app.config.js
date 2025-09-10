@@ -6,7 +6,7 @@ export default ({config}) => ({
       slug: 'hive-keychain',
       version: '2.9.0',
       orientation: 'portrait',
-      icon: './src/assets/ic_launcher-playstore.png',
+      icon: './src/assets/ios_launcher.png',
       userInterfaceStyle: 'light',
       newArchEnabled: true,
       assetBundlePatterns: ['src/assets/fonts/*'],
@@ -38,9 +38,8 @@ export default ({config}) => ({
         softwareKeyboardLayoutMode: 'pan',
         adaptiveIcon: {
           resizeMode: 'contain',
-          foregroundImage:
-            './src/assets/new_UI/keychain_logo_powered_dark_theme.png',
-          backgroundColor: '#212838',
+          foregroundImage: './src/assets/android_launcher.png',
+          backgroundColor: '#000000',
         },
         edgeToEdgeEnabled: true,
         intentFilters: [
