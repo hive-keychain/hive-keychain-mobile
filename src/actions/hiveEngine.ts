@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {HiveEngineApi} from 'api/hiveEngine';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AppThunk} from 'src/hooks/redux';
 import {DEFAULT_HE_RPC_NODE} from 'src/interfaces/hiveEngineRpc.interface';
@@ -9,7 +10,6 @@ import {
   TokenMarket,
   TokenTransaction,
 } from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState, store} from 'store';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine';
 import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';

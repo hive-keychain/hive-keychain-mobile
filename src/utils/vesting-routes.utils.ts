@@ -8,8 +8,8 @@ import {
   VestingRouteDifference,
 } from 'components/popups/vesting-routes/vesting-routes.interface';
 import _ from 'lodash';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Key} from 'src/interfaces/keys.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {broadcast, getData} from './hive';
 
 const getVestingRoutes = async (
@@ -54,10 +54,11 @@ const getLastVestingRoutes = async () => {
 };
 
 const getChangedVestingRoutes = async (localAccounts: Account[]) => {
-  let currentVestingRoutes = await VestingRoutesUtils.getAllAccountsVestingRoutes(
-    localAccounts.map((acc) => acc.name),
-    'outgoing',
-  );
+  let currentVestingRoutes =
+    await VestingRoutesUtils.getAllAccountsVestingRoutes(
+      localAccounts.map((acc) => acc.name),
+      'outgoing',
+    );
   const lastVestingRoutes = await VestingRoutesUtils.getLastVestingRoutes();
 
   if (!lastVestingRoutes) {

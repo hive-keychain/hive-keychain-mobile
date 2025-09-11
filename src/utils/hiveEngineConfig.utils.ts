@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_ACCOUNT_HISTORY_RPCS,
@@ -6,7 +7,6 @@ import {
   DEFAULT_HIVE_ENGINE_RPCS,
   HiveEngineConfig,
 } from 'src/interfaces/hiveEngineRpc.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 
 let rpc = DEFAULT_HE_RPC_NODE;
 

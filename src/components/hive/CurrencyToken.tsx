@@ -11,9 +11,9 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
-import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
-import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
-import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
+import {getHBDButtonList} from 'src/lists/hbdOperationButtonList';
+import {getHiveButtonList} from 'src/lists/hiveOperationButtonList';
+import {getHPButtonList} from 'src/lists/hpOperationButtonList';
 import {getCardStyle} from 'src/styles/card';
 import {GREEN_SUCCESS, PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {

@@ -7,12 +7,12 @@ import {
   ISwap,
   SwapStatus,
 } from 'hive-keychain-commons/lib/swaps/swap.interface';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {
   SwapConfig,
   SwapServerStatus,
 } from 'src/interfaces/swapTokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {withCommas} from './format';
 import {getCurrency, sendToken, transfer} from './hive';
 import {sanitizeAmount, sanitizeUsername} from './hiveUtils';

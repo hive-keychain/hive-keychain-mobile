@@ -7,7 +7,7 @@ import {
   InfoScreenData,
   InfoScreenItemList,
   InfoScreenType,
-} from 'src/reference-data/infoScreenItemList';
+} from 'src/lists/infoScreenItemList';
 import {getColors} from 'src/styles/colors';
 import {
   button_link_primary_small,

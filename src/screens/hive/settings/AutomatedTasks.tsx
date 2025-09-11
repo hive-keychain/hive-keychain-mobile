@@ -30,7 +30,7 @@ import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {CARD_PADDING_HORIZONTAL, getCardStyle} from 'src/styles/card';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {ICONMINDIMENSIONS} from 'src/styles/icon';

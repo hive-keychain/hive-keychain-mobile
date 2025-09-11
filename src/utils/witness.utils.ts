@@ -3,13 +3,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
 import keychain from 'api/keychain';
 import moment from 'moment';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Key} from 'src/interfaces/keys.interface';
 import {
   LastSigningKeys,
   WitnessInfo,
   WitnessParamsForm,
 } from 'src/interfaces/witness.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {WitnessesConfig} from './config';
 import {
   fromNaiAndSymbol,

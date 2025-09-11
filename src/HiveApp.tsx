@@ -38,8 +38,8 @@ import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {noHeader, setNavigator} from 'utils/navigation';
 import {useWorkingRPC} from 'utils/rpc-switcher.utils';
 import {checkRpcStatus} from 'utils/rpc.utils';
+import {FLOATINGBAR_ALLOWED_SCREENS} from './lists/FloatingScreenList';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
-import {FLOATINGBAR_ALLOWED_SCREENS} from './reference-data/FloatingScreenList';
 const Root = createStackNavigator<RootStackParam>();
 let rpc: string | undefined = '';
 

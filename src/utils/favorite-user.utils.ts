@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Account, ActiveAccount} from 'actions/interfaces';
 import {ExchangesUtils} from 'hive-keychain-commons';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {
   AutoCompleteCategory,
   AutoCompleteValue,
@@ -9,8 +10,7 @@ import {
 import {
   FavoriteUserItems,
   FavoriteUserListName,
-} from 'src/interfaces/favorite-user.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+} from 'src/interfaces/favoriteUsers.interface';
 import {RootState, store} from 'store';
 
 export interface AutocompleteListOption {

@@ -7,6 +7,7 @@ import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
 import React from 'react';
 import SimpleToast from 'react-native-root-toast';
 import {Socket, io} from 'socket.io-client';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
 import {
   ConnectDisconnectMessage,
@@ -24,7 +25,6 @@ import {
   SocketMessageCommand,
   TransactionOptionsMetadata,
 } from 'src/interfaces/multisig.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState, store} from 'store';
 import {MultisigConfig as MultisigConfiguration} from 'utils/config';
 import {

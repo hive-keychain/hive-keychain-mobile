@@ -2,7 +2,7 @@ import {Asset} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadAccount} from 'actions/hive';
 import moment from 'moment';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';

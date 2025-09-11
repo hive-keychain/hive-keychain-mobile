@@ -10,7 +10,7 @@ import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,

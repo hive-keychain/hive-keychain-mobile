@@ -14,8 +14,8 @@ import {
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect, useSelector} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Token} from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {fields_primary_text_1} from 'src/styles/typography';

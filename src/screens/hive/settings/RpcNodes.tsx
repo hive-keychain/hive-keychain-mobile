@@ -25,6 +25,7 @@ import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {
   DEFAULT_ACCOUNT_HISTORY_RPCS,
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
@@ -32,7 +33,6 @@ import {
   DEFAULT_HE_RPC_NODE,
   DEFAULT_HIVE_ENGINE_RPCS,
 } from 'src/interfaces/hiveEngineRpc.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {

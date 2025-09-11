@@ -8,7 +8,7 @@ import {Chain, ChainContext} from './context/multichain.context';
 import {OrientationProvider} from './context/orientation.context';
 import {TabProvider} from './context/tab.context';
 import {Theme, ThemeContext} from './context/theme.context';
-import {KeychainStorageKeyEnum} from './reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from './enums/keychainStorageKey.enum';
 
 export default () => {
   const [chain, setChain] = useState<Chain>();

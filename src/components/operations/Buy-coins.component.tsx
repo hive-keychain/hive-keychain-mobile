@@ -14,7 +14,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
-import {getBuyCoinsListItem} from 'src/reference-data/buy-coins-list-item.list';
+import {getBuyCoinsListItem} from 'src/lists/buy-coins-list-item.list';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
