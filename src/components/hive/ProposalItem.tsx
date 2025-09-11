@@ -29,7 +29,7 @@ import {withCommas} from 'utils/format';
 import {updateProposalVote} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {FundedOption, Proposal} from 'utils/proposals';
+import {FundedOption, Proposal} from 'utils/proposals.utils';
 import Icon from './Icon';
 
 interface ProposalItemProps {

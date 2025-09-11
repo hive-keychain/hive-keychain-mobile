@@ -21,7 +21,7 @@ import {
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {navigate} from 'utils/navigation';
-import {NotificationsUtils} from 'utils/notifications.utils';
+import {PeakDNotificationsUtils} from 'utils/notifications.utils';
 import Icon from '../Icon';
 import NotificationsModal from './NotificationsModal';
 
@@ -38,7 +38,7 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
   }, [user]);
 
   const init = async (username: string) => {
-    const {notifs, hasMore} = await NotificationsUtils.getNotifications(
+    const {notifs, hasMore} = await PeakDNotificationsUtils.getAllNotifications(
       username,
       properties,
     );

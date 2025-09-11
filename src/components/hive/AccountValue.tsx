@@ -15,7 +15,7 @@ import {
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {withCommas} from 'utils/format';
-import {getAccountValue} from 'utils/price';
+import {getAccountValue} from 'utils/price.utils';
 
 type Props = {
   prices: CurrencyPrices;

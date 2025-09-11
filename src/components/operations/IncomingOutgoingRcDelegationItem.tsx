@@ -36,7 +36,7 @@ import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
-import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
+import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 
 interface Props {
   theme: Theme;

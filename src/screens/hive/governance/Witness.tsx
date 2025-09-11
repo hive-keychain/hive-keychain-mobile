@@ -34,7 +34,7 @@ import {AsyncUtils} from 'utils/async.utils';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import ProxyUtils from 'utils/proxy';
+import ProxyUtils from 'utils/proxy.utils';
 import {MAX_WITNESS_VOTE, WITNESS_DISABLED_KEY} from 'utils/witness.utils';
 import * as ValidUrl from 'valid-url';
 

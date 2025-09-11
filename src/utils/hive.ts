@@ -32,7 +32,7 @@ import {
   HiveTxBroadcastResult,
   HiveTxBroadcastSuccessResponse,
   TransactionResult,
-} from 'src/interfaces/hive-tx.interface';
+} from 'src/interfaces/hiveTx.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RootState, store} from 'store';
 import {hiveEngine} from 'utils/config';
@@ -49,7 +49,7 @@ import {
   RequestRemoveKeyAuthority,
 } from './keychain.types';
 import {MultisigUtils} from './multisig.utils';
-import {useWorkingRPC} from './rpc-switcher.utils';
+import {useWorkingRPC} from './rpcSwitcher.utils';
 
 type BroadcastResult = {id: string; tx_id: string};
 

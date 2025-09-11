@@ -16,8 +16,8 @@ import {
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {VersionLogUtils} from 'utils/version-log.utils';
-import {WhatsNewUtils} from 'utils/whats-new.utils';
+import {VersionLogUtils} from 'utils/version.utils';
+import {WhatsNewUtils} from 'utils/whatsNew.utils';
 import {Feature, WhatsNewContent} from './whats-new.interface';
 interface Props {
   navigation: WalletNavigation;

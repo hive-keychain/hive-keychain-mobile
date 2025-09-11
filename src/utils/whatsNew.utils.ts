@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
-import {VersionLogUtils} from './version-log.utils';
+import {VersionLogUtils} from './version.utils';
 
 const saveLastSeen = async () => {
   const currentAppVersion = VersionLogUtils.getCurrentMobileAppVersion()

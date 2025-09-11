@@ -6,7 +6,7 @@ import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
 import {getTokenPrecision} from 'utils/tokens.utils';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';

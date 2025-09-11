@@ -15,7 +15,7 @@ import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
 import {translate} from 'utils/localize';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
 import {BackToTopButton} from '../ui/Back-To-Top-Button';
 import SwapHistoryItem from './SwapHistoryItem';
 

@@ -56,7 +56,7 @@ import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
 import {
   getAllTokens,
   getHiveEngineTokenPrice,

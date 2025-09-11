@@ -15,7 +15,7 @@ import {getColors} from 'src/styles/colors';
 import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {navigate} from 'utils/navigation';
-import {PeakDNotificationsUtils} from 'utils/peakd-notifications.utils';
+import {PeakDNotificationsUtils} from 'utils/notifications.utils';
 
 const Notifications = ({active}: PropsFromRedux) => {
   const [isActive, setActive] = useState(false);

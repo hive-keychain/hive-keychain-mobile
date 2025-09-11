@@ -27,7 +27,7 @@ import {RootState} from 'store';
 import {formatBalance} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
-import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
+import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 import IncomingOutgoingRcDelegationItem from './IncomingOutgoingRcDelegationItem';
 import OperationThemed from './OperationThemed';
 

@@ -19,7 +19,7 @@ import {
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
-import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
+import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation.utils';
 import HAS from '..';
 import {
   answerFailedBroadcastReq,

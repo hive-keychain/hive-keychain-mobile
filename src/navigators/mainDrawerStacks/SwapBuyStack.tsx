@@ -16,7 +16,7 @@ import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {Dimensions} from 'utils/common.types';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
 
 const Stack = createStackNavigator();
 

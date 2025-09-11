@@ -14,7 +14,7 @@ import {
 import {formatBalance} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {getAccount} from 'utils/hiveUtils';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
 
 type Props = {
   username: string;

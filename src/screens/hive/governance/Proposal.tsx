@@ -15,8 +15,10 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {AsyncUtils} from 'utils/async.utils';
-import ProposalUtils, {Proposal as ProposalInterface} from 'utils/proposals';
-import ProxyUtils from 'utils/proxy';
+import ProposalUtils, {
+  Proposal as ProposalInterface,
+} from 'utils/proposals.utils';
+import ProxyUtils from 'utils/proxy.utils';
 
 type Props = {
   isMultisig: boolean;

@@ -83,7 +83,7 @@ import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
+import {VestingRoutesUtils} from 'utils/vestingRoutes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 
 const Main = ({

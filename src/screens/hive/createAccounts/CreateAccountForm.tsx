@@ -64,7 +64,7 @@ import {
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
+import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 
 interface SelectOption {
   label: string;

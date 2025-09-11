@@ -52,8 +52,8 @@ import {
 import {RequestError, RequestSuccess} from 'utils/keychain.types';
 import {MultisigUtils} from 'utils/multisig.utils';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
-import {hasPreference} from 'utils/preferences';
-import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
+import {hasPreference} from 'utils/preferences.utils';
+import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation.utils';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';

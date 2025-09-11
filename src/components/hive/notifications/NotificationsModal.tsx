@@ -30,8 +30,7 @@ import {
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {NotificationsUtils} from 'utils/notifications.utils';
-
+import {PeakDNotificationsUtils} from 'utils/notifications.utils';
 type Props = {
   notifs: Notification[];
   user: ActiveAccount;
@@ -75,7 +74,7 @@ const NotificationsModal = ({
 
   const markAllAsRead = async () => {
     setSettingNotifications(true);
-    await NotificationsUtils.markAllAsRead(user);
+    await PeakDNotificationsUtils.markAllAsRead(user);
     setNotifications(
       notifications?.map((notif) => {
         notif.read = true;
@@ -96,7 +95,7 @@ const NotificationsModal = ({
 
   const handleLoadMore = async () => {
     setIsLoadingMore(true);
-    const {notifs, hasMore} = await NotificationsUtils.getNotifications(
+    const {notifs, hasMore} = await PeakDNotificationsUtils.getAllNotifications(
       user.name!,
       properties!,
       notifications,
