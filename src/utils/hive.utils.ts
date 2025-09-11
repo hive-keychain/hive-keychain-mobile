@@ -3,7 +3,6 @@ import {
   CollateralizedConversion,
   Delegator,
   GlobalProperties,
-  Rpc,
 } from 'actions/interfaces';
 import api from 'api/keychain';
 import {PendingOutgoingUndelegation} from 'src/interfaces/delegations.interface';
@@ -11,7 +10,6 @@ import {getClient, getData} from './hiveLibs.utils';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
 const HIVE_100_PERCENT = 10000;
-export const DEFAULT_RPC: Rpc = {uri: 'https://api.hive.blog', testnet: false};
 
 export const getVP = (account: ExtendedAccount) => {
   if (!account?.name) {
@@ -171,24 +169,6 @@ export const getConversionRequests = async (
 export const getSavingsRequests = async (name: string) => {
   return await getClient().database.call('get_savings_withdraw_to', [name]);
 };
-
-export const rpcList: Rpc[] = [
-  DEFAULT_RPC,
-  {uri: 'https://api.deathwing.me', testnet: false},
-  {uri: 'https://api.openhive.network', testnet: false},
-  {uri: 'https://anyx.io', testnet: false},
-  {uri: 'https://api.pharesim.me', testnet: false},
-  {uri: 'https://hived.emre.sh', testnet: false},
-  {uri: 'https://rpc.ausbit.dev', testnet: false},
-  {uri: 'https://rpc.ecency.com', testnet: false},
-  {uri: 'https://techcoderx.com', testnet: false},
-  {uri: 'https://hive-api.arcange.eu', testnet: false},
-  {
-    uri: 'https://testnet.openhive.network',
-    testnet: true,
-    chainId: '18dcf0a285365fc58b71f18b3d3fec954aa0c141c44e4e5cb4cf777b9eab274e',
-  },
-];
 
 export const getAccountKeys = async (username: string) => {
   const account = (await getClient().database.getAccounts([username]))[0];

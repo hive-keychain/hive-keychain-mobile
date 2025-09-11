@@ -2,9 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setRpc} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
+import {rpcList} from 'lists/rpc.list';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {store} from 'store';
-import {rpcList} from './hive.utils';
 import {checkRpcStatus} from './rpc.utils';
 
 export const useWorkingRPC = async (rpc?: Rpc) => {

@@ -20,6 +20,7 @@ module.exports = function (api) {
             screens: './src/screens',
             store: './src/store',
             utils: './src/utils',
+            lists: './src/lists',
             src: './src',
           },
           extensions: [

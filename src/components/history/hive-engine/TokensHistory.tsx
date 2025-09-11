@@ -23,7 +23,7 @@ import {
   IN_TOKENS_TRANSACTIONS,
   OUT_TOKENS_TRANSACTIONS,
   TokenTransactionUtils,
-} from 'utils/token-transaction.utils';
+} from 'utils/tokenTransaction.utils';
 import {TokenHistoryItemComponent} from './TokenHistoryItem';
 
 export type TokenHistoryProps = {

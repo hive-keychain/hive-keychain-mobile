@@ -11,6 +11,7 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
+import {DEFAULT_RPC, rpcList} from 'lists/rpc.list';
 import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
@@ -46,7 +47,6 @@ import {
   headlines_primary_headline_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {DEFAULT_RPC, rpcList} from 'utils/hive.utils';
 import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 import {translate} from 'utils/localize';
 import {addCustomRpc, deleteCustomRpc, getCustomRpcs} from 'utils/rpc.utils';

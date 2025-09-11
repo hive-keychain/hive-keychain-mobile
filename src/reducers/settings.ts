@@ -5,11 +5,11 @@ import {
   SET_MOBILE_SETTINGS,
   SET_RPC,
 } from 'actions/types';
+import {DEFAULT_RPC} from 'lists/rpc.list';
 import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_HE_RPC_NODE,
 } from 'src/interfaces/hiveEngineRpc.interface';
-import {DEFAULT_RPC} from 'utils/hive.utils';
 
 export default (
   state: Settings = {

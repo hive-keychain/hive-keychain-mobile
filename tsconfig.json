@@ -28,6 +28,7 @@
       "screens/*": ["./src/screens/*"],
       "store": ["./src/store"],
       "utils/*": ["./src/utils/*"],
+      "lists/*": ["./src/lists/*"],
       "styles": ["./src/styles"],
       "src": ["./src"], 
     },
