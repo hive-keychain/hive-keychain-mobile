@@ -1,29 +1,25 @@
 import React from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
-import {Width} from 'src/interfaces/common.interface';
+import {Dimensions} from 'src/interfaces/common.interface';
 
 const Marker = () => {
   const styles = getStyles(useWindowDimensions());
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <View style={styles.marker}>
-        <View style={[styles.markerSide, styles.topLeft]}></View>
-        <View style={[styles.markerSide, styles.topRight]}></View>
-        <View style={[styles.markerSide, styles.bottomLeft]}></View>
-        <View style={[styles.markerSide, styles.bottomRight]}></View>
-      </View>
+    <View style={styles.marker}>
+      <View style={[styles.markerSide, styles.topLeft]}></View>
+      <View style={[styles.markerSide, styles.topRight]}></View>
+      <View style={[styles.markerSide, styles.bottomLeft]}></View>
+      <View style={[styles.markerSide, styles.bottomRight]}></View>
     </View>
   );
 };
 
-const getStyles = ({width}: Width) =>
+const getStyles = ({width, height}: Dimensions) =>
   StyleSheet.create({
     marker: {
+      position: 'absolute',
+      top: 0.2 * height,
+      left: 0.1 * width,
       width: 0.8 * width,
       height: 0.8 * width,
     },

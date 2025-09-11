@@ -44,7 +44,6 @@ import {
   RequestRemoveKeyAuthority,
 } from '../interfaces/keychain.interface';
 import {sleep} from './keychain.utils';
-import {useWorkingRPC} from './rpcSwitcher.utils';
 
 type BroadcastResult = {id: string; tx_id: string};
 
@@ -712,7 +711,14 @@ export const getData = async (
   const response = await call(method, params);
   if (response?.result) {
     return key ? response.result[key] : response.result;
-  } else useWorkingRPC();
+  } else {
+    try {
+      const {useWorkingRPC} = await import('./rpcSwitcher.utils');
+      await useWorkingRPC();
+    } catch (e) {
+      // ignore fallback errors
+    }
+  }
   throw new Error(
     `Error while retrieving data from ${method} : ${JSON.stringify(
       response.error,

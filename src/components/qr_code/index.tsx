@@ -51,9 +51,8 @@ const QRCode = ({onSuccess, topContent}: Props) => {
           barcodeTypes: ['qr'],
         }}
         onBarcodeScanned={handleBarcodeScanned}
-        style={{flex: 1}}>
-        <Marker />
-      </CameraView>
+        style={{flex: 1}}></CameraView>
+      <Marker />
     </View>
   );
 };
