@@ -1,13 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
+  DEFAULT_ACCOUNT_HISTORY_RPCS,
   DEFAULT_HE_RPC_NODE,
-} from 'screens/hive/settings/RpcNodes';
-import {
-  DefaultAccountHistoryApis,
-  DefaultHiveEngineRpcs,
+  DEFAULT_HIVE_ENGINE_RPCS,
   HiveEngineConfig,
-} from 'src/interfaces/hive-engine-rpc.interface';
+} from 'src/interfaces/hiveEngineRpc.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 
 let rpc = DEFAULT_HE_RPC_NODE;
@@ -32,7 +30,7 @@ const getHiveEngineRpcList = async (dynamicEnabled: boolean = false) => {
   if (dynamicEnabled) {
     return [];
   }
-  return DefaultHiveEngineRpcs;
+  return DEFAULT_HIVE_ENGINE_RPCS;
 };
 
 const switchToNextRpc = async () => {
@@ -83,7 +81,8 @@ const getCustomAccountHistoryApi = async () => {
   return customAccountHistoryApis ? customAccountHistoryApis : ([] as string[]);
 };
 const addCustomAccountHistoryApi = async (api: string) => {
-  const savedCustomAccountHistoryApis = await HiveEngineConfigUtils.getCustomAccountHistoryApi();
+  const savedCustomAccountHistoryApis =
+    await HiveEngineConfigUtils.getCustomAccountHistoryApi();
   savedCustomAccountHistoryApis.push(api);
   await AsyncStorage.setItem(
     KeychainStorageKeyEnum.HIVE_ENGINE_CUSTOM_ACCOUNT_HISTORY_API,
@@ -102,11 +101,11 @@ const deleteCustomAccountHistoryApi = async (api: string) => {
 };
 
 const isRpcDefault = (rpc: string) => {
-  return DefaultHiveEngineRpcs.includes(rpc);
+  return DEFAULT_HIVE_ENGINE_RPCS.includes(rpc);
 };
 
 const isAccountHistoryApiDefault = (api: string) => {
-  return DefaultAccountHistoryApis.includes(api);
+  return DEFAULT_ACCOUNT_HISTORY_RPCS.includes(api);
 };
 
 const saveConfigInStorage = async (config: HiveEngineConfig) => {

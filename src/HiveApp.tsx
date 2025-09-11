@@ -23,17 +23,17 @@ import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
+import {BottomNavigationComponent} from 'screens/hive/wallet/BottomNavigation.component';
 import Modal from 'screens/Modal';
 import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_HE_RPC_NODE,
-} from 'screens/hive/settings/RpcNodes';
-import {BottomNavigationComponent} from 'screens/hive/wallet/BottomNavigation.component';
+} from 'src/interfaces/hiveEngineRpc.interface';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {setRpc} from 'utils/hive';
-import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {processQRCodeOp} from 'utils/hive-uri';
+import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {noHeader, setNavigator} from 'utils/navigation';
 import {useWorkingRPC} from 'utils/rpc-switcher.utils';

@@ -28,6 +28,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {useOrientation} from 'src/context/orientation.context';
 import {useTab} from 'src/context/tab.context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {BottomBarLink} from 'src/enums/bottomBarLink.enum';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -41,12 +42,6 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {PlatformsUtils} from 'utils/platforms.utils';
 
-export enum BottomBarLink {
-  Wallet = 'WalletScreen',
-  Browser = 'BrowserScreen',
-  ScanQr = 'ScanQRFromWalletScreen',
-  SwapBuy = 'SwapBuy',
-}
 interface Props {
   showTags?: boolean;
 }

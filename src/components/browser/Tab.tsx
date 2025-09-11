@@ -36,7 +36,7 @@ import {
 import {UserPreference} from 'reducers/preferences.types';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
-import {ProviderEvent} from 'src/enums/provider-event.enum';
+import {ProviderEvent} from 'src/enums/providerEvent.enum';
 import {store} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';

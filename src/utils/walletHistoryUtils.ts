@@ -1,6 +1,6 @@
 import {ActiveAccount} from 'actions/interfaces';
 import moment from 'moment';
-import {WalletHistoryFilter} from 'src/types/wallet.history.types';
+import {WalletHistoryFilter} from 'src/interfaces/walletHistory.interface';
 import {
   ClaimReward,
   CollateralizedConvert,

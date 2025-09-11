@@ -4,7 +4,7 @@ export interface HiveEngineConfig {
   accountHistoryApi: string;
 }
 
-export const DefaultHiveEngineRpcs = [
+export const DEFAULT_HIVE_ENGINE_RPCS = [
   'https://api.hive-engine.com/rpc',
   'https://herpc.dtools.dev',
   'https://api.primersion.com',
@@ -13,8 +13,19 @@ export const DefaultHiveEngineRpcs = [
   'https://he.atexoras.com:2083',
 ];
 
-export const DefaultAccountHistoryApis = [
+export const DEFAULT_ACCOUNT_HISTORY_RPCS = [
   'https://accounts.hive-engine.com/accountHistory',
   'https://history.hive-engine.com',
   'https://he.atexoras.com:8443',
 ];
+
+export const DEFAULT_CUSTOM_RPC = {
+  uri: '',
+  testnet: false,
+  hiveEngine: false,
+};
+
+export const DEFAULT_HE_RPC_NODE = 'https://api.hive-engine.com/rpc';
+
+export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
+  'https://history.hive-engine.com/';

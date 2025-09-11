@@ -1,7 +1,7 @@
 const SSC = require('sscjs');
 import axios from 'axios';
 import {TokenRequestParams} from 'src/interfaces/token-request-params.interface';
-import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
+import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 
 const getSSC = () => new SSC(HiveEngineConfigUtils.getApi());
 

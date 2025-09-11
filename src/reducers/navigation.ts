@@ -1,6 +1,6 @@
 import {ActionPayload} from 'actions/interfaces';
 import {UPDATE_NAVIGATION_SCREEN} from 'actions/types';
-import {BottomBarLink} from 'screens/hive/wallet/BottomNavigation.component';
+import {BottomBarLink} from 'src/enums/bottomBarLink.enum';
 
 export default (
   state: {activeScreen: string} = {activeScreen: BottomBarLink.Wallet},

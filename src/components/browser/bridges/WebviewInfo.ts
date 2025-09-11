@@ -1,4 +1,4 @@
-import {ProviderEvent} from 'src/enums/provider-event.enum';
+import {ProviderEvent} from 'src/enums/providerEvent.enum';
 
 const getWebviewInfo = `
 	// Clear any existing intervals and event listeners
