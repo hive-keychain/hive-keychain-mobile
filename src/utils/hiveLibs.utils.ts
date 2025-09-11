@@ -26,7 +26,6 @@ import {
 } from '@hiveio/dhive';
 import {Rpc} from 'actions/interfaces';
 import hiveTx, {call, Transaction as HiveTransaction} from 'hive-tx';
-import {requestMultisigSignatures} from 'src/background/multisig.module';
 import {
   HiveTxBroadcastErrorResponse,
   HiveTxBroadcastResult,
@@ -34,7 +33,6 @@ import {
   TransactionResult,
 } from 'src/interfaces/hiveTx.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {RootState, store} from 'store';
 import {hiveEngine} from 'utils/config.utils';
 import {
   KeychainKeyTypes,
@@ -45,10 +43,7 @@ import {
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
 } from '../interfaces/keychain.interface';
-import {getAccount} from './hive.utils';
-import {KeyUtils} from './key.utils';
 import {sleep} from './keychain.utils';
-import {MultisigUtils} from './multisig.utils';
 import {useWorkingRPC} from './rpcSwitcher.utils';
 
 type BroadcastResult = {id: string; tx_id: string};
@@ -617,23 +612,11 @@ export const broadcast = async (
     const tx = new hiveTx.Transaction();
     const transaction = await tx.create(arr);
     const signedTx = tx.sign(hiveTx.PrivateKey.from(key));
-    if (options?.multisig) {
-      const username = MultisigUtils.getUsernameFromTransaction(transaction);
-      const transactionAccount = await getAccount(username!.toString());
-
-      const acc = (store.getState() as RootState).accounts.find(
-        (account) =>
-          account.keys.posting === key || account.keys.active === key,
-      );
-      const initiatorAccount = await getAccount(acc?.name!);
-      const method = await KeyUtils.isKeyActiveOrPosting(key, initiatorAccount);
-      return requestMultisigSignatures({
+    if (options?.multisig && multisigRequestHandler) {
+      return multisigRequestHandler({
         transaction,
         key,
-        initiatorAccount,
-        transactionAccount,
         signature: signedTx.signatures[0],
-        method,
         options,
       });
     } else {
@@ -743,3 +726,15 @@ export const getTransaction = async (txId: string) => {
 };
 
 export default hive;
+type MultisigRequestHandler = (data: {
+  transaction: Transaction;
+  key: string;
+  signature: string;
+  options?: TransactionOptions;
+}) => Promise<any>;
+let multisigRequestHandler: MultisigRequestHandler | undefined;
+export const registerMultisigRequestHandler = (
+  handler: MultisigRequestHandler,
+) => {
+  multisigRequestHandler = handler;
+};

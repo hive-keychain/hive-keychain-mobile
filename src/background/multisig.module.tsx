@@ -29,7 +29,9 @@ import {RootState, store} from 'store';
 import {MultisigConfig as MultisigConfiguration} from 'utils/config.utils';
 import {
   broadcastAndConfirmTransactionWithSignature,
+  getClient,
   getTransaction,
+  registerMultisigRequestHandler,
   signTx,
 } from 'utils/hiveLibs.utils';
 import {KeyUtils} from 'utils/key.utils';
@@ -106,6 +108,35 @@ export const requestMultisigSignatures = async (
 ) => {
   await createConnectionIfNeeded(data);
   return requestSignatures(data, data.options.fromWallet ?? true);
+};
+
+// Register handler so hiveLibs can delegate multisig requests without importing this module
+registerMultisigRequestHandler(
+  async ({transaction, key, signature, options}) => {
+    const username = MultisigUtils.getUsernameFromTransaction(transaction);
+    const transactionAccount = await getTransactionAccount(
+      username!.toString(),
+    );
+    const acc = (store.getState() as RootState).accounts.find(
+      (account) => account.keys.posting === key || account.keys.active === key,
+    );
+    const initiatorAccount = await getTransactionAccount(acc?.name!);
+    const method = await KeyUtils.isKeyActiveOrPosting(key, initiatorAccount);
+    return requestMultisigSignatures({
+      transaction,
+      key,
+      initiatorAccount,
+      transactionAccount,
+      signature,
+      method,
+      options,
+    });
+  },
+);
+
+const getTransactionAccount = async (username: string) => {
+  const accounts = await getClient().database.getAccounts([username]);
+  return accounts[0];
 };
 
 // When the socket has not been initialized because multisig is not enabled for any account
