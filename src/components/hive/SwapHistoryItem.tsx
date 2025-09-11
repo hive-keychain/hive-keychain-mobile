@@ -11,7 +11,7 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';

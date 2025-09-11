@@ -10,7 +10,7 @@ import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';

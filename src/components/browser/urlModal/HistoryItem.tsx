@@ -4,7 +4,7 @@ import FastImageComponent from 'components/ui/FastImage';
 import React, {memo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {body_primary_body_1} from 'src/styles/typography';

@@ -4,7 +4,7 @@ import {Image} from 'expo-image';
 import React, {useState} from 'react';
 import {Image as Img, StyleSheet, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Token} from 'src/interfaces/tokens.interface';
 import {HBDICONBGCOLOR, HIVEICONBGCOLOR} from 'src/styles/colors';
 import {Colors, getTokenBackgroundColor} from 'utils/colors';

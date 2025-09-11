@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   BACKGROUNDITEMDARKISH,
   DARKER_RED_COLOR,

@@ -15,7 +15,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
   RCDelegationValue,
   RcDelegation,
-} from 'src/interfaces/rc-delegation.interface';
+} from 'src/interfaces/rcDelegation.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {

@@ -18,7 +18,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Token, TokenBalance} from 'src/interfaces/tokens.interface';
 import {
   BUTTON_ICON_TEXT_MARGIN,

@@ -14,7 +14,7 @@ import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import MenuItem from './drawer-content-item/MenuItem';

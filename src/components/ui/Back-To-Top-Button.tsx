@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import Icon from '../hive/Icon';
 

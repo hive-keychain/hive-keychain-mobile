@@ -2,7 +2,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {Linking, StyleSheet, Text, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {

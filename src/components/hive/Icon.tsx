@@ -89,7 +89,7 @@ import TransferIcon from 'src/assets/new_UI/send.svg';
 import Success from 'src/assets/new_UI/success-mark.svg';
 import AutomatedTasks from 'src/assets/settings/automated-tasks.svg';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getColors} from 'src/styles/colors';
 
 const smallerIconSizeNameList = [

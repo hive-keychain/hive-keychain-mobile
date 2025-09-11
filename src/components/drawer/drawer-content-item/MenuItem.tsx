@@ -13,7 +13,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {PADDING_LEFT_MAIN_MENU} from 'src/styles/spacing';
 import {

@@ -20,7 +20,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   BLACK_OVERLAY_TRANSPARENT,
   PRIMARY_RED_COLOR,

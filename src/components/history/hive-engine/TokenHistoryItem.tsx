@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   AuthorCurationTransaction,
   CommentCurationTransaction,

@@ -4,7 +4,7 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {RootState} from 'store';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';

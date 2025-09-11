@@ -7,7 +7,7 @@ import {FormatUtils} from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';

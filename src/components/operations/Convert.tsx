@@ -17,8 +17,8 @@ import {
 import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';

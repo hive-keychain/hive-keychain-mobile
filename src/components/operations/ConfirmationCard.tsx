@@ -9,7 +9,7 @@ import {FormatUtils} from 'hive-keychain-commons';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   ConfirmationData,
   ConfirmationDataTag,

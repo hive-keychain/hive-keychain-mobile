@@ -2,7 +2,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
 

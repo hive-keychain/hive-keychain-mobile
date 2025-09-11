@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
 import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
 import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';

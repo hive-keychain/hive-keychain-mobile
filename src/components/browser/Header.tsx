@@ -22,7 +22,7 @@ import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getInputContainerHeight} from 'src/styles/input';

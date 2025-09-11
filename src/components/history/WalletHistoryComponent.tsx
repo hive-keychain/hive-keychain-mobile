@@ -11,7 +11,7 @@ import {
 } from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Transaction} from 'src/interfaces/transaction.interface';
 import {getColors} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';

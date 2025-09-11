@@ -17,7 +17,7 @@ import {
 import Modal from 'react-native-modal';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {FontPoppinsName, title_primary_body_3} from 'src/styles/typography';

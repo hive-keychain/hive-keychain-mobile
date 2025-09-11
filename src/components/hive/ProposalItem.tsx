@@ -17,7 +17,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {

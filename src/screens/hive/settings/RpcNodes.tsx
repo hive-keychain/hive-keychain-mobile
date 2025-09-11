@@ -24,7 +24,7 @@ import SimpleToast from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   DEFAULT_ACCOUNT_HISTORY_RPCS,
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,

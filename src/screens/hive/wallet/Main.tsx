@@ -38,7 +38,6 @@ import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
@@ -58,7 +57,8 @@ import {
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {BottomBarLink} from 'src/enums/bottomBarLink.enum';
+import {Icons} from 'src/enums/icons.enum';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getCardStyle} from 'src/styles/card';
@@ -85,7 +85,6 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
-import {BottomBarLink} from './BottomNavigation.component';
 
 const Main = ({
   loadAccount,

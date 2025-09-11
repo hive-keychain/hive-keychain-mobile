@@ -29,7 +29,7 @@ import {useOrientation} from 'src/context/orientation.context';
 import {useTab} from 'src/context/tab.context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BottomBarLink} from 'src/enums/bottomBarLink.enum';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getIconDimensions} from 'src/styles/icon';

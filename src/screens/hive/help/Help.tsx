@@ -5,7 +5,7 @@ import React from 'react';
 import {Linking, StatusBar, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
 import {RootState} from 'store';

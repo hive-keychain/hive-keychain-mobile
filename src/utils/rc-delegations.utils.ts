@@ -2,7 +2,7 @@ import {Asset} from '@hiveio/dhive';
 import {GlobalProperties} from 'actions/interfaces';
 import {Key} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {RcDelegation} from 'src/interfaces/rc-delegation.interface';
+import {RcDelegation} from 'src/interfaces/rcDelegation.interface';
 import {broadcastJson, getData} from './hive';
 
 const GIGA = 1000000000;

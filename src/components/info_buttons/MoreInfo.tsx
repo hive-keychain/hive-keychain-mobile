@@ -13,7 +13,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {Width} from 'utils/common.types';

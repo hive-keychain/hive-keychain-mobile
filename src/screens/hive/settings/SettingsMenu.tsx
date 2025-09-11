@@ -4,7 +4,7 @@ import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import React from 'react';
 import {StatusBar, Text, View, useWindowDimensions} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
 import {getBadgeStyle} from 'src/styles/text';

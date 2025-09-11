@@ -3,7 +3,7 @@ import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PowerDown} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
@@ -29,7 +29,7 @@ const PowerDownTransactionComponent = ({
 }: Props) => {
   const {timestamp, amount} = transaction;
   const date = new Date(
-    token ? ((timestamp as unknown) as number) * 1000 : timestamp,
+    token ? (timestamp as unknown as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
     year: '2-digit',
     month: '2-digit',

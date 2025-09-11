@@ -2,7 +2,7 @@ import Icon from 'components/hive/Icon';
 import React, {memo} from 'react';
 import {StyleProp, Text, TextStyle, ViewStyle} from 'react-native';
 import {Tooltip} from 'react-native-elements';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {translate} from 'utils/localize';
 
 type Props = {

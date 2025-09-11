@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getColors} from 'src/styles/colors';

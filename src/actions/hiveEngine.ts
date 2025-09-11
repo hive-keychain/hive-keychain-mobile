@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {HiveEngineApi} from 'api/hiveEngine';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AppThunk} from 'src/hooks/redux';
 import {DEFAULT_HE_RPC_NODE} from 'src/interfaces/hiveEngineRpc.interface';
 import {

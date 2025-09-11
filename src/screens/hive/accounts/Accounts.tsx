@@ -5,7 +5,7 @@ import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
 import React from 'react';
 import {StatusBar, View} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
 import {navigate} from 'utils/navigation';

@@ -18,8 +18,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,

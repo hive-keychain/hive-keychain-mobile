@@ -29,7 +29,7 @@ import {initialWindowMetrics} from 'react-native-safe-area-context';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';

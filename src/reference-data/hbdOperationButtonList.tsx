@@ -12,7 +12,7 @@ import SquareButton from 'components/ui/SquareButton';
 import React from 'react';
 import {useWindowDimensions} from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getCurrency} from 'utils/hive';

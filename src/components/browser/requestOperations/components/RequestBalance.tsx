@@ -4,8 +4,8 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Icon from 'src/components/hive/Icon';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,

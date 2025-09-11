@@ -3,7 +3,7 @@ import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React, {useState} from 'react';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {FillRecurrentTransfer as FillRecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
@@ -29,18 +29,12 @@ const FillRecurrentTransfer = ({
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
-  const {
-    timestamp,
-    from,
-    to,
-    amount,
-    memo,
-    remainingExecutions,
-  } = transaction as FillRecurrentTransferInterface;
+  const {timestamp, from, to, amount, memo, remainingExecutions} =
+    transaction as FillRecurrentTransferInterface;
   const other = from === username ? to : from;
   const direction = from === username ? '-' : '+';
   const date = new Date(
-    token ? ((timestamp as unknown) as number) * 1000 : timestamp,
+    token ? (timestamp as unknown as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
     year: '2-digit',
     month: '2-digit',

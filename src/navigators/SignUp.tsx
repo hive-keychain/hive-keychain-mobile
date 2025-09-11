@@ -14,7 +14,7 @@ import CreateAccountConfirmation from 'screens/hive/createAccounts/CreateAccount
 import CreateAccountPeerToPeer from 'screens/hive/createAccountsPeerToPeer/CreateAccountPeerToPeer';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';

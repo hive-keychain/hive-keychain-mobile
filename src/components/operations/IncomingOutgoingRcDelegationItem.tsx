@@ -1,50 +1,50 @@
-import { loadAccount } from "actions/index";
-import OperationInput from "components/form/OperationInput";
-import Icon from "components/hive/Icon";
-import TwoFaModal from "components/modals/TwoFaModal";
-import ConfirmationInItem from "components/ui/ConfirmationInItem";
-import Loader from "components/ui/Loader";
-import Separator from "components/ui/Separator";
-import React, { useEffect, useState } from "react";
+import {loadAccount} from 'actions/index';
+import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
+import TwoFaModal from 'components/modals/TwoFaModal';
+import ConfirmationInItem from 'components/ui/ConfirmationInItem';
+import Loader from 'components/ui/Loader';
+import Separator from 'components/ui/Separator';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
-} from "react-native";
-import SimpleToast from "react-native-root-toast";
-import { ConnectedProps, connect } from "react-redux";
-import { Theme } from "src/context/theme.context";
-import { Icons } from "src/enums/icons.enums";
-import { TransactionOptions } from "src/interfaces/multisig.interface";
+} from 'react-native';
+import SimpleToast from 'react-native-root-toast';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enum';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {
   RCDelegationValue,
   RcDelegation,
-} from "src/interfaces/rc-delegation.interface";
-import { getCardStyle } from "src/styles/card";
-import { PRIMARY_RED_COLOR, getColors } from "src/styles/colors";
-import { getHorizontalLineStyle, getSeparatorLineStyle } from "src/styles/line";
-import { getRotateStyle } from "src/styles/transform";
+} from 'src/interfaces/rcDelegation.interface';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getHorizontalLineStyle, getSeparatorLineStyle} from 'src/styles/line';
+import {getRotateStyle} from 'src/styles/transform';
 import {
   FontPoppinsName,
   title_primary_body_2,
   title_secondary_body_3,
-} from "src/styles/typography";
-import { RootState } from "store";
-import { capitalize, getCleanAmountValue, withCommas } from "utils/format";
-import { getCurrency } from "utils/hive";
-import { translate } from "utils/localize";
-import { goBack, navigate } from "utils/navigation";
-import { RcDelegationsUtils } from "utils/rc-delegations.utils";
+} from 'src/styles/typography';
+import {RootState} from 'store';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
+import {getCurrency} from 'utils/hive';
+import {translate} from 'utils/localize';
+import {goBack, navigate} from 'utils/navigation';
+import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
 
 interface Props {
   theme: Theme;
-  type: "incoming" | "outgoing";
+  type: 'incoming' | 'outgoing';
   item: RcDelegation;
   available: RCDelegationValue;
   isMultisig: boolean;
-  twoFABots: { [botName: string]: string };
+  twoFABots: {[botName: string]: string};
 }
 
 const IncomingOutgoingRcDelegationItem = ({
@@ -61,7 +61,7 @@ const IncomingOutgoingRcDelegationItem = ({
   const [selectedItem, setSelectedItem] = useState<RcDelegation>();
   const [editMode, setEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [editedAmountDelegation, setEditedAmountDelegation] = useState("");
+  const [editedAmountDelegation, setEditedAmountDelegation] = useState('');
   const [
     showCancelConfirmationRCDelegation,
     setShowCancelConfirmationRCDelegation,
@@ -70,7 +70,7 @@ const IncomingOutgoingRcDelegationItem = ({
     string | undefined
   >();
 
-  const { width } = useWindowDimensions();
+  const {width} = useWindowDimensions();
 
   const styles = getStyles(theme, width);
 
@@ -78,8 +78,8 @@ const IncomingOutgoingRcDelegationItem = ({
     setSelectedItem(selectedItem ? undefined : item);
     setEditedAmountDelegation(
       selectedItem
-        ? ""
-        : RcDelegationsUtils.rcToGigaRc(Number(item.value)).toString()
+        ? ''
+        : RcDelegationsUtils.rcToGigaRc(Number(item.value)).toString(),
     );
   };
 
@@ -90,8 +90,8 @@ const IncomingOutgoingRcDelegationItem = ({
     ) {
       setEquivalentHPAmount(
         withCommas(
-          RcDelegationsUtils.gigaRcToHp(editedAmountDelegation, properties)
-        )
+          RcDelegationsUtils.gigaRcToHp(editedAmountDelegation, properties),
+        ),
       );
     } else {
       setEquivalentHPAmount(undefined);
@@ -100,14 +100,14 @@ const IncomingOutgoingRcDelegationItem = ({
 
   const hpValue = RcDelegationsUtils.gigaRcToHp(
     RcDelegationsUtils.rcToGigaRc(Number(item.value)),
-    properties
+    properties,
   );
 
   const isItemSelected =
     selectedItem && selectedItem.delegatee === item.delegatee;
 
   const onRCDelegate = async (isCancelling?: boolean) => {
-    let amount = isCancelling ? "0.000" : editedAmountDelegation;
+    let amount = isCancelling ? '0.000' : editedAmountDelegation;
     const isCancel = Number(amount) === 0;
     const handleSubmit = async (options: TransactionOptions) => {
       try {
@@ -119,7 +119,7 @@ const IncomingOutgoingRcDelegationItem = ({
           item.delegatee,
           user.name!,
           user.keys.posting!,
-          options
+          options,
         );
         if (success) {
           loadAccount(user.name!);
@@ -128,22 +128,22 @@ const IncomingOutgoingRcDelegationItem = ({
             if (!isCancel) {
               SimpleToast.show(
                 translate(
-                  "wallet.operations.rc_delegation.success.rc_delegation_successful",
-                  { to: item.delegatee }
+                  'wallet.operations.rc_delegation.success.rc_delegation_successful',
+                  {to: item.delegatee},
                 ),
                 {
                   duration: SimpleToast.durations.LONG,
-                }
+                },
               );
             } else {
               SimpleToast.show(
                 translate(
-                  "wallet.operations.rc_delegation.success.cancel_rc_delegation_successful",
-                  { to: item.delegatee }
+                  'wallet.operations.rc_delegation.success.cancel_rc_delegation_successful',
+                  {to: item.delegatee},
                 ),
                 {
                   duration: SimpleToast.durations.LONG,
-                }
+                },
               );
             }
           }
@@ -151,11 +151,11 @@ const IncomingOutgoingRcDelegationItem = ({
           if (!isMultisig)
             SimpleToast.show(
               translate(
-                "wallet.operations.rc_delegation.failed.rc_delegation_failed"
+                'wallet.operations.rc_delegation.failed.rc_delegation_failed',
               ),
               {
                 duration: SimpleToast.durations.LONG,
-              }
+              },
             );
         }
       } catch (error) {
@@ -167,7 +167,7 @@ const IncomingOutgoingRcDelegationItem = ({
       }
     };
     if (Object.entries(twoFABots).length > 0) {
-      navigate("ModalScreen", {
+      navigate('ModalScreen', {
         name: `2FA`,
         modalContent: (
           <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
@@ -185,8 +185,7 @@ const IncomingOutgoingRcDelegationItem = ({
     <TouchableOpacity
       activeOpacity={1}
       style={[getCardStyle(theme, 28).defaultCardItem]}
-      onPress={() => onHandleSelectedItem(item)}
-    >
+      onPress={() => onHandleSelectedItem(item)}>
       <View style={styles.container}>
         <View style={styles.row}>
           <Text style={styles.textBase}> {`@${item.delegatee}`}</Text>
@@ -197,7 +196,7 @@ const IncomingOutgoingRcDelegationItem = ({
               {RcDelegationsUtils.formatRcWithUnit(item.value)}
             </Text>
             <Text style={[styles.textBase, styles.italic, styles.opaque]}>
-              {`(≈ ${hpValue}) ${getCurrency("HP")}`}
+              {`(≈ ${hpValue}) ${getCurrency('HP')}`}
             </Text>
           </View>
           <Icon
@@ -207,8 +206,8 @@ const IncomingOutgoingRcDelegationItem = ({
               styles.logo,
               getRotateStyle(
                 selectedItem && selectedItem.delegatee === item.delegatee
-                  ? "0"
-                  : "180"
+                  ? '0'
+                  : '180',
               ),
             ]}
             {...styles.smallIcon}
@@ -228,21 +227,19 @@ const IncomingOutgoingRcDelegationItem = ({
             <TouchableOpacity
               activeOpacity={1}
               style={[styles.button, styles.marginRight]}
-              onPress={() => setEditMode(true)}
-            >
+              onPress={() => setEditMode(true)}>
               <Icon
                 name={Icons.EDIT}
                 theme={theme}
                 additionalContainerStyle={styles.roundButton}
                 {...styles.icon}
               />
-              <Text style={styles.buttonText}>{translate("common.edit")}</Text>
+              <Text style={styles.buttonText}>{translate('common.edit')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={1}
               style={styles.button}
-              onPress={() => setShowCancelConfirmationRCDelegation(true)}
-            >
+              onPress={() => setShowCancelConfirmationRCDelegation(true)}>
               <Icon
                 name={Icons.GIFT_DELETE}
                 theme={theme}
@@ -250,7 +247,7 @@ const IncomingOutgoingRcDelegationItem = ({
                 {...styles.icon}
               />
               <Text style={styles.buttonText}>
-                {translate("common.delete")}
+                {translate('common.delete')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -273,30 +270,30 @@ const IncomingOutgoingRcDelegationItem = ({
           <View>
             <View style={styles.flexRow}>
               <OperationInput
-                labelInput={translate("common.currency")}
+                labelInput={translate('common.currency')}
                 placeholder={translate(
-                  "wallet.operations.rc_delegation.giga_rc"
+                  'wallet.operations.rc_delegation.giga_rc',
                 )}
-                value={translate("wallet.operations.rc_delegation.giga_rc")}
+                value={translate('wallet.operations.rc_delegation.giga_rc')}
                 editable={false}
                 additionalOuterContainerStyle={{
-                  width: "30%",
+                  width: '30%',
                 }}
               />
               <OperationInput
-                labelInput={capitalize(translate("common.amount"))}
+                labelInput={capitalize(translate('common.amount'))}
                 labelExtraInfo={
                   equivalentHPAmount
-                    ? `≈ ${equivalentHPAmount} ${getCurrency("HP")}`
+                    ? `≈ ${equivalentHPAmount} ${getCurrency('HP')}`
                     : undefined
                 }
-                placeholder={"0.000"}
+                placeholder={'0.000'}
                 keyboardType="decimal-pad"
                 textAlign="right"
                 value={editedAmountDelegation}
                 onChangeText={setEditedAmountDelegation}
                 additionalOuterContainerStyle={{
-                  width: "68%",
+                  width: '68%',
                 }}
                 rightIcon={
                   <View style={styles.flexRowCenter}>
@@ -306,19 +303,18 @@ const IncomingOutgoingRcDelegationItem = ({
                         theme,
                         1,
                         35,
-                        16
+                        16,
                       )}
                     />
                     <TouchableOpacity
                       activeOpacity={1}
                       onPress={() =>
                         setEditedAmountDelegation(
-                          getCleanAmountValue(available.gigaRcValue)
+                          getCleanAmountValue(available.gigaRcValue),
                         )
-                      }
-                    >
+                      }>
                       <Text style={[styles.textBase, styles.redText]}>
-                        {translate("common.max").toUpperCase()}
+                        {translate('common.max').toUpperCase()}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -329,9 +325,8 @@ const IncomingOutgoingRcDelegationItem = ({
               style={[
                 styles.flexRowCenter,
                 styles.marginTop,
-                { justifyContent: "center" },
-              ]}
-            >
+                {justifyContent: 'center'},
+              ]}>
               <ConfirmationInItem
                 theme={theme}
                 onCancel={() => setEditMode(false)}
@@ -345,7 +340,7 @@ const IncomingOutgoingRcDelegationItem = ({
       {editMode &&
         isItemSelected &&
         !showCancelConfirmationRCDelegation &&
-        isLoading && <Loader size={"small"} animating />}
+        isLoading && <Loader size={'small'} animating />}
     </TouchableOpacity>
   );
 };
@@ -353,30 +348,30 @@ const IncomingOutgoingRcDelegationItem = ({
 const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
     rightContainer: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
     },
-    logo: { marginLeft: 10 },
-    flexRow: { flexDirection: "row", justifyContent: "space-between" },
+    logo: {marginLeft: 10},
+    flexRow: {flexDirection: 'row', justifyContent: 'space-between'},
     textBase: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,
-      textAlign: "right",
+      textAlign: 'right',
     },
-    row: { flexDirection: "row" },
-    opaque: { opacity: 0.7 },
-    paddingHorizontal: { paddingHorizontal: 10 },
-    smallIcon: { width: 15, height: 15 },
+    row: {flexDirection: 'row'},
+    opaque: {opacity: 0.7},
+    paddingHorizontal: {paddingHorizontal: 10},
+    smallIcon: {width: 15, height: 15},
     buttonRowContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
+      flexDirection: 'row',
+      justifyContent: 'center',
       marginBottom: 10,
     },
     icon: {
@@ -384,12 +379,12 @@ const getStyles = (theme: Theme, width: number) =>
       height: 18,
     },
     button: {
-      flexDirection: "row",
-      alignItems: "center",
-      width: "30%",
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '30%',
       borderRadius: 12,
       borderWidth: 1,
-      justifyContent: "center",
+      justifyContent: 'center',
       paddingVertical: 10,
       borderColor: getColors(theme).quaternaryCardBorderColor,
     },
@@ -401,7 +396,7 @@ const getStyles = (theme: Theme, width: number) =>
     marginRight: {
       marginRight: 16,
     },
-    marginLeft: { marginLeft: 16 },
+    marginLeft: {marginLeft: 16},
     roundButton: {
       borderWidth: 1,
       borderColor: getColors(theme).quinaryCardBorderColor,
@@ -409,20 +404,20 @@ const getStyles = (theme: Theme, width: number) =>
       width: 25,
       height: 25,
     },
-    whiteText: { color: "#FFF" },
-    margins: { marginTop: 10, marginBottom: 15 },
+    whiteText: {color: '#FFF'},
+    margins: {marginTop: 10, marginBottom: 15},
     paddingLeft: {
       paddingLeft: 10,
     },
     flexRowCenter: {
-      flexDirection: "row",
-      alignItems: "center",
-      alignContent: "center",
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
     },
-    redText: { color: PRIMARY_RED_COLOR },
-    biggerIcon: { width: 25, height: 25 },
-    marginTop: { marginTop: 8 },
-    italic: { fontFamily: FontPoppinsName.ITALIC },
+    redText: {color: PRIMARY_RED_COLOR},
+    biggerIcon: {width: 25, height: 25},
+    marginTop: {marginTop: 8},
+    italic: {fontFamily: FontPoppinsName.ITALIC},
   });
 
 const connector = connect(
@@ -433,7 +428,7 @@ const connector = connect(
       properties: state.properties,
     };
   },
-  { loadAccount }
+  {loadAccount},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

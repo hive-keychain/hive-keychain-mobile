@@ -7,7 +7,7 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {RootState} from 'store';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';

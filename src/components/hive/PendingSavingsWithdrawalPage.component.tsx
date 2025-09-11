@@ -19,7 +19,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';

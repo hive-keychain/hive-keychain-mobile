@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Notification} from 'src/interfaces/notifications.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';

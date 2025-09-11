@@ -22,8 +22,8 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -64,17 +64,15 @@ const DelegationsList = ({
   showModal,
   theme,
 }: Props) => {
-  const [totalDelegationsAmount, setTotalDelegationsAmount] = useState<number>(
-    0,
-  );
+  const [totalDelegationsAmount, setTotalDelegationsAmount] =
+    useState<number>(0);
   const [
     totalPendingOutgoingUndelegation,
     setTotalPendingOutgoingUndelegation,
   ] = useState<number>(0);
   const [pendingUndelegationsList, setPendingList] = useState<any[]>([]);
-  const [selectedOutgoingItem, setSelectedOutgoingItem] = useState<
-    VestingDelegation
-  >();
+  const [selectedOutgoingItem, setSelectedOutgoingItem] =
+    useState<VestingDelegation>();
   const [
     showCancelConfirmationDelegation,
     setShowCancelConfirmationDelegation,

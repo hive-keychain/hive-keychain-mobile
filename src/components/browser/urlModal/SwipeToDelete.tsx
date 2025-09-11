@@ -13,7 +13,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 
 type Props = {
@@ -35,29 +35,28 @@ const SwipeableItem = memo(
     const bgTranslateX = useSharedValue(0);
     const SCREEN_WIDTH = useWindowDimensions().width;
     const SWIPE_THRESHOLD = -SCREEN_WIDTH / 4;
-    const gestureHandler = useAnimatedGestureHandler<
-      PanGestureHandlerGestureEvent
-    >({
-      onStart: (_, ctx: any) => {
-        ctx.startX = translateX.value;
-      },
-      onActive: (event, ctx: any) => {
-        // Only allow left swipe
-        translateX.value = Math.min(0, ctx.startX + event.translationX);
-      },
-      onEnd: () => {
-        if (translateX.value < SWIPE_THRESHOLD) {
-          translateX.value = withSpring(-SCREEN_WIDTH);
-          bgTranslateX.value = withSpring(-SCREEN_WIDTH, {}, () => {
-            runOnJS(onDismiss)(); // callback to remove from list
-          });
-        } else {
-          // Snap back
-          translateX.value = withSpring(0);
-          bgTranslateX.value = withSpring(0);
-        }
-      },
-    });
+    const gestureHandler =
+      useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
+        onStart: (_, ctx: any) => {
+          ctx.startX = translateX.value;
+        },
+        onActive: (event, ctx: any) => {
+          // Only allow left swipe
+          translateX.value = Math.min(0, ctx.startX + event.translationX);
+        },
+        onEnd: () => {
+          if (translateX.value < SWIPE_THRESHOLD) {
+            translateX.value = withSpring(-SCREEN_WIDTH);
+            bgTranslateX.value = withSpring(-SCREEN_WIDTH, {}, () => {
+              runOnJS(onDismiss)(); // callback to remove from list
+            });
+          } else {
+            // Snap back
+            translateX.value = withSpring(0);
+            bgTranslateX.value = withSpring(0);
+          }
+        },
+      });
 
     const bgStyle = useAnimatedStyle(() => {
       return {

@@ -12,7 +12,7 @@ import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import QRCode from 'react-qr-code';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';

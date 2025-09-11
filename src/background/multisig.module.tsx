@@ -1,13 +1,13 @@
-import { SignedTransaction } from "@hiveio/dhive";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { showModal } from "actions/message";
-import { signBuffer } from "components/bridge";
-import RequestMultisig from "components/multisig/RequestMultisig";
-import { KeychainKeyTypes, KeychainKeyTypesLC } from "hive-keychain-commons";
-import React from "react";
-import SimpleToast from "react-native-root-toast";
-import { Socket, io } from "socket.io-client";
-import { MessageModalType } from "src/enums/messageModal.enums";
+import {SignedTransaction} from '@hiveio/dhive';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {showModal} from 'actions/message';
+import {signBuffer} from 'components/bridge';
+import RequestMultisig from 'components/multisig/RequestMultisig';
+import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
+import React from 'react';
+import SimpleToast from 'react-native-root-toast';
+import {Socket, io} from 'socket.io-client';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {
   ConnectDisconnectMessage,
   MultisigAccountConfig,
@@ -23,21 +23,21 @@ import {
   SignerConnectResponse,
   SocketMessageCommand,
   TransactionOptionsMetadata,
-} from "src/interfaces/multisig.interface";
-import { KeychainStorageKeyEnum } from "src/reference-data/keychainStorageKeyEnum";
-import { RootState, store } from "store";
-import { MultisigConfig as MultisigConfiguration } from "utils/config";
+} from 'src/interfaces/multisig.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {RootState, store} from 'store';
+import {MultisigConfig as MultisigConfiguration} from 'utils/config';
 import {
   broadcastAndConfirmTransactionWithSignature,
   getTransaction,
   signTx,
-} from "utils/hive";
-import { KeyUtils } from "utils/key.utils";
-import { sleep } from "utils/keychain";
-import { getPublicKeyFromPrivateKeyString } from "utils/keyValidation";
-import { translate } from "utils/localize";
-import { MultisigUtils } from "utils/multisig.utils";
-import { goBack, navigate } from "utils/navigation";
+} from 'utils/hive';
+import {KeyUtils} from 'utils/key.utils';
+import {sleep} from 'utils/keychain';
+import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
+import {translate} from 'utils/localize';
+import {MultisigUtils} from 'utils/multisig.utils';
+import {goBack, navigate} from 'utils/navigation';
 
 let socket: Socket;
 let shouldReconnectSocket: boolean = false;
@@ -48,13 +48,13 @@ const start = async () => {
   console.info(`Starting multisig`);
 
   socket = io(MultisigConfiguration.baseURL, {
-    transports: ["websocket"],
+    transports: ['websocket'],
     reconnection: true,
     autoConnect: false,
   });
 
   const multisigConfig: MultisigConfig = JSON.parse(
-    await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG)
+    await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG),
   );
 
   if (
@@ -62,21 +62,21 @@ const start = async () => {
     Object.values(multisigConfig).some(
       (config) =>
         config.isEnabled &&
-        (config.active.isEnabled || config.posting.isEnabled)
+        (config.active.isEnabled || config.posting.isEnabled),
     )
   ) {
-    console.info("Some accounts need connection");
+    console.info('Some accounts need connection');
     shouldReconnectSocket = true;
     if (!socket.connected) socket.connect();
     connectSocket(multisigConfig);
   } else {
-    console.info("Multisig hasnt been enabled for any account");
+    console.info('Multisig hasnt been enabled for any account');
   }
 };
 
 const refreshConnections = async (value: ConnectDisconnectMessage) => {
   const multisigConfig: MultisigConfig = JSON.parse(
-    await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG)
+    await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG),
   );
   const accountMultisigConfig = multisigConfig[value.account];
   if (value.connect) {
@@ -91,18 +91,18 @@ const refreshConnections = async (value: ConnectDisconnectMessage) => {
     } else {
       disconnectFromBackend(
         value.account,
-        accountMultisigConfig.active.publicKey
+        accountMultisigConfig.active.publicKey,
       );
       disconnectFromBackend(
         value.account,
-        accountMultisigConfig.posting.publicKey
+        accountMultisigConfig.posting.publicKey,
       );
     }
   }
 };
 
 export const requestMultisigSignatures = async (
-  data: MultisigRequestSignatures
+  data: MultisigRequestSignatures,
 ) => {
   await createConnectionIfNeeded(data);
   return requestSignatures(data, data.options.fromWallet ?? true);
@@ -120,37 +120,37 @@ const createConnectionIfNeeded = async (data: MultisigRequestSignatures) => {
 
   const config: MultisigConfig =
     JSON.parse(
-      await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG)
+      await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG),
     ) || {};
   if (
     !config[data.initiatorAccount.name]?.[
-      data.method?.toLowerCase() as "posting" | "active"
+      data.method?.toLowerCase() as 'posting' | 'active'
     ].isEnabled
   ) {
     const config = {
       isEnabled: true,
       posting:
-        data.method.toLowerCase() === "posting"
+        data.method.toLowerCase() === 'posting'
           ? {
               isEnabled: true,
               publicKey: getPublicKeyFromPrivateKeyString(data.key!)!,
               message: await signBuffer(
                 data.key?.toString()!,
-                data.initiatorAccount.name!
+                data.initiatorAccount.name!,
               ),
             }
-          : { isEnabled: false, message: "", publicKey: "" },
+          : {isEnabled: false, message: '', publicKey: ''},
       active:
-        data.method.toLowerCase() === "active"
+        data.method.toLowerCase() === 'active'
           ? {
               isEnabled: true,
               publicKey: getPublicKeyFromPrivateKeyString(data.key!)!,
               message: await signBuffer(
                 data.key?.toString()!,
-                data.initiatorAccount.name!
+                data.initiatorAccount.name!,
               ),
             }
-          : { isEnabled: false, message: "", publicKey: "" },
+          : {isEnabled: false, message: '', publicKey: ''},
     } as MultisigAccountConfig;
     await connectToBackend(data.initiatorAccount.name, config);
 
@@ -160,13 +160,13 @@ const createConnectionIfNeeded = async (data: MultisigRequestSignatures) => {
 
 const requestSignatures = async (
   data: MultisigRequestSignatures,
-  fromWallet?: boolean
+  fromWallet?: boolean,
 ) => {
   return new Promise(async (resolve, reject) => {
     await createConnectionIfNeeded(data);
     const message = await getRequestSignatureMessage(data);
     try {
-      console.log("emitting message", message);
+      console.log('emitting message', message);
       socket.volatile.emit(
         SocketMessageCommand.REQUEST_SIGNATURE,
         message,
@@ -174,12 +174,12 @@ const requestSignatures = async (
           async (message: string) => {
             if (fromWallet) {
               SimpleToast.show(message);
-              resolve("");
+              resolve('');
             } else {
               // resolve('multisig_transaction_sent_to_signers');
               // in this case try to wait for broadcast notification
               try {
-                const { txId, id } = (await waitForBroadcastToBeDone()) as {
+                const {txId, id} = (await waitForBroadcastToBeDone()) as {
                   txId: string;
                   id: number;
                 };
@@ -188,18 +188,18 @@ const requestSignatures = async (
                   resolve(txId);
                 }
               } catch (err) {
-                console.log("catching error", err);
-                resolve({ error: { message: err } });
+                console.log('catching error', err);
+                resolve({error: {message: err}});
               }
             }
           },
           () => {
-            console.info("timeout in socketio");
-          }
-        )
+            console.info('timeout in socketio');
+          },
+        ),
       );
     } catch (err) {
-      console.error({ err });
+      console.error({err});
     }
   });
 };
@@ -214,17 +214,17 @@ const initAccountsConnections = async (multisigConfig: MultisigConfig) => {
 };
 
 const connectSocket = (multisigConfig: MultisigConfig) => {
-  socket.on("connect", () => {
-    console.info("Connected to socket");
+  socket.on('connect', () => {
+    console.info('Connected to socket');
 
     keepAlive();
     initAccountsConnections(multisigConfig);
   });
-  socket.on("error", (err: any) => {
-    console.error("Error in socket", err);
+  socket.on('error', (err: any) => {
+    console.error('Error in socket', err);
   });
-  socket.on("disconnect", (ev: any) => {
-    console.info("Disconnected from socket");
+  socket.on('disconnect', (ev: any) => {
+    console.info('Disconnected from socket');
     socket.connect();
   });
 
@@ -241,10 +241,10 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
 
       const signedTransaction = await MultisigModule.processSignatureRequest(
         signatureRequest,
-        signer
+        signer,
       );
 
-      SimpleToast.show(translate("multisig.transaction_signed_successfully"), {
+      SimpleToast.show(translate('multisig.transaction_signed_successfully'), {
         duration: SimpleToast.durations.LONG,
       });
       if (signedTransaction) {
@@ -257,7 +257,7 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
           } as SignTransactionMessage,
           async (signatures: string[]) => {
             console.info(
-              `Should try to broadcast ${JSON.stringify(signedTransaction)}`
+              `Should try to broadcast ${JSON.stringify(signedTransaction)}`,
             );
             const txResult = await broadcastAndConfirmTransactionWithSignature(
               {
@@ -268,7 +268,7 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
                 ref_block_prefix: signedTransaction.ref_block_prefix,
               },
               signatures,
-              true
+              true,
             );
             if (txResult?.confirmed) {
               socket.emit(
@@ -279,15 +279,15 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
                 } as NotifyTxBroadcastedMessage,
                 () => {
                   console.info(`Notified`);
-                }
+                },
               );
             }
-          }
+          },
         );
       } else {
         //TODO  check if need to return if no rejected
       }
-    }
+    },
   );
 
   socket.on(
@@ -298,12 +298,12 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
       if (!lockedRequests.includes(signatureRequest.id)) {
         lockedRequests.push(signatureRequest.id);
         openModal(
-          "multisig.transaction_broadcasted",
+          'multisig.transaction_broadcasted',
           MessageModalType.MULTISIG_SUCCESS,
-          { txId }
+          {txId},
         );
       }
-    }
+    },
   );
   socket.on(SocketMessageCommand.TRANSACTION_ERROR_NOTIFICATION, async (e) => {
     await sleep(200);
@@ -320,20 +320,20 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
 
 const disconnectFromBackend = async (
   accountName: string,
-  publicKey: string
+  publicKey: string,
 ) => {
   console.info(
-    `Trying to disconnect @${accountName} (${publicKey}) from backend`
+    `Trying to disconnect @${accountName} (${publicKey}) from backend`,
   );
   connectedPublicKeys = connectedPublicKeys.filter(
-    (pk) => pk.username === accountName && pk.publicKey === publicKey
+    (pk) => pk.username === accountName && pk.publicKey === publicKey,
   );
   socket.emit(SocketMessageCommand.SIGNER_DISCONNECT, publicKey);
 };
 
 const connectToBackend = async (
   accountName: string,
-  accountConfig: MultisigAccountConfig
+  accountConfig: MultisigAccountConfig,
 ) => {
   console.info(`Connecting @${accountName} to the multisig backend server`);
   const signerConnectMessages: SignerConnectMessage[] = [];
@@ -375,14 +375,14 @@ const connectToBackend = async (
           connectedPublicKeys.push(signer);
         }
       }
-    }
+    },
   );
 };
 
 const keepAlive = () => {
   const keepAliveIntervalId = setInterval(() => {
     if (socket) {
-      socket.emit("ping");
+      socket.emit('ping');
     } else {
       clearInterval(keepAliveIntervalId);
     }
@@ -390,13 +390,13 @@ const keepAlive = () => {
 };
 
 const getRequestSignatureMessage = async (
-  data: MultisigRequestSignatures
+  data: MultisigRequestSignatures,
 ): Promise<RequestSignatureMessage> => {
   return new Promise(async (resolve, reject) => {
     const potentialSigners = await MultisigUtils.getPotentialSigners(
       data.transactionAccount,
       data.key,
-      data.method
+      data.method,
     );
     const signers: RequestSignatureSigner[] = [];
     for (const [receiverPubKey, weight] of potentialSigners) {
@@ -408,7 +408,7 @@ const getRequestSignatureMessage = async (
           [usernames[0]]: await encodeMetadata(
             data.options?.metaData?.twoFACodes[usernames[0]],
             data.key!.toString(),
-            receiverPubKey
+            receiverPubKey,
           ),
         };
       }
@@ -417,11 +417,11 @@ const getRequestSignatureMessage = async (
         encryptedTransaction: await encodeTransaction(
           data.transaction,
           data.key!.toString(),
-          receiverPubKey
+          receiverPubKey,
         ),
         publicKey: receiverPubKey,
         weight: weight.toString(),
-        metaData: { ...metaData, twoFACodes: twoFACodes },
+        metaData: {...metaData, twoFACodes: twoFACodes},
       });
     }
 
@@ -433,7 +433,7 @@ const getRequestSignatureMessage = async (
         : data.initiatorAccount.posting.key_auths;
 
     const keyAuth = keyAuths.find(
-      ([key, weight]) => key.toString() === publicKey.toString()
+      ([key, weight]) => key.toString() === publicKey.toString(),
     );
 
     const transactionAccountThreshold =
@@ -462,11 +462,11 @@ const getRequestSignatureMessage = async (
 
 const processSignatureRequest = async (
   signatureRequest: SignatureRequest,
-  signer: Signer
+  signer: Signer,
 ): Promise<SignedTransaction | undefined> => {
   if (signer) {
     const username = connectedPublicKeys.find(
-      (c) => c.publicKey === signer.publicKey
+      (c) => c.publicKey === signer.publicKey,
     )?.username;
 
     const accounts = (store.getState() as RootState).accounts;
@@ -481,7 +481,7 @@ const processSignatureRequest = async (
         decodedTransaction,
         signer,
         signatureRequest,
-        key
+        key,
       );
       return signedTransaction;
     } else {
@@ -495,12 +495,12 @@ const requestSignTransactionFromUser = (
   signer: Signer,
   signatureRequest: SignatureRequest,
   key: string,
-  openNewWindow?: boolean
+  openNewWindow?: boolean,
 ): Promise<SignedTransaction | undefined> => {
   return new Promise(async (resolve, reject) => {
     const usernames = await KeyUtils.getKeyReferences([signer.publicKey]);
 
-    navigate("ModalScreen", {
+    navigate('ModalScreen', {
       name: `Operation_sign_multisig`,
       modalContent: (
         <RequestMultisig
@@ -577,26 +577,26 @@ const requestSignTransactionFromUser = (
 const decryptRequest = async (signer: Signer, key: string) => {
   return await MultisigUtils.decodeTransaction(
     signer.encryptedTransaction,
-    key
+    key,
   );
 };
 
 const encodeTransaction = async (
   transaction: any,
   key: string,
-  receiverPublicKey: string
+  receiverPublicKey: string,
 ): Promise<string> => {
   return await MultisigUtils.encodeTransaction(
     transaction,
     key,
-    receiverPublicKey
+    receiverPublicKey,
   );
 };
 
 const encodeMetadata = async (
   metaData: any,
   key: string,
-  receiverPublicKey: string
+  receiverPublicKey: string,
 ): Promise<string> => {
   return await MultisigUtils.encodeMetadata(metaData, key, receiverPublicKey);
 };
@@ -604,7 +604,7 @@ const encodeMetadata = async (
 const withTimeout = (
   onSuccess: any,
   onTimeout: any,
-  timeout: number = 5000
+  timeout: number = 5000,
 ) => {
   let called = false;
 
@@ -626,27 +626,27 @@ const waitForBroadcastToBeDone = async () => {
   return new Promise((resolve, reject) => {
     const broadcastedListener = async (
       signatureRequest: SignatureRequest,
-      txId: string
+      txId: string,
     ) => {
       socket.off(
         SocketMessageCommand.TRANSACTION_ERROR_NOTIFICATION,
-        notifyError
+        notifyError,
       );
       socket.off(
         SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
-        broadcastedListener
+        broadcastedListener,
       );
-      resolve({ txId, id: signatureRequest.id });
+      resolve({txId, id: signatureRequest.id});
     };
 
     const notifyError = async (res: any) => {
       socket.off(
         SocketMessageCommand.TRANSACTION_ERROR_NOTIFICATION,
-        notifyError
+        notifyError,
       );
       socket.off(
         SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
-        broadcastedListener
+        broadcastedListener,
       );
       if (!lockedRequests.includes(res.signatureRequest.id)) {
         lockedRequests.push(res.signatureRequest.id);
@@ -655,7 +655,7 @@ const waitForBroadcastToBeDone = async () => {
     };
     socket.on(
       SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
-      broadcastedListener
+      broadcastedListener,
     );
     socket.on(SocketMessageCommand.TRANSACTION_ERROR_NOTIFICATION, notifyError);
   });
@@ -663,7 +663,7 @@ const waitForBroadcastToBeDone = async () => {
 
 setInterval(() => {
   if (shouldReconnectSocket && (!socket || !socket.connected)) {
-    console.log("Restarting the socket");
+    console.log('Restarting the socket');
     start();
   }
 }, 60 * 1000);
@@ -672,7 +672,7 @@ const openModal = (
   key: string,
   type: MessageModalType,
   params?: any,
-  skipTranslation?: boolean
+  skipTranslation?: boolean,
 ) => {
   store.dispatch(showModal(key, type, params, skipTranslation));
 };
