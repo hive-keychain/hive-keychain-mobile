@@ -9,6 +9,7 @@ export default ({config}) => ({
       icon: './src/assets/ios_launcher.png',
       userInterfaceStyle: 'light',
       newArchEnabled: true,
+      backgroundColor: '#212838',
       assetBundlePatterns: ['src/assets/fonts/*'],
       splash: {
         image: './src/assets/new_UI/keychain_logo_powered_dark_theme.png',
@@ -20,7 +21,7 @@ export default ({config}) => ({
         supportsTablet: true,
         infoPlist: {
           NSLocationWhenInUseUsageDescription:
-            'We need your location for maps.',
+            'We need your location to load maps.',
         },
         googleServicesFile: './firebase/GoogleService-Info.plist',
       },

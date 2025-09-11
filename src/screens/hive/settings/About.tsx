@@ -63,7 +63,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
               }
             }}>
             <Text style={[styles.textBase, styles.title, styles.textCentered]}>
-              Keychain Mobile v{Constants.expoConfig?.version} (Beta)
+              Keychain Mobile v{Constants.expoConfig?.version}
             </Text>
             <Separator height={10} />
           </TouchableOpacity>

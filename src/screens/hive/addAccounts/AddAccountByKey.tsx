@@ -1,52 +1,52 @@
-import { addAccount } from "actions/index";
-import { showModal } from "actions/message";
-import TitleLogoLight from "assets/new_UI/img_import_dark.svg";
-import TitleLogoDark from "assets/new_UI/img_import_light.svg";
-import EllipticButton from "components/form/EllipticButton";
-import OperationInput from "components/form/OperationInput";
-import Icon from "components/hive/Icon";
-import Background from "components/ui/Background";
-import CustomIconButton from "components/ui/CustomIconButton";
-import FocusAwareStatusBar from "components/ui/FocusAwareStatusBar";
-import Separator from "components/ui/Separator";
-import useLockedPortrait from "hooks/useLockedPortrait";
-import React, { useState } from "react";
+import {addAccount} from 'actions/index';
+import {showModal} from 'actions/message';
+import TitleLogoLight from 'assets/new_UI/img_import_dark.svg';
+import TitleLogoDark from 'assets/new_UI/img_import_light.svg';
+import EllipticButton from 'components/form/EllipticButton';
+import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
+import Background from 'components/ui/Background';
+import CustomIconButton from 'components/ui/CustomIconButton';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import Separator from 'components/ui/Separator';
+import useLockedPortrait from 'hooks/useLockedPortrait';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
   View,
   useWindowDimensions,
-} from "react-native";
-import { Text } from "react-native-elements";
-import { ScrollView } from "react-native-gesture-handler";
-import SimpleToast from "react-native-root-toast";
-import { initialWindowMetrics } from "react-native-safe-area-context";
-import { ConnectedProps, connect } from "react-redux";
-import { Theme, useThemeContext } from "src/context/theme.context";
-import { Icons } from "src/enums/icons.enums";
-import { MessageModalType } from "src/enums/messageModal.enums";
-import { getColors } from "src/styles/colors";
+} from 'react-native';
+import {Text} from 'react-native-elements';
+import {ScrollView} from 'react-native-gesture-handler';
+import SimpleToast from 'react-native-root-toast';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
   button_link_primary_medium,
   getFontSizeSmallDevices,
-} from "src/styles/typography";
-import { RootState } from "store";
-import { Dimensions } from "utils/common.types";
-import validateNewAccount from "utils/keyValidation";
-import { translate } from "utils/localize";
-import { navigate } from "utils/navigation";
+} from 'src/styles/typography';
+import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
+import validateNewAccount from 'utils/keyValidation';
+import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 const AddAccountByKey = ({
   addAccount,
   navigation,
   route,
   showModal,
-}: PropsFromRedux & { navigation: any; route: any }) => {
-  const [account, setAccount] = useState("");
-  const [key, setKey] = useState("");
+}: PropsFromRedux & {navigation: any; route: any}) => {
+  const [account, setAccount] = useState('');
+  const [key, setKey] = useState('');
   const [allowAddByAuth, setAllowAddByAuth] = useState(
-    route.params ? route.params.wallet : false
+    route.params ? route.params.wallet : false,
   );
   const [loadingImportAccount, setLoadingImportAccount] = useState(false);
 
@@ -54,7 +54,7 @@ const AddAccountByKey = ({
 
   const onImportKeys = async () => {
     if (account.trim().length === 0 || key.trim().length === 0)
-      return SimpleToast.show(translate("toast.error_missing_fields"), {
+      return SimpleToast.show(translate('toast.error_missing_fields'), {
         duration: SimpleToast.durations.LONG,
       });
     const accountName = account.toLowerCase().trim();
@@ -66,23 +66,23 @@ const AddAccountByKey = ({
         const wallet = route.params ? route.params.wallet : false;
         addAccount(accountName, keys, wallet, false);
       } else {
-        showModal("toast.error_add_account", MessageModalType.ERROR);
+        showModal('toast.error_add_account', MessageModalType.ERROR);
       }
     } catch (e) {
       showModal(
         (e as any).message || JSON.stringify(e),
         MessageModalType.ERROR,
         undefined,
-        true
+        true,
       );
     } finally {
       setLoadingImportAccount(false);
     }
   };
-  const { theme } = useThemeContext();
-  const { width, height } = useWindowDimensions();
+  const {theme} = useThemeContext();
+  const {width, height} = useWindowDimensions();
 
-  const styles = getStyles(theme, { width, height });
+  const styles = getStyles(theme, {width, height});
 
   return (
     <Background
@@ -91,12 +91,11 @@ const AddAccountByKey = ({
       skipBottom
       additionalBgSvgImageStyle={{
         bottom: -initialWindowMetrics.insets.bottom,
-      }}
-    >
+      }}>
       <ScrollView contentContainerStyle={styles.container}>
         <FocusAwareStatusBar
           backgroundColor={getColors(theme).primaryBackground}
-          barStyle={theme === Theme.DARK ? "light-content" : "dark-content"}
+          barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
         <CustomIconButton
           lightThemeIcon={<TitleLogoLight />}
@@ -112,23 +111,22 @@ const AddAccountByKey = ({
             styles.opacity,
             styles.paddingHorizontal,
             styles.centeredText,
-          ]}
-        >
-          {translate("addAccountByKey.text")}
+          ]}>
+          {translate('addAccountByKey.text')}
         </Text>
         <Separator height={height / 22} />
         <OperationInput
-          autoCapitalize={"none"}
-          labelInput={translate("common.username")}
-          placeholder={translate("common.username")}
+          autoCapitalize={'none'}
+          labelInput={translate('common.username')}
+          placeholder={translate('common.username')}
           value={account}
           onChangeText={(textValue) => setAccount(textValue.toLowerCase())}
         />
         <Separator height={height / 22} />
 
         <OperationInput
-          labelInput={translate("common.privateKey")}
-          placeholder={translate("common.privateKey")}
+          labelInput={translate('common.privateKey')}
+          placeholder={translate('common.privateKey')}
           value={key}
           onChangeText={setKey}
           rightIcon={
@@ -136,15 +134,14 @@ const AddAccountByKey = ({
               name={Icons.SCANNER}
               theme={theme}
               onPress={() => {
-                console.log("here");
-                navigate("ScanQRScreen", { wallet: true });
+                navigate('ScanQRScreen', {wallet: true});
               }}
             />
           }
         />
         <View style={styles.bottomContainer}>
           <EllipticButton
-            title={translate("common.import")}
+            title={translate('common.import')}
             onPress={onImportKeys}
             additionalTextStyle={styles.buttonText}
             isWarningButton
@@ -154,10 +151,9 @@ const AddAccountByKey = ({
           {allowAddByAuth && (
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => navigate("AddAccountFromWalletScreenByAuth")}
-            >
+              onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
               <Text style={[styles.text, styles.textUnderlined]}>
-                {translate("common.use_authorized_account_instead")}
+                {translate('common.use_authorized_account_instead')}
               </Text>
             </TouchableOpacity>
           )}
@@ -167,7 +163,7 @@ const AddAccountByKey = ({
   );
 };
 
-const getStyles = (theme: Theme, { width, height }: Dimensions) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     text: {
       color: getColors(theme).secondaryText,
@@ -175,8 +171,8 @@ const getStyles = (theme: Theme, { width, height }: Dimensions) =>
       fontSize: getFontSizeSmallDevices(width, 16),
     },
     container: {
-      alignItems: "center",
-      justifyContent: "space-between",
+      alignItems: 'center',
+      justifyContent: 'space-between',
       flexGrow: 1,
       paddingHorizontal: 16,
     },
@@ -184,7 +180,7 @@ const getStyles = (theme: Theme, { width, height }: Dimensions) =>
       fontSize: 13,
     },
     textUnderlined: {
-      textDecorationLine: "underline",
+      textDecorationLine: 'underline',
     },
     opacity: {
       opacity: 0.7,
@@ -192,21 +188,21 @@ const getStyles = (theme: Theme, { width, height }: Dimensions) =>
     paddingHorizontal: {
       paddingHorizontal: 20,
     },
-    centeredText: { textAlign: "center" },
+    centeredText: {textAlign: 'center'},
     bottomContainer: {
       marginBottom: 10,
-      width: "100%",
-      alignItems: "center",
+      width: '100%',
+      alignItems: 'center',
       minHeight: height / 5,
       flexGrow: 1,
-      justifyContent: "flex-end",
+      justifyContent: 'flex-end',
     },
-    marginTop: { marginTop: 25 },
+    marginTop: {marginTop: 25},
     buttonText: {
       ...button_link_primary_medium,
       fontSize: getFontSizeSmallDevices(
         width,
-        { ...button_link_primary_medium }.fontSize
+        {...button_link_primary_medium}.fontSize,
       ),
     },
   });
@@ -215,6 +211,6 @@ const mapStateToProps = (state: RootState) => {
   return state;
 };
 
-const connector = connect(mapStateToProps, { addAccount, showModal });
+const connector = connect(mapStateToProps, {addAccount, showModal});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(AddAccountByKey);

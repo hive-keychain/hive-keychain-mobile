@@ -31,7 +31,7 @@ export default () => {
     <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="IntroductionScreen"
-        options={noHeader}
+        options={{...noHeader, animation: 'none'}}
         component={Introduction}
       />
       <Stack.Screen
