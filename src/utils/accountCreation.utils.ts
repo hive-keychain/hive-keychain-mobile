@@ -3,7 +3,7 @@ import {Account} from 'actions/interfaces';
 import {Key} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import AccountUtils from './account.utils';
-import {createClaimedAccount, createNewAccount} from './hive';
+import {createClaimedAccount, createNewAccount} from './hiveLibs.utils';
 import {translate} from './localize';
 
 export enum AccountCreationType {

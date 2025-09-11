@@ -1,6 +1,6 @@
 import {Authority, ExtendedAccount} from '@hiveio/dhive';
 import {AccountKeys} from 'actions/interfaces';
-import hive, {getClient} from 'utils/hive';
+import hive, {getClient} from 'utils/hiveLibs.utils';
 import {translate} from './localize';
 
 const isMemoWif = (publicKey: string, memo: string) => {

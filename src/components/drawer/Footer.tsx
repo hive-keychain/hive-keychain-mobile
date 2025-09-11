@@ -26,9 +26,9 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {store} from 'store';
-import {voteForWitness} from 'utils/hive';
+import {voteForWitness} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 export default ({
   user,

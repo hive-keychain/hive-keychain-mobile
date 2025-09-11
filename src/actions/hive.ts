@@ -1,12 +1,12 @@
 import {AppThunk} from 'src/hooks/redux';
 import AccountUtils from 'utils/account.utils';
-import {getClient} from 'utils/hive';
 import {
   getConversionRequests,
   getDelegatees,
   getDelegators,
   getSavingsRequests,
-} from 'utils/hiveUtils';
+} from 'utils/hive.utils';
+import {getClient} from 'utils/hiveLibs.utils';
 import PhishingUtils from 'utils/phishing.utils';
 import {getPrices} from 'utils/price.utils';
 import TransactionUtils from 'utils/transactions.utils';

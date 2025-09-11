@@ -14,7 +14,7 @@ import {
   button_link_primary_small,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import MyWitnessDataBlock from './MyWitnessDataBlock';
 
 interface Props {

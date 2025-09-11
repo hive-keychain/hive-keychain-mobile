@@ -14,7 +14,7 @@ import {
 } from 'src/styles/typography';
 import {clearHAS} from 'utils/hiveAuthenticationService';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 import StatusIndicator, {ConnectionStatus, Indicator} from './StatusIndicator';
 const TitleDarkPNG = require('assets/new_UI/has_title_dark.png');
 

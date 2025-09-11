@@ -9,8 +9,8 @@ import {
   button_link_primary_small,
   fields_primary_text_1,
 } from 'src/styles/typography';
-import {formatBalance, formatBalanceCurrency} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {formatBalance, formatBalanceCurrency} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import MyWitnessDataBlock from './MyWitnessDataBlock';
 

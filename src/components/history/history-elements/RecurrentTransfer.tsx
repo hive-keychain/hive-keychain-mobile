@@ -6,7 +6,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {RecurrentTransfer as RecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {capitalize, withCommas} from 'utils/format';
+import {capitalize, withCommas} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import Icon from '../../hive/Icon';
 

@@ -9,13 +9,13 @@ import {StyleSheet, Text, View} from 'react-native';
 
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {KeychainKeyTypesLC} from 'src/interfaces/keychain.interface';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {body_primary_body_3, FontPoppinsName} from 'src/styles/typography';
 import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_Session} from 'utils/hiveAuthenticationService/has.types';
 import {HAS_ChallengePayload} from 'utils/hiveAuthenticationService/payloads.types';
-import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 const LOGO_LIGHT = require('assets/has/logo-light.png');
 

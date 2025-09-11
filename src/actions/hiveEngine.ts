@@ -11,7 +11,7 @@ import {
   TokenTransaction,
 } from 'src/interfaces/tokens.interface';
 import {RootState, store} from 'store';
-import {decodeMemoIfNeeded} from 'utils/hiveEngine';
+import {decodeMemoIfNeeded} from 'utils/hiveEngine.utils';
 import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 import {getAllTokens, getUserBalance} from 'utils/tokens.utils';
 import {ActionPayload, TokenBalance} from './interfaces';

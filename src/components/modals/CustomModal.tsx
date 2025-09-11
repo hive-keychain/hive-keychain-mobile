@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
+import {Dimensions as Dim} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
-import {Dimensions as Dim} from 'utils/common.types';
 
 type Props = {
   bottomHalf: boolean;

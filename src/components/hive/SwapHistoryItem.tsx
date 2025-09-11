@@ -16,7 +16,7 @@ import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
 import {button_link_primary_small} from 'src/styles/typography';
-import {withCommas} from 'utils/format';
+import {withCommas} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 

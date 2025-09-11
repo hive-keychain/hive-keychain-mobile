@@ -14,7 +14,7 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {getOrdinalLabelTranslation} from 'utils/format';
+import {getOrdinalLabelTranslation} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import {getWitnessInfo} from 'utils/witness.utils';
 import EditMyWitness from './EditMyWitness';

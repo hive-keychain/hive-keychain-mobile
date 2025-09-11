@@ -26,18 +26,18 @@ import {
   TransactionOptionsMetadata,
 } from 'src/interfaces/multisig.interface';
 import {RootState, store} from 'store';
-import {MultisigConfig as MultisigConfiguration} from 'utils/config';
+import {MultisigConfig as MultisigConfiguration} from 'utils/config.utils';
 import {
   broadcastAndConfirmTransactionWithSignature,
   getTransaction,
   signTx,
-} from 'utils/hive';
+} from 'utils/hiveLibs.utils';
 import {KeyUtils} from 'utils/key.utils';
-import {sleep} from 'utils/keychain';
-import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
+import {sleep} from 'utils/keychain.utils';
+import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation.utils';
 import {translate} from 'utils/localize';
 import {MultisigUtils} from 'utils/multisig.utils';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 
 let socket: Socket;
 let shouldReconnectSocket: boolean = false;

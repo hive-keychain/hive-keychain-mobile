@@ -4,8 +4,7 @@ import {KeyTypes} from 'actions/interfaces';
 import assert from 'assert';
 import Crypto from 'crypto-es';
 import SimpleToast from 'react-native-root-toast';
-import {RootState, store} from 'store';
-import {getRequiredWifType} from 'utils/keychain';
+import {ModalComponent} from 'src/enums/modal.enum';
 import {
   KeychainKeyTypes,
   KeychainRequest,
@@ -15,10 +14,11 @@ import {
   RequestPost,
   RequestSuccess,
   RequestVote,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {RootState, store} from 'store';
+import {getRequiredWifType} from 'utils/keychain.utils';
 import {translate} from 'utils/localize';
-import {ModalComponent} from 'utils/modal.enum';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation.utils';
 import HAS from '..';
 import {

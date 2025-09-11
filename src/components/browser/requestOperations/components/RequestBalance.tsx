@@ -11,9 +11,9 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {formatBalance} from 'utils/format';
-import {getCurrency} from 'utils/hive';
-import {getAccount} from 'utils/hiveUtils';
+import {formatBalance} from 'utils/format.utils';
+import {getAccount} from 'utils/hive.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
 
 type Props = {

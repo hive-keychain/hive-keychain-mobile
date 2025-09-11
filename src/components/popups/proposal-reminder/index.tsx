@@ -14,10 +14,10 @@ import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {RootState} from 'store';
-import {ProposalConfig} from 'utils/config';
-import {toHP} from 'utils/format';
-import {getClient, updateProposalVote} from 'utils/hive';
-import {goBack, navigate} from 'utils/navigation';
+import {ProposalConfig} from 'utils/config.utils';
+import {toHP} from 'utils/format.utils';
+import {getClient, updateProposalVote} from 'utils/hiveLibs.utils';
+import {goBack, navigate} from 'utils/navigation.utils';
 interface Props {
   navigation: BrowserScreenProps['navigation'];
 }

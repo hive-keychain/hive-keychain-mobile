@@ -1,6 +1,6 @@
 import {Account, ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {useEffect, useState} from 'react';
-import {getAccount} from 'utils/hiveUtils';
+import {getAccount} from 'utils/hive.utils';
 import {MultisigUtils} from 'utils/multisig.utils';
 
 export const useCheckForMultisig = (

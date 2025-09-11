@@ -28,6 +28,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-root-toast';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
@@ -37,7 +38,6 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
 export interface DropdownModalItem {

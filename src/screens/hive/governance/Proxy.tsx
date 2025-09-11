@@ -20,9 +20,9 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {AsyncUtils} from 'utils/async.utils';
-import {setProxy} from 'utils/hive';
+import {setProxy} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 type Props = {
   isMultisig: boolean;

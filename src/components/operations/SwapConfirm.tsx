@@ -12,7 +12,7 @@ import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
-import {withCommas} from 'utils/format';
+import {withCommas} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 type Props = {

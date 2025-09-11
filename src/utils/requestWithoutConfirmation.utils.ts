@@ -22,7 +22,7 @@ import {
   RequestSignTx,
   RequestSuccess,
   RequestVote,
-} from './keychain.types';
+} from '../interfaces/keychain.interface';
 
 export const requestWithoutConfirmation = (
   accounts: Account[],

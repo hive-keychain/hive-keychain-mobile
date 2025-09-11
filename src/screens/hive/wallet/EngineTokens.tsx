@@ -20,14 +20,14 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 interface Props {
   showEngineTokenSettings: boolean;

@@ -26,7 +26,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 import CustomSearchBar from './CustomSearchBar';
 import EllipticButton from './EllipticButton';
 

@@ -12,8 +12,8 @@ import {Icons} from 'src/enums/icons.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
-import {toHP} from 'utils/format';
-import {claimRewards} from 'utils/hive';
+import {toHP} from 'utils/format.utils';
+import {claimRewards} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 
 interface Props {

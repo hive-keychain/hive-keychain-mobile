@@ -1,6 +1,6 @@
 import Crypto from 'crypto-es';
-import {ModalComponent} from 'utils/modal.enum';
-import {goBack, navigate} from 'utils/navigation';
+import {ModalComponent} from 'src/enums/modal.enum';
+import {goBack, navigate} from 'utils/navigation.utils';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {getChallengeData} from '../helpers/challenge';

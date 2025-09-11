@@ -13,6 +13,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_3,
@@ -20,7 +21,6 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 export const QR_CONTENT_PREFIX = 'keychain://add_accounts=';

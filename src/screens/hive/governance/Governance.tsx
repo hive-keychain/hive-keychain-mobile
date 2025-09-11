@@ -12,6 +12,7 @@ import Toast from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -19,7 +20,6 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import Proposal from './Proposal';
 import Proxy from './Proxy';

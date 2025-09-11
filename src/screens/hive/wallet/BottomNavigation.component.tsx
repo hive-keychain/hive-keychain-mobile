@@ -30,16 +30,16 @@ import {useTab} from 'src/context/tab.context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BottomBarLink} from 'src/enums/bottomBarLink.enum';
 import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getIconDimensions} from 'src/styles/icon';
 import {body_primary_body_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {BrowserUtils} from 'utils/browser';
-import {Dimensions} from 'utils/common.types';
-import {BrowserConfig} from 'utils/config';
+import {BrowserUtils} from 'utils/browser.utils';
+import {BrowserConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {PlatformsUtils} from 'utils/platforms.utils';
 
 interface Props {

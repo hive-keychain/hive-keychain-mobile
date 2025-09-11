@@ -35,10 +35,7 @@ import {
 } from 'src/interfaces/hiveTx.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RootState, store} from 'store';
-import {hiveEngine} from 'utils/config';
-import {getAccount} from './hiveUtils';
-import {KeyUtils} from './key.utils';
-import {sleep} from './keychain';
+import {hiveEngine} from 'utils/config.utils';
 import {
   KeychainKeyTypes,
   KeychainKeyTypesLC,
@@ -47,7 +44,10 @@ import {
   RequestPost,
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
-} from './keychain.types';
+} from '../interfaces/keychain.interface';
+import {getAccount} from './hive.utils';
+import {KeyUtils} from './key.utils';
+import {sleep} from './keychain.utils';
 import {MultisigUtils} from './multisig.utils';
 import {useWorkingRPC} from './rpcSwitcher.utils';
 

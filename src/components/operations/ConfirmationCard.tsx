@@ -14,13 +14,13 @@ import {
   ConfirmationData,
   ConfirmationDataTag,
 } from 'src/interfaces/confirmation.interface';
+import {KeychainRequest, RequestId} from 'src/interfaces/keychain.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {FontPoppinsName, getFormFontStyle} from 'src/styles/typography';
-import {Colors} from 'utils/colors';
-import {KeychainRequest, RequestId} from 'utils/keychain.types';
+import {Colors} from 'utils/colors.utils';
 import {translate} from 'utils/localize';
 
 export const createBalanceData = (

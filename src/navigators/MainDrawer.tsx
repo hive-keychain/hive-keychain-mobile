@@ -10,7 +10,7 @@ import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
-import {noHeader} from 'utils/navigation';
+import {noHeader} from 'utils/navigation.utils';
 import {MainDrawerStackParam} from './MainDrawer.types';
 import Accounts from './mainDrawerStacks/Accounts';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';

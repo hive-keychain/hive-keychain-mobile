@@ -1,4 +1,4 @@
-import {PeakdNotificationsConfig} from 'utils/config';
+import {PeakdNotificationsConfig} from 'utils/config.utils';
 import {BaseApi} from './base';
 
 const buildUrl = (url: string) => {

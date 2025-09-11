@@ -43,10 +43,10 @@ import {
   formatBalanceCurrency,
   getCleanAmountValue,
   withCommas,
-} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';

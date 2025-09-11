@@ -8,6 +8,7 @@ import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {
   NEUTRAL_WHITE_COLOR,
@@ -18,7 +19,6 @@ import {
   button_link_primary_medium,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const ChooseAccountOption = ({navigation}: SignupNavProp) => {

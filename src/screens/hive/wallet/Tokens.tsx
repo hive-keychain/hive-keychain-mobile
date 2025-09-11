@@ -32,11 +32,11 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {logScreenView} from 'utils/analytics';
-import {hiveEngineWebsiteURL} from 'utils/config';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
+import {logScreenView} from 'utils/analytics.utils';
+import {hiveEngineWebsiteURL} from 'utils/config.utils';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 interface TokensProps {}
 /**Note: Currently component not being called or used. */

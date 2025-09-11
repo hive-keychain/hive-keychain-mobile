@@ -9,7 +9,7 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
 import {getBadgeStyle} from 'src/styles/text';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 const SettingsMenu = () => {
   const {theme} = useThemeContext();

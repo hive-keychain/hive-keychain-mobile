@@ -3,7 +3,7 @@ import QRCode from 'components/qr_code';
 import {BarcodeScanningResult} from 'expo-camera';
 import React from 'react';
 import SimpleToast from 'react-native-root-toast';
-import {handleAddAccountQR} from 'utils/linking';
+import {handleAddAccountQR} from 'utils/linking.utils';
 import {translate} from 'utils/localize';
 
 type AnyScanQRRoute = RouteProp<

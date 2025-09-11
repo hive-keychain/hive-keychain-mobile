@@ -19,10 +19,12 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -34,12 +36,10 @@ import {
   getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {depositToSavings, withdrawFromSavings} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {depositToSavings, withdrawFromSavings} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {SavingsUtils} from 'utils/savings.utils';
 import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';

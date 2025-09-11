@@ -16,6 +16,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
@@ -24,23 +25,22 @@ import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {FavoriteUserUtils} from 'utils/favorite-user.utils';
+import {FavoriteUserUtils} from 'utils/favoriteUsers.utils';
 import {
   beautifyTransferError,
   capitalize,
   getCleanAmountValue,
   withCommas,
-} from 'utils/format';
-import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
+} from 'utils/format.utils';
 import {
   getAccountKeys,
   sanitizeAmount,
   sanitizeUsername,
-} from 'utils/hiveUtils';
+} from 'utils/hive.utils';
+import {tryConfirmTransaction} from 'utils/hiveEngine.utils';
+import {recurrentTransfer, sendToken, transfer} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {TransferUtils} from 'utils/transfer.utils';
 import Balance from '../Balance';
 import {ConfirmationPageProps} from '../Confirmation';

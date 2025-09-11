@@ -1,6 +1,6 @@
 import {StyleProp, TextStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Dimensions} from 'utils/common.types';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from './colors';
 import {
   getFontSizeSmallDevices,

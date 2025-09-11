@@ -9,9 +9,9 @@ import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
 import {StatusBar, StyleProp, ViewStyle} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
+import {ModalComponent} from 'src/enums/modal.enum';
 import {getColors} from 'src/styles/colors';
 import {HAS_BroadcastModalPayload} from 'utils/hiveAuthenticationService/payloads.types';
-import {ModalComponent} from 'utils/modal.enum';
 
 export default ({navigation, route}: ModalNavigationProps) => {
   const {theme} = useThemeContext();

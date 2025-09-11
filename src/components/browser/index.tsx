@@ -8,7 +8,7 @@ import {BrowserPropsFromRedux} from 'screens/Browser';
 import {useOrientation} from 'src/context/orientation.context';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
-import {BrowserConfig} from 'utils/config';
+import {BrowserConfig} from 'utils/config.utils';
 import Header from './Header';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';

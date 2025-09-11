@@ -10,8 +10,8 @@ import {
   NotificationOperationName,
   NotificationType,
 } from 'src/interfaces/notifications.interface';
-import {fromNaiAndSymbol, toFormattedHP, withCommas} from './format';
-import {broadcastJson} from './hive';
+import {fromNaiAndSymbol, toFormattedHP, withCommas} from './format.utils';
+import {broadcastJson} from './hiveLibs.utils';
 const suggestedConfig = [
   'fill_convert_request',
   'interest',

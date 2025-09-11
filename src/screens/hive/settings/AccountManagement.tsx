@@ -24,6 +24,7 @@ import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {MARGIN_PADDING} from 'src/styles/spacing';
@@ -33,10 +34,9 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
-import {Dimensions} from 'utils/common.types';
 import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 const AccountManagement = ({
   account,

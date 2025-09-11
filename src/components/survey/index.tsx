@@ -13,7 +13,7 @@ import {
   title_primary_body_2,
   title_primary_title_1,
 } from 'src/styles/typography';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {SurveyData} from './surveyData';
 
 type Props = {

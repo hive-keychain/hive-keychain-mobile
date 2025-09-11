@@ -29,7 +29,7 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {PeakDNotificationsUtils} from 'utils/notifications.utils';
 type Props = {
   notifs: Notification[];

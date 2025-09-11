@@ -1,6 +1,6 @@
 import {ExchangesUtils} from 'hive-keychain-commons';
 import {BuyCoinType} from 'src/enums/operations.enum';
-import {getCurrency} from 'utils/hive';
+import {getCurrency} from 'utils/hiveLibs.utils';
 
 interface Exchange {
   name: string;

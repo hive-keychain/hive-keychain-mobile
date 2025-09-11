@@ -7,10 +7,10 @@ import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Tokens from 'screens/hive/wallet/Tokens';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
 
 const Stack = createStackNavigator();
 

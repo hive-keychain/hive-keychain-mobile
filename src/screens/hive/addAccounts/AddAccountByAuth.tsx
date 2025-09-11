@@ -20,6 +20,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
@@ -28,7 +29,6 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 type AnyAuthRoute = RouteProp<

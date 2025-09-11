@@ -14,10 +14,10 @@ import Wallet from 'screens/hive/wallet/Main';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();

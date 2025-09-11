@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CurrencyPrices, TokenBalance, TokenMarket} from 'actions/interfaces';
 import api from 'api/keychain';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
-import {toHP} from 'utils/format';
-import {getHiveEngineTokenValue} from './hiveEngine';
+import {toHP} from 'utils/format.utils';
+import {getHiveEngineTokenValue} from './hiveEngine.utils';
 
 export const getPrices = async () => {
   return (await api.get('/hive/v2/price')).data;

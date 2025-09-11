@@ -13,7 +13,7 @@ import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
-import {SwapsConfig} from 'utils/config';
+import {SwapsConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
 import {BackToTopButton} from '../ui/Back-To-Top-Button';

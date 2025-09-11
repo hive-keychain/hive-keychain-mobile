@@ -8,7 +8,7 @@ import {useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 const Accounts = () => {
   const {theme} = useThemeContext();

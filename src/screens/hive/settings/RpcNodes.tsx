@@ -46,8 +46,8 @@ import {
   headlines_primary_headline_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {DEFAULT_RPC, rpcList} from 'utils/hive.utils';
 import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
-import {DEFAULT_RPC, rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {addCustomRpc, deleteCustomRpc, getCustomRpcs} from 'utils/rpc.utils';
 import * as ValidUrl from 'valid-url';

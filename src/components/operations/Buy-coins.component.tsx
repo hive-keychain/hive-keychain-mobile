@@ -14,7 +14,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
-import {getBuyCoinsListItem} from 'src/lists/buy-coins-list-item.list';
+import {getBuyCoinsListItem} from 'src/lists/buyHive.list';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -24,7 +24,7 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {capitalize} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import OperationThemed from './OperationThemed';
 

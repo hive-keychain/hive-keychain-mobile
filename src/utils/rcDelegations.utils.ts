@@ -3,7 +3,7 @@ import {GlobalProperties} from 'actions/interfaces';
 import {Key} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RcDelegation} from 'src/interfaces/rcDelegation.interface';
-import {broadcastJson, getData} from './hive';
+import {broadcastJson, getData} from './hiveLibs.utils';
 
 const GIGA = 1000000000;
 

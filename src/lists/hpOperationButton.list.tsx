@@ -10,9 +10,9 @@ import React from 'react';
 import {useWindowDimensions} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
-import {getCurrency} from 'utils/hive';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 export const getHPButtonList = (theme: Theme, delegatee: string) => {
   const styles = getButtonStyle(

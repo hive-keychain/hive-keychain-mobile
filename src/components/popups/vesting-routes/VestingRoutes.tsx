@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
@@ -17,9 +18,8 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import {AccountVestingRoutesDifferences} from './vesting-routes.interface';
 import {VestingRoutesItemComponent} from './VestingRoutesItem';
 

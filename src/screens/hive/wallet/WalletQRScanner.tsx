@@ -10,10 +10,10 @@ import SimpleToast from 'react-native-root-toast';
 import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {KeyUtils} from 'utils/key.utils';
-import {validateFromObject} from 'utils/keyValidation';
-import {handleAddAccountQR, handleUrl} from 'utils/linking';
+import {validateFromObject} from 'utils/keyValidation.utils';
+import {handleAddAccountQR, handleUrl} from 'utils/linking.utils';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
+import {resetStackAndNavigate} from 'utils/navigation.utils';
 
 type AnyWalletQRRoute = RouteProp<
   Record<string, {wallet?: boolean} | undefined>,

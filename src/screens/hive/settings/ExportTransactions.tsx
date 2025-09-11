@@ -28,6 +28,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
@@ -37,7 +38,6 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
   const {theme} = useThemeContext();

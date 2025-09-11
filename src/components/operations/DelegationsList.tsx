@@ -36,15 +36,20 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {fromHP, getCleanAmountValue, toHP, withCommas} from 'utils/format';
-import {delegate, getCurrency} from 'utils/hive';
+import {
+  fromHP,
+  getCleanAmountValue,
+  toHP,
+  withCommas,
+} from 'utils/format.utils';
 import {
   getPendingOutgoingUndelegation,
   sanitizeAmount,
   sanitizeUsername,
-} from 'utils/hiveUtils';
+} from 'utils/hive.utils';
+import {delegate, getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import OperationThemed from './OperationThemed';
 
 interface DelegationListProps {

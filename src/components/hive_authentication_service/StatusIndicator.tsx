@@ -7,8 +7,8 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {RootState} from 'store';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
-import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {ModalComponent} from 'src/enums/modal.enum';
+import {navigate} from 'utils/navigation.utils';
 
 export enum ConnectionStatus {
   VOID,

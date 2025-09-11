@@ -18,6 +18,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   body_primary_body_3,
@@ -25,7 +26,6 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {getSafeState} from 'store';
-import {Dimensions} from 'utils/common.types';
 
 export default ({navigation}: {navigation: AboutNavigation}) => {
   useLockedPortrait(navigation);

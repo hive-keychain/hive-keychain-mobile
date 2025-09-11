@@ -6,7 +6,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {Delegation} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {withCommas} from 'utils/format';
+import {withCommas} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import Icon from '../../hive/Icon';
 

@@ -1,9 +1,9 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {RequestId, RequestPowerUp} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {powerUp} from 'utils/hive';
-import {RequestId, RequestPowerUp} from 'utils/keychain.types';
+import {powerUp} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';

@@ -31,6 +31,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {CreateDataAccountOnBoarding} from 'src/interfaces/createAccounts.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -42,28 +43,27 @@ import {
   getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import AccountUtils from 'utils/account.utils';
 import {
   AccountCreationType,
   AccountCreationUtils,
   GeneratedKey,
-} from 'utils/account-creation.utils';
-import AccountUtils from 'utils/account.utils';
-import {Dimensions} from 'utils/common.types';
+} from 'utils/accountCreation.utils';
 import {
   capitalize,
   fromHP,
   getCleanAmountValue,
   toHP,
   withCommas,
-} from 'utils/format';
-import {delegate, getCurrency} from 'utils/hive';
+} from 'utils/format.utils';
 import {
   getAccountPrice,
   sanitizeAmount,
   sanitizeUsername,
-} from 'utils/hiveUtils';
+} from 'utils/hive.utils';
+import {delegate, getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 
 interface SelectOption {

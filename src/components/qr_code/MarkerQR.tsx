@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
-import {Width} from 'utils/common.types';
+import {Width} from 'src/interfaces/common.interface';
 
 const Marker = () => {
   const styles = getStyles(useWindowDimensions());

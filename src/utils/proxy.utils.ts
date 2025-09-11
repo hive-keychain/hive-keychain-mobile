@@ -1,5 +1,5 @@
 import {ExtendedAccount} from '@hiveio/dhive';
-import {getClient} from './hive';
+import {getClient} from './hiveLibs.utils';
 
 const findUserProxy = async (user: ExtendedAccount): Promise<string | null> => {
   const previousChecked: string[] = [user.name!];

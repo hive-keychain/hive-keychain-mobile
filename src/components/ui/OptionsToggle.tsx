@@ -9,12 +9,12 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 
 type Props = {
   children: React.ReactNode[] | React.ReactNode;

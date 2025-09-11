@@ -2,9 +2,9 @@ import {Asset, DynamicGlobalProperties} from '@hiveio/dhive';
 import moment from 'moment';
 import {Key} from 'src/interfaces/keys.interface';
 import {RootState, store} from 'store';
-import {ProposalConfig} from './config';
-import {getSymbol, nFormatter, toHP} from './format';
-import {getClient, getData, updateProposalVote} from './hive';
+import {ProposalConfig} from './config.utils';
+import {getSymbol, nFormatter, toHP} from './format.utils';
+import {getClient, getData, updateProposalVote} from './hiveLibs.utils';
 
 export enum FundedOption {
   TOTALLY_FUNDED = 'totally_funded',

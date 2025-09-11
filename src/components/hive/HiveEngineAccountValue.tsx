@@ -1,7 +1,7 @@
 import {CurrencyPrices, TokenBalance, TokenMarket} from 'actions/interfaces';
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
-import {withCommas} from 'utils/format';
+import {withCommas} from 'utils/format.utils';
 
 type Props = {
   tokensMarket: TokenMarket[];

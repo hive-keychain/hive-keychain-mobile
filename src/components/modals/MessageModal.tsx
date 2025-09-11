@@ -26,7 +26,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 const DEFAULTHIDETIMEMS = 3000;
 interface Props {

@@ -30,6 +30,7 @@ import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
@@ -41,15 +42,14 @@ import {
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import AccountUtils from 'utils/account.utils';
 import {
   AccountCreationType,
   AccountCreationUtils,
   GeneratedKeys,
-} from 'utils/account-creation.utils';
-import AccountUtils from 'utils/account.utils';
-import {Dimensions} from 'utils/common.types';
+} from 'utils/accountCreation.utils';
 import {translate} from 'utils/localize';
-import {navigate, resetStackAndNavigate} from 'utils/navigation';
+import {navigate, resetStackAndNavigate} from 'utils/navigation.utils';
 
 const DEFAULT_EMPTY_KEYS = {
   owner: {public: '', private: ''},

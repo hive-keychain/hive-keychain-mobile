@@ -10,13 +10,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
   title_primary_body_2,
   title_primary_title_1,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 
 type Props = {
   components: React.ReactNode[];

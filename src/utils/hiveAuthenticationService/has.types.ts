@@ -1,4 +1,4 @@
-import {KeychainRequestTypes} from 'utils/keychain.types';
+import {KeychainRequestTypes} from 'src/interfaces/keychain.interface';
 
 // One HAS_Instance per different domain serving HAS being used
 export type HAS_Instance = {

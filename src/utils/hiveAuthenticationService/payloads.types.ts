@@ -4,7 +4,7 @@ import {
   KeychainRequest,
   RequestError,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
 
 export enum HAS_PayloadType {
   AUTH = 'auth_req',

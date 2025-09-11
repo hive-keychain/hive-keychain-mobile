@@ -17,7 +17,7 @@ import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
+import {resetStackAndNavigate} from 'utils/navigation.utils';
 import {TokenUtils} from 'utils/tokens.utils';
 import TransactionUtils from 'utils/transactions.utils';
 

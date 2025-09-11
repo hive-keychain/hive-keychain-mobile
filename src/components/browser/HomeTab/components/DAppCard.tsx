@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -15,8 +16,7 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {store} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {DApp} from 'utils/config';
+import {DApp} from 'utils/config.utils';
 type Props = {
   dApp: DApp;
   updateTabUrl: (link: string) => void;

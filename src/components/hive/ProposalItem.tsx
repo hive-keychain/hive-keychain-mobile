@@ -25,10 +25,10 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {withCommas} from 'utils/format';
-import {updateProposalVote} from 'utils/hive';
+import {withCommas} from 'utils/format.utils';
+import {updateProposalVote} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {FundedOption, Proposal} from 'utils/proposals.utils';
 import Icon from './Icon';
 

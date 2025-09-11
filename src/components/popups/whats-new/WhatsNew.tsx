@@ -15,7 +15,7 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {VersionLogUtils} from 'utils/version.utils';
 import {WhatsNewUtils} from 'utils/whatsNew.utils';
 import {Feature, WhatsNewContent} from './whats-new.interface';

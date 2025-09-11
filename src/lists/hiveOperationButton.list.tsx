@@ -16,9 +16,9 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {getCurrency} from 'utils/hive';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
   const styles = getButtonStyle(

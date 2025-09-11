@@ -29,6 +29,8 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
+import {ModalComponent} from 'src/enums/modal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {SwapConfig} from 'src/interfaces/swapTokens.interface';
 import {Token} from 'src/interfaces/tokens.interface';
@@ -49,13 +51,11 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {SwapsConfig} from 'utils/config';
-import {capitalize, withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {SwapsConfig} from 'utils/config.utils';
+import {capitalize, withCommas} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
 import {
   getAllTokens,

@@ -3,18 +3,18 @@ import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {
   InfoScreenData,
   InfoScreenItemList,
   InfoScreenType,
-} from 'src/lists/infoScreenItemList';
+} from 'src/lists/infoScreenItem.list';
 import {getColors} from 'src/styles/colors';
 import {
   button_link_primary_small,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 interface Props {

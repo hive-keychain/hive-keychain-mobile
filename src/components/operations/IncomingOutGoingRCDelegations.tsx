@@ -24,8 +24,8 @@ import {
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {formatBalance} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {formatBalance} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 import IncomingOutgoingRcDelegationItem from './IncomingOutgoingRcDelegationItem';

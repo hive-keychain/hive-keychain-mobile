@@ -1,6 +1,6 @@
 import {AppThunk} from 'src/hooks/redux';
 import {EcosystemUtils} from 'utils/ecosystem.utils';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {ActionPayload, BrowserPayload, Page, Tab} from './interfaces';
 import {
   ADD_BROWSER_TAB,

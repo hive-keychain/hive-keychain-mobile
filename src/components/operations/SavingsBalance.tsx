@@ -8,8 +8,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {Width} from 'utils/common.types';
-import {formatBalance} from 'utils/format';
+import {Width} from 'src/interfaces/common.interface';
+import {formatBalance} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 type Props = {

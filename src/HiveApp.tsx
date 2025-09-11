@@ -30,12 +30,12 @@ import {
   DEFAULT_HE_RPC_NODE,
 } from 'src/interfaces/hiveEngineRpc.interface';
 import {RootState} from 'store';
-import {logScreenView} from 'utils/analytics';
-import {setRpc} from 'utils/hive';
-import {processQRCodeOp} from 'utils/hive-uri';
+import {logScreenView} from 'utils/analytics.utils';
 import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
-import setupLinking, {clearLinkingListeners} from 'utils/linking';
-import {noHeader, setNavigator} from 'utils/navigation';
+import {setRpc} from 'utils/hiveLibs.utils';
+import {processQRCodeOp} from 'utils/hiveUri.utils';
+import setupLinking, {clearLinkingListeners} from 'utils/linking.utils';
+import {noHeader, setNavigator} from 'utils/navigation.utils';
 import {checkRpcStatus} from 'utils/rpc.utils';
 import {useWorkingRPC} from 'utils/rpcSwitcher.utils';
 import {FLOATINGBAR_ALLOWED_SCREENS} from './lists/floatingBarAllowedScreens.list';

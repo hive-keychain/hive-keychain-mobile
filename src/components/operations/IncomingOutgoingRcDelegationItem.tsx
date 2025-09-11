@@ -32,10 +32,10 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 
 interface Props {

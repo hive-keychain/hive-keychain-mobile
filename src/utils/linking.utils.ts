@@ -7,12 +7,12 @@ import SimpleToast from 'react-native-root-toast';
 import {RootState, store} from 'store';
 import isURL from 'validator/lib/isURL';
 import AccountUtils from './account.utils';
-import {HASConfig} from './config';
-import {HiveUriOpType, processQRCodeOp} from './hive-uri';
+import {HASConfig} from './config.utils';
+import {HiveUriOpType, processQRCodeOp} from './hiveUri.utils';
 import {KeyUtils} from './key.utils';
-import {validateFromObject} from './keyValidation';
+import {validateFromObject} from './keyValidation.utils';
 import {translate} from './localize';
-import {goBack, goBackAndNavigate} from './navigation';
+import {goBack, goBackAndNavigate} from './navigation.utils';
 
 let flagCurrentlyProcessing = false;
 let qrDataAccounts: {

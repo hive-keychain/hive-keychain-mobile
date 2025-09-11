@@ -15,11 +15,11 @@ import Operations from 'screens/hive/settings/Operations';
 import RpcNodes from 'screens/hive/settings/RpcNodes';
 import SettingsMenu from 'screens/hive/settings/SettingsMenu';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
 
 const Stack = createStackNavigator();
 

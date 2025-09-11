@@ -11,9 +11,10 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
-import {getHBDButtonList} from 'src/lists/hbdOperationButtonList';
-import {getHiveButtonList} from 'src/lists/hiveOperationButtonList';
-import {getHPButtonList} from 'src/lists/hpOperationButtonList';
+import {Dimensions} from 'src/interfaces/common.interface';
+import {getHBDButtonList} from 'src/lists/hbdOperationButton.list';
+import {getHiveButtonList} from 'src/lists/hiveOperationButton.list';
+import {getHPButtonList} from 'src/lists/hpOperationButton.list';
 import {getCardStyle} from 'src/styles/card';
 import {GREEN_SUCCESS, PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
@@ -23,10 +24,9 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {formatBalance, toHP} from 'utils/format';
+import {formatBalance, toHP} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {WalletHistoryComponentProps} from '../history/WalletHistoryComponent';
 import CurrencyIcon from './CurrencyIcon';
 import Icon from './Icon';

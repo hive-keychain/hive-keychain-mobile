@@ -11,13 +11,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
   headerH3Primary,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 
 interface Props {
   number?: number;

@@ -11,6 +11,7 @@ import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
@@ -22,10 +23,9 @@ import {RootState} from 'store';
 import {
   AccountCreationType,
   AccountCreationUtils,
-} from 'utils/account-creation.utils';
-import {Dimensions} from 'utils/common.types';
+} from 'utils/accountCreation.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 const CreateAccountPeerToPeer = ({}: PropsFromRedux) => {
   const {theme} = useThemeContext();

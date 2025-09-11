@@ -1,6 +1,6 @@
 import {KeychainRequest} from 'hive-keychain-commons';
 import {useEffect, useState} from 'react';
-import {urlTransformer} from 'utils/browser';
+import {urlTransformer} from 'utils/browser.utils';
 import {translate} from 'utils/localize';
 import PhishingUtils from 'utils/phishing.utils';
 

@@ -15,6 +15,7 @@ import {
 import {Text} from 'react-native-elements';
 import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
+import {Width} from 'src/interfaces/common.interface';
 import {
   PRIMARY_RED_COLOR,
   RED_SHADOW_COLOR,
@@ -28,9 +29,8 @@ import {
   headlines_primary_headline_1,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
 

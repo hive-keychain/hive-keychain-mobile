@@ -19,8 +19,8 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {Colors, getTokenBackgroundColor} from 'utils/colors';
-import {nFormatter} from 'utils/format';
+import {Colors, getTokenBackgroundColor} from 'utils/colors.utils';
+import {nFormatter} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 interface TokenSettingsItemProps {

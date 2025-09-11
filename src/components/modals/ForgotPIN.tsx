@@ -6,6 +6,7 @@ import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Width} from 'src/interfaces/common.interface';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getSpacing} from 'src/styles/spacing';
 import {
@@ -14,9 +15,8 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 
 interface Props {
   theme: Theme;

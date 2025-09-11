@@ -14,7 +14,7 @@ import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {PeakDNotificationsUtils} from 'utils/notifications.utils';
 
 const Notifications = ({active}: PropsFromRedux) => {

@@ -33,7 +33,7 @@ import {
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {formatBalanceCurrency} from 'utils/format';
+import {formatBalanceCurrency} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 interface TokenHistoryItemProps {

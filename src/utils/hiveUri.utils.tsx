@@ -15,7 +15,7 @@ import {DecodeResult, resolveCallback} from 'hive-uri';
 import React from 'react';
 import {Linking} from 'react-native';
 import {RootState, store} from 'store';
-import {validateAuthority} from './keychain';
+import {ModalComponent} from '../enums/modal.enum';
 import {
   KeychainKeyTypes,
   KeychainKeyTypesLC,
@@ -30,9 +30,9 @@ import {
   RequestTransfer,
   RequestUpdateProposalVote,
   RequestWitnessVote,
-} from './keychain.types';
-import {ModalComponent} from './modal.enum';
-import {goBack, navigate} from './navigation';
+} from '../interfaces/keychain.interface';
+import {validateAuthority} from './keychain.utils';
+import {goBack, navigate} from './navigation.utils';
 
 const DOMAIN = 'scanned';
 export enum HiveUriOpType {
@@ -122,11 +122,8 @@ export const processQRCodeOp = async (
         break;
       }
       case 'delegate_vesting_shares': {
-        const {
-          delegatee,
-          vesting_shares,
-          delegator,
-        } = data as DelegateVestingSharesOperation[1];
+        const {delegatee, vesting_shares, delegator} =
+          data as DelegateVestingSharesOperation[1];
         const [amount, unit] = (vesting_shares as string).split(' ');
         request = {
           domain: DOMAIN,
@@ -142,11 +139,8 @@ export const processQRCodeOp = async (
         break;
       }
       case 'account_witness_vote': {
-        const {
-          witness,
-          approve,
-          account,
-        } = data as AccountWitnessVoteOperation[1];
+        const {witness, approve, account} =
+          data as AccountWitnessVoteOperation[1];
         request = {
           domain: DOMAIN,
           username: account || qrRequest?.params?.signer,
@@ -193,12 +187,8 @@ export const processQRCodeOp = async (
         break;
 
       case 'update_proposal_votes': {
-        const {
-          proposal_ids,
-          approve,
-          extensions,
-          voter,
-        } = data as UpdateProposalVotesOperation[1];
+        const {proposal_ids, approve, extensions, voter} =
+          data as UpdateProposalVotesOperation[1];
         request = {
           domain: DOMAIN,
           username: voter || qrRequest?.params?.signer,

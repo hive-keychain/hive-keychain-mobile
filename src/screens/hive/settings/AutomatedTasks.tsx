@@ -38,7 +38,7 @@ import {inputStyle} from 'src/styles/input';
 import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';
-import {ClaimsConfig} from 'utils/config';
+import {ClaimsConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 
 const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {

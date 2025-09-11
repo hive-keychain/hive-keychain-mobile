@@ -37,10 +37,11 @@ import {UserPreference} from 'reducers/preferences.types';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
 import {ProviderEvent} from 'src/enums/providerEvent.enum';
+import {RequestError, RequestSuccess} from 'src/interfaces/keychain.interface';
 import {store} from 'store';
-import {urlTransformer} from 'utils/browser';
-import {BrowserConfig} from 'utils/config';
-import {getAccount} from 'utils/hiveUtils';
+import {urlTransformer} from 'utils/browser.utils';
+import {BrowserConfig} from 'utils/config.utils';
+import {getAccount} from 'utils/hive.utils';
 import {
   getRequestTitle,
   getRequiredWifType,
@@ -48,10 +49,9 @@ import {
   sendResponse,
   validateAuthority,
   validateRequest,
-} from 'utils/keychain';
-import {RequestError, RequestSuccess} from 'utils/keychain.types';
+} from 'utils/keychain.utils';
 import {MultisigUtils} from 'utils/multisig.utils';
-import {navigate, goBack as navigationGoBack} from 'utils/navigation';
+import {navigate, goBack as navigationGoBack} from 'utils/navigation.utils';
 import {hasPreference} from 'utils/preferences.utils';
 import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation.utils';
 import HomeTab from './HomeTab';

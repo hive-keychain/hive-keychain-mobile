@@ -19,7 +19,7 @@ import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
-import {noHeader} from 'utils/navigation';
+import {noHeader} from 'utils/navigation.utils';
 import {SignupStackParamList} from './Signup.types';
 
 const Stack = createStackNavigator<SignupStackParamList>();

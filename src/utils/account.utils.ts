@@ -4,8 +4,8 @@ import {
   ExtendedAccount,
 } from '@hiveio/dhive';
 import {Account, AccountKeys, ActiveAccount, RC} from 'actions/interfaces';
-import {ClaimsConfig} from './config';
-import {broadcast, getClient, getData} from './hive';
+import {ClaimsConfig} from './config.utils';
+import {broadcast, getClient, getData} from './hiveLibs.utils';
 import {KeyUtils} from './key.utils';
 import {translate} from './localize';
 

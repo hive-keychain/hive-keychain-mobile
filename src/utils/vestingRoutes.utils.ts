@@ -10,7 +10,7 @@ import {
 import _ from 'lodash';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Key} from 'src/interfaces/keys.interface';
-import {broadcast, getData} from './hive';
+import {broadcast, getData} from './hiveLibs.utils';
 
 const getVestingRoutes = async (
   name: string,

@@ -20,7 +20,7 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {hiveEngineWebsiteURL} from 'utils/config';
+import {hiveEngineWebsiteURL} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 import TokenSettingsItem from './TokenSettingsItem';
 

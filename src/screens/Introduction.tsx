@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {
   NEUTRAL_WHITE_COLOR,
@@ -35,7 +36,6 @@ import {
   headlines_primary_headline_2,
   title_primary_title_1,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const INTRO_STEPS = 3;

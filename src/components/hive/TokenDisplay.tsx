@@ -33,9 +33,9 @@ import {
   getFontSizeSmallDevices,
   title_secondary_body_3,
 } from 'src/styles/typography';
-import {formatBalance} from 'utils/format';
+import {formatBalance} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import Icon from './Icon';
 
 type Props = {

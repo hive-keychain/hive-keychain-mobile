@@ -19,15 +19,15 @@ import {
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {ConfirmationData} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
+import {resetStackAndNavigate} from 'utils/navigation.utils';
 import ConfirmationCard from './ConfirmationCard';
 
 export type ConfirmationPageProps = {

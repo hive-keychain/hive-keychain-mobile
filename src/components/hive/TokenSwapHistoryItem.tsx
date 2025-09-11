@@ -9,7 +9,7 @@ import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Icons} from 'src/enums/icons.enum';
 import {RootState} from 'store';
-import {withCommas} from 'utils/format';
+import {withCommas} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 interface Props {

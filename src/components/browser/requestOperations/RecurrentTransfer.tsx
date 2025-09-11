@@ -4,10 +4,13 @@ import {createBalanceData} from 'components/operations/ConfirmationCard';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React, {useEffect, useState} from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {
+  RequestId,
+  RequestRecurrentTransfer,
+} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {recurrentTransfer} from 'utils/hive';
-import {getAccount, getAccountKeys} from 'utils/hiveUtils';
-import {RequestId, RequestRecurrentTransfer} from 'utils/keychain.types';
+import {getAccount, getAccountKeys} from 'utils/hive.utils';
+import {recurrentTransfer} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
@@ -25,12 +28,8 @@ export default ({
   const {request_id, ...data} = request;
   const {amount, to, currency, executions, recurrence, memo} = data;
   const [availableBalance, setAvailableBalance] = useState(0);
-  const {
-    getAccountKey,
-    RequestUsername,
-    getAccountMemoKey,
-    getUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
+  const {getAccountKey, RequestUsername, getAccountMemoKey, getUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
   useEffect(() => {
     const fetchAvailableBalance = async () => {
       const account = await getAccount(getUsername());

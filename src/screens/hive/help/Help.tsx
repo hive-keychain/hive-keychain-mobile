@@ -9,8 +9,8 @@ import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
 import {RootState} from 'store';
-import {tutorialBaseUrl} from 'utils/config';
-import {navigate} from 'utils/navigation';
+import {tutorialBaseUrl} from 'utils/config.utils';
+import {navigate} from 'utils/navigation.utils';
 
 const Help = ({addTab}: PropsFromRedux) => {
   const {theme} = useThemeContext();

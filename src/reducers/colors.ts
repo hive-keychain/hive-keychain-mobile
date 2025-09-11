@@ -1,6 +1,6 @@
 import {ActionPayload} from 'actions/interfaces';
 import {GET_BACKGROUND_COLORS} from 'actions/types';
-import {Colors} from 'utils/colors';
+import {Colors} from 'utils/colors.utils';
 
 const colorsReducer = (
   state: Colors = {},

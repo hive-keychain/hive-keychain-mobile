@@ -14,7 +14,7 @@ import {
   headlines_primary_headline_1,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 
 type Props = PropsFromRedux & {name: string; type: KeyTypes};
 

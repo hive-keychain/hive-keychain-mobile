@@ -25,9 +25,9 @@ import {
   title_secondary_title_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {hiveConfig} from 'utils/config';
+import {hiveConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import {PlatformsUtils} from 'utils/platforms.utils';
 
 const CreateAccount = ({showExternalOnboarding}: PropsFromRedux) => {

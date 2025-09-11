@@ -7,7 +7,7 @@ import {
 } from 'actions/interfaces';
 import api from 'api/keychain';
 import {PendingOutgoingUndelegation} from 'src/interfaces/delegations.interface';
-import {getClient, getData} from './hive';
+import {getClient, getData} from './hiveLibs.utils';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
 const HIVE_100_PERCENT = 10000;

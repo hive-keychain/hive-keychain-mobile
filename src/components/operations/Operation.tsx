@@ -15,7 +15,7 @@ import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 
 type Props = {
   children: React.ReactNode;

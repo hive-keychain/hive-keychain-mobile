@@ -4,9 +4,9 @@ import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import {KeychainKeyTypesLC} from 'hive-keychain-commons';
 import {Key, PrivateKeyType} from 'src/interfaces/keys.interface';
 import {RootState, store} from 'store';
-import {getData} from './hive';
-import {KeychainKeyTypes} from './keychain.types';
-import {getPublicKeyFromPrivateKeyString} from './keyValidation';
+import {KeychainKeyTypes} from '../interfaces/keychain.interface';
+import {getData} from './hiveLibs.utils';
+import {getPublicKeyFromPrivateKeyString} from './keyValidation.utils';
 
 const isAuthorizedAccount = (key: string): boolean => {
   return key.toString().startsWith('@');

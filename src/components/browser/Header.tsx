@@ -23,6 +23,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getInputContainerHeight} from 'src/styles/input';
@@ -32,9 +33,8 @@ import {
   button_link_primary_small,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {urlTransformer} from 'utils/browser';
-import {Dimensions} from 'utils/common.types';
-import {BrowserConfig} from 'utils/config';
+import {urlTransformer} from 'utils/browser.utils';
+import {BrowserConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 
 const HEART_PNG = require('assets/new_UI/heart.png');

@@ -2,8 +2,8 @@ import {KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {setProxy} from 'utils/hive';
-import {RequestId, RequestProxy} from 'utils/keychain.types';
+import {RequestId, RequestProxy} from 'src/interfaces/keychain.interface';
+import {setProxy} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
@@ -21,11 +21,8 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {proxy} = data;
-  const {
-    getAccountKey,
-    RequestUsername,
-    getUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
+  const {getAccountKey, RequestUsername, getUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
   const performOperation = async () => {
     return await setProxy(getAccountKey(), {
       account: getUsername(),

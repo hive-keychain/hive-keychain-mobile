@@ -13,7 +13,7 @@ import {getModalBaseStyle} from 'src/styles/modal';
 import {getFontSizeSmallDevices} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 
 interface Props {

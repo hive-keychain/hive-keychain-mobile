@@ -21,6 +21,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {DomainPreference} from 'reducers/preferences.types';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -29,7 +30,6 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const Operations = ({

@@ -1,18 +1,18 @@
-import { KeyTypes } from "actions/interfaces";
-import { encodeMemo } from "components/bridge";
-import { createBalanceData } from "components/operations/ConfirmationCard";
-import usePotentiallyAnonymousRequest from "hooks/usePotentiallyAnonymousRequest";
-import React, { useEffect, useState } from "react";
-import SimpleToast from "react-native-root-toast";
-import { ConfirmationDataTag } from "src/interfaces/confirmation.interface";
-import { TransactionOptions } from "src/interfaces/multisig.interface";
-import { beautifyTransferError } from "utils/format";
-import { transfer } from "utils/hive";
-import { getAccount, getAccountKeys } from "utils/hiveUtils";
-import { RequestId, RequestTransfer } from "utils/keychain.types";
-import { translate } from "utils/localize";
-import RequestOperation from "./components/RequestOperation";
-import { RequestComponentCommonProps } from "./requestOperations.types";
+import {KeyTypes} from 'actions/interfaces';
+import {encodeMemo} from 'components/bridge';
+import {createBalanceData} from 'components/operations/ConfirmationCard';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
+import React, {useEffect, useState} from 'react';
+import SimpleToast from 'react-native-root-toast';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {RequestId, RequestTransfer} from 'src/interfaces/keychain.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {beautifyTransferError} from 'utils/format.utils';
+import {getAccount, getAccountKeys} from 'utils/hive.utils';
+import {transfer} from 'utils/hiveLibs.utils';
+import {translate} from 'utils/localize';
+import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
   request: RequestTransfer & RequestId;
@@ -25,18 +25,18 @@ export default ({
   sendResponse,
   sendError,
 }: Props) => {
-  const { request_id, ...data } = request;
-  const { to, memo, amount, currency } = data;
+  const {request_id, ...data} = request;
+  const {to, memo, amount, currency} = data;
   const [availableBalance, setAvailableBalance] = useState(0);
-  const { getUsername, getAccountKey, getAccountMemoKey, RequestUsername } =
+  const {getUsername, getAccountKey, getAccountMemoKey, RequestUsername} =
     usePotentiallyAnonymousRequest(request, accounts);
   useEffect(() => {
     const fetchAvailableBalance = async () => {
       const account = await getAccount(getUsername());
       setAvailableBalance(
-        currency === "HIVE"
+        currency === 'HIVE'
           ? parseFloat(account.balance.toString())
-          : parseFloat(account.hbd_balance.toString())
+          : parseFloat(account.hbd_balance.toString()),
       );
     };
     fetchAvailableBalance();
@@ -45,14 +45,14 @@ export default ({
     <RequestOperation
       sendResponse={sendResponse}
       sendError={sendError}
-      successMessage={translate("request.success.transfer", {
+      successMessage={translate('request.success.transfer', {
         amount,
         currency,
         username: getUsername(),
         to,
       })}
       errorMessage={(error, data) =>
-        beautifyTransferError(error, { ...data, username: getUsername() })
+        beautifyTransferError(error, {...data, username: getUsername()})
       }
       method={KeyTypes.active}
       request={request}
@@ -61,10 +61,10 @@ export default ({
       RequestUsername={RequestUsername}
       performOperation={async (options: TransactionOptions) => {
         let finalMemo = memo;
-        if (memo.length && memo[0] === "#") {
+        if (memo.length && memo[0] === '#') {
           const memoKey = getAccountMemoKey();
           if (!memoKey) {
-            SimpleToast.show(translate("request.error.transfer.encrypt"));
+            SimpleToast.show(translate('request.error.transfer.encrypt'));
             return;
           }
           const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
@@ -78,39 +78,39 @@ export default ({
             memo: finalMemo,
             amount: `${amount} ${currency}`,
           },
-          options
+          options,
         );
       }}
       confirmationData={[
         {
-          title: "request.item.username",
-          value: "",
+          title: 'request.item.username',
+          value: '',
           tag: ConfirmationDataTag.REQUEST_USERNAME,
         },
         {
-          title: "request.item.to",
+          title: 'request.item.to',
           value: to,
           tag: ConfirmationDataTag.USERNAME,
         },
         {
-          title: "request.item.amount",
+          title: 'request.item.amount',
           value: amount,
           currency,
           tag: ConfirmationDataTag.AMOUNT,
         },
         {
-          title: "request.item.memo",
+          title: 'request.item.memo',
           value: memo.length
-            ? memo[0] === "#"
-              ? `${memo.substring(1)} (${translate("common.encrypted")})`
+            ? memo[0] === '#'
+              ? `${memo.substring(1)} (${translate('common.encrypted')})`
               : memo
-            : translate("common.none"),
+            : translate('common.none'),
         },
         createBalanceData(
-          "wallet.operations.transfer.confirm.balance",
+          'wallet.operations.transfer.confirm.balance',
           availableBalance,
           parseFloat(amount),
-          currency
+          currency,
         ),
       ]}
     />

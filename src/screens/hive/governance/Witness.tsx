@@ -31,9 +31,9 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {AsyncUtils} from 'utils/async.utils';
-import {getClient, voteForWitness} from 'utils/hive';
+import {getClient, voteForWitness} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import ProxyUtils from 'utils/proxy.utils';
 import {MAX_WITNESS_VOTE, WITNESS_DISABLED_KEY} from 'utils/witness.utils';
 import * as ValidUrl from 'valid-url';

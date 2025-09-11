@@ -1,4 +1,4 @@
-import {Dimensions} from 'utils/common.types';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from './typography';
 
 export const WIDTH_SMALL_DEVICES = 20;

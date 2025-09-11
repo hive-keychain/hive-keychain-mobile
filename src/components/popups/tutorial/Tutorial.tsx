@@ -11,6 +11,7 @@ import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
@@ -26,10 +27,9 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {tutorialBaseUrl} from 'utils/config';
+import {tutorialBaseUrl} from 'utils/config.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 interface Props {
   navigation: WalletNavigation;

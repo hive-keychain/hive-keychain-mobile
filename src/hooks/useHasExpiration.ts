@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 
 export const useHasExpiration = (expiration: number, onExpire?: () => void) => {
   if (!expiration) return;

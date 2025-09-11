@@ -6,7 +6,7 @@ import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';
-import {ClaimsConfig} from 'utils/config';
+import {ClaimsConfig} from 'utils/config.utils';
 import {RewardsUtils} from 'utils/rewards.utils';
 import {SavingsUtils} from 'utils/savings.utils';
 import {ActiveAccountModule} from './activeAccount.module';

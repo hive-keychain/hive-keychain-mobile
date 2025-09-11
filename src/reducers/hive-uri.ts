@@ -1,7 +1,7 @@
 import {ActionPayload} from 'actions/interfaces';
 import {HiveURIActionTypes} from 'actions/types';
 import {DecodeResult} from 'hive-uri';
-import {HiveUriOpType} from 'src/utils/hive-uri';
+import {HiveUriOpType} from 'utils/hiveUri.utils';
 
 export default (
   state: {operation?: DecodeResult; opType?: HiveUriOpType} = {},

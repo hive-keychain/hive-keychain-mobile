@@ -14,10 +14,10 @@ import {
 } from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
+import {Width} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
-import {Width} from 'utils/common.types';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 export enum Info {
   KEYS = 'KEYS',

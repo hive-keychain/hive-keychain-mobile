@@ -2,7 +2,7 @@ import {CommentOptionsOperation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {MutableRefObject} from 'react';
 import WebView from 'react-native-webview';
-import {KeychainConfig} from 'utils/config';
+import {KeychainConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 import {
   HiveErrorMessage,
@@ -14,7 +14,7 @@ import {
   RequestPost,
   RequestSuccess,
   RequestTransfer,
-} from './keychain.types';
+} from '../interfaces/keychain.interface';
 
 export const validateAuthority = (
   accounts: Account[],
@@ -238,9 +238,9 @@ export const getRequiredWifType: (
     case 'vote':
       return KeyTypes.posting;
     case 'custom':
-      return (!request.method
-        ? 'posting'
-        : request.method.toLowerCase()) as KeyTypes;
+      return (
+        !request.method ? 'posting' : request.method.toLowerCase()
+      ) as KeyTypes;
     case 'signedCall':
       return request.typeWif.toLowerCase() as KeyTypes;
     case 'transfer':

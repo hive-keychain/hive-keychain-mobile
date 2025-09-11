@@ -13,7 +13,7 @@ import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 interface Props {
   navigation: BrowserScreenProps['navigation'];
 }

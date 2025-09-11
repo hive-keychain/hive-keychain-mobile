@@ -7,7 +7,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {Token} from 'src/interfaces/tokens.interface';
 import {HBDICONBGCOLOR, HIVEICONBGCOLOR} from 'src/styles/colors';
-import {Colors, getTokenBackgroundColor} from 'utils/colors';
+import {Colors, getTokenBackgroundColor} from 'utils/colors.utils';
 import Icon from './Icon';
 import IconHP from './IconHP';
 

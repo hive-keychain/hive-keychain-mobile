@@ -3,13 +3,13 @@ import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {getAccountKeys} from 'utils/hiveUtils';
 import {
   RequestEncode,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {getAccountKeys} from 'utils/hive.utils';
 import {translate} from 'utils/localize';
 import RequestOperation, {
   processOperationWithoutConfirmation,

@@ -20,7 +20,7 @@ import {
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {getCurrency} from 'utils/hive';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import {updateWitnessParameters} from 'utils/witness.utils';
 

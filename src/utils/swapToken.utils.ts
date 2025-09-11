@@ -13,9 +13,9 @@ import {
   SwapConfig,
   SwapServerStatus,
 } from 'src/interfaces/swapTokens.interface';
-import {withCommas} from './format';
-import {getCurrency, sendToken, transfer} from './hive';
-import {sanitizeAmount, sanitizeUsername} from './hiveUtils';
+import {withCommas} from './format.utils';
+import {sanitizeAmount, sanitizeUsername} from './hive.utils';
+import {getCurrency, sendToken, transfer} from './hiveLibs.utils';
 import {getTokenInfo, getUserBalance} from './tokens.utils';
 
 const getSwapTokenStartList = async (account: ExtendedAccount) => {

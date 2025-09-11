@@ -10,7 +10,7 @@ import {
   WitnessInfo,
   WitnessParamsForm,
 } from 'src/interfaces/witness.interface';
-import {WitnessesConfig} from './config';
+import {WitnessesConfig} from './config.utils';
 import {
   fromNaiAndSymbol,
   getAmountFromNai,
@@ -18,8 +18,8 @@ import {
   nFormatter,
   toFormattedHP,
   toHP,
-} from './format';
-import {broadcast, getClient} from './hive';
+} from './format.utils';
+import {broadcast, getClient} from './hiveLibs.utils';
 
 export const MAX_WITNESS_VOTE = 30;
 

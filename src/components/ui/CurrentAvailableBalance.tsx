@@ -17,7 +17,7 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {getFontSizeSmallDevices, getFormFontStyle} from 'src/styles/typography';
-import {formatBalanceCurrency} from 'utils/format';
+import {formatBalanceCurrency} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import SquareButton from './SquareButton';
 

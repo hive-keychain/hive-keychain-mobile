@@ -1,6 +1,10 @@
 import {Asset} from '@hiveio/dhive';
 import {ActiveAccount} from 'actions/interfaces';
-import {depositToSavings, getClient, withdrawFromSavings} from './hive';
+import {
+  depositToSavings,
+  getClient,
+  withdrawFromSavings,
+} from './hiveLibs.utils';
 
 /* istanbul ignore next */
 const getSavingsWitdrawFrom = async (username: string) => {

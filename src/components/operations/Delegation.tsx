@@ -21,6 +21,7 @@ import {MessageModalType} from 'src/enums/messageModal.enum';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -36,12 +37,11 @@ import {
   getCleanAmountValue,
   toHP,
   withCommas,
-} from 'utils/format';
-import {delegate, getCurrency} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+} from 'utils/format.utils';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hive.utils';
+import {delegate, getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';

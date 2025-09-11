@@ -6,9 +6,9 @@ import {
   KeychainRequest,
   RequestError,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 import Requests from './requestOperations';
 
 type Props = {

@@ -1,10 +1,13 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {
+  RequestId,
+  RequestRemoveAccountAuthority,
+} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {removeAccountAuth} from 'utils/hive';
-import {beautifyErrorMessage} from 'utils/keychain';
-import {RequestId, RequestRemoveAccountAuthority} from 'utils/keychain.types';
+import {removeAccountAuth} from 'utils/hiveLibs.utils';
+import {beautifyErrorMessage} from 'utils/keychain.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';

@@ -1,10 +1,10 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {RequestConvert, RequestId} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {collateralizedConvert, convert} from 'utils/hive';
-import {getConversionRequests} from 'utils/hiveUtils';
-import {RequestConvert, RequestId} from 'utils/keychain.types';
+import {getConversionRequests} from 'utils/hive.utils';
+import {collateralizedConvert, convert} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';

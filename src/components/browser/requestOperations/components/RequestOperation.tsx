@@ -13,14 +13,6 @@ import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {ConfirmationData} from 'src/interfaces/confirmation.interface';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {getButtonHeight, getButtonStyle} from 'src/styles/button';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {getCaptionStyle} from 'src/styles/text';
-import {title_primary_body_2} from 'src/styles/typography';
-import {RootState} from 'store';
-import {urlTransformer} from 'utils/browser';
-import {beautifyErrorMessage} from 'utils/keychain';
 import {
   HiveErrorMessage,
   KeychainRequest,
@@ -28,9 +20,17 @@ import {
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getButtonHeight, getButtonStyle} from 'src/styles/button';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getCaptionStyle} from 'src/styles/text';
+import {title_primary_body_2} from 'src/styles/typography';
+import {RootState} from 'store';
+import {urlTransformer} from 'utils/browser.utils';
+import {beautifyErrorMessage} from 'utils/keychain.utils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 import RequestMessage from './RequestMessage';
 
 type Props = {

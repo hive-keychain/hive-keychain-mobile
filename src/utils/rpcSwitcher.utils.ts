@@ -4,7 +4,7 @@ import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {store} from 'store';
-import {rpcList} from './hiveUtils';
+import {rpcList} from './hive.utils';
 import {checkRpcStatus} from './rpc.utils';
 
 export const useWorkingRPC = async (rpc?: Rpc) => {

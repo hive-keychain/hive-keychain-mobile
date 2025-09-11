@@ -3,14 +3,14 @@ import {signBuffer} from 'components/bridge';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {urlTransformer} from 'utils/browser';
-import {beautifyIfJSON} from 'utils/format';
 import {
   RequestError,
   RequestId,
   RequestSignBuffer,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {urlTransformer} from 'utils/browser.utils';
+import {beautifyIfJSON} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import RequestOperation, {
   processOperationWithoutConfirmation,
@@ -30,12 +30,8 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {domain, method, username, message} = data;
-  const {
-    getAccountKey,
-    getAccountPublicKey,
-    RequestUsername,
-    getUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
+  const {getAccountKey, getAccountPublicKey, RequestUsername, getUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
   const messageString = username
     ? translate('request.message.signBuffer', {
         domain: urlTransformer(domain).hostname,

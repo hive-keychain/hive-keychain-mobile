@@ -2,9 +2,12 @@ import {KeyTypes} from 'actions/interfaces';
 import {FormatUtils} from 'hive-keychain-commons';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {
+  RequestCreateClaimedAccount,
+  RequestId,
+} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {createClaimedAccount} from 'utils/hive';
-import {RequestCreateClaimedAccount, RequestId} from 'utils/keychain.types';
+import {createClaimedAccount} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';

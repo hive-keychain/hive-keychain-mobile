@@ -1,10 +1,10 @@
 import Toast from 'react-native-root-toast';
 import BackGroundUtils from 'src/background';
 import {AppThunk} from 'src/hooks/redux';
-import {decryptToJson} from 'utils/encrypt';
-import {getFromKeychain} from 'utils/keychainStorage';
+import {decryptToJson} from 'utils/encrypt.utils';
+import {getFromKeychain} from 'utils/keychainStorage.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {AccountsPayload, ActionPayload, NullableString} from './interfaces';
 import {INIT_ACCOUNTS, LOCK, SIGN_UP, UNLOCK} from './types';
 
