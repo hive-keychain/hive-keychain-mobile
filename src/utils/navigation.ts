@@ -1,4 +1,8 @@
-import {CommonActions, NavigationContainerRef} from '@react-navigation/native';
+import {
+  CommonActions,
+  NavigationContainerRef,
+  StackActions,
+} from '@react-navigation/native';
 
 export let navigator: NavigationContainerRef<ReactNavigation.RootParamList> =
   null;
@@ -32,18 +36,23 @@ export const goBackAndNavigate = (name: string, params?: object) => {
 
 export const resetStackAndNavigate = (name: string) => {
   if (navigator && 'isReady' in navigator && navigator.isReady()) {
-    navigator.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'Main',
-            // Ensure nested navigation to drawer route like 'WALLET'
-            params: {screen: name},
-          },
-        ],
-      }),
-    );
+    if (name !== 'WALLET') {
+      navigator.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Main',
+              // Ensure nested navigation to drawer route like 'WALLET'
+              params: {screen: name},
+            },
+          ],
+        }),
+      );
+    } else {
+      navigator.dispatch(StackActions.popToTop());
+      navigator.dispatch(CommonActions.navigate({name}));
+    }
   }
 };
 

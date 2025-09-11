@@ -24,7 +24,6 @@ const QRCode = ({onSuccess, topContent}: Props) => {
     const timestamp = Date.now();
 
     if (scanned || timestamp - lastScannedTimestampRef.current < 2000) {
-      //change that 2000 (2 seconds) for whatever value you want
       return;
     }
     lastScannedTimestampRef.current = timestamp;
@@ -52,12 +51,7 @@ const QRCode = ({onSuccess, topContent}: Props) => {
           barcodeTypes: ['qr'],
         }}
         onBarcodeScanned={handleBarcodeScanned}
-        style={{flex: 1}}
-
-        // reactivate={true}
-        // reactivateTimeout={2000}
-        // customMarker={<Marker />}
-      >
+        style={{flex: 1}}>
         <Marker />
       </CameraView>
     </View>

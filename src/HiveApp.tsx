@@ -112,17 +112,29 @@ const App = ({
     if (!hasAccounts) {
       // No accounts, sign up process
       return (
-        <Root.Screen name="Main" component={SignUpStack} options={noHeader} />
+        <Root.Screen
+          name="Main"
+          component={SignUpStack}
+          options={{...noHeader, animation: 'none'}}
+        />
       );
     } else if (!auth.mk) {
       // Login process
       return (
-        <Root.Screen name="Main" component={UnlockStack} options={noHeader} />
+        <Root.Screen
+          name="Main"
+          component={UnlockStack}
+          options={{...noHeader, animation: 'none'}}
+        />
       );
     } else {
       // Main page
       return (
-        <Root.Screen name="Main" component={MainDrawer} options={noHeader} />
+        <Root.Screen
+          name="Main"
+          component={MainDrawer}
+          options={{...noHeader, animation: 'none'}}
+        />
       );
     }
   };

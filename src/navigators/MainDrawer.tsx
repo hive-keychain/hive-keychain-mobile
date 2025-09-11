@@ -4,7 +4,7 @@ import AboutStack from 'navigators/mainDrawerStacks/About';
 import BrowserStack from 'navigators/mainDrawerStacks/Browser';
 import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -27,6 +27,14 @@ const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 export default () => {
   const theme = useThemeContext()?.theme || Theme.LIGHT;
   const styles = getStyles(theme);
+  const previousRouteRef = useRef(null);
+  const [resetKey, setResetKey] = useState(0);
+
+  const withReset = (Component: React.ComponentType<any>, resetKey: number) => {
+    return function Wrapped(props: any) {
+      return <Component key={resetKey} {...props} />;
+    };
+  };
 
   return (
     <Drawer.Navigator
@@ -38,6 +46,20 @@ export default () => {
         drawerStyle: styles.drawer,
         drawerType: 'front',
         drawerInactiveTintColor: getColors(theme).secondaryText,
+      }}
+      screenListeners={{
+        state: (e) => {
+          const currentRoute = e.data.state?.routes[e.data.state.index]?.name;
+          if (!previousRouteRef.current) {
+            previousRouteRef.current = currentRoute;
+          }
+          if (currentRoute !== previousRouteRef.current) {
+            if (currentRoute === 'WALLET') {
+              setResetKey((prev) => prev + 1);
+            }
+            previousRouteRef.current = currentRoute;
+          }
+        },
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="WALLET" component={WalletStack} options={noHeader} />
@@ -57,13 +79,14 @@ export default () => {
           popToTopOnBlur: true,
           ...noHeader,
         }}
-        component={GovernanceStack}
+        component={withReset(GovernanceStack, resetKey)}
       />
       <Drawer.Screen
         name="SettingsScreen"
-        component={SettingsStack}
+        component={withReset(SettingsStack, resetKey)}
         options={{
           title: translate('navigation.settings'),
+          popToTopOnBlur: true,
           ...noHeader,
         }}
       />
@@ -85,8 +108,9 @@ export default () => {
       />
       <Drawer.Screen
         name="Accounts"
-        component={Accounts}
+        component={withReset(Accounts, resetKey)}
         options={{
+          popToTopOnBlur: true,
           ...noHeader,
         }}
       />
@@ -106,11 +130,11 @@ export default () => {
       />
       <Drawer.Screen
         name="Operation"
-        component={Operation}
         options={{
           popToTopOnBlur: true,
           ...noHeader,
         }}
+        component={withReset(Operation, resetKey)}
       />
       <Drawer.Screen
         name="TokenSettings"
@@ -122,7 +146,7 @@ export default () => {
       />
       <Drawer.Screen
         name="SwapBuyStack"
-        component={SwapBuyStack}
+        component={withReset(SwapBuyStack, resetKey)}
         options={{
           popToTopOnBlur: true,
           ...noHeader,

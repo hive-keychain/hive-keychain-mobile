@@ -92,7 +92,7 @@ const AccountManagement = ({
         onConfirm: () => {
           forgetAccount(username);
           setTimeout(() => {
-            navigate('WALLET');
+            navigate('WalletScreen');
           }, 1000);
         },
         data: [
