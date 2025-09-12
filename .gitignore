@@ -39,8 +39,14 @@ yarn-error.*
 # google services
 firebase
 
-.git2
 
 /android/*
 ios
 .env
+
+# eas
+eas.json
+gplay-account.json
+
+#building
+builds

@@ -11,26 +11,35 @@ export default ({config}) => ({
       newArchEnabled: true,
       backgroundColor: '#212838',
       assetBundlePatterns: ['src/assets/fonts/*'],
+      owner: 'stoodkev',
+      extra: {
+        eas: {
+          projectId: 'cad28c24-8bb3-48a4-802b-282ba38d6fab',
+        },
+      },
       splash: {
         image: './src/assets/new_UI/keychain_logo_powered_dark_theme.png',
         resizeMode: 'contain',
         backgroundColor: '#212838',
       },
       ios: {
-        bundleIdentifier: 'com.mobilekeychain',
+        buildNumber: '191',
+        bundleIdentifier: 'com.stoodkev.mobileKeychain',
         supportsTablet: true,
         infoPlist: {
           NSLocationWhenInUseUsageDescription:
             'We need your location to load maps.',
+          ITSAppUsesNonExemptEncryption: false,
         },
-        googleServicesFile: './firebase/GoogleService-Info.plist',
+        googleServicesFile: process.env.GOOGLE_SERVICES_PLIST,
       },
       android: {
+        versionCode: 191,
         package:
           process.env.APP_VARIANT !== 'prod'
             ? 'com.mobilekeychain.dev'
             : 'com.mobilekeychain',
-        googleServicesFile: './firebase/google-services.json',
+        googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
         permissions: [
           'android.permission.CAMERA',
           'ACCESS_FINE_LOCATION',

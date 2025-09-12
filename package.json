@@ -11,6 +11,12 @@
     "clean": "watchman watch-del-all &&npm run dep-clean ",
     "bump": "npx react-native bump-version --type patch",
     "bump:minor": "npx react-native bump-version --type minor",
+    "build:android": "eas build -p android",
+    "build:ios": "eas build -p ios",
+    "localBuild:android": "eas build --platform android --local --output ./builds/keychain.aab",
+    "localSubmit:android": "eas submit --platform android  --profile production",
+    "submit:android": "eas submit -p android --profile internal",
+    "submit:ios": "source .env && EXPO_APPLE_APP_SPECIFIC_PASSWORD=$EXPO_APPLE_APP_SPECIFIC_PASSWORD eas submit -p ios --profile production",
     "crowdin:pull": "crowdin download",
     "crowdin:push": "crowdin upload sources"
   },
@@ -84,7 +90,8 @@
     "sscjs": "0.0.9",
     "stream": "0.0.3",
     "valid-url": "1.0.9",
-    "validator": "13.15.15"
+    "validator": "13.15.15",
+    "expo-secure-store": "~14.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -99,6 +106,7 @@
     "@types/valid-url": "^1.0.7",
     "@types/validator": "^13.15.3",
     "babel-plugin-module-resolver": "^5.0.2",
+    "eas-cli": "^16.18.1",
     "react-native-svg-transformer": "^1.5.1",
     "typescript": "^5.9.2",
     "url-parse": "^1.5.10"
