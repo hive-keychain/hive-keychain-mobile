@@ -39,7 +39,7 @@ import {RootState} from 'store';
 import {BrowserUtils} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation.utils';
+import {goBack, navigate} from 'utils/navigation.utils';
 import {PlatformsUtils} from 'utils/platforms.utils';
 
 interface Props {
@@ -109,7 +109,7 @@ const BottomNavigation = ({
         nestedScreenOrParams = {
           screen: 'WalletScreen',
         };
-        break;
+        return goBack();
       case BottomBarLink.Browser:
         screen = 'Browser';
         nestedScreenOrParams = {

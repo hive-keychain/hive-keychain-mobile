@@ -39,7 +39,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
       )}>
       <Stack.Screen
         name="TokensHistory"
-        component={() => <TokensHistoryComponent {...route.params} />}
+        children={() => <TokensHistoryComponent {...route.params} />}
         options={() => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
