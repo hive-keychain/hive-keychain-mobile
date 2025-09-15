@@ -19,6 +19,7 @@ import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
+import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -28,7 +29,7 @@ export default () => {
   const styles = getStyles({width, height}, theme, useSafeAreaInsets());
 
   return (
-    <Stack.Navigator id={undefined}>
+    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
       <Stack.Screen
         name="WalletScreen"
         component={Wallet}

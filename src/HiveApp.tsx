@@ -35,7 +35,11 @@ import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 import {setRpc} from 'utils/hiveLibs.utils';
 import {processQRCodeOp} from 'utils/hiveUri.utils';
 import setupLinking, {clearLinkingListeners} from 'utils/linking.utils';
-import {noHeader, setNavigator} from 'utils/navigation.utils';
+import {
+  iosHorizontalSwipeBack,
+  noHeader,
+  setNavigator,
+} from 'utils/navigation.utils';
 import {checkRpcStatus} from 'utils/rpc.utils';
 import {useWorkingRPC} from 'utils/rpcSwitcher.utils';
 import {FLOATINGBAR_ALLOWED_SCREENS} from './lists/floatingBarAllowedScreens.list';
@@ -141,7 +145,7 @@ const App = ({
 
   const renderRootNavigator = () => {
     return (
-      <Root.Navigator id={undefined}>
+      <Root.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
         {renderMainNavigator()}
         <Root.Screen
           name="ModalScreen"

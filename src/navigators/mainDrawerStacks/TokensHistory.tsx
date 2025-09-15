@@ -21,6 +21,7 @@ import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from 'src/styles/typography';
 import {translate} from 'utils/localize';
+import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -31,7 +32,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const styles = getStyles(theme, useSafeAreaInsets(), width);
 
   return (
-    <Stack.Navigator id={undefined}>
+    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
       <Stack.Screen
         name="TokensHistory"
         component={() => <TokensHistoryComponent {...route.params} />}

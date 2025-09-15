@@ -18,6 +18,7 @@ import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {RootState} from 'store';
+import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
 
 type Params = {
   delegationType: TokenDelegationType;
@@ -45,7 +46,7 @@ const Screen = ({route, navigation, tokens, colors}: PropsFromRedux) => {
     />
   );
   return (
-    <Stack.Navigator id={undefined}>
+    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
       <Stack.Screen
         name="TokenDelegations"
         options={{

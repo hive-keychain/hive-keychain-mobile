@@ -12,6 +12,7 @@ import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
+import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +21,7 @@ export default () => {
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator id={undefined}>
+    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
       <Stack.Screen
         name="TokenSettingsScreen"
         component={TokenSettings}

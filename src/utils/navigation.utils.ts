@@ -67,3 +67,10 @@ export const headerTransparent = {
 };
 
 export const noHeader = {headerShown: false};
+
+// Shared default iOS-style horizontal back-swipe gesture options for stacks
+export const iosHorizontalSwipeBack = {
+  gestureEnabled: true,
+  gestureDirection: 'horizontal',
+  gestureResponseDistance: 50,
+} as const;

@@ -45,7 +45,10 @@ import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {capitalize} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation.utils';
+import {
+  iosHorizontalSwipeBack,
+  resetStackAndNavigate,
+} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -121,7 +124,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
   };
 
   return (
-    <Stack.Navigator id={undefined}>
+    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
       <Stack.Screen
         name="Operation"
         options={({navigation}) => ({
