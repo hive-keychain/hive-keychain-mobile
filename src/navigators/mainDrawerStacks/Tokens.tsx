@@ -36,7 +36,7 @@ export default () => {
             <Icon
               name={Icons.CLOSE_CIRCLE}
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('Wallet')}
               color={getColors(theme).iconBW}
             />
           ),

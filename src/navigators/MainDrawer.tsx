@@ -15,11 +15,6 @@ import {MainDrawerStackParam} from './MainDrawer.types';
 import Accounts from './mainDrawerStacks/Accounts';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import Help from './mainDrawerStacks/Help';
-import Operation from './mainDrawerStacks/Operation';
-import TokenDelegationsStack from './mainDrawerStacks/TokenDelegationsStack';
-import TokenSettingsStack from './mainDrawerStacks/TokenSettingsStack';
-import Tokens from './mainDrawerStacks/Tokens';
-import TokensHistory from './mainDrawerStacks/TokensHistory';
 
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 
@@ -53,7 +48,7 @@ export default () => {
             previousRouteRef.current = currentRoute;
           }
           if (currentRoute !== previousRouteRef.current) {
-            if (currentRoute === 'WALLET') {
+            if (currentRoute === 'Wallet') {
               setResetKey((prev) => prev + 1);
             }
             previousRouteRef.current = currentRoute;
@@ -61,7 +56,7 @@ export default () => {
         },
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
-      <Drawer.Screen name="WALLET" component={WalletStack} options={noHeader} />
+      <Drawer.Screen name="Wallet" component={WalletStack} options={noHeader} />
       <Drawer.Screen
         name="Browser"
         options={{
@@ -110,44 +105,6 @@ export default () => {
         component={withReset(Accounts, resetKey)}
         options={{
           popToTopOnBlur: true,
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="Tokens"
-        component={Tokens}
-        options={{
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="TokensHistory"
-        component={TokensHistory}
-        options={{
-          ...noHeader,
-        }}
-      />
-      <Drawer.Screen
-        name="Operation"
-        options={{
-          popToTopOnBlur: true,
-          ...noHeader,
-        }}
-        component={withReset(Operation, resetKey)}
-      />
-      <Drawer.Screen
-        name="TokenSettings"
-        component={TokenSettingsStack}
-        options={{
-          popToTopOnBlur: true,
-          ...noHeader,
-        }}
-      />
-
-      <Drawer.Screen
-        name="TokenDelegations"
-        component={TokenDelegationsStack}
-        options={{
           ...noHeader,
         }}
       />

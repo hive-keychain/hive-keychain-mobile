@@ -269,7 +269,7 @@ const Main = ({
     lastAccount,
   ]);
 
-  useBackButtonNavigation('WALLET', true);
+  useBackButtonNavigation('Wallet', true);
   useLockedPortrait(navigation);
 
   const appState = useRef(AppState.currentState);

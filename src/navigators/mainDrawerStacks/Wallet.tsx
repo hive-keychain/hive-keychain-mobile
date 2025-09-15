@@ -24,8 +24,12 @@ import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation.utils';
+import Operation from './Operation';
 import SwapBuyStack from './SwapBuyStack';
-
+import TokenDelegationsStack from './TokenDelegationsStack';
+import Tokens from './Tokens';
+import TokenSettingsStack from './TokenSettingsStack';
+import TokensHistory from './TokensHistory';
 const Stack = createStackNavigator();
 
 export default () => {
@@ -138,6 +142,42 @@ export default () => {
       <Stack.Screen
         name="SwapBuyStack"
         component={SwapBuyStack}
+        options={{
+          ...noHeader,
+        }}
+      />
+      <Stack.Screen
+        name="Tokens"
+        component={Tokens}
+        options={{
+          ...noHeader,
+        }}
+      />
+      <Stack.Screen
+        name="TokensHistory"
+        component={(props: any) => <TokensHistory {...props} />}
+        options={{
+          ...noHeader,
+        }}
+      />
+      <Stack.Screen
+        name="Operation"
+        options={{
+          ...noHeader,
+        }}
+        component={(props: any) => <Operation {...props} />}
+      />
+      <Stack.Screen
+        name="TokenSettings"
+        component={TokenSettingsStack}
+        options={{
+          ...noHeader,
+        }}
+      />
+
+      <Stack.Screen
+        name="TokenDelegations"
+        component={TokenDelegationsStack}
         options={{
           ...noHeader,
         }}

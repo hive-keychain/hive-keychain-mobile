@@ -42,7 +42,7 @@ export const addAccount =
       Toast.show(translate('toast.account_already', {account: name}));
       if (multipleAccounts) return;
       if (wallet) {
-        qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');
+        qr ? resetStackAndNavigate('Wallet') : navigate('Wallet');
       }
       return;
     }
@@ -66,7 +66,7 @@ export const addAccount =
     }
     if (wallet) {
       dispatch(loadAccount(name));
-      qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');
+      qr ? resetStackAndNavigate('Wallet') : navigate('Wallet');
     }
   };
 

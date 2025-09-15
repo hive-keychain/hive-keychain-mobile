@@ -2,7 +2,7 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 export type MainDrawerStackParam = {
-  WALLET: undefined;
+  Wallet: undefined;
   Browser: {icon: string};
   Accounts: undefined;
   // Consolidated: related screens live under Accounts stack now
@@ -35,7 +35,7 @@ export type BrowserNavigationProps = {
 
 export type WalletNavigation = StackNavigationProp<
   MainDrawerStackParam,
-  'WALLET'
+  'Wallet'
 >;
 
 export type GovernanceNavigation = StackNavigationProp<

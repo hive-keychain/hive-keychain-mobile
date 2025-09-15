@@ -140,7 +140,7 @@ const WalletQRScanner = () => {
     }
     setQrDataAccounts([]);
     setProcessingAccounts(false);
-    return resetStackAndNavigate('WALLET');
+    return resetStackAndNavigate('Wallet');
   };
 
   return (

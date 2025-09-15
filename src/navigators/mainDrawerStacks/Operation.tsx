@@ -144,7 +144,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
               theme={theme}
               onPress={() => {
                 // @ts-ignore
-                navigation.navigate('WALLET');
+                navigation.navigate('Wallet');
               }}
             />
           ),
@@ -278,7 +278,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
             <CloseButton
               theme={theme}
               onPress={() => {
-                resetStackAndNavigate('WALLET');
+                resetStackAndNavigate('Wallet');
               }}
             />
           ),
@@ -305,7 +305,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
             <CloseButton
               theme={theme}
               onPress={() => {
-                resetStackAndNavigate('WALLET');
+                resetStackAndNavigate('Wallet');
               }}
             />
           ),

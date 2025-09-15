@@ -56,7 +56,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('Wallet')}
               additionalContainerStyle={styles.marginRight}
             />
           ),
@@ -125,7 +125,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('Wallet')}
               additionalContainerStyle={styles.marginRight}
             />
           ),

@@ -50,7 +50,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('Wallet')}
             />
           ),
           headerLeft: () => (
@@ -131,7 +131,7 @@ export default () => {
               theme={theme}
               onPress={() => {
                 // @ts-ignore
-                navigation.navigate('WALLET');
+                navigation.navigate('Wallet');
               }}
             />
           ),
@@ -162,7 +162,7 @@ export default () => {
               theme={theme}
               onPress={() => {
                 // @ts-ignore
-                navigation.navigate('WALLET');
+                navigation.navigate('Wallet');
               }}
             />
           ),
@@ -213,7 +213,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('Wallet')}
             />
           ),
           headerLeft: () => (
@@ -241,7 +241,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('Wallet')}
             />
           ),
           headerLeft: () => (

@@ -40,14 +40,14 @@ export const goBackAndNavigate = (name: string, params?: object) => {
 
 export const resetStackAndNavigate = (name: string) => {
   if (navigator && 'isReady' in navigator && navigator.isReady()) {
-    if (name !== 'WALLET') {
+    if (name !== 'Wallet') {
       navigator.dispatch(
         CommonActions.reset({
           index: 0,
           routes: [
             {
               name: 'Main',
-              // Ensure nested navigation to drawer route like 'WALLET'
+              // Ensure nested navigation to drawer route like 'Wallet
               params: {screen: name},
             },
           ],

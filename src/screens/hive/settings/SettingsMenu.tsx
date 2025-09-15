@@ -15,7 +15,7 @@ const SettingsMenu = () => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
 
-  useBackButtonNavigation('WALLET');
+  useBackButtonNavigation('Wallet');
 
   return (
     <View style={getMenuCardStyle(theme)}>

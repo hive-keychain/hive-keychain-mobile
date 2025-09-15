@@ -285,7 +285,7 @@ const StepTwo = ({
                 true,
                 false,
               );
-              resetStackAndNavigate('WALLET');
+              resetStackAndNavigate('Wallet');
             } else {
               if (!isMultisig)
                 SimpleToast.show(
@@ -380,7 +380,7 @@ const StepTwo = ({
         accountName,
       },
     );
-    navigate('WALLET');
+    navigate('Wallet');
   };
 
   useEffect(() => {

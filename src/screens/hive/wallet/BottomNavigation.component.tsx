@@ -105,7 +105,7 @@ const BottomNavigation = ({
     let nestedScreenOrParams;
     switch (link) {
       case BottomBarLink.Wallet:
-        screen = 'WALLET';
+        screen = 'Wallet';
         nestedScreenOrParams = {
           screen: 'WalletScreen',
         };
@@ -117,7 +117,7 @@ const BottomNavigation = ({
         };
         break;
       case BottomBarLink.ScanQr:
-        screen = 'WALLET';
+        screen = 'Wallet';
         nestedScreenOrParams = {
           screen: 'ScanQRFromWalletScreen',
           params: {wallet: true},
