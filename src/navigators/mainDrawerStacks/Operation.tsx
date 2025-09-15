@@ -46,7 +46,7 @@ import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {capitalize} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import {
-  iosHorizontalSwipeBack,
+  buildIOSHorizontalStackOptions,
   resetStackAndNavigate,
 } from 'utils/navigation.utils';
 
@@ -124,7 +124,11 @@ export default ({navigation, route}: OperationNavigationProps) => {
   };
 
   return (
-    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="Operation"
         options={({navigation}) => ({
@@ -160,7 +164,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
         options={({navigation, route}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
-          animation: 'none',
           headerTitle: () => (
             <NavigatorTitle title={`common.${(route.params as any)?.type}`} />
           ),
@@ -183,7 +186,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
         options={({navigation, route}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
-          animation: 'none',
           headerTitle: () => (
             <NavigatorTitle
               title={(route.params as any)?.type}
@@ -213,7 +215,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
-          animation: 'none',
           headerTitle: () => (
             <NavigatorTitle title={'wallet.operations.savings.pending'} />
           ),
@@ -243,7 +244,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
-          animation: 'none',
           headerTitle: () => (
             <NavigatorTitle title={'wallet.operations.convert.pending'} />
           ),
@@ -272,7 +272,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'common.receive'} />,
-          animation: 'none',
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
@@ -300,7 +299,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'common.confirm'} />,
-          animation: 'none',
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (

@@ -16,7 +16,6 @@ export default () => {
           title: '',
           headerTintColor: 'white',
           headerTransparent: true,
-          animation: 'none',
         }}
       />
     </Stack.Navigator>

@@ -20,7 +20,7 @@ import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -31,7 +31,9 @@ export default () => {
   return (
     <Stack.Navigator
       id={undefined}
-      screenOptions={{cardStyle: styles.card, ...iosHorizontalSwipeBack}}>
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="SettingsScreen"
         component={SettingsMenu}
@@ -42,7 +44,6 @@ export default () => {
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
           headerRight: () => (
             <CloseButton
               theme={theme}
@@ -66,7 +67,6 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
-          animation: 'none',
           headerTitle: () => (
             <NavigatorTitle title={'settings.settings.operations'} />
           ),
@@ -100,7 +100,6 @@ export default () => {
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
           headerRight: () => (
             <CloseButton
               theme={theme}
@@ -130,7 +129,6 @@ export default () => {
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
           headerRight: () => (
             <CloseButton
               theme={theme}
@@ -160,7 +158,6 @@ export default () => {
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
           headerRight: () => (
             <CloseButton
               theme={theme}
@@ -190,7 +187,6 @@ export default () => {
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
           headerRight: () => (
             <CloseButton
               theme={theme}
@@ -220,7 +216,6 @@ export default () => {
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
           headerRight: () => (
             <CloseButton
               theme={theme}

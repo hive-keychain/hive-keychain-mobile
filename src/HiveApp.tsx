@@ -1,4 +1,5 @@
 import {
+  DefaultTheme,
   NavigationContainer,
   NavigationContainerRef,
 } from '@react-navigation/native';
@@ -42,8 +43,10 @@ import {
 } from 'utils/navigation.utils';
 import {checkRpcStatus} from 'utils/rpc.utils';
 import {useWorkingRPC} from 'utils/rpcSwitcher.utils';
+import {useThemeContext} from './context/theme.context';
 import {FLOATINGBAR_ALLOWED_SCREENS} from './lists/floatingBarAllowedScreens.list';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
+import {getColors} from './styles/colors';
 const Root = createStackNavigator<RootStackParam>();
 let rpc: string | undefined = '';
 
@@ -69,6 +72,7 @@ const App = ({
     getSettings();
     initApplication();
   }, []);
+  const {theme} = useThemeContext();
 
   const initApplication = async () => {
     HiveEngineConfigUtils.setActiveApi(hiveEngineRpc ?? DEFAULT_HE_RPC_NODE);
@@ -119,7 +123,7 @@ const App = ({
         <Root.Screen
           name="Main"
           component={SignUpStack}
-          options={{...noHeader, animation: 'none'}}
+          options={{...noHeader}}
         />
       );
     } else if (!auth.mk) {
@@ -128,7 +132,7 @@ const App = ({
         <Root.Screen
           name="Main"
           component={UnlockStack}
-          options={{...noHeader, animation: 'none'}}
+          options={{...noHeader}}
         />
       );
     } else {
@@ -137,7 +141,7 @@ const App = ({
         <Root.Screen
           name="Main"
           component={MainDrawer}
-          options={{...noHeader, animation: 'none'}}
+          options={{...noHeader}}
         />
       );
     }
@@ -170,6 +174,13 @@ const App = ({
       onReady={() => {
         const currentRouteName = navigationRef.current.getCurrentRoute().name;
         logScreenView(currentRouteName);
+      }}
+      theme={{
+        ...DefaultTheme,
+        colors: {
+          ...DefaultTheme.colors,
+          background: getColors(theme).primaryBackground,
+        },
       }}
       onStateChange={async (state) => {
         let currentRouteName = navigationRef.current.getCurrentRoute().name;

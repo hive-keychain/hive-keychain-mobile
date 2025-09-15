@@ -16,7 +16,7 @@ import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
 
 const Stack = createStackNavigator();
@@ -30,14 +30,17 @@ export default () => {
   );
 
   return (
-    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="SwapBuy"
         component={SwapBuy}
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,
           headerTitleAlign: 'center',
-          animation: 'none',
           cardStyle: styles.cardStyle,
           headerTitle: () => <NavigatorTitle title={'navigation.swap_buy'} />,
           headerTransparent: true,
@@ -64,7 +67,6 @@ export default () => {
         options={({route, navigation}) => ({
           headerStyle: styles.headerStyle,
           headerTitleAlign: 'center',
-          animation: 'none',
           cardStyle: styles.cardStyle,
           headerTransparent: true,
           headerTitle: () => (
@@ -106,7 +108,6 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,
           headerTitleAlign: 'center',
-          animation: 'none',
           cardStyle: styles.cardStyle,
           headerTitle: () => (
             <NavigatorTitle title={'navigation.swap_history'} />

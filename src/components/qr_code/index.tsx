@@ -31,7 +31,12 @@ const QRCode = ({onSuccess, topContent}: Props) => {
     onSuccess(event);
   };
   return (
-    <View style={{flex: 1}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: getColors(theme).primaryBackground,
+        overflow: 'hidden',
+      }}>
       {topContent ? (
         <View
           style={{
@@ -51,7 +56,12 @@ const QRCode = ({onSuccess, topContent}: Props) => {
           barcodeTypes: ['qr'],
         }}
         onBarcodeScanned={handleBarcodeScanned}
-        style={{flex: 1}}></CameraView>
+        style={{flex: 1}}
+        // @ts-ignore ensure iOS doesn’t draw any default bg
+        isActive={true}
+        // Prevent any platform default background from showing at edges
+        // @ts-ignore (prop exists on native side)
+        enableTorch={false}></CameraView>
       <Marker />
     </View>
   );

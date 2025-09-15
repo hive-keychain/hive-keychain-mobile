@@ -1,4 +1,8 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  HeaderStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
@@ -19,7 +23,8 @@ import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
-import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
+import {noHeader} from 'utils/navigation.utils';
+import SwapBuyStack from './SwapBuyStack';
 
 const Stack = createStackNavigator();
 
@@ -29,16 +34,23 @@ export default () => {
   const styles = getStyles({width, height}, theme, useSafeAreaInsets());
 
   return (
-    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+        detachPreviousScreen: false,
+        cardShadowEnabled: false,
+        cardOverlayEnabled: false,
+        cardStyle: {backgroundColor: getColors(theme).primaryBackground},
+      }}>
       <Stack.Screen
         name="WalletScreen"
         component={Wallet}
         options={({navigation}) => ({
-          headerStyle: styles.noStyle,
-          headerTransparent: true,
-          animation: 'none',
-          headerLeft: null,
-          title: '',
+          headerShown: false,
         })}
       />
       <Stack.Screen
@@ -51,7 +63,8 @@ export default () => {
           ),
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
+          unmountOnBlur: true,
+          cardStyle: styles.cardStyle,
           headerRight: () => {
             return <MoreInformation type={Info.QR_WALLET} />;
           },
@@ -59,7 +72,7 @@ export default () => {
             <CustomIconButton
               theme={theme}
               onPress={() => {
-                navigation.navigate('WalletScreen');
+                navigation.goBack();
               }}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
@@ -73,7 +86,6 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,
           headerTitleAlign: 'center',
-          animation: 'none',
           headerTitle: () => (
             <NavigatorTitle title={'navigation.wallet_history'} />
           ),
@@ -114,7 +126,7 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => navigation.navigate('WalletScreen')}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
@@ -122,6 +134,13 @@ export default () => {
           ),
         })}
         component={WalletHistoryComponent}
+      />
+      <Stack.Screen
+        name="SwapBuyStack"
+        component={SwapBuyStack}
+        options={{
+          ...noHeader,
+        }}
       />
     </Stack.Navigator>
   );

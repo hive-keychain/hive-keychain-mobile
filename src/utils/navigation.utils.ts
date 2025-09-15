@@ -3,6 +3,10 @@ import {
   NavigationContainerRef,
   StackActions,
 } from '@react-navigation/native';
+import {
+  CardStyleInterpolators,
+  HeaderStyleInterpolators,
+} from '@react-navigation/stack';
 
 export let navigator: NavigationContainerRef<ReactNavigation.RootParamList> =
   null;
@@ -74,3 +78,19 @@ export const iosHorizontalSwipeBack = {
   gestureDirection: 'horizontal',
   gestureResponseDistance: 50,
 } as const;
+
+// Shared iOS-style horizontal transition options with consistent background and perf tweaks
+export const buildIOSHorizontalStackOptions = (
+  backgroundColor: string,
+  opts?: {detachPreviousScreen?: boolean},
+) =>
+  ({
+    gestureEnabled: true,
+    gestureDirection: 'horizontal',
+    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+    headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+    detachPreviousScreen: opts?.detachPreviousScreen ?? false,
+    cardShadowEnabled: false,
+    cardOverlayEnabled: false,
+    cardStyle: {backgroundColor},
+  } as const);

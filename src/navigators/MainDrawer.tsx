@@ -16,7 +16,6 @@ import Accounts from './mainDrawerStacks/Accounts';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import Help from './mainDrawerStacks/Help';
 import Operation from './mainDrawerStacks/Operation';
-import SwapBuyStack from './mainDrawerStacks/SwapBuyStack';
 import TokenDelegationsStack from './mainDrawerStacks/TokenDelegationsStack';
 import TokenSettingsStack from './mainDrawerStacks/TokenSettingsStack';
 import Tokens from './mainDrawerStacks/Tokens';
@@ -144,14 +143,7 @@ export default () => {
           ...noHeader,
         }}
       />
-      <Drawer.Screen
-        name="SwapBuyStack"
-        component={withReset(SwapBuyStack, resetKey)}
-        options={{
-          popToTopOnBlur: true,
-          ...noHeader,
-        }}
-      />
+
       <Drawer.Screen
         name="TokenDelegations"
         component={TokenDelegationsStack}

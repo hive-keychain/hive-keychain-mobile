@@ -4,6 +4,7 @@ import {StyleSheet} from 'react-native';
 import Browser from 'screens/Browser';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 import {BrowserParamList} from './Browser.types';
 const Stack = createStackNavigator<BrowserParamList>();
 
@@ -11,7 +12,11 @@ export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
-    <Stack.Navigator id={undefined}>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="BrowserScreen"
         component={Browser}

@@ -11,7 +11,7 @@ import {Dimensions} from 'src/interfaces/common.interface';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +20,11 @@ export default () => {
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="Tokens"
         component={Tokens}

@@ -31,12 +31,12 @@ export default () => {
     <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
       <Stack.Screen
         name="IntroductionScreen"
-        options={{...noHeader, animation: 'none'}}
+        options={{...noHeader}}
         component={Introduction}
       />
       <Stack.Screen
         name="SignupScreen"
-        options={{...noHeader, animation: 'none'}}
+        options={{...noHeader}}
         component={Signup}
       />
       <Stack.Screen
@@ -48,7 +48,6 @@ export default () => {
           headerTitle: () => (
             <NavigatorTitle title="navigation.choose_first_account" />
           ),
-          animation: 'none',
           headerLeft: null,
         })}
         component={ChooseAccountOption}
@@ -63,7 +62,6 @@ export default () => {
           headerTitle: () => (
             <NavigatorTitle title="navigation.create_an_account" />
           ),
-          animation: 'none',
           headerLeft: () => (
             <Icon
               name={Icons.ARROW_LEFT}
@@ -86,7 +84,6 @@ export default () => {
           headerTitle: () => (
             <NavigatorTitle title="navigation.create_an_account" />
           ),
-          animation: 'none',
           headerLeft: () => (
             <Icon
               name={Icons.ARROW_LEFT}
@@ -109,7 +106,6 @@ export default () => {
           headerStyle: styles.header,
           headerTintColor: 'white',
           headerRightContainerStyle: styles.paddingRight,
-          animation: 'none',
           headerRight: () => {
             return (
               <MoreInformation type={Info.ACCOUNT_CREATION_PEER_TO_PEER} />
@@ -133,7 +129,6 @@ export default () => {
           headerStyle: styles.header,
           headerTintColor: 'white',
           headerTitleAlign: 'center',
-          animation: 'none',
           headerBackTitle: translate('navigation.choose_an_existing_account'),
           headerTitle: () => (
             <NavigatorTitle title="navigation.choose_an_existing_account" />
@@ -157,7 +152,6 @@ export default () => {
           headerStyle: styles.header,
           headerTintColor: 'white',
           headerRightContainerStyle: styles.paddingRight,
-          animation: 'none',
           headerRight: () => {
             return <MoreInformation type={Info.QR_ACCOUNT} />;
           },

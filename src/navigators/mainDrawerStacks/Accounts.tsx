@@ -22,7 +22,7 @@ import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {iosHorizontalSwipeBack} from 'utils/navigation.utils';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -31,7 +31,12 @@ export default () => {
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+        {detachPreviousScreen: false},
+      )}>
       <Stack.Screen
         name="AccountsList"
         component={Accounts}
@@ -41,14 +46,13 @@ export default () => {
           headerTitle: () => <NavigatorTitle title={'common.account'} />,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
+          cardStyle: styles.card,
           headerRight: () => (
             <CloseButton
               theme={theme}
               onPress={() => navigation.navigate('WALLET')}
             />
           ),
-          cardStyle: styles.card,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
@@ -65,7 +69,7 @@ export default () => {
         options={({navigation}) => ({
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animation: 'none',
+          cardStyle: styles.card,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
@@ -90,7 +94,7 @@ export default () => {
           headerTitle: () => (
             <NavigatorTitle title={'navigation.add_account'} />
           ),
-          animation: 'none',
+          cardStyle: styles.card,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
@@ -113,7 +117,7 @@ export default () => {
         name="AddAccountFromWalletScreenByAuth"
         component={AddAccountByAuth}
         options={({navigation}) => ({
-          animation: 'none',
+          cardStyle: styles.card,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
@@ -145,7 +149,7 @@ export default () => {
         name="CreateAccountFromWalletScreenPageOne"
         component={CreateAccountStepOne as any}
         options={({navigation}) => ({
-          animation: 'none',
+          cardStyle: styles.card,
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => (
@@ -177,7 +181,7 @@ export default () => {
         name="AccountManagementScreen"
         component={AccountManagement}
         options={({navigation}) => ({
-          animation: 'none',
+          cardStyle: styles.card,
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'navigation.manage'} />,
@@ -200,7 +204,7 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
-          animation: 'none',
+          cardStyle: styles.card,
           headerTitle: () => (
             <NavigatorTitle title={'navigation.export_accounts_qr'} />
           ),
@@ -228,7 +232,7 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
-          animation: 'none',
+          cardStyle: styles.card,
           headerTitle: () => (
             <NavigatorTitle title={'navigation.export_accounts_qr'} />
           ),
