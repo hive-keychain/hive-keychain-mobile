@@ -552,6 +552,9 @@ const DropdownModal = ({
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="always"
             scrollEnabled={true}
+            initialNumToRender={12}
+            maxToRenderPerBatch={12}
+            windowSize={7}
             ListHeaderComponent={<Separator />}
             ListFooterComponent={<Separator />}
             ListEmptyComponent={
@@ -569,7 +572,7 @@ const DropdownModal = ({
                 </Text>
               </View>
             }
-            data={[...filteredDropdownList]}
+            data={filteredDropdownList}
             filteredDropdownList={filteredDropdownList}
             scrollToOverflowEnabled
             onDragEnd={({data}) => {

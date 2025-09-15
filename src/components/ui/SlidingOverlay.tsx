@@ -39,6 +39,7 @@ const SafeSlidingOverlay = ({
   const {theme} = useThemeContext();
   const {height, width} = useWindowDimensions();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [shouldRenderContent, setShouldRenderContent] = useState(showOverlay);
 
   useEffect(() => {
     const showSub = Keyboard.addListener('keyboardDidShow', (e) => {
@@ -52,6 +53,17 @@ const SafeSlidingOverlay = ({
       hideSub.remove();
     };
   }, []);
+
+  // When opening, render content immediately to avoid layout jank
+  // When closing, wait for exit animation to finish before unmounting children
+  useEffect(() => {
+    if (showOverlay) {
+      setShouldRenderContent(true);
+    } else {
+      const timeout = setTimeout(() => setShouldRenderContent(false), 250);
+      return () => clearTimeout(timeout);
+    }
+  }, [showOverlay]);
 
   return (
     <Modal
@@ -80,7 +92,7 @@ const SafeSlidingOverlay = ({
         <Text style={[styles.title, inputStyle(theme, width).label]}>
           {translate(title)}
         </Text>
-        {children}
+        {shouldRenderContent ? children : null}
       </AnimatedView>
     </Modal>
   );

@@ -11,6 +11,7 @@ export default ({username, style}: Props) => (
   <Image
     style={style}
     source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
+    cachePolicy="disk"
     contentFit="contain"
   />
 );
