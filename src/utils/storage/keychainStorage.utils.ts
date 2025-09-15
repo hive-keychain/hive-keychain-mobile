@@ -1,6 +1,6 @@
 import * as Keychain from 'react-native-keychain';
-import {chunkArray} from './format.utils';
-import {translate} from './localize';
+import {chunkArray} from '../format.utils';
+import {translate} from '../localize';
 
 export const saveOnKeychain = async (radix: string, string: string) => {
   const biometrics = await Keychain.getSupportedBiometryType();

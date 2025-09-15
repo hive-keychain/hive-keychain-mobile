@@ -4,9 +4,12 @@ import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AppThunk} from 'src/hooks/redux';
 import {encryptJson} from 'utils/encrypt.utils';
 import validateKeys from 'utils/keyValidation.utils';
-import {clearKeychain, saveOnKeychain} from 'utils/keychainStorage.utils';
 import {translate} from 'utils/localize';
 import {navigate, resetStackAndNavigate} from 'utils/navigation.utils';
+import {
+  clearKeychain,
+  saveOnKeychain,
+} from 'utils/storage/keychainStorage.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 import {
   Account,

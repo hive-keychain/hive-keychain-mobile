@@ -1,10 +1,9 @@
 import Toast from 'react-native-root-toast';
 import BackGroundUtils from 'src/background';
 import {AppThunk} from 'src/hooks/redux';
-import {decryptToJson} from 'utils/encrypt.utils';
-import {getFromKeychain} from 'utils/keychainStorage.utils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation.utils';
+import StorageUtils from 'utils/storage/storage.utils';
 import {AccountsPayload, ActionPayload, NullableString} from './interfaces';
 import {INIT_ACCOUNTS, LOCK, SIGN_UP, UNLOCK} from './types';
 
@@ -18,8 +17,8 @@ export const unlock =
   (mk: string, errorCallback?: (b?: boolean) => void): AppThunk =>
   async (dispatch, getState) => {
     try {
-      const accountsEncrypted = await getFromKeychain('accounts');
-      const accounts = decryptToJson(accountsEncrypted, mk);
+      const accounts = await StorageUtils.getAccounts(mk);
+
       if (accounts && accounts.list) {
         const unlock: ActionPayload<NullableString> = {
           type: UNLOCK,
