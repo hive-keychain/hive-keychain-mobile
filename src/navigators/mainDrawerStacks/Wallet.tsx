@@ -36,6 +36,7 @@ export default () => {
           headerStyle: styles.noStyle,
           headerTransparent: true,
           animation: 'none',
+          headerLeft: null,
           title: '',
         })}
       />

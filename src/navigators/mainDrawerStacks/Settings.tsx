@@ -28,7 +28,7 @@ export default () => {
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator id={undefined}>
+    <Stack.Navigator id={undefined} screenOptions={{cardStyle: styles.card}}>
       <Stack.Screen
         name="SettingsScreen"
         component={SettingsMenu}
@@ -39,6 +39,7 @@ export default () => {
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
+          animation: 'none',
           headerRight: () => (
             <CloseButton
               theme={theme}
