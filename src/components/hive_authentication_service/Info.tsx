@@ -1,4 +1,3 @@
-import HasTitleDark from 'assets/new_UI/has_title_dark.svg';
 import HasTitleLight from 'assets/new_UI/has_title_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
@@ -29,7 +28,7 @@ const HASInfo = () => {
           theme={theme}
           additionalContainerStyle={styles.hasContainer}
         />
-        {theme === Theme.LIGHT ? <HasTitleLight /> : <HasTitleDark />}
+        {<HasTitleLight />}
       </View>
     );
   };
