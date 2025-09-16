@@ -1,6 +1,6 @@
 import {loadAccount} from 'actions/hive';
 import {Witness as WitnessInterface} from 'actions/interfaces';
-import Vote from 'assets/governance/arrow_circle_up.svg';
+import Vote from 'assets/images/governance/arrow_circle_up.svg';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';

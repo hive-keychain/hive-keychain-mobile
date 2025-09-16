@@ -1,4 +1,4 @@
-import LOGO_MULTISIG from 'assets/wallet/multisig.png';
+import LOGO_MULTISIG from 'assets/images/hive/multisig.png';
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Caption} from './Caption';

@@ -1,4 +1,4 @@
-import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import BackgroundIconRed from 'assets/images/background/background-icon-red.svg';
 import Loader from 'components/ui/Loader';
 import * as Clipboard from 'expo-clipboard';
 import {

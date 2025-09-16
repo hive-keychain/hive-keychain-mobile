@@ -16,7 +16,7 @@ import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_AuthPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {translate} from 'utils/localize';
-const LOGO_LIGHT = require('assets/has/logo-light.png');
+const LOGO_LIGHT = require('assets/images/has/logo-light.png');
 
 type Props = PropsFromRedux & {
   data: HAS_AuthPayload & {

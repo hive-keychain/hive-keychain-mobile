@@ -1,8 +1,8 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {addAccount} from 'actions/index';
 import {showModal} from 'actions/message';
-import TitleLogoLight from 'assets/new_UI/img_import_dark.svg';
-import TitleLogoDark from 'assets/new_UI/img_import_light.svg';
+import TitleLogoLight from 'assets/images/wallet/img_import_dark.svg';
+import TitleLogoDark from 'assets/images/wallet/img_import_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';

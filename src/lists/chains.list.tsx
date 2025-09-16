@@ -1,5 +1,5 @@
-import EthereumImage from 'assets/new_UI/ethereum_logo.svg';
-import HiveChainImage from 'assets/new_UI/hive_logo.svg';
+import EthereumImage from 'assets/images/chains/ethereum_logo.svg';
+import HiveChainImage from 'assets/images/hive/hive_logo.svg';
 import {DropdownModalItem} from 'components/form/DropdownModal';
 import React from 'react';
 import {View} from 'react-native';

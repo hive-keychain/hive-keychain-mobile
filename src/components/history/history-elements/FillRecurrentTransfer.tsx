@@ -1,5 +1,5 @@
 import {ActiveAccount, Transaction} from 'actions/interfaces';
-import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import BackgroundIconRed from 'assets/images/background/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React, {useState} from 'react';
 import {Theme} from 'src/context/theme.context';

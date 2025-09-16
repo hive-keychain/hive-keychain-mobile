@@ -1,7 +1,7 @@
 import {loadTokensMarket} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
-import ErrorSvg from 'assets/new_UI/error.svg';
+import ErrorSvg from 'assets/images/common-ui/error.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import CurrencyIcon from 'components/hive/CurrencyIcon';
@@ -168,13 +168,13 @@ const Swap = ({
         img =
           tokenInfo.metadata.icon && tokenInfo.metadata.icon.length > 0
             ? tokenInfo.metadata.icon
-            : 'src/assets/new_UI/hive.svg';
-        imgBackup = 'src/assets/new_UI/hive-engine.svg';
+            : 'src/assets/images/hive/hive.svg';
+        imgBackup = 'src/assets/images/hive/hive-engine.svg';
       } else {
         img =
           token.symbol === getCurrency('HIVE')
-            ? 'src/assets/new_UI/hive.svg'
-            : 'src/assets/new_UI/hbd.svg';
+            ? 'src/assets/images/hive/hive.svg'
+            : 'src/assets/images/hive/hbd.svg';
       }
       return {
         value: token,

@@ -6,7 +6,7 @@ export default ({config}) => ({
       slug: 'hive-keychain',
       version: '2.9.0',
       orientation: 'portrait',
-      icon: './src/assets/ios_launcher.png',
+      icon: './src/assets/images/icons/ios_launcher.png',
       userInterfaceStyle: 'light',
       newArchEnabled: true,
       backgroundColor: '#212838',
@@ -18,7 +18,7 @@ export default ({config}) => ({
         },
       },
       splash: {
-        image: './src/assets/new_UI/keychain_logo_powered_dark_theme.png',
+        image: './src/assets/images/icons/keychain_logo_powered_dark_theme.png',
         resizeMode: 'contain',
         backgroundColor: '#212838',
       },
@@ -48,7 +48,7 @@ export default ({config}) => ({
         softwareKeyboardLayoutMode: 'pan',
         adaptiveIcon: {
           resizeMode: 'contain',
-          foregroundImage: './src/assets/android_launcher.png',
+          foregroundImage: './src/assets/images/icons/android_launcher.png',
           backgroundColor: '#000000',
         },
         edgeToEdgeEnabled: true,

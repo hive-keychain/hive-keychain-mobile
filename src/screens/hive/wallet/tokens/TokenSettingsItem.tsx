@@ -1,4 +1,4 @@
-import HiveEngine from 'assets/wallet/hive_engine.png';
+import HiveEngine from 'assets/images/hive/hive_engine.png';
 import {Image} from 'expo-image';
 import React, {memo, useState} from 'react';
 import {

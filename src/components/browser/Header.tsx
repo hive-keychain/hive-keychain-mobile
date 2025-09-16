@@ -37,8 +37,8 @@ import {urlTransformer} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 
-const HEART_PNG = require('assets/new_UI/heart.png');
-const HEART_EMPTY_PNG = require('assets/new_UI/heart-empty.png');
+const HEART_PNG = require('assets/images/browser/heart.png');
+const HEART_EMPTY_PNG = require('assets/images/browser/heart-empty.png');
 
 type Props = {
   browser: Browser;

@@ -1,4 +1,4 @@
-import HiveEngine from 'assets/wallet/hive_engine.png';
+import HiveEngine from 'assets/images/hive/hive_engine.png';
 import FastImageComponent from 'components/ui/FastImage';
 import {Image} from 'expo-image';
 import React, {useState} from 'react';

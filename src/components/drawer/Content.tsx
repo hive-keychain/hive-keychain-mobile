@@ -4,8 +4,8 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import {addTab, closeAllTabs, lock} from 'actions/index';
-import SwitchDarkIcon from 'assets/new_UI/moon.svg';
-import SwitchLightIcon from 'assets/new_UI/sun.svg';
+import SwitchDarkIcon from 'assets/images/drawer/moon.svg';
+import SwitchLightIcon from 'assets/images/drawer/sun.svg';
 import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import CustomSwitch from 'components/form/CustomSwitch';

@@ -1,5 +1,5 @@
 import {ExtendedAccount} from '@hiveio/dhive';
-import Savings from 'assets/wallet/icon_savings.svg';
+import Savings from 'assets/images/wallet/icon_savings.svg';
 import React from 'react';
 import {
   StyleSheet,

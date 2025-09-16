@@ -14,7 +14,7 @@ import {
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket} from 'actions/index';
 import {updateNavigationActiveScreen} from 'actions/navigation';
-import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
+import HiveEngineLogo from 'assets/images/hive/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';

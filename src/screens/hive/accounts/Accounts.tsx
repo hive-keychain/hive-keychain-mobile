@@ -1,6 +1,6 @@
-import AddAccountIcon from 'assets/new_UI/account-create.svg';
-import CreateAccountIcon from 'assets/new_UI/create_account.svg';
-import ManageKeysIcon from 'assets/new_UI/key.svg';
+import AddAccountIcon from 'assets/images/menus/accounts/account-create.svg';
+import CreateAccountIcon from 'assets/images/menus/accounts/create_account.svg';
+import ManageKeysIcon from 'assets/images/menus/accounts/key.svg';
 import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
 import React from 'react';
 import {StatusBar, View} from 'react-native';

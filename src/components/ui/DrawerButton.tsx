@@ -1,6 +1,6 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import HamburguerMenuIconDark from 'assets/new_UI/hamburguer-menu-dark.svg';
-import HamburguerMenuIconLight from 'assets/new_UI/hamburguer-menu-light.svg';
+import HamburguerMenuIconDark from 'assets/images/drawer/hamburguer-menu-dark.svg';
+import HamburguerMenuIconLight from 'assets/images/drawer/hamburguer-menu-light.svg';
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Theme} from 'src/context/theme.context';

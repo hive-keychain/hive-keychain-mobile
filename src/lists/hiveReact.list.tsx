@@ -1,7 +1,7 @@
 import {ExtendedAccount} from '@hiveio/dhive';
-import Hbd from 'assets/wallet/icon_hbd.svg';
-import Hive from 'assets/wallet/icon_hive.svg';
-import Hp from 'assets/wallet/icon_hp.svg';
+import Hbd from 'assets/images/hive/icon_hbd.svg';
+import Hive from 'assets/images/hive/icon_hive.svg';
+import Hp from 'assets/images/hive/icon_hp.svg';
 import React from 'react';
 import {withCommas} from '../utils/format.utils';
 //TODO after refactoring UI check if needed at all & remove component.

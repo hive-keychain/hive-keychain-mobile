@@ -1,16 +1,16 @@
 import React from 'react';
 import {Pressable} from 'react-native';
-import Binance from 'src/assets/buy/binance.svg';
-import GateioDark from 'src/assets/buy/dark/gateio.svg';
-import HuobiDark from 'src/assets/buy/dark/huobi.svg';
-import IonomyDark from 'src/assets/buy/dark/ionomy.svg';
-import MexcDark from 'src/assets/buy/dark/mexc.svg';
-import GateioLight from 'src/assets/buy/light/gateio.svg';
-import HuobiLight from 'src/assets/buy/light/huobi.svg';
-import IonomyLight from 'src/assets/buy/light/ionomy.svg';
-import MexcLight from 'src/assets/buy/light/mexc.svg';
-import Upbit from 'src/assets/buy/upbit.svg';
-import TransakSVG from 'src/assets/new_UI/transak-logo-rounded.svg';
+import Binance from 'src/assets/images/buy/binance.svg';
+import GateioDark from 'src/assets/images/buy/dark/gateio.svg';
+import HuobiDark from 'src/assets/images/buy/dark/huobi.svg';
+import IonomyDark from 'src/assets/images/buy/dark/ionomy.svg';
+import MexcDark from 'src/assets/images/buy/dark/mexc.svg';
+import GateioLight from 'src/assets/images/buy/light/gateio.svg';
+import HuobiLight from 'src/assets/images/buy/light/huobi.svg';
+import IonomyLight from 'src/assets/images/buy/light/ionomy.svg';
+import MexcLight from 'src/assets/images/buy/light/mexc.svg';
+import Upbit from 'src/assets/images/buy/upbit.svg';
+import TransakSVG from 'src/assets/images/buy/transak-logo-rounded.svg';
 import {Theme} from 'src/context/theme.context';
 import SvgContainer, {
   ContainerStylesProps,

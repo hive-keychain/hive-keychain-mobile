@@ -3,8 +3,8 @@ import {
   HeaderStyleInterpolators,
   createStackNavigator,
 } from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import ArrowLeftDark from 'assets/images/common-ui/arrow_left_dark.svg';
+import ArrowLeftLight from 'assets/images/common-ui/arrow_left_light.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
 import {WalletHistoryComponent} from 'components/history/WalletHistoryComponent';
 import Icon from 'components/hive/Icon';

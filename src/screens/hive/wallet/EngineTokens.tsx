@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadUserTokens} from 'actions/index';
-import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
+import HiveEngineLogo from 'assets/images/hive/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Icon from 'components/hive/Icon';

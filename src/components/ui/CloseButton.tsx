@@ -1,5 +1,5 @@
-import CloseIconDark from 'assets/new_UI/close_circle_dark.svg';
-import CloseIconLight from 'assets/new_UI/close_circle_light.svg';
+import CloseIconDark from 'assets/images/common-ui/close_circle_dark.svg';
+import CloseIconLight from 'assets/images/common-ui/close_circle_light.svg';
 import React from 'react';
 import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';

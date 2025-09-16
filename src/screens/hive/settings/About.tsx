@@ -1,4 +1,4 @@
-import AboutBGLight from 'assets/new_UI/about_background_light.svg';
+import AboutBGLight from 'assets/images/background/about_background_light.svg';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';

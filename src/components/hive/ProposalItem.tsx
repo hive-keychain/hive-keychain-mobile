@@ -1,5 +1,5 @@
 import {ActiveAccount} from 'actions/interfaces';
-import Vote from 'assets/governance/arrow_circle_up.svg';
+import Vote from 'assets/images/governance/arrow_circle_up.svg';
 import TwoFaModal from 'components/modals/TwoFaModal';
 import Loader from 'components/ui/Loader';
 import {Image} from 'expo-image';

@@ -1,6 +1,6 @@
-import KeychainIcon from 'assets/keychain.svg';
-import KeychainLogoPoweredDark from 'assets/new_UI/keychain_logo_powered_dark_theme.svg';
-import KeychainLogoPoweredLight from 'assets/new_UI/keychain_logo_powered_light_theme.svg';
+import KeychainIcon from 'assets/images/keychain.svg';
+import KeychainLogoPoweredDark from 'assets/images/icons/keychain_logo_powered_dark_theme.svg';
+import KeychainLogoPoweredLight from 'assets/images/icons/keychain_logo_powered_light_theme.svg';
 import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';

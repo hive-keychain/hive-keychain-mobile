@@ -1,5 +1,5 @@
-import BackspaceDark from 'assets/new_UI/backspace_dark_theme.svg';
-import BackspaceLight from 'assets/new_UI/backspace_light_theme.svg';
+import BackspaceDark from 'assets/images/common-ui/backspace_dark_theme.svg';
+import BackspaceLight from 'assets/images/common-ui/backspace_light_theme.svg';
 import {LinearGradient} from 'expo-linear-gradient';
 import React, {useState} from 'react';
 import {

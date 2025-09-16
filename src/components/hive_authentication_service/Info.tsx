@@ -1,4 +1,4 @@
-import HasTitleLight from 'assets/new_UI/has_title_light.svg';
+import HasTitleLight from 'assets/images/has/has_title_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';

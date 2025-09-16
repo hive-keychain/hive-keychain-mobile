@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addTab} from 'actions/browser';
-import TUTORIAL_POPUP_IMAGE from 'assets/new_UI/onboarding_mobile.png';
+import TUTORIAL_POPUP_IMAGE from 'assets/images/intro/onboarding_mobile.png';
 import EllipticButton from 'components/form/EllipticButton';
 import {Image} from 'expo-image';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
