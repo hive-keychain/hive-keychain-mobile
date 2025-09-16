@@ -231,7 +231,7 @@ const DelegationsList = ({
             )} ${getCurrency('HP')}`}</Text>
             <Icon
               theme={theme}
-              name={Icons.EXPAND_THIN}
+              name={Icons.EXPAND}
               additionalContainerStyle={[
                 styles.logo,
                 getRotateStyle(
@@ -275,7 +275,7 @@ const DelegationsList = ({
                 style={styles.button}
                 onPress={() => setShowCancelConfirmationDelegation(true)}>
                 <Icon
-                  name={Icons.GIFT_DELETE}
+                  name={Icons.REMOVE}
                   theme={theme}
                   additionalContainerStyle={styles.roundButton}
                   {...styles.icon}

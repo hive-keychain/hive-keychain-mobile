@@ -42,7 +42,7 @@ const CreateClaimedAccountTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={Icons.CREATE_CLAIMED_ACCOUNT}
+            name={Icons.ACCOUNT_CREATE}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}

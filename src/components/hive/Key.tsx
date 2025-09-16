@@ -238,7 +238,7 @@ const ViewKey = ({toggle, isPKShown, theme}: ViewKeyProps) => {
   return (
     <TouchableOpacity activeOpacity={1} onPress={toggle}>
       <Icon
-        name={isPKShown ? Icons.NOT_SEE : Icons.SEE}
+        name={isPKShown ? Icons.EYE_CROSSED : Icons.EYE}
         theme={theme}
         color={PRIMARY_RED_COLOR}
       />

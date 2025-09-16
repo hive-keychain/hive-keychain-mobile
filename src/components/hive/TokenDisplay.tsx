@@ -195,7 +195,7 @@ const TokenDisplay = ({
           {toggled && (
             <Icon
               key={`show-token-history-${currency}`}
-              name={Icons.BACK_TIME}
+              name={Icons.HISTORY}
               onPress={onHandleGoToTokenHistory}
               additionalContainerStyle={[
                 styles.squareButton,

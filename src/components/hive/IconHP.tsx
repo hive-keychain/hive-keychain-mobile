@@ -34,7 +34,7 @@ const IconHP = ({
       />
       <Icon
         theme={theme}
-        name={Icons.HIVE_CURRENCY_LOGO}
+        name={Icons.HIVE}
         width={width}
         height={heigth}
         additionalContainerStyle={[

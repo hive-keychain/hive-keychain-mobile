@@ -205,7 +205,7 @@ const Convert = ({
               </View>
               <Icon
                 theme={theme}
-                name={Icons.EXPAND_THIN}
+                name={Icons.EXPAND}
                 additionalContainerStyle={getRotateStyle('90')}
                 width={13}
                 height={13}

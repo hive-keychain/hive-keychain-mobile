@@ -104,7 +104,7 @@ const DrawerContent = (props: Props) => {
             onPress={() => navigation.navigate('SettingsScreen')}
             iconImage={
               <Icon
-                name={Icons.CANDLE}
+                name={Icons.SETTINGS}
                 theme={theme}
                 color={PRIMARY_RED_COLOR}
               />

@@ -68,7 +68,7 @@ const SwapDisplay = ({
           </View>
           <View style={styles.arrowContainer}>
             <Icon
-              name={Icons.ARROW_RIGHT_BROWSER}
+              name={Icons.ARROW_RIGHT}
               additionalContainerStyle={styles.arrowIcon}
               width={16}
               height={16}

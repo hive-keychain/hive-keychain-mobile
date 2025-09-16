@@ -18,20 +18,15 @@ import ExportIcon from 'assets/new_UI/export.svg';
 import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
 import HBDCurrencyLogo from 'assets/new_UI/hbd-currency-logo.svg';
-import HeartIcon from 'assets/new_UI/heart.svg';
 import HelpIcon from 'assets/new_UI/help.svg';
 import HiveCurrencyLogo from 'assets/new_UI/hive-currency-logo.svg';
-import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
-import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
 import AddBrowser from 'assets/new_UI/linear_add-browser.svg';
-import ArrowLeftBrowser from 'assets/new_UI/linear_arrow-left-browser.svg';
 import ArrowRightBrowser from 'assets/new_UI/linear_arrow-right-browser.svg';
 import ClockIcon from 'assets/new_UI/linear_clock.svg';
 import CloseCircleIcon from 'assets/new_UI/linear_close-circle.svg';
 import CopyIcon from 'assets/new_UI/linear_copy.svg';
 import CpuIcon from 'assets/new_UI/linear_cpu-setting.svg';
-import MoneyIcon from 'assets/new_UI/linear_dollar-circle.svg';
 import EditIcon from 'assets/new_UI/linear_edit-2.svg';
 import EmptyWalletIcon from 'assets/new_UI/linear_empty-wallet.svg';
 import ExternalLinkIcon from 'assets/new_UI/linear_export.svg';
@@ -72,10 +67,7 @@ import SwipeLeftIcon from 'src/assets/browser/swipe-left.svg';
 import SwipeRightIcon from 'src/assets/browser/swipe-right.svg';
 import TwoFingersTapIcon from 'src/assets/browser/two-fingers-tap.svg';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
-import {default as ArrowUpwardIcon} from 'src/assets/icons/svgs/arrow_upward.svg';
-import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
-import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import CalendarIcon from 'src/assets/new_UI/calendar.svg';
 import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import DelegateTokenIcon from 'src/assets/new_UI/delegate-token.svg';
@@ -175,9 +167,8 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.CLAIM_ACCOUNT:
-      return <LinkIcon style={finalStyleOnIcon} />;
-    case name === Icons.ACCOUNT_CREATE || name === Icons.CREATE_CLAIMED_ACCOUNT:
+
+    case name === Icons.ACCOUNT_CREATE:
       return (
         <AddAccountIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -205,13 +196,6 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.ARROW_UPWARD:
-      return (
-        <ArrowUpwardIcon
-          style={styles.defaultIconContainer}
-          {...dimensionsProps}
-        />
-      );
     case name === Icons.ADD_CIRCLE_OUTLINE:
       return (
         <AddCircleOutlineIcon
@@ -220,11 +204,8 @@ const getIconFilePath = (
           fill={getColors(theme).iconBW}
         />
       );
-    case name === Icons.DELETE:
-      return (
-        <DeleteIcon style={style.defaultIconContainer} {...dimensionsProps} />
-      );
-    case name === Icons.CANDLE:
+
+    case name === Icons.SETTINGS:
       return (
         <CandleIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -238,13 +219,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.TOKENS:
-      return (
-        <HiveAlternative
-          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
-          {...dimensionsProps}
-        />
-      );
+
     case name === Icons.GOVERNANCE:
       return (
         <BankIcon
@@ -280,28 +255,21 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.SETTINGS_2:
+    case name === Icons.SETTINGS_WHEEL:
       return (
         <Settings2Icon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.SETTINGS_4:
+    case name === Icons.FILTERS:
       return (
         <Settings4Icon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.IMPORT:
-      return (
-        <ImportIcon
-          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
-          {...dimensionsProps}
-        />
-      );
-    case name === Icons.BACK_TIME:
+    case name === Icons.HISTORY:
       return (
         <BackTimeIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -315,7 +283,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.CARRET_UP:
+    case name === Icons.CARET_UP:
       return (
         <PolygonDown
           style={[
@@ -325,28 +293,22 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.DOUBLE_ARROW || name === Icons.DELEGATE:
+    case name === Icons.DELEGATE:
       return (
         <DoubleArrowIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.ARROW_LEFT || name === Icons.BACK:
+    case name === Icons.ARROW_LEFT:
       return (
         <ArrowLeftIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.ARROW_LEFT_BROWSER:
-      return (
-        <ArrowLeftBrowser
-          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
-          {...dimensionsProps}
-        />
-      );
-    case name === Icons.ARROW_RIGHT_BROWSER:
+
+    case name === Icons.ARROW_RIGHT:
       return (
         <ArrowRightBrowser
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -411,21 +373,21 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.GIFT_DELETE || name === Icons.REMOVE:
+    case name === Icons.REMOVE:
       return (
         <GiftDeleteIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.EDIT || name === Icons.PENCIL:
+    case name === Icons.EDIT:
       return (
         <EditIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.EXPAND_THIN:
+    case name === Icons.EXPAND:
       return (
         <ExpandThinIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -454,55 +416,49 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.SEE:
+    case name === Icons.EYE:
       return (
         <SeeIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.NOT_SEE:
+    case name === Icons.EYE_CROSSED:
       return (
         <NotSeeIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.CPU:
+    case name === Icons.SETTINGS_OPERATIONS:
       return (
         <CpuIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.RPC:
+    case name === Icons.SETTINGS_RPC:
       return (
         <RPCNodeIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.RAM:
+    case name === Icons.SAVE_RPC:
       return (
         <RamIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.OPEN || name === Icons.EXTERNAL_LINK:
+    case name === Icons.EXTERNAL_LINK:
       return (
         <ExternalLinkIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.MONEY || name === Icons.DOLLAR:
-      return (
-        <MoneyIcon
-          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
-          {...dimensionsProps}
-        />
-      );
+
     case name === Icons.CLOCK:
       return (
         <ClockIcon
@@ -512,25 +468,25 @@ const getIconFilePath = (
       );
     case name === Icons.LOGO_HAS:
       return <HASIcon style={[finalStyleOnIcon]} {...dimensionsProps} />;
-    case name === Icons.SEND_SQUARE:
+    case name === Icons.VOTING_MANA:
       return (
         <SendSquareIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.SPEEDOMETER:
+    case name === Icons.RC:
       return (
         <SpeedometerIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.HIVE_CURRENCY_LOGO:
+    case name === Icons.HIVE:
       return (
         <HiveCurrencyLogo style={[finalStyleOnIcon]} {...dimensionsProps} />
       );
-    case name === Icons.HBD_CURRENCY_LOGO:
+    case name === Icons.HBD:
       return (
         <HBDCurrencyLogo style={[finalStyleOnIcon]} {...dimensionsProps} />
       );
@@ -557,7 +513,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.WALLET_ADD:
+    case name === Icons.ADD_TAB:
       return (
         <WalletAddIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -571,7 +527,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.REPEATE_MUSIC || name === Icons.SWAP:
+    case name === Icons.SWAP:
       return (
         <RepeatMusicIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -593,22 +549,15 @@ const getIconFilePath = (
           strokeWidth={strokeWidth}
         />
       );
-    case name === Icons.HEART || name === Icons.FAVORITE:
-      return (
-        <HeartIcon
-          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
-          fill={fill ?? undefined}
-          {...dimensionsProps}
-        />
-      );
-    case name === Icons.REPEAT:
+
+    case name === Icons.EXCHANGE_ARROW:
       return (
         <RepeatIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.REPEAT_CIRCLE:
+    case name === Icons.EXCHANGE_ARROW_CIRCLED:
       return (
         <RepeatCircleIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -678,7 +627,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.MULTISIG:
+    case name === Icons.SETTINGS_MULTISIG:
       return (
         <MultiSigIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -692,7 +641,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.NOTIFICATIONS:
+    case name === Icons.SETTINGS_NOTIFICATIONS:
       return (
         <NotificationsIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}

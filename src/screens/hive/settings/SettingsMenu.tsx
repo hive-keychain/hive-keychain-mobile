@@ -28,7 +28,11 @@ const SettingsMenu = () => {
         theme={theme}
         onPress={() => navigate('SettingsOperationsScreen')}
         iconImage={
-          <Icon name={Icons.CPU} theme={theme} color={PRIMARY_RED_COLOR} />
+          <Icon
+            name={Icons.SETTINGS_OPERATIONS}
+            theme={theme}
+            color={PRIMARY_RED_COLOR}
+          />
         }
         drawBottomLine={true}
       />
@@ -37,7 +41,11 @@ const SettingsMenu = () => {
         theme={theme}
         onPress={() => navigate('SettingsRpcNodesScreen')}
         iconImage={
-          <Icon name={Icons.RPC} theme={theme} color={PRIMARY_RED_COLOR} />
+          <Icon
+            name={Icons.SETTINGS_RPC}
+            theme={theme}
+            color={PRIMARY_RED_COLOR}
+          />
         }
         drawBottomLine={true}
       />
@@ -60,7 +68,7 @@ const SettingsMenu = () => {
         onPress={() => navigate('SettingsMultisigScreen')}
         iconImage={
           <Icon
-            name={Icons.MULTISIG}
+            name={Icons.SETTINGS_MULTISIG}
             theme={theme}
             color={PRIMARY_RED_COLOR}
             width={45}
@@ -74,7 +82,7 @@ const SettingsMenu = () => {
         onPress={() => navigate('SettingsNotificationsScreen')}
         iconImage={
           <Icon
-            name={Icons.NOTIFICATIONS}
+            name={Icons.SETTINGS_NOTIFICATIONS}
             theme={theme}
             color={PRIMARY_RED_COLOR}
             width={55}

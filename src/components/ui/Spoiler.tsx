@@ -25,7 +25,7 @@ const Spoiler = ({title, initiallyOpened, children}: Props) => {
         }}>
         <Text style={styles.headerText}>{title}</Text>
         <Icon
-          name={Icons.EXPAND_THIN}
+          name={Icons.EXPAND}
           theme={theme}
           additionalContainerStyle={styles.expand}
           color={getColors(theme).primaryText}

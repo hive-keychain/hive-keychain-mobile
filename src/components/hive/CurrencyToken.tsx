@@ -177,7 +177,7 @@ const CurrencyToken = ({
                 transform: !isPositive ? [{rotate: '180deg'}] : undefined,
               }}>
               <Icon
-                name={Icons.CARRET_UP}
+                name={Icons.CARET_UP}
                 color={isPositive ? GREEN_SUCCESS : PRIMARY_RED_COLOR}
                 height={10}
               />
@@ -225,7 +225,7 @@ const CurrencyToken = ({
             {isExpanded && (
               <Icon
                 key={`show-token-history-${currencyName}`}
-                name={Icons.BACK_TIME}
+                name={Icons.HISTORY}
                 onPress={onHandleGoToWalletHistory}
                 additionalContainerStyle={styles.squareButton}
                 theme={theme}

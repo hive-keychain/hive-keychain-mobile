@@ -86,12 +86,7 @@ const SwipeableItem = memo(
               bgStyle,
             ]}>
             <View style={styles.deleteIcon}>
-              <Icon
-                color="white"
-                name={Icons.GIFT_DELETE}
-                width={25}
-                height={25}
-              />
+              <Icon color="white" name={Icons.REMOVE} width={25} height={25} />
             </View>
           </Animated.View>
           <PanGestureHandler

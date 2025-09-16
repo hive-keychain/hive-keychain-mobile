@@ -454,7 +454,7 @@ const Main = ({
                         percent={getVP(user.account) || 100}
                         IconBgcolor={OVERLAYICONBGCOLOR}
                         theme={theme}
-                        iconName={Icons.SEND_SQUARE}
+                        iconName={Icons.VOTING_MANA}
                         bgColor={BACKGROUNDITEMDARKISH}
                         secondary={`$${
                           getVotingDollarsPerAccount(
@@ -466,7 +466,7 @@ const Main = ({
                         }`}
                       />
                       <PercentageDisplay
-                        iconName={Icons.SPEEDOMETER}
+                        iconName={Icons.RC}
                         bgColor={DARKER_RED_COLOR}
                         name={translate('wallet.rc')}
                         percent={user.rc.percentage || 100}
@@ -544,7 +544,7 @@ const Main = ({
                                 height={18}
                               />
                               <Icon
-                                name={Icons.SETTINGS_2}
+                                name={Icons.SETTINGS_WHEEL}
                                 theme={theme}
                                 onPress={handleClickSettings}
                               />

@@ -97,7 +97,7 @@ export default () => {
           cardStyle: styles.cardStyle,
           headerRight: () => (
             <Icon
-              name={Icons.SETTINGS_4}
+              name={Icons.FILTERS}
               theme={theme}
               onPress={() =>
                 navigation.navigate('ModalScreen', {
@@ -116,11 +116,11 @@ export default () => {
                   renderButtonElement: (
                     <View style={styles.overlayButtonElement}>
                       <Icon
-                        name={Icons.SETTINGS_4}
+                        name={Icons.FILTERS}
                         theme={theme}
                         additionalContainerStyle={styles.iconButton}
                       />
-                      <Icon theme={theme} name={Icons.CARRET_UP} />
+                      <Icon theme={theme} name={Icons.CARET_UP} />
                     </View>
                   ),
                 })

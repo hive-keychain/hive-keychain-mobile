@@ -106,7 +106,7 @@ export default ({username, startToken, amount, accounts}: Props) => {
                 {`${balance} ${startToken}`}
               </Text>
               <Icon
-                name={Icons.ARROW_RIGHT_BROWSER}
+                name={Icons.ARROW_RIGHT}
                 additionalContainerStyle={styles.arrowIcon}
                 width={20}
                 height={20}

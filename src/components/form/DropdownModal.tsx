@@ -491,7 +491,7 @@ const DropdownModal = ({
         </View>
       )}
       <Icon
-        name={Icons.EXPAND_THIN}
+        name={Icons.EXPAND}
         theme={theme}
         additionalContainerStyle={[
           styles.marginLeft,

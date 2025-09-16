@@ -80,7 +80,7 @@ const CurrencyIcon = ({
       return (
         <Icon
           theme={theme}
-          name={Icons.HIVE_CURRENCY_LOGO}
+          name={Icons.HIVE}
           additionalContainerStyle={styles.hiveIconContainer}
           {...styles.icon}
         />
@@ -90,7 +90,7 @@ const CurrencyIcon = ({
       return (
         <Icon
           theme={theme}
-          name={Icons.HBD_CURRENCY_LOGO}
+          name={Icons.HBD}
           additionalContainerStyle={[
             styles.hiveIconContainer,
             styles.hbdIconBgColor,

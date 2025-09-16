@@ -251,7 +251,7 @@ const RpcNodes = ({
           </Text>
           <Icon
             theme={theme}
-            name={Icons.RAM}
+            name={Icons.SAVE_RPC}
             onPress={handleAddCustomRPC}
             color={PRIMARY_RED_COLOR}
           />

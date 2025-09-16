@@ -285,7 +285,7 @@ const Savings = ({
               </View>
               <Icon
                 theme={theme}
-                name={Icons.EXPAND_THIN}
+                name={Icons.EXPAND}
                 additionalContainerStyle={getRotateStyle('90')}
                 width={15}
                 height={15}

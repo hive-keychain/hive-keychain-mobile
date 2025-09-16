@@ -70,7 +70,7 @@ const CurrentAvailableBalance = ({
         icon={
           <Icon
             theme={theme}
-            name={Icons.SEND_SQUARE}
+            name={Icons.VOTING_MANA}
             color="#FFF"
             additionalContainerStyle={styles.icon}
           />

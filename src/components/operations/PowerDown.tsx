@@ -230,7 +230,7 @@ const PowerDown = ({
                 </View>
                 <Icon
                   theme={theme}
-                  name={Icons.GIFT_DELETE}
+                  name={Icons.REMOVE}
                   onPress={() => {
                     onPowerDownConfirmation(true);
                   }}

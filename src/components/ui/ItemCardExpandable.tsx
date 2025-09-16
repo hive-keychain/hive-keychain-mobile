@@ -63,7 +63,7 @@ const ItemCardExpandable = ({
               <Text style={styles.textBase}>{date}</Text>
               {memo && memo.length ? (
                 <Icon
-                  name={Icons.EXPAND_THIN}
+                  name={Icons.EXPAND}
                   theme={theme}
                   additionalContainerStyle={[
                     toggle ? getRotateStyle('0') : getRotateStyle('180'),

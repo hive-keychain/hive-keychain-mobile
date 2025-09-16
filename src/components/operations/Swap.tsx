@@ -552,7 +552,7 @@ const Swap = ({
                 </Text>
                 <Icon
                   theme={theme}
-                  name={Icons.BACK_TIME}
+                  name={Icons.HISTORY}
                   additionalContainerStyle={[styles.squareButton]}
                   onPress={() => navigate('SwapHistory')}
                   color={PRIMARY_RED_COLOR}
@@ -661,7 +661,7 @@ const Swap = ({
               <Separator />
               <Icon
                 theme={theme}
-                name={Icons.REPEAT}
+                name={Icons.EXCHANGE_ARROW}
                 onPress={swapStartAndEnd}
                 additionalContainerStyle={styles.autoWidthCentered}
                 color={PRIMARY_RED_COLOR}
@@ -771,7 +771,7 @@ const Swap = ({
                 </Text>
                 <Icon
                   theme={theme}
-                  name={Icons.EXPAND_THIN}
+                  name={Icons.EXPAND}
                   {...styles.dropdownIcon}
                   additionalContainerStyle={
                     isAdvanceSettingOpen

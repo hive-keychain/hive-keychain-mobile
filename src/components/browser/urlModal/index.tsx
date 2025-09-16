@@ -99,7 +99,7 @@ const UrlModal = ({
       <KeyboardAvoidingView style={{flex: 1}} behavior={'padding'}>
         <View style={styles.urlModalContent}>
           <Icon
-            name={Icons.BACK}
+            name={Icons.ARROW_LEFT}
             theme={theme}
             width={17}
             height={17}

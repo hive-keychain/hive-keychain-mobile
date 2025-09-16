@@ -73,7 +73,7 @@ const SwapConfirm = ({
                 {`${withCommas(amount)} ${startToken.symbol}`}
               </Text>
               <Icon
-                name={Icons.ARROW_RIGHT_BROWSER}
+                name={Icons.ARROW_RIGHT}
                 additionalContainerStyle={{marginHorizontal: 8}}
                 width={20}
                 height={20}

@@ -188,7 +188,7 @@ const Tokens = ({
             additionalContainerStyle={styles.searchBar}
           />
           <Icon
-            name={Icons.SETTINGS_2}
+            name={Icons.SETTINGS_WHEEL}
             theme={theme}
             onPress={() => navigate('TokenSettings')}
             additionalContainerStyle={styles.iconButton}

@@ -130,7 +130,7 @@ const RpcComponent = ({
             </Text>
             <Icon
               theme={theme}
-              name={Icons.RAM}
+              name={Icons.SAVE_RPC}
               onPress={onHandleSave}
               color={PRIMARY_RED_COLOR}
             />

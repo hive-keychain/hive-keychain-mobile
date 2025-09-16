@@ -304,7 +304,7 @@ const BottomNavigation = ({
         ]}>
         <Icon
           theme={theme}
-          name={Icons.WALLET_ADD}
+          name={Icons.ADD_TAB}
           color={activeScreen === BottomBarLink.Wallet ? 'white' : undefined}
           {...getIconDimensions(width)}
         />

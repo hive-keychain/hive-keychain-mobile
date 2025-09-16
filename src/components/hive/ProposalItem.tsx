@@ -161,7 +161,7 @@ const ProposalItem = ({
         </View>
         <Icon
           theme={theme}
-          name={Icons.EXPAND_THIN}
+          name={Icons.EXPAND}
           {...styles.expander}
           additionalContainerStyle={[
             styles.marginRight,
@@ -239,7 +239,7 @@ const ProposalItem = ({
             <View style={styles.detail}>
               <Icon
                 theme={theme}
-                name={Icons.MONEY}
+                name={Icons.DHF_AMOUNT}
                 additionalContainerStyle={styles.detailIcon}
                 {...styles.icon}
                 color={getColors(theme).iconBW}

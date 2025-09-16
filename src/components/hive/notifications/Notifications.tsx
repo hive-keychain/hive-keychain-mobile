@@ -73,7 +73,7 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
           }}>
           <Icon
             theme={theme}
-            name={Icons.NOTIFICATIONS}
+            name={Icons.SETTINGS_NOTIFICATIONS}
             color={PRIMARY_RED_COLOR}
             width={45}
             height={45}
