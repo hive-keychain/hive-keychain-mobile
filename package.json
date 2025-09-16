@@ -18,7 +18,9 @@
     "submit:android": "eas submit -p android --profile internal",
     "submit:ios": "source .env && EXPO_APPLE_APP_SPECIFIC_PASSWORD=$EXPO_APPLE_APP_SPECIFIC_PASSWORD eas submit -p ios --profile production",
     "crowdin:pull": "crowdin download",
-    "crowdin:push": "crowdin upload sources"
+    "crowdin:push": "crowdin upload sources",
+    "assets:usage": "node scripts/scan-asset-usage.js",
+    "assets:clean": "node scripts/clean-unused-assets.js"
   },
   "dependencies": {
     "@bittingz/expo-widgets": "3.0.2",

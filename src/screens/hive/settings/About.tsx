@@ -41,9 +41,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
         paddingBottom: initialWindowMetrics.insets.bottom,
       }}>
       <>
-        <View style={styles.extraBg}>
-          {theme === Theme.LIGHT ? <AboutBGLight /> : <AboutBGLight />}
-        </View>
+        <View style={styles.extraBg}>{<AboutBGLight />}</View>
         <FocusAwareStatusBar />
         <Separator height={30} />
         <View style={styles.container}>
