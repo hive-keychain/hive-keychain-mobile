@@ -1,4 +1,4 @@
-import AddAccountIcon from 'assets/new_UI/add_account.svg';
+import AddAccountIcon from 'assets/new_UI/account-create.svg';
 import CreateAccountIcon from 'assets/new_UI/create_account.svg';
 import ManageKeysIcon from 'assets/new_UI/key.svg';
 import MenuItem from 'components/drawer/drawer-content-item/MenuItem';

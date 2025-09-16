@@ -1,5 +1,5 @@
 import HPIconLight from 'assets/new_UI/hp-icon-light.svg';
-import PowerDownLight from 'assets/new_UI/power-down-light.svg';
+import PowerDownLight from 'assets/new_UI/power-down.svg';
 import RCDelegationLight from 'assets/new_UI/rc-delegation-light.svg';
 import {DelegationOperationProps} from 'components/operations/Delegation';
 import {PowerDownOperationProps} from 'components/operations/PowerDown';
