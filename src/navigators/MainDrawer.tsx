@@ -1,7 +1,6 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerContent from 'components/drawer/Content';
 import AboutStack from 'navigators/mainDrawerStacks/About';
-import BrowserStack from 'navigators/mainDrawerStacks/Browser';
 import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
 import React, {useRef, useState} from 'react';
@@ -57,14 +56,6 @@ export default () => {
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="Wallet" component={WalletStack} options={noHeader} />
-      <Drawer.Screen
-        name="Browser"
-        options={{
-          title: translate('navigation.browser'),
-          ...noHeader,
-        }}
-        component={BrowserStack}
-      />
 
       <Drawer.Screen
         name="Governance"

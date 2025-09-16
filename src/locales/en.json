@@ -1211,5 +1211,9 @@
   },
   "multichain": {
     "switch_chain": "Switch Chain"
+  },
+  "encryption": {
+    "save": "Use your biometrics for a faster login",
+    "retrieve": "Use your biometrics to login"
   }
 }
