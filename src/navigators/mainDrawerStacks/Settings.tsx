@@ -13,6 +13,7 @@ import Multisig from 'screens/hive/drawer/settings/Multisig';
 import Notifications from 'screens/hive/drawer/settings/Notifications';
 import Operations from 'screens/hive/drawer/settings/Operations';
 import RpcNodes from 'screens/hive/drawer/settings/RpcNodes';
+import Security from 'screens/hive/drawer/settings/Security';
 import SettingsMenu from 'screens/hive/drawer/settings/SettingsMenu';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Dimensions} from 'src/interfaces/common.interface';
@@ -212,6 +213,34 @@ export default () => {
           headerTitleAlign: 'center',
           headerTitle: () => (
             <NavigatorTitle title={'navigation.export_transactions'} />
+          ),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('Wallet')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="SecurityScreen"
+        component={Security}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.security.title'} />
           ),
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,

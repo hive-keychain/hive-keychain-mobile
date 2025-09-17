@@ -600,7 +600,9 @@
         "title": "Export Transactions"
       },
       "security": {
-        "title": "Security"
+        "title": "Security",
+        "disclaimer": "You can use your biometrics for a faster login experience",
+        "biometrics": "Enable biometrics login"
       },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",

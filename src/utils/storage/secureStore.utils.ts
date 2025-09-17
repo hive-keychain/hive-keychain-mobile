@@ -54,6 +54,12 @@ const getFromSecureStore = async (radix: string) => {
   }
 };
 
+const deleteFromSecureStore = async (radix: string) => {
+  await SecureStore.deleteItemAsync(radix, {
+    keychainService: radix,
+  });
+};
+
 const clearSecureStore = async (radix: string) => {
   const password = await SecureStore.getItemAsync(`${radix}_length`, {
     keychainService: radix,
@@ -86,6 +92,7 @@ const chunkArray = (myArray: any[], chunk_size: number) => {
 const SecureStoreUtils = {
   saveOnSecureStore,
   getFromSecureStore,
+  deleteFromSecureStore,
   clearSecureStore,
 };
 
