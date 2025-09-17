@@ -11,11 +11,16 @@ import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import SecureStoreUtils from 'utils/storage/secureStore.utils';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;
-const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
+const Unlock = ({
+  unlock,
+  navigation,
+  ignoreNextBiometrics,
+}: UnlockScreenProps) => {
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
 
@@ -28,7 +33,8 @@ const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
       console.log('isBiometricsLoginEnabled', isBiometricsLoginEnabled);
       if (
         accountStorageVersion[1] === '2' &&
-        isBiometricsLoginEnabled[1] === 'true'
+        isBiometricsLoginEnabled[1] === 'true' &&
+        !ignoreNextBiometrics
       ) {
         const pin = await SecureStoreUtils.getFromSecureStore(
           KeychainStorageKeyEnum.SECURE_MK,
@@ -61,10 +67,15 @@ const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
   );
 };
 
-const connector = connect(null, {
-  unlock,
-  forgetAccounts,
-});
+const connector = connect(
+  (state: RootState) => ({
+    ignoreNextBiometrics: state.auth.ignoreNextBiometrics,
+  }),
+  {
+    unlock,
+    forgetAccounts,
+  },
+);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const styles = StyleSheet.create({

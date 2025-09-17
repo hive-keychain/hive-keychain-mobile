@@ -23,6 +23,7 @@ export type NullableString = string | null;
 
 export interface Auth {
   mk: NullableString;
+  ignoreNextBiometrics?: boolean;
 }
 
 export interface Rpc {
