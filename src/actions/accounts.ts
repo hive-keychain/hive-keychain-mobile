@@ -7,6 +7,7 @@ import validateKeys from 'utils/keyValidation.utils';
 import {translate} from 'utils/localize';
 import {navigate, resetStackAndNavigate} from 'utils/navigation.utils';
 import {EncryptedStorageUtils} from 'utils/storage/encryptedStorage.utils';
+import StorageUtils from 'utils/storage/storage.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 import {
   Account,
@@ -35,6 +36,12 @@ export const addAccount =
   async (dispatch, getState) => {
     const mk = getState().auth.mk;
     const previousAccounts = getState().accounts;
+    if (previousAccounts.length === 0) {
+      StorageUtils.requireBiometricsLogin(
+        mk,
+        'settings.settings.security.biometrics',
+      );
+    }
     if (previousAccounts.find((e) => e.name === name)) {
       Toast.show(translate('toast.account_already', {account: name}));
       if (multipleAccounts) return;
@@ -71,9 +78,7 @@ export const addAccount =
   };
 
 export const forgetAccounts = (): AppThunk => async (dispatch) => {
-  EncryptedStorageUtils.removeFromEncryptedStorage(
-    KeychainStorageKeyEnum.ACCOUNTS,
-  );
+  EncryptedStorageUtils.clearEncryptedStorage();
   dispatch({
     type: FORGET_ACCOUNTS,
   });

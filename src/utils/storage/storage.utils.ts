@@ -23,17 +23,18 @@ const getAccounts = async (mk: string) => {
       [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
     ]);
     await clearKeychain('accounts');
-    await requireBiometricsLogin(mk);
+    await requireBiometricsLogin(mk, 'encryption.save');
     console.log('migratin old accounts to new storage');
     return decryptToJson(accountsEncrypted, mk);
   }
 };
 
-const requireBiometricsLogin = async (mk: string) => {
+const requireBiometricsLogin = async (mk: string, title: string) => {
   try {
     await SecureStoreUtils.saveOnSecureStore(
       KeychainStorageKeyEnum.SECURE_MK,
       mk,
+      title,
     );
     AsyncStorage.setItem(
       KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,

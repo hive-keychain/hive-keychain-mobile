@@ -14,7 +14,6 @@ export const signUp = (pwd: string) => {
   navigate('ChooseAccountOptionsScreen');
   const action: ActionPayload<NullableString> = {type: SIGN_UP, payload: pwd};
   AsyncStorage.setItem(KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2');
-  StorageUtils.requireBiometricsLogin(pwd);
   return action;
 };
 

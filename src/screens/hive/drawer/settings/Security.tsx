@@ -50,6 +50,7 @@ const Security = ({mk}: PropsFromRedux) => {
               await SecureStoreUtils.saveOnSecureStore(
                 KeychainStorageKeyEnum.SECURE_MK,
                 mk,
+                'settings.settings.security.biometrics',
               );
             } else {
               await SecureStoreUtils.deleteFromSecureStore(
@@ -58,7 +59,7 @@ const Security = ({mk}: PropsFromRedux) => {
             }
             setActive(!isActive);
           }}
-          title="settings.settings.security.biometrics"
+          title="settings.settings.security.checkbox"
         />
       </View>
     </Background>

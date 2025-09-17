@@ -1,7 +1,11 @@
 import * as SecureStore from 'expo-secure-store';
 import {translate} from '../localize';
 
-const saveOnSecureStore = async (radix: string, string: string) => {
+const saveOnSecureStore = async (
+  radix: string,
+  string: string,
+  title: string,
+) => {
   const chunks = chunkArray(string.split(''), 300).map((e) => e.join(''));
   await SecureStore.setItemAsync(`${radix}_length`, chunks.length.toString(), {
     keychainService: radix,
@@ -15,7 +19,7 @@ const saveOnSecureStore = async (radix: string, string: string) => {
             keychainAccessible: SecureStore.WHEN_UNLOCKED,
             keychainService: radix,
             requireAuthentication: true,
-            authenticationPrompt: translate('encryption.save'),
+            authenticationPrompt: translate(title),
           }
         : {keychainService: radix},
     );

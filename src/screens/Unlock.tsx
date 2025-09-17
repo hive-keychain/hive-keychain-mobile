@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {forgetAccounts, unlock} from 'actions/index';
+import {unlock} from 'actions/index';
 import InfoPIN from 'components/info_buttons/ForgotPin';
 import Pincode from 'components/pin_code';
 import Background from 'components/ui/Background';
@@ -73,7 +73,6 @@ const connector = connect(
   }),
   {
     unlock,
-    forgetAccounts,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
