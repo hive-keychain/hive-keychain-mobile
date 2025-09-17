@@ -23,7 +23,6 @@ export default ({config}) => ({
         backgroundColor: '#212838',
       },
       ios: {
-        buildNumber: '191',
         bundleIdentifier: 'com.stoodkev.mobileKeychain',
         supportsTablet: true,
         infoPlist: {
@@ -42,7 +41,6 @@ export default ({config}) => ({
         googleServicesFile: process.env.GOOGLE_SERVICES_PLIST,
       },
       android: {
-        versionCode: 191,
         package:
           process.env.APP_VARIANT !== 'prod'
             ? 'com.mobilekeychain.dev'
