@@ -4,7 +4,7 @@ export default ({config}) => ({
     expo: {
       name: 'Hive Keychain',
       slug: 'hive-keychain',
-      version: '2.9.0',
+      version: '2.9.1',
       orientation: 'portrait',
       icon: './src/assets/images/icons/ios_launcher.png',
       userInterfaceStyle: 'light',
@@ -18,7 +18,7 @@ export default ({config}) => ({
         },
       },
       splash: {
-        image: './src/assets/images/icons/keychain_logo_powered_dark_theme.png',
+        image: './src/assets/images/icons/splashscreen.png',
         resizeMode: 'contain',
         backgroundColor: '#212838',
       },
