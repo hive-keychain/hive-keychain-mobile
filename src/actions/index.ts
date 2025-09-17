@@ -2,6 +2,7 @@ import Toast from 'react-native-root-toast';
 import BackGroundUtils from 'src/background';
 import {AppThunk} from 'src/hooks/redux';
 import {translate} from 'utils/localize';
+import LockoutUtils from 'utils/lockout.utils';
 import {navigate} from 'utils/navigation.utils';
 import StorageUtils from 'utils/storage/storage.utils';
 import {AccountsPayload, ActionPayload, NullableString} from './interfaces';
@@ -17,6 +18,13 @@ export const unlock =
   (mk: string, errorCallback?: (b?: boolean) => void): AppThunk =>
   async (dispatch, getState) => {
     try {
+      // Check active lockout before attempting unlock
+      const isLocked = await LockoutUtils.checkActiveLockout();
+      if (isLocked) {
+        if (errorCallback) errorCallback();
+        return;
+      }
+
       const accounts = await StorageUtils.getAccounts(mk);
 
       if (accounts && accounts.list) {
@@ -31,6 +39,9 @@ export const unlock =
         };
         dispatch(init);
         BackGroundUtils.init(accounts.list);
+
+        // Reset failure counters on successful unlock
+        await LockoutUtils.reset();
       }
       if (getState().browser.shouldFocus) {
         navigate('Browser');
@@ -43,6 +54,13 @@ export const unlock =
           duration: Toast.durations.LONG,
         });
         console.log(e.message);
+        // Increment failure count and set lockout if thresholds reached
+        try {
+          await LockoutUtils.recordFailure();
+        } catch (err) {
+          console.log('Failed to update unlock lockout state', err);
+        }
+
         errorCallback();
       }
     }

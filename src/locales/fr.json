@@ -1,1 +1,21 @@
-{"enterPIN": "Entrez votre code PIN"}
+{
+  "enterPIN": "Entrez votre code PIN",
+  "lockout": {
+    "warning_after_third": "Attention : vous serez bloqué après la 5ᵉ tentative.",
+    "active": "Trop d'échecs. Réessayez dans {{time}}.",
+    "locked_for": "Trop d'échecs. Verrouillé pendant {{time}}.",
+    "duration": {
+      "hour": "1 heure",
+      "fifteen_minutes": "15 minutes",
+      "five_minutes": "5 minutes",
+      "minute": "1 minute",
+      "thirty_seconds": "30 secondes"
+    },
+    "time": {
+      "h": "h",
+      "m": "min",
+      "s": "s",
+      "separator": " "
+    }
+  }
+}

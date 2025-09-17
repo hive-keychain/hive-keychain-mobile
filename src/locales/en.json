@@ -1220,5 +1220,23 @@
   "encryption": {
     "save": "Use your biometrics for a faster login",
     "retrieve": "Use your biometrics to login"
+  },
+  "lockout": {
+    "warning_after_third": "Warning: You will be temporarily locked out after the 5th attempt.",
+    "active": "Too many failed attempts. Try again in {{time}}.",
+    "locked_for": "Too many failed attempts. Locked for {{time}}.",
+    "duration": {
+      "hour": "1 hour",
+      "fifteen_minutes": "15 minutes",
+      "five_minutes": "5 minutes",
+      "minute": "1 minute",
+      "thirty_seconds": "30 seconds"
+    },
+    "time": {
+      "h": "h",
+      "m": "m",
+      "s": "s",
+      "separator": " "
+    }
   }
 }
