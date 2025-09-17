@@ -48,14 +48,23 @@ const getIconFilePath = (
       <IconComponent
         style={[finalStyleOnIcon, {color: overrideColor}, extraStyle]}
         {...dimensionsProps}
+        fill={fill}
+        strokeWidth={strokeWidth}
       />
     );
+  }
+  const additionalProps: any = dimensionsProps;
+  if (fill) {
+    additionalProps.fill = fill;
+  }
+  if (strokeWidth) {
+    additionalProps.strokeWidth = strokeWidth;
   }
 
   return (
     <IconComponent
       style={[finalStyleOnIcon, {color: overrideColor}]}
-      {...dimensionsProps}
+      {...additionalProps}
     />
   );
 };

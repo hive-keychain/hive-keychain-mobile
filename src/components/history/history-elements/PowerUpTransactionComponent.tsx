@@ -54,8 +54,8 @@ const PowerUpTransactionComponent = ({
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
-            width={24}
-            height={24}
+            width={30}
+            height={30}
           />
         ) : null
       }

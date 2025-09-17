@@ -5,7 +5,6 @@ import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {DepositSavings} from 'src/interfaces/transaction.interface';
-import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format.utils';
 import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
@@ -48,8 +47,10 @@ const DepositSavingsTransactionComponent = ({
           <Icon
             name={Icons.SAVINGS}
             theme={theme}
+            height={26}
+            width={26}
             bgImage={<BackgroundIconRed />}
-            color={PRIMARY_RED_COLOR}
+            color={'white'}
           />
         ) : null
       }

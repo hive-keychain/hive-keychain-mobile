@@ -244,7 +244,8 @@ const WallettHistory = ({
                         </Text>
                         <Icon
                           name={Icons.ADD_CIRCLE_OUTLINE}
-                          theme={theme}
+                          fill={getColors(theme).iconBW}
+                          height={15}
                           additionalContainerStyle={{marginLeft: 5}}
                         />
                       </TouchableOpacity>
@@ -381,6 +382,7 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...fields_primary_text_1,
+      paddingTop: 1,
     },
   });
 

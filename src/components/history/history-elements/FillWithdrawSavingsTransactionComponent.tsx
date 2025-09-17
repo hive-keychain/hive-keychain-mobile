@@ -48,6 +48,8 @@ const FillWithdrawSavingsTransactionComponent = ({
             name={Icons.SAVINGS}
             theme={theme}
             bgImage={<BackgroundIconRed />}
+            height={26}
+            width={26}
             color={PRIMARY_RED_COLOR}
           />
         ) : null
