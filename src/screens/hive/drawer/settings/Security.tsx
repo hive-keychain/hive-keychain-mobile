@@ -5,6 +5,7 @@ import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import Toast from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -13,6 +14,7 @@ import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
+import {translate} from 'utils/localize';
 import SecureStoreUtils from 'utils/storage/secureStore.utils';
 
 const Security = ({mk}: PropsFromRedux) => {
@@ -42,22 +44,28 @@ const Security = ({mk}: PropsFromRedux) => {
         <CheckBoxPanel
           checked={isActive}
           onPress={async () => {
-            await AsyncStorage.setItem(
-              KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
-              (!isActive).toString(),
-            );
-            if (!isActive) {
-              await SecureStoreUtils.saveOnSecureStore(
-                KeychainStorageKeyEnum.SECURE_MK,
-                mk,
-                'settings.settings.security.biometrics',
+            try {
+              if (!isActive) {
+                await SecureStoreUtils.saveOnSecureStore(
+                  KeychainStorageKeyEnum.SECURE_MK,
+                  mk,
+                  'settings.settings.security.biometrics',
+                );
+              } else {
+                await SecureStoreUtils.deleteFromSecureStore(
+                  KeychainStorageKeyEnum.SECURE_MK,
+                );
+              }
+              await AsyncStorage.setItem(
+                KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+                (!isActive).toString(),
               );
-            } else {
-              await SecureStoreUtils.deleteFromSecureStore(
-                KeychainStorageKeyEnum.SECURE_MK,
+              setActive(!isActive);
+            } catch (error) {
+              Toast.show(
+                translate('settings.settings.security.error_no_biometrics'),
               );
             }
-            setActive(!isActive);
           }}
           title="settings.settings.security.checkbox"
         />
