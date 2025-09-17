@@ -188,6 +188,7 @@ export default () => {
         options={{
           title: translate('navigation.browser'),
           ...noHeader,
+          gestureEnabled: false,
         }}
         component={Browser}
       />
