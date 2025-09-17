@@ -1,5 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
 import BackGroundUtils from 'src/background';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {AppThunk} from 'src/hooks/redux';
 import {translate} from 'utils/localize';
 import LockoutUtils from 'utils/lockout.utils';
@@ -11,6 +13,8 @@ import {INIT_ACCOUNTS, LOCK, SIGN_UP, UNLOCK} from './types';
 export const signUp = (pwd: string) => {
   navigate('ChooseAccountOptionsScreen');
   const action: ActionPayload<NullableString> = {type: SIGN_UP, payload: pwd};
+  AsyncStorage.setItem(KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2');
+  StorageUtils.requireBiometricsLogin(pwd);
   return action;
 };
 

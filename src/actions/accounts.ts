@@ -1,15 +1,12 @@
 import {loadAccount} from 'actions/hive';
 import Toast from 'react-native-root-toast';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AppThunk} from 'src/hooks/redux';
-import {encryptJson} from 'utils/encrypt.utils';
 import validateKeys from 'utils/keyValidation.utils';
 import {translate} from 'utils/localize';
 import {navigate, resetStackAndNavigate} from 'utils/navigation.utils';
-import {
-  clearKeychain,
-  saveOnKeychain,
-} from 'utils/storage/keychainStorage.utils';
+import {EncryptedStorageUtils} from 'utils/storage/encryptedStorage.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 import {
   Account,
@@ -52,14 +49,17 @@ export const addAccount =
     };
     dispatch(action);
     const accounts = [...previousAccounts, {name, keys}];
-    const encrypted = encryptJson({list: accounts}, mk);
+    EncryptedStorageUtils.saveOnEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      {list: accounts},
+      mk,
+    );
 
     await WidgetUtils.addAccountBalanceList(
       name,
       accounts.map((acc) => acc.name),
     );
 
-    await saveOnKeychain('accounts', encrypted);
     if (multipleAccounts) {
       Toast.show(translate('toast.added_account', {account: name}));
       return;
@@ -71,7 +71,9 @@ export const addAccount =
   };
 
 export const forgetAccounts = (): AppThunk => async (dispatch) => {
-  clearKeychain('accounts');
+  EncryptedStorageUtils.removeFromEncryptedStorage(
+    KeychainStorageKeyEnum.ACCOUNTS,
+  );
   dispatch({
     type: FORGET_ACCOUNTS,
   });
@@ -85,8 +87,11 @@ export const forgetAccount =
     const previousAccounts = getState().accounts;
     const accounts = previousAccounts.filter((e) => e.name !== username);
     if (accounts.length) {
-      const encrypted = encryptJson({list: accounts}, mk);
-      await saveOnKeychain('accounts', encrypted);
+      await EncryptedStorageUtils.saveOnEncryptedStorage(
+        KeychainStorageKeyEnum.ACCOUNTS,
+        {list: accounts},
+        mk,
+      );
       const action: ActionPayload<AccountsPayload> = {
         type: FORGET_ACCOUNT,
         payload: {name: username},
@@ -163,8 +168,11 @@ export const reorderAccounts =
   (newAccounts: Account[]): AppThunk =>
   async (dispatch, getState) => {
     const mk = getState().auth.mk;
-    const encrypted = encryptJson({list: newAccounts}, mk);
-    await saveOnKeychain('accounts', encrypted);
+    await EncryptedStorageUtils.saveOnEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      {list: newAccounts},
+      mk,
+    );
     dispatch({
       type: UPDATE_ACCOUNTS,
       payload: {accounts: newAccounts},
@@ -177,8 +185,11 @@ const updateAccounts =
     const mk = getState().auth.mk;
     const previousAccounts = getState().accounts;
     const accounts = previousAccounts.map(mapper);
-    const encrypted = encryptJson({list: accounts}, mk);
-    await saveOnKeychain('accounts', encrypted);
+    EncryptedStorageUtils.saveOnEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      {list: accounts},
+      mk,
+    );
     const actions: ActionPayload<AccountsPayload> = {
       type: UPDATE_ACCOUNTS,
       payload: {accounts},

@@ -20,6 +20,10 @@ const saveOnEncryptedStorage = async (
   return await AsyncStorage.setItem(key, encryptedValue);
 };
 
+const removeFromEncryptedStorage = async (key: KeychainStorageKeyEnum) => {
+  await AsyncStorage.removeItem(key);
+};
+
 const clearEncryptedStorage = async () => {
   await AsyncStorage.clear();
 };
@@ -27,5 +31,6 @@ const clearEncryptedStorage = async () => {
 export const EncryptedStorageUtils = {
   getFromEncryptedStorage,
   saveOnEncryptedStorage,
+  removeFromEncryptedStorage,
   clearEncryptedStorage,
 };

@@ -22,26 +22,31 @@ const getAccounts = async (mk: string) => {
       [KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2'],
       [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
     ]);
-    try {
-      await clearKeychain('accounts');
-      await SecureStoreUtils.saveOnSecureStore(
-        KeychainStorageKeyEnum.SECURE_MK,
-        mk,
-      );
-      AsyncStorage.setItem(
-        KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
-        'true',
-      );
-    } catch (error) {
-      console.log('Refused biometrics encryption');
-    }
+    await clearKeychain('accounts');
+    await requireBiometricsLogin(mk);
     console.log('migratin old accounts to new storage');
     return decryptToJson(accountsEncrypted, mk);
   }
 };
 
+const requireBiometricsLogin = async (mk: string) => {
+  try {
+    await SecureStoreUtils.saveOnSecureStore(
+      KeychainStorageKeyEnum.SECURE_MK,
+      mk,
+    );
+    AsyncStorage.setItem(
+      KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+      'true',
+    );
+  } catch (error) {
+    console.log('Refused biometrics encryption');
+  }
+};
+
 const StorageUtils = {
   getAccounts,
+  requireBiometricsLogin,
 };
 
 export default StorageUtils;
