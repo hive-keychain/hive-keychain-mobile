@@ -1,5 +1,5 @@
 import {ActiveAccount} from 'actions/interfaces';
-import CurrencySavingLight from 'assets/images/wallet/currency-saving-light.svg';
+import CurrencySavingLight from 'assets/images/wallet/savings.svg';
 import Icon from 'components/hive/Icon';
 import {ConvertOperationProps} from 'components/operations/Convert';
 import {
