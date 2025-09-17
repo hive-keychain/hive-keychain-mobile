@@ -7,7 +7,7 @@ import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import About from 'screens/hive/settings/About';
+import About from 'screens/hive/drawer/settings/About';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';

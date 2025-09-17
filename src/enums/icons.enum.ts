@@ -5,7 +5,6 @@ export enum Icons {
   SUCCESS = 'SUCCESS',
 
   EXPORT = 'EXPORT',
-  HIVE_WHITE = 'HIVE_WHITE',
   SUPPORT = 'SUPPORT',
   HELP = 'HELP',
   TUTORIAL = 'TUTORIAL',
@@ -197,7 +196,6 @@ export const ICON_COMPONENTS: Record<Icons, React.FC<SvgProps>> = {
   [Icons.SUCCESS]: Success,
 
   [Icons.EXPORT]: Export,
-  [Icons.HIVE_WHITE]: Hive,
   [Icons.SUPPORT]: Support,
   [Icons.HELP]: Help,
   [Icons.TUTORIAL]: Tutorial,

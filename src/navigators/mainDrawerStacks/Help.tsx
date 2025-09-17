@@ -7,7 +7,7 @@ import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {SubMenuHelp} from 'screens/hive/help/Help';
+import {SubMenuHelp} from 'screens/hive/drawer/help/Help';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Dimensions} from 'src/interfaces/common.interface';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
