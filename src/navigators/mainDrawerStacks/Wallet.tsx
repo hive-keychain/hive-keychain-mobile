@@ -120,7 +120,6 @@ export default () => {
                         theme={theme}
                         additionalContainerStyle={styles.iconButton}
                       />
-                      <Icon theme={theme} name={Icons.CARET_UP} />
                     </View>
                   ),
                 })
@@ -218,7 +217,7 @@ const getStyles = (
       backgroundColor: getColors(theme).primaryBackground,
     },
     wrapperFixed: {
-      top: 55,
+      top: 55 + insets.top,
       bottom: undefined,
       left: undefined,
       right: 10,
@@ -229,6 +228,7 @@ const getStyles = (
       width: 'auto',
       backgroundColor: 'none',
       borderWidth: 0,
+      borderRadius: 53,
     },
     overlayButtonElement: {
       position: 'absolute',

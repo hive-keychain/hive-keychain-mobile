@@ -238,13 +238,11 @@ const getStyles = (
     },
     container: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderWidth: 1,
       borderRadius: 15.1,
       flex: 1,
       justifyContent: 'space-evenly',
       paddingVertical: 10,
       maxWidth: width * 0.75,
-      marginTop: insets.top,
     },
     headerText: {
       marginVertical: 8,
