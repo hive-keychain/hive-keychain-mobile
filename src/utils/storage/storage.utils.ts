@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {decryptToJson} from 'utils/encrypt.utils';
 import {EncryptedStorageUtils} from './encryptedStorage.utils';
-import {getFromKeychain} from './keychainStorage.utils';
+import {clearKeychain, getFromKeychain} from './keychainStorage.utils';
 import SecureStoreUtils from './secureStore.utils';
 
 const getAccounts = async (mk: string) => {
@@ -22,10 +22,19 @@ const getAccounts = async (mk: string) => {
       [KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2'],
       [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
     ]);
-    await SecureStoreUtils.saveOnSecureStore(
-      KeychainStorageKeyEnum.SECURE_MK,
-      mk,
-    );
+    try {
+      await clearKeychain('accounts');
+      await SecureStoreUtils.saveOnSecureStore(
+        KeychainStorageKeyEnum.SECURE_MK,
+        mk,
+      );
+      AsyncStorage.setItem(
+        KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+        'true',
+      );
+    } catch (error) {
+      console.log('Refused biometrics encryption');
+    }
     console.log('migratin old accounts to new storage');
     return decryptToJson(accountsEncrypted, mk);
   }
