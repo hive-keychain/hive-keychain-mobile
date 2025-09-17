@@ -30,6 +30,13 @@ export default ({config}) => ({
           NSLocationWhenInUseUsageDescription:
             'We need your location to load maps.',
           ITSAppUsesNonExemptEncryption: false,
+          CFBundleURLTypes: [
+            {
+              CFBundleTypeRole: 'Editor',
+              CFBundleURLName: 'has',
+              CFBundleURLSchemes: ['has', 'hive'],
+            },
+          ],
         },
         googleServicesFile: process.env.GOOGLE_SERVICES_PLIST,
       },
