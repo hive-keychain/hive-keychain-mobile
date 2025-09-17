@@ -29,6 +29,7 @@ export default ({config}) => ({
         infoPlist: {
           NSLocationWhenInUseUsageDescription:
             'We need your location to load maps.',
+          NSFaceIDUsageDescription: 'Enable Face ID to unlock the app faster',
           ITSAppUsesNonExemptEncryption: false,
           CFBundleURLTypes: [
             {
