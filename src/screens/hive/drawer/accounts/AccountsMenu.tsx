@@ -37,6 +37,7 @@ const Accounts = () => {
         theme={theme}
         onPress={() => navigate('AccountManagementScreen')}
         iconImage={<Icon name={Icons.ACCOUNT_KEY} color={PRIMARY_RED_COLOR} />}
+        drawBottomLine={true}
       />
       <MenuItem
         labelTranslationKey={'navigation.export_accounts_qr'}

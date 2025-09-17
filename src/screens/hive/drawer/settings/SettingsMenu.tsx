@@ -63,6 +63,14 @@ const SettingsMenu = () => {
         drawBottomLine
       />
       <MenuItem
+        labelTranslationKey={'settings.settings.security.title'}
+        theme={theme}
+        onPress={() => navigate('SecurityScreen')}
+        iconImage={<Icon name={Icons.ACCOUNT_KEY} color={PRIMARY_RED_COLOR} />}
+        additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
+        drawBottomLine
+      />
+      <MenuItem
         labelTranslationKey={'settings.settings.multisig.title'}
         theme={theme}
         onPress={() => navigate('SettingsMultisigScreen')}
@@ -75,6 +83,7 @@ const SettingsMenu = () => {
             height={45}
           />
         }
+        drawBottomLine
       />
       <MenuItem
         labelTranslationKey={'settings.settings.notifications.title'}
@@ -97,6 +106,7 @@ const SettingsMenu = () => {
           </View>
         }
         additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
+        drawBottomLine
       />
 
       <MenuItem
@@ -112,13 +122,6 @@ const SettingsMenu = () => {
             height={55}
           />
         }
-        additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
-      />
-      <MenuItem
-        labelTranslationKey={'settings.settings.security.title'}
-        theme={theme}
-        onPress={() => navigate('SecurityScreen')}
-        iconImage={<Icon name={Icons.ACCOUNT_KEY} color={PRIMARY_RED_COLOR} />}
         additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
       />
     </View>
