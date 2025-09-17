@@ -22,7 +22,6 @@ export enum Icons {
   INTEREST = 'INTEREST',
 
   DELEGATE_TOKEN = 'DELEGATE_VESTING_SHARES',
-  ACCOUNT_CREATE = 'ACCOUNT_CREATE',
   CONVERT = 'CONVERT',
   EXPAND_MORE = 'EXPAND_MORE',
   EXPAND_LESS = 'EXPAND_LESS',
@@ -85,6 +84,9 @@ export enum Icons {
   MOBILE = 'MOBILE',
   SETTINGS_MULTISIG = 'SETTINGS_MULTISIG',
   SETTINGS_NOTIFICATIONS = 'SETTINGS_NOTIFICATIONS',
+  ACCOUNT_KEY = 'ACCOUNT_KEY',
+  ADD_ACCOUNT = 'ADD_ACCOUNT',
+  CREATE_ACCOUNT = 'CREATE_ACCOUNT',
   CALENDAR = 'CALENDAR',
 
   //Browser Swipe
@@ -146,7 +148,6 @@ import TwoFingersTap from 'assets/images/browser/two-fingers-tap.svg';
 // Menus & Settings
 import Help from 'assets/images/drawer/help.svg';
 import Accounts from 'assets/images/menus/accounts.svg';
-import AccountCreate from 'assets/images/menus/accounts/account-create.svg';
 import Governance from 'assets/images/menus/governance.svg';
 import Support from 'assets/images/menus/help/support.svg';
 import Tutorial from 'assets/images/menus/help/tutorial.svg';
@@ -159,6 +160,11 @@ import SettingsNotifications from 'assets/images/menus/settings/settings-notific
 import SettingsOperations from 'assets/images/menus/settings/settings-operations.svg';
 import SettingsRpc from 'assets/images/menus/settings/settings-rpc.svg';
 import SettingsWheel from 'assets/images/menus/settings/settings-wheel.svg';
+// Account menu
+import AddAccount from 'assets/images/menus/accounts/add-account.svg';
+import CreateAccount from 'assets/images/menus/accounts/create-account.svg';
+import Key from 'assets/images/menus/accounts/key.svg';
+
 import Theme from 'assets/images/menus/theme.svg';
 
 // Wallet & Hive assets
@@ -213,7 +219,6 @@ export const ICON_COMPONENTS: Record<Icons, React.FC<SvgProps>> = {
   [Icons.INTEREST]: Gift,
 
   [Icons.DELEGATE_TOKEN]: DelegateToken,
-  [Icons.ACCOUNT_CREATE]: AccountCreate,
   [Icons.CONVERT]: Convert,
   [Icons.EXPAND_MORE]: ExpandMore,
   [Icons.EXPAND_LESS]: ExpandLess,
@@ -277,7 +282,9 @@ export const ICON_COMPONENTS: Record<Icons, React.FC<SvgProps>> = {
   [Icons.SETTINGS_MULTISIG]: SettingsMultisig,
   [Icons.SETTINGS_NOTIFICATIONS]: SettingsNotifications,
   [Icons.CALENDAR]: Calendar,
-
+  [Icons.ACCOUNT_KEY]: Key,
+  [Icons.ADD_ACCOUNT]: AddAccount,
+  [Icons.CREATE_ACCOUNT]: CreateAccount,
   [Icons.SWIPE_LEFT]: SwipeLeft,
   [Icons.SWIPE_RIGHT]: SwipeRight,
   [Icons.SWIPE_DOWN]: SwipeDown,

@@ -114,6 +114,13 @@ const SettingsMenu = () => {
         }
         additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
       />
+      <MenuItem
+        labelTranslationKey={'settings.settings.security.title'}
+        theme={theme}
+        onPress={() => navigate('SecurityScreen')}
+        iconImage={<Icon name={Icons.ACCOUNT_KEY} color={PRIMARY_RED_COLOR} />}
+        additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
+      />
     </View>
   );
 };
