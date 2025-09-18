@@ -458,7 +458,6 @@ const getStyles = (
 
 const connector = connect(
   (state: RootState) => {
-    console.log('activescreen', state.navigation.activeScreen);
     return {
       show: state.floatingBar.showBasedOnScroll && !state.floatingBar.hide,
       isProposalRequestDisplayed: state.floatingBar.isProposalRequestDisplayed,

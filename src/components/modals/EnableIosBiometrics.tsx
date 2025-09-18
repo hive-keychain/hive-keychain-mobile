@@ -1,11 +1,16 @@
 import EllipticButton from 'components/form/EllipticButton';
 import SafeArea from 'components/ui/SafeArea';
+import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Width} from 'src/interfaces/common.interface';
-import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {
+  BACKGROUNDDARKBLUE,
+  getColors,
+  PRIMARY_RED_COLOR,
+} from 'src/styles/colors';
 import {getSpacing} from 'src/styles/spacing';
 import {
   body_primary_body_3,
@@ -29,7 +34,7 @@ const EnableIosBiometrics = ({mk, data}: PropsFromRedux & Props) => {
   const styles = getDimensionedStyles({width}, theme);
   const {title} = data;
   return (
-    <SafeArea skipTop style={styles.flexSpaceAround}>
+    <SafeArea skipTop style={{flex: 1}}>
       <View>
         <Text
           style={[
@@ -40,10 +45,18 @@ const EnableIosBiometrics = ({mk, data}: PropsFromRedux & Props) => {
           {title}
         </Text>
       </View>
+      <View style={{flex: 1}}>
+        <Separator />
+        <Text style={styles.text}>
+          {translate(
+            'settings.settings.security.enable_biometrics_description',
+          )}
+        </Text>
+      </View>
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           alignItems: 'center',
         }}>
         <EllipticButton
@@ -51,9 +64,11 @@ const EnableIosBiometrics = ({mk, data}: PropsFromRedux & Props) => {
           onPress={() => {
             goBack();
           }}
-          isWarningButton
-          style={[styles.warningProceedButton, {backgroundColor: 'grey'}]}
-          additionalTextStyle={{...button_link_primary_medium, color: 'white'}}
+          style={[styles.warningProceedButton, {backgroundColor: 'white'}]}
+          additionalTextStyle={{
+            ...button_link_primary_medium,
+            color: BACKGROUNDDARKBLUE,
+          }}
         />
         <EllipticButton
           title={translate('settings.settings.security.enable_biometrics')}
@@ -86,13 +101,14 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       color: getColors(theme).secondaryText,
       ...body_primary_body_3,
       lineHeight: 12 * 2,
+      paddingHorizontal: getSpacing(width).mainMarginHorizontal,
     },
     textCentered: {
       textAlign: 'center',
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,
-      flex: 1,
+      width: '40%',
     },
     marginText: {
       marginHorizontal: getSpacing(width).mainMarginHorizontal,
