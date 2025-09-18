@@ -5,4 +5,5 @@ export enum ModalComponent {
   HAS_ERROR = 'HAS_ERROR',
   HAS_INFO = 'HAS_INFO',
   SWAP_INFO = 'SWAP_INFO',
+  ENABLE_IOS_BIOMETRICS = 'ENABLE_IOS_BIOMETRICS',
 }

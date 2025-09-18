@@ -5,6 +5,7 @@ import HASChallengeRequest from 'components/hive_authentication_service/Challeng
 import HASError from 'components/hive_authentication_service/Error';
 import HASInfo from 'components/hive_authentication_service/Info';
 import CustomModal from 'components/modals/CustomModal';
+import EnableIosBiometrics from 'components/modals/EnableIosBiometrics';
 import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
 import {StatusBar, StyleProp, ViewStyle} from 'react-native';
@@ -65,6 +66,8 @@ export default ({navigation, route}: ModalNavigationProps) => {
         return <HASInfo />;
       case ModalComponent.SWAP_INFO:
         return <SwapInfo />;
+      case ModalComponent.ENABLE_IOS_BIOMETRICS:
+        return <EnableIosBiometrics data={data as any} />;
       default:
         return null;
     }

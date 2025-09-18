@@ -2,8 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as LocalAuthentication from 'expo-local-authentication';
 import {Platform} from 'react-native';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {ModalComponent} from 'src/enums/modal.enum';
 import {decryptToJson} from 'utils/encrypt.utils';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation.utils';
 import {EncryptedStorageUtils} from './encryptedStorage.utils';
 import {clearKeychain, getFromKeychain} from './keychainStorage.utils';
 import SecureStoreUtils from './secureStore.utils';
@@ -26,6 +28,7 @@ const getAccounts = async (mk: string) => {
       [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
     ]);
     await clearKeychain('accounts');
+    //Instead, show the modal and ask in there.
     await requireBiometricsLogin(mk, 'encryption.save');
     console.log('migratin old accounts to new storage');
     return decryptToJson(accountsEncrypted, mk);
@@ -34,23 +37,30 @@ const getAccounts = async (mk: string) => {
 
 const requireBiometricsLogin = async (mk: string, title: string) => {
   try {
-    const isBiometricsLoginEnabled = await requireBiometricsLoginIOS(title);
-    if (isBiometricsLoginEnabled !== BiometricsLoginStatus.ENABLED)
-      throw new Error(isBiometricsLoginEnabled);
-    await SecureStoreUtils.saveOnSecureStore(
-      KeychainStorageKeyEnum.SECURE_MK,
-      mk,
-      title,
-    );
-    AsyncStorage.setItem(
-      KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
-      'true',
-    );
+    if (Platform.OS === 'ios') {
+      navigate('ModalScreen', {
+        name: ModalComponent.ENABLE_IOS_BIOMETRICS,
+        data: {title: translate(title)},
+      });
+    } else {
+      saveOnStore(mk, title);
+    }
   } catch (error) {
     console.log('Refused biometrics encryption');
   }
 };
 
+const saveOnStore = async (mk: string, title: string) => {
+  await SecureStoreUtils.saveOnSecureStore(
+    KeychainStorageKeyEnum.SECURE_MK,
+    mk,
+    title,
+  );
+  AsyncStorage.setItem(
+    KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+    'true',
+  );
+};
 export enum BiometricsLoginStatus {
   ENABLED = 'ENABLED',
   DISABLED = 'DISABLED',
@@ -89,6 +99,7 @@ const StorageUtils = {
   getAccounts,
   requireBiometricsLogin,
   requireBiometricsLoginIOS,
+  saveOnStore,
 };
 
 export default StorageUtils;
