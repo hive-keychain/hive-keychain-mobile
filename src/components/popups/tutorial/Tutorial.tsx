@@ -35,7 +35,11 @@ interface Props {
   navigation: WalletNavigation;
 }
 
-const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
+const Tutorial = ({
+  navigation,
+  addTab,
+  activeScreen,
+}: Props & PropsFromRedux): null => {
   const [show, setShow] = useState(false);
   const {theme} = useThemeContext();
 
@@ -54,7 +58,7 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
   };
 
   useEffect(() => {
-    if (show) {
+    if (show && activeScreen !== 'ModalScreen') {
       navigate('ModalScreen', {
         name: 'TutorialPopup',
         modalContent: renderContent(),
@@ -62,7 +66,7 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
         modalContainerStyle: getModalBaseStyle(theme).roundedTop,
       } as ModalScreenProps);
     }
-  }, [show]);
+  }, [show, activeScreen]);
 
   const handleClick = async (option: 'skip' | 'show') => {
     const hidePopup = async () => {
@@ -182,7 +186,7 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
 
 const connector = connect(
   (state: RootState) => {
-    return {};
+    return {activeScreen: state.navigation.activeScreen};
   },
   {addTab},
 );
