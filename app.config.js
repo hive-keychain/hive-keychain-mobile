@@ -1,3 +1,5 @@
+import base from './app.json';
+
 export default ({config}) => ({
   ...config,
   expo: {
@@ -28,7 +30,6 @@ export default ({config}) => ({
         infoPlist: {
           NSLocationWhenInUseUsageDescription:
             'We need your location to load maps.',
-          NSFaceIDUsageDescription: 'Enable Face ID to unlock the app faster',
           ITSAppUsesNonExemptEncryption: false,
           CFBundleURLTypes: [
             {
@@ -41,6 +42,7 @@ export default ({config}) => ({
         googleServicesFile: process.env.GOOGLE_SERVICES_PLIST,
       },
       android: {
+        ...base.expo.android,
         package:
           process.env.APP_VARIANT !== 'prod'
             ? 'com.mobilekeychain.dev'
@@ -113,6 +115,13 @@ export default ({config}) => ({
         ],
         '@react-native-firebase/app',
         '@react-native-firebase/crashlytics',
+        [
+          'expo-secure-store',
+          {
+            configureAndroidBackup: true,
+            faceIDPermission: 'Enable biometrics login in $(PRODUCT_NAME)',
+          },
+        ],
       ],
     },
   },

@@ -14,6 +14,7 @@ import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import SecureStoreUtils from 'utils/storage/secureStore.utils';
+import StorageUtils, {BiometricsLoginStatus} from 'utils/storage/storage.utils';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;
 const Unlock = ({
@@ -36,6 +37,9 @@ const Unlock = ({
         isBiometricsLoginEnabled[1] === 'true' &&
         !ignoreNextBiometrics
       ) {
+        const isBiometricsLoginEnabled =
+          await StorageUtils.requireBiometricsLoginIOS('encryption.retrieve');
+        if (isBiometricsLoginEnabled !== BiometricsLoginStatus.ENABLED) return;
         const pin = await SecureStoreUtils.getFromSecureStore(
           KeychainStorageKeyEnum.SECURE_MK,
         );

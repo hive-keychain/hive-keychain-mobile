@@ -13,8 +13,9 @@
     "bump:minor": "npx react-native bump-version --type minor",
     "build:android": "eas build -p android",
     "build:ios": "eas build -p ios",
+    "copy:aab": "echo builds/keychain.aab | pbcopy && echo '👉 builds/keychain.aab copied to clipboard'",
     "localBuild:android": "eas build --platform android --local --output ./builds/keychain.aab",
-    "localSubmit:android": "eas submit --platform android  --profile production",
+    "localSubmit:android": "npm run copy:aab && eas submit --platform android  --profile production",
     "submit:android": "eas submit -p android --profile internal",
     "submit:ios": "source .env && EXPO_APPLE_APP_SPECIFIC_PASSWORD=$EXPO_APPLE_APP_SPECIFIC_PASSWORD eas submit -p ios --profile production",
     "crowdin:pull": "crowdin download",
@@ -95,7 +96,8 @@
     "sscjs": "0.0.9",
     "stream": "0.0.3",
     "valid-url": "1.0.9",
-    "validator": "13.15.15"
+    "validator": "13.15.15",
+    "expo-local-authentication": "16.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

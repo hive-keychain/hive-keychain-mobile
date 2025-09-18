@@ -604,7 +604,8 @@
         "disclaimer": "You can use your biometrics for a faster login experience",
         "biometrics": "Enable biometrics login",
         "checkbox": "Biometrics login",
-        "error_no_biometrics": "No biometrics enrolled"
+        "error_no_biometrics": "No biometrics enrolled",
+        "biometrics_refused": "Enable Fingerprint or Face ID for Hive Keychain in your iOS settings"
       },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",

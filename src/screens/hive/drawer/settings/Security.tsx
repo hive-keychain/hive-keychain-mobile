@@ -16,6 +16,7 @@ import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import SecureStoreUtils from 'utils/storage/secureStore.utils';
+import StorageUtils, {BiometricsLoginStatus} from 'utils/storage/storage.utils';
 
 const Security = ({mk}: PropsFromRedux) => {
   const [isActive, setActive] = useState(false);
@@ -46,6 +47,12 @@ const Security = ({mk}: PropsFromRedux) => {
           onPress={async () => {
             try {
               if (!isActive) {
+                const isBiometricsAvailable =
+                  await StorageUtils.requireBiometricsLoginIOS(
+                    'settings.settings.security.biometrics',
+                  );
+                if (isBiometricsAvailable !== BiometricsLoginStatus.ENABLED)
+                  throw new Error(isBiometricsAvailable);
                 await SecureStoreUtils.saveOnSecureStore(
                   KeychainStorageKeyEnum.SECURE_MK,
                   mk,
@@ -61,10 +68,17 @@ const Security = ({mk}: PropsFromRedux) => {
                 (!isActive).toString(),
               );
               setActive(!isActive);
-            } catch (error) {
-              Toast.show(
-                translate('settings.settings.security.error_no_biometrics'),
-              );
+            } catch (error: any) {
+              if (error.message === BiometricsLoginStatus.REFUSED) {
+                Toast.show(
+                  translate('settings.settings.security.biometrics_refused'),
+                  {duration: Toast.durations.LONG},
+                );
+              } else {
+                Toast.show(
+                  translate('settings.settings.security.error_no_biometrics'),
+                );
+              }
             }
           }}
           title="settings.settings.security.checkbox"

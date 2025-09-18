@@ -1,6 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalAuthentication from 'expo-local-authentication';
+import {Platform} from 'react-native';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {decryptToJson} from 'utils/encrypt.utils';
+import {translate} from 'utils/localize';
 import {EncryptedStorageUtils} from './encryptedStorage.utils';
 import {clearKeychain, getFromKeychain} from './keychainStorage.utils';
 import SecureStoreUtils from './secureStore.utils';
@@ -31,6 +34,9 @@ const getAccounts = async (mk: string) => {
 
 const requireBiometricsLogin = async (mk: string, title: string) => {
   try {
+    const isBiometricsLoginEnabled = await requireBiometricsLoginIOS(title);
+    if (isBiometricsLoginEnabled !== BiometricsLoginStatus.ENABLED)
+      throw new Error(isBiometricsLoginEnabled);
     await SecureStoreUtils.saveOnSecureStore(
       KeychainStorageKeyEnum.SECURE_MK,
       mk,
@@ -45,9 +51,44 @@ const requireBiometricsLogin = async (mk: string, title: string) => {
   }
 };
 
+export enum BiometricsLoginStatus {
+  ENABLED = 'ENABLED',
+  DISABLED = 'DISABLED',
+  REFUSED = 'REFUSED',
+}
+
+const requireBiometricsLoginIOS = async (title: string) => {
+  if (Platform.OS !== 'ios') return BiometricsLoginStatus.ENABLED;
+  const isBiometricsAvailable = await LocalAuthentication.isEnrolledAsync();
+  if (isBiometricsAvailable) {
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: translate(title),
+      disableDeviceFallback: true,
+    });
+    if (!result.success) {
+      await AsyncStorage.setItem(
+        KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_REFUSED,
+        'true',
+      );
+    }
+    return result.success
+      ? BiometricsLoginStatus.ENABLED
+      : BiometricsLoginStatus.DISABLED;
+  } else {
+    const isBiometricsLoginRefused = await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_REFUSED,
+    );
+
+    return isBiometricsLoginRefused === 'true'
+      ? BiometricsLoginStatus.REFUSED
+      : BiometricsLoginStatus.DISABLED;
+  }
+};
+
 const StorageUtils = {
   getAccounts,
   requireBiometricsLogin,
+  requireBiometricsLoginIOS,
 };
 
 export default StorageUtils;
