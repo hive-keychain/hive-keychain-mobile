@@ -358,7 +358,7 @@ const DropdownModal = ({
     }) => {
       if (canBeReordered) {
         return (
-          <GestureHandlerRootView>
+          <GestureHandlerRootView style={{flexShrink: 1}}>
             <DraggableFlatList
               {...props}
               onDragEnd={onDragEnd}
@@ -556,7 +556,7 @@ const DropdownModal = ({
             maxToRenderPerBatch={12}
             windowSize={7}
             ListHeaderComponent={<Separator />}
-            ListFooterComponent={<Separator />}
+            ListFooterComponent={<Separator height={50} />}
             ListEmptyComponent={
               <View
                 style={[
