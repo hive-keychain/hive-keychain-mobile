@@ -15,8 +15,6 @@ const getAccounts = async (mk: string) => {
     KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
   ));
   if (version === 2) {
-    console.log('accounts from new storage');
-
     return await EncryptedStorageUtils.getFromEncryptedStorage(
       KeychainStorageKeyEnum.ACCOUNTS,
       mk,
@@ -28,9 +26,7 @@ const getAccounts = async (mk: string) => {
       [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
     ]);
     await clearKeychain('accounts');
-    //Instead, show the modal and ask in there.
     await requireBiometricsLogin(mk, 'encryption.save');
-    console.log('migratin old accounts to new storage');
     return decryptToJson(accountsEncrypted, mk);
   }
 };

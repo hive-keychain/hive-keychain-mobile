@@ -30,8 +30,6 @@ const Unlock = ({
       KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
       KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
     ]).then(async ([accountStorageVersion, isBiometricsLoginEnabled]) => {
-      console.log('accountStorageVersion', accountStorageVersion);
-      console.log('isBiometricsLoginEnabled', isBiometricsLoginEnabled);
       if (
         accountStorageVersion[1] === '2' &&
         isBiometricsLoginEnabled[1] === 'true' &&
