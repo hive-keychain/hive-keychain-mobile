@@ -1,14 +1,13 @@
 import dotenv from 'dotenv';
 import base from './app.json';
 dotenv.config();
-console.log(process.env.APP_VARIANT);
 export default ({config}) => ({
   ...config,
   expo: {
     expo: {
       name: 'Hive Keychain',
       slug: 'hive-keychain',
-      version: '2.9.2',
+      version: '2.9.3',
       orientation: 'portrait',
       icon: './src/assets/images/icons/ios_launcher.png',
       userInterfaceStyle: 'light',
