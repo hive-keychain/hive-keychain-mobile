@@ -6,56 +6,21 @@ const saveOnSecureStore = async (
   string: string,
   title: string,
 ) => {
-  const chunks = chunkArray(string.split(''), 300).map((e) => e.join(''));
-  await SecureStore.setItemAsync(`${radix}_length`, chunks.length.toString(), {
+  await SecureStore.setItemAsync(radix, string, {
+    keychainAccessible: SecureStore.WHEN_UNLOCKED,
     keychainService: radix,
+    requireAuthentication: true,
+    authenticationPrompt: translate(title),
   });
-  for (const [i, chunk] of chunks.entries()) {
-    await SecureStore.setItemAsync(
-      `${radix}_${i}`,
-      chunk,
-      i === 0
-        ? {
-            keychainAccessible: SecureStore.WHEN_UNLOCKED,
-            keychainService: radix,
-            requireAuthentication: true,
-            authenticationPrompt: translate(title),
-          }
-        : {keychainService: radix},
-    );
-  }
 };
 
 const getFromSecureStore = async (radix: string) => {
-  let string = '';
-  let i = 0;
-  const password = await SecureStore.getItemAsync(`${radix}_length`, {
+  return await SecureStore.getItemAsync(radix, {
     keychainService: radix,
+    authenticationPrompt: translate('encryption.retrieve'),
+    requireAuthentication: true,
+    keychainAccessible: SecureStore.WHEN_UNLOCKED,
   });
-  if (password) {
-    const length = +password;
-    while (i < length) {
-      try {
-        const cred = await SecureStore.getItemAsync(
-          `${radix}_${i}`,
-          i === 0
-            ? {
-                keychainService: radix,
-                authenticationPrompt: translate('encryption.retrieve'),
-                requireAuthentication: true,
-                keychainAccessible: SecureStore.WHEN_UNLOCKED,
-              }
-            : {keychainService: radix},
-        );
-        if (cred) string += cred;
-        i++;
-      } catch (e) {
-        console.log('e', e);
-        throw e;
-      }
-    }
-    return string;
-  }
 };
 
 const deleteFromSecureStore = async (radix: string) => {

@@ -1,5 +1,7 @@
+import dotenv from 'dotenv';
 import base from './app.json';
-
+dotenv.config();
+console.log(process.env.APP_VARIANT);
 export default ({config}) => ({
   ...config,
   expo: {
@@ -25,6 +27,7 @@ export default ({config}) => ({
         backgroundColor: '#212838',
       },
       ios: {
+        ...base.expo.ios,
         bundleIdentifier: 'com.stoodkev.mobileKeychain',
         supportsTablet: true,
         infoPlist: {
