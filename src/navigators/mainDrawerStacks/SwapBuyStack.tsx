@@ -56,7 +56,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('Wallet')}
+              onPress={() => navigation.navigate('WalletScreen')}
               additionalContainerStyle={styles.marginRight}
             />
           ),
@@ -116,7 +116,7 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate('SwapBuy')}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
@@ -125,7 +125,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('Wallet')}
+              onPress={() => navigation.navigate('WalletScreen')}
               additionalContainerStyle={styles.marginRight}
             />
           ),

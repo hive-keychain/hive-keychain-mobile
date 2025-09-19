@@ -85,7 +85,7 @@ const ConfirmationPage = ({
       loadAccount(user.name, true);
     }
     setLoading(false);
-    resetStackAndNavigate('Wallet');
+    resetStackAndNavigate('WalletScreen');
   };
 
   return (

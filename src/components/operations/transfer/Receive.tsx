@@ -48,7 +48,7 @@ const Receive = ({
       if (res) {
         clearInterval(interval);
         showModal('toast.receive_success', MessageModalType.SUCCESS);
-        resetStackAndNavigate('Wallet');
+        resetStackAndNavigate('WalletScreen');
       }
     }, 3000);
   }, []);
