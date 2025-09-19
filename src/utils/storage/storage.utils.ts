@@ -38,6 +38,7 @@ const getAccounts = async (mk: string) => {
 const requireBiometricsLogin = async (mk: string, title: string) => {
   try {
     if (Platform.OS === 'ios') {
+      if (!(await LocalAuthentication.isEnrolledAsync())) return;
       navigate('ModalScreen', {
         name: ModalComponent.ENABLE_IOS_BIOMETRICS,
         data: {title: translate(title)},
