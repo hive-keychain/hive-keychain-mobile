@@ -15,11 +15,9 @@ import {Dimensions} from 'src/interfaces/common.interface';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
-  RED_SHADOW_COLOR,
   getColors,
 } from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
   body_primary_body_1,
   button_link_primary_medium,
@@ -105,18 +103,7 @@ const Tutorial = ({
           <EllipticButton
             title={translate('common.show')}
             onPress={() => handleClick('show')}
-            style={[
-              styles.warningProceedButton,
-              generateBoxShadowStyle(
-                0,
-                13,
-                RED_SHADOW_COLOR,
-                1,
-                25,
-                30,
-                RED_SHADOW_COLOR,
-              ),
-            ]}
+            style={[styles.warningProceedButton]}
             additionalTextStyle={styles.textButtonFilled}
           />
         </View>

@@ -6,11 +6,7 @@ import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Width} from 'src/interfaces/common.interface';
-import {
-  BACKGROUNDDARKBLUE,
-  getColors,
-  PRIMARY_RED_COLOR,
-} from 'src/styles/colors';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getSpacing} from 'src/styles/spacing';
 import {
   body_primary_body_3,
@@ -64,11 +60,8 @@ const EnableIosBiometrics = ({mk, data}: PropsFromRedux & Props) => {
           onPress={() => {
             goBack();
           }}
-          style={[styles.warningProceedButton, {backgroundColor: 'white'}]}
-          additionalTextStyle={{
-            ...button_link_primary_medium,
-            color: BACKGROUNDDARKBLUE,
-          }}
+          style={[styles.outlineButton]}
+          additionalTextStyle={styles.textButtonFilledSkip}
         />
         <EllipticButton
           title={translate('settings.settings.security.enable_biometrics')}
@@ -116,6 +109,16 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     flexSpaceAround: {
       flex: 1,
       justifyContent: 'space-around',
+    },
+    textButtonFilledSkip: {
+      ...button_link_primary_medium,
+      fontSize: 13,
+      color: getColors(theme).primaryText,
+    },
+    outlineButton: {
+      borderColor: getColors(theme).borderContrast,
+      borderWidth: 1,
+      width: '40%',
     },
   });
 

@@ -41,6 +41,7 @@ const requireBiometricsLogin = async (mk: string, title: string) => {
       navigate('ModalScreen', {
         name: ModalComponent.ENABLE_IOS_BIOMETRICS,
         data: {title: translate(title)},
+        fixedHeight: 0.35,
       });
     } else {
       saveOnStore(mk, title);
