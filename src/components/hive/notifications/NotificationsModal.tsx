@@ -189,6 +189,7 @@ const NotificationsModal = ({
           theme={theme}
           element={flatListRef}
           isScrollView={false}
+          addInsetBottom={false}
         />
       )}
       {settingNotifications && (
@@ -236,7 +237,7 @@ const getStyles = (theme: Theme, width: number) =>
       width: '40%',
     },
     loaderContainer: {
-      flex: 1,
+      flexGrow: 1,
       justifyContent: 'center',
       alignItems: 'center',
     },

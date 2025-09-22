@@ -17,9 +17,14 @@ interface BackToTopButtonProps {
   theme: Theme;
   isScrollView?: boolean;
   additionalOverlayButtonStyle?: StyleProp<ViewStyle>;
+  addInsetBottom?: boolean;
 }
 
-export const BackToTopButton = (props: BackToTopButtonProps) => {
+export const BackToTopButton = ({
+  addInsetBottom = true,
+  ...props
+}: BackToTopButtonProps) => {
+  const styles = getStyles(addInsetBottom);
   const scrollToTop = () => {
     if (props.element && props.element.current) {
       try {
@@ -50,16 +55,17 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  overlayButton: {
-    justifyContent: 'center',
-    borderRadius: 100,
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: initialWindowMetrics.insets.bottom + 10,
-    right: 10,
-    width: 45,
-    height: 45,
-    backgroundColor: PRIMARY_RED_COLOR,
-  },
-});
+const getStyles = (addInsetBottom: boolean) =>
+  StyleSheet.create({
+    overlayButton: {
+      justifyContent: 'center',
+      borderRadius: 100,
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: addInsetBottom ? 10 + initialWindowMetrics.insets.bottom : 10,
+      right: 10,
+      width: 45,
+      height: 45,
+      backgroundColor: PRIMARY_RED_COLOR,
+    },
+  });
