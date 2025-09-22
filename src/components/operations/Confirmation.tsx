@@ -1,3 +1,4 @@
+import {NavigationProp} from '@react-navigation/native';
 import {loadAccount} from 'actions/hive';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
@@ -27,7 +28,6 @@ import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation.utils';
 import ConfirmationCard from './ConfirmationCard';
 
 export type ConfirmationPageProps = {
@@ -48,8 +48,10 @@ const ConfirmationPage = ({
   user,
   colors,
   tokens,
+  navigation,
 }: {
   route: ConfirmationPageRoute;
+  navigation: NavigationProp<any>;
 } & PropsFromRedux) => {
   const {
     onSend,
@@ -85,7 +87,7 @@ const ConfirmationPage = ({
       loadAccount(user.name, true);
     }
     setLoading(false);
-    resetStackAndNavigate('WalletScreen');
+    navigation.getParent()?.goBack();
   };
 
   return (

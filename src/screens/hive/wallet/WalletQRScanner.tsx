@@ -1,4 +1,4 @@
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {NavigationProp, RouteProp, useRoute} from '@react-navigation/native';
 import {addAccount} from 'actions/index';
 import {Account} from 'actions/interfaces';
 import QRCode from 'components/qr_code';
@@ -13,14 +13,13 @@ import {KeyUtils} from 'utils/key.utils';
 import {validateFromObject} from 'utils/keyValidation.utils';
 import {handleAddAccountQR, handleUrl} from 'utils/linking.utils';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation.utils';
 
 type AnyWalletQRRoute = RouteProp<
   Record<string, {wallet?: boolean} | undefined>,
   string
 >;
 
-const WalletQRScanner = () => {
+const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
   const route = useRoute<AnyWalletQRRoute>();
   const [processingAccounts, setProcessingAccounts] = useState(false);
   const [qrDataAccounts, setQrDataAccounts] = useState<Account[]>([]);
@@ -77,7 +76,7 @@ const WalletQRScanner = () => {
         }
       } else if (data.startsWith('keychain://add_account=')) {
         const wallet = route.params ? route.params.wallet : false;
-        handleAddAccountQR(data, wallet);
+        handleAddAccountQR(data, wallet, true);
       } else handleUrl(data, true);
     } catch (e) {
       console.log(e, data);
@@ -135,12 +134,14 @@ const WalletQRScanner = () => {
         keys = await validateFromObject(dataAcc);
       }
       if (wallet && KeyUtils.hasKeys(keys)) {
+        console.log('here');
         store.dispatch<any>(addAccount(dataAcc.name, keys, false, false, true));
       }
     }
     setQrDataAccounts([]);
     setProcessingAccounts(false);
-    return resetStackAndNavigate('Wallet');
+    console.log('there');
+    return navigation.getParent()?.goBack();
   };
 
   return (

@@ -1,8 +1,4 @@
-import {
-  CommonActions,
-  NavigationContainerRef,
-  StackActions,
-} from '@react-navigation/native';
+import {CommonActions, NavigationContainerRef} from '@react-navigation/native';
 import {
   CardStyleInterpolators,
   HeaderStyleInterpolators,
@@ -54,8 +50,13 @@ export const resetStackAndNavigate = (name: string) => {
         }),
       );
     } else {
-      navigator.dispatch(StackActions.popToTop());
-      navigator.dispatch(CommonActions.navigate({name}));
+      navigator.dispatch(
+        CommonActions.navigate({
+          name: 'Wallet',
+          params: {animation: 'none', screen: 'WalletScreen'},
+          merge: true, // reuses the existing route, avoids push
+        }),
+      );
     }
   }
 };

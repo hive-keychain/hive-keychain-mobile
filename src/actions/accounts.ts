@@ -5,7 +5,7 @@ import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AppThunk} from 'src/hooks/redux';
 import validateKeys from 'utils/keyValidation.utils';
 import {translate} from 'utils/localize';
-import {navigate, resetStackAndNavigate} from 'utils/navigation.utils';
+import {goBack, navigate, resetStackAndNavigate} from 'utils/navigation.utils';
 import {EncryptedStorageUtils} from 'utils/storage/encryptedStorage.utils';
 import StorageUtils from 'utils/storage/storage.utils';
 import {WidgetUtils} from 'utils/widget.utils';
@@ -32,6 +32,7 @@ export const addAccount =
     wallet: boolean,
     qr: boolean,
     multipleAccounts?: boolean,
+    mainStack = false,
   ): AppThunk =>
   async (dispatch, getState) => {
     const mk = getState().auth.mk;
@@ -46,7 +47,7 @@ export const addAccount =
       Toast.show(translate('toast.account_already', {account: name}));
       if (multipleAccounts) return;
       if (wallet) {
-        qr ? resetStackAndNavigate('Wallet') : navigate('Wallet');
+        qr ? goBack() : navigate('Wallet');
       }
       return;
     }
@@ -73,7 +74,11 @@ export const addAccount =
     }
     if (wallet) {
       dispatch(loadAccount(name));
-      qr ? resetStackAndNavigate('Wallet') : navigate('Wallet');
+      qr
+        ? mainStack
+          ? goBack()
+          : resetStackAndNavigate('Wallet')
+        : navigate('Wallet');
     }
   };
 

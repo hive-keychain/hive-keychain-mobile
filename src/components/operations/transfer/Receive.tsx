@@ -1,3 +1,4 @@
+import {NavigationProp} from '@react-navigation/native';
 import {showModal} from 'actions/message';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
@@ -17,14 +18,17 @@ import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation.utils';
 import {TokenUtils} from 'utils/tokens.utils';
 import TransactionUtils from 'utils/transactions.utils';
 
 const Receive = ({
   route,
   showModal,
-}: {route: ReceiveTransferRoute} & PropsFromRedux) => {
+  navigation,
+}: {
+  route: ReceiveTransferRoute;
+  navigation: NavigationProp<any>;
+} & PropsFromRedux) => {
   const theme = useThemeContext().theme;
   const params = route.params;
   const {width} = useWindowDimensions();
@@ -48,7 +52,7 @@ const Receive = ({
       if (res) {
         clearInterval(interval);
         showModal('toast.receive_success', MessageModalType.SUCCESS);
-        resetStackAndNavigate('WalletScreen');
+        navigation.getParent()?.goBack();
       }
     }, 3000);
   }, []);

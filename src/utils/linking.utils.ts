@@ -95,7 +95,11 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
   }
 };
 
-export const handleAddAccountQR = async (data: string, wallet = true) => {
+export const handleAddAccountQR = async (
+  data: string,
+  wallet = true,
+  mainStack = false,
+) => {
   let obj: any;
   try {
     const jsonCandidate = data.replace('keychain://add_account=', '');
@@ -135,7 +139,9 @@ export const handleAddAccountQR = async (data: string, wallet = true) => {
     keys = await validateFromObject(obj);
   }
   if (wallet && KeyUtils.hasKeys(keys)) {
-    store.dispatch<any>(addAccount(obj.name, keys, wallet, true));
+    store.dispatch<any>(
+      addAccount(obj.name, keys, wallet, true, false, mainStack),
+    );
   } else {
     return;
   }

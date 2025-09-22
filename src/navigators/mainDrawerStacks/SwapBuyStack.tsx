@@ -49,10 +49,7 @@ export default () => {
             />
           ),
           headerRight: () => (
-            <CloseButton
-              theme={theme}
-              onPress={() => navigation.navigate('WalletScreen')}
-            />
+            <CloseButton theme={theme} onPress={() => navigation.goBack()} />
           ),
         })}
       />
@@ -113,7 +110,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WalletScreen')}
+              onPress={() => navigation.getParent()?.goBack()}
             />
           ),
         })}

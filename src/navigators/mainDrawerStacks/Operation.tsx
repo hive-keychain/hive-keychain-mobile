@@ -43,11 +43,7 @@ import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {capitalize} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import {
-  buildIOSHorizontalStackOptions,
-  goBack,
-  resetStackAndNavigate,
-} from 'utils/navigation.utils';
+import {buildIOSHorizontalStackOptions, goBack} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -266,7 +262,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
             <CloseButton
               theme={theme}
               onPress={() => {
-                resetStackAndNavigate('WalletScreen');
+                navigation.getParent()?.goBack();
               }}
             />
           ),
@@ -291,7 +287,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
             <CloseButton
               theme={theme}
               onPress={() => {
-                resetStackAndNavigate('WalletScreen');
+                navigation.getParent()?.goBack();
               }}
             />
           ),
