@@ -775,6 +775,7 @@
     }
   },
   "toast": {
+    "error_camera_permission": "Camera permission is required to scan QR codes",
     "receive_success": "The transfer has been received successfully",
     "error_witness_account_update": "Error while updating witness account @{{account}}",
     "noMatch": "The PIN codes do not match",

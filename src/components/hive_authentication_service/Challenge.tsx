@@ -81,10 +81,6 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
       <SafeArea style={styles.container} skipTop skipBottom>
         <View style={{flexGrow: 1}}>
           <Separator height={30} />
-          <Text style={[styles.text, styles.uuid]}>
-            {translate('wallet.has.uuid', data)}
-          </Text>
-          <Separator />
           <Text style={styles.text}>{showText()}</Text>
           {accounts.find((e) => e.name === data.account) ? null : (
             <>

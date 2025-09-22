@@ -9,6 +9,7 @@ import Background from 'components/ui/Background';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
+import {Camera} from 'expo-camera';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import React, {useState} from 'react';
 import {
@@ -19,7 +20,10 @@ import {
 } from 'react-native';
 import {Text} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
-import SimpleToast from 'react-native-root-toast';
+import {
+  default as SimpleToast,
+  default as Toast,
+} from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -134,7 +138,15 @@ const AddAccountByKey = ({
               name={Icons.SCANNER}
               theme={theme}
               onPress={() => {
-                navigate('ScanQRScreen', {wallet: true});
+                Camera.requestCameraPermissionsAsync().then((result) => {
+                  if (result.granted) {
+                    navigate('ScanQRScreen', {wallet: true});
+                  } else {
+                    Toast.show(translate('toast.error_camera_permission'), {
+                      duration: Toast.durations.LONG,
+                    });
+                  }
+                });
               }}
             />
           }
