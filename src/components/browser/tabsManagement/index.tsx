@@ -19,10 +19,9 @@ import {getCardStyle} from 'src/styles/card';
 import {BORDERWHITISH, DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
 
-//TODO: put in config
-const margin = Dimensions.get('window').width * 0.02;
-const THUMB_WIDTH = Dimensions.get('window').width * 0.46;
-const THUMB_HEIGHT = THUMB_WIDTH * 1.3;
+// Maintain the previous visual ratio: height ≈ width * 1.3
+const CARD_ASPECT_RATIO = 1 / 1.3; // width / height
+const SIDE_MARGIN = Dimensions.get('window').width * 0.025;
 
 type Props = {
   tabs: Tab[];
@@ -112,12 +111,20 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
       backgroundColor: getColors(theme).primaryBackground,
       paddingBottom: insets.bottom,
     },
-    subcontainer: {flex: 1, flexDirection: 'row', flexWrap: 'wrap'},
+    subcontainer: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      paddingHorizontal: SIDE_MARGIN,
+    },
     hide: {display: 'none'},
     tabWrapper: {
-      width: THUMB_WIDTH,
-      height: THUMB_HEIGHT,
-      margin,
+      // Two per row using percentage-based sizing
+      flexBasis: '46%',
+      maxWidth: '46%',
+      aspectRatio: CARD_ASPECT_RATIO,
+      marginBottom: 16,
       overflow: 'hidden',
       paddingHorizontal: 0,
       paddingVertical: 0,
