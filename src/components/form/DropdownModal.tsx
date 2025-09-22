@@ -149,6 +149,7 @@ const DropdownModal = ({
   }, [isListExpanded, pendingSelect, onSelected]);
 
   const onHandleCopyValue = (username: string) => {
+    console.log('here', username);
     Clipboard.setStringAsync(username);
     SimpleToast.show(translate('toast.copied_username'), {
       duration: SimpleToast.durations.LONG,
@@ -210,25 +211,39 @@ const DropdownModal = ({
             </View>
           ) : null}
           {copyButtonValue && (
-            <Icon
-              theme={theme}
-              name={Icons.COPY}
-              onPress={onHandleCopyValueCb(item.value)}
-              width={16}
-              height={16}
-              additionalContainerStyle={{marginLeft: 6}}
-              strokeWidth={2}
-              color={PRIMARY_RED_COLOR}
-            />
+            <Pressable
+              onPress={(e) => {
+                // Prevent parent row press
+                // @ts-ignore - stopPropagation may not exist on some RN platforms
+                e?.stopPropagation?.();
+                onHandleCopyValueCb(item.value)();
+              }}
+              hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+              style={{marginLeft: 9, padding: 6}}>
+              <Icon
+                theme={theme}
+                name={Icons.COPY}
+                width={16}
+                height={16}
+                strokeWidth={2}
+                color={PRIMARY_RED_COLOR}
+              />
+            </Pressable>
           )}
           {drag && canBeReordered && (
-            <Pressable onPressIn={dragCb(drag)}>
+            <Pressable
+              onPressIn={(e) => {
+                // @ts-ignore
+                e?.stopPropagation?.();
+                dragCb(drag)();
+              }}
+              hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+              style={{marginLeft: 9, padding: 6}}>
               <Icon
                 name={Icons.DRAG}
                 theme={theme}
                 width={16}
                 height={16}
-                additionalContainerStyle={{marginLeft: 6}}
                 strokeWidth={2}
                 color={PRIMARY_RED_COLOR}
               />
