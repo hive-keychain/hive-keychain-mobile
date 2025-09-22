@@ -82,10 +82,6 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
       additionalHeaderTitleStyle={[styles.text, styles.title]}>
       <View style={styles.paddingHorizontal}>
         <Separator height={30} />
-        <Text style={[styles.text, styles.uuid]}>
-          {translate('wallet.has.uuid', data)}
-        </Text>
-        <Separator />
         <Text style={styles.text}>
           {success
             ? translate('wallet.has.auth.success', {
