@@ -1,5 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
@@ -42,11 +43,9 @@ export default () => {
           ),
           cardStyle: styles.cardStyle,
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              color={getColors(theme).iconBW}
             />
           ),
         })}

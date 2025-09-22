@@ -1,7 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/images/common-ui/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/images/common-ui/arrow_left_light.svg';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet} from 'react-native';
@@ -35,11 +33,9 @@ export default () => {
           ),
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}

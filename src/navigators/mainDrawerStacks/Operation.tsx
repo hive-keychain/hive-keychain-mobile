@@ -1,6 +1,4 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/images/common-ui/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/images/common-ui/arrow_left_light.svg';
 import PendingConversions from 'components/hive/PendingConversions';
 import PendingSavingsWithdrawalPageComponent from 'components/hive/PendingSavingsWithdrawalPage.component';
 import ConfirmationPage from 'components/operations/Confirmation';
@@ -31,8 +29,8 @@ import Transfer, {
 import UnstakeToken, {
   UnstakeTokenOperationProps,
 } from 'components/operations/UnstakeToken';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
 import React from 'react';
@@ -47,6 +45,7 @@ import {capitalize} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import {
   buildIOSHorizontalStackOptions,
+  goBack,
   resetStackAndNavigate,
 } from 'utils/navigation.utils';
 
@@ -143,17 +142,14 @@ export default ({navigation, route}: OperationNavigationProps) => {
             <CloseButton
               theme={theme}
               onPress={() => {
-                // @ts-ignore
-                navigation.navigate('WalletScreen');
+                goBack();
               }}
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}>
@@ -169,11 +165,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
           ),
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -194,11 +188,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
           ),
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -220,11 +212,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
           ),
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -249,11 +239,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
           ),
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -283,11 +271,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -310,11 +296,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}

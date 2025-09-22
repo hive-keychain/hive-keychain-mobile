@@ -1,10 +1,8 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/images/common-ui/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/images/common-ui/arrow_left_light.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
 import {TokensHistoryComponent} from 'components/history/hive-engine/TokensHistory';
 import Icon from 'components/hive/Icon';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import {
   RootStackParam,
@@ -86,11 +84,9 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
             backgroundColor: getColors(theme).primaryBackground,
           },
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
             />
           ),

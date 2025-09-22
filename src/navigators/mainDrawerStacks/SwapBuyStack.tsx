@@ -1,11 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/images/common-ui/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/images/common-ui/arrow_left_light.svg';
 import SwapBuy from 'components/hive/SwapBuy';
 import SwapHistory from 'components/hive/SwapHistory';
 import SwapConfirm from 'components/operations/SwapConfirm';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
@@ -45,11 +43,9 @@ export default () => {
           headerTitle: () => <NavigatorTitle title={'navigation.swap_buy'} />,
           headerTransparent: true,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
             />
           ),
@@ -73,7 +69,7 @@ export default () => {
             <NavigatorTitle title={'common.confirm_token_swap'} />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={async () => {
                 try {
@@ -84,8 +80,6 @@ export default () => {
                 }
                 navigation.goBack();
               }}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
             />
           ),
@@ -114,11 +108,9 @@ export default () => {
           ),
           headerTransparent: true,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.navigate('SwapBuy')}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
             />
           ),

@@ -37,6 +37,7 @@ export default ({
 }: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
+
   return (
     <View
       style={{

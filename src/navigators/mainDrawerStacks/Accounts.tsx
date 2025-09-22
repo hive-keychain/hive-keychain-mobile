@@ -1,9 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/images/common-ui/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/images/common-ui/arrow_left_light.svg';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
@@ -54,11 +52,9 @@ export default () => {
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -71,11 +67,9 @@ export default () => {
           headerLeftContainerStyle: styles.headerLeftContainer,
           cardStyle: styles.card,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
           headerRight: () => <MoreInformation type={Info.KEYS} />,
@@ -96,11 +90,9 @@ export default () => {
           ),
           cardStyle: styles.card,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
           headerRight: () => {
@@ -119,11 +111,9 @@ export default () => {
         options={({navigation}) => ({
           cardStyle: styles.card,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
           headerRight: () => (
@@ -167,11 +157,9 @@ export default () => {
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -189,11 +177,9 @@ export default () => {
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => <MoreInformation type={Info.COPY_KEYS} />,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -217,11 +203,9 @@ export default () => {
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -245,11 +229,9 @@ export default () => {
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
