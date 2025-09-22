@@ -89,7 +89,12 @@ const SafeSlidingOverlay = ({
             borderColor: getColors(theme).quaternaryCardBorderColor,
           },
         ]}>
-        <Text style={[styles.title, inputStyle(theme, width).label]}>
+        <Text
+          style={[
+            styles.title,
+            inputStyle(theme, width).label,
+            {fontSize: 18},
+          ]}>
           {translate(title)}
         </Text>
         {shouldRenderContent ? children : null}

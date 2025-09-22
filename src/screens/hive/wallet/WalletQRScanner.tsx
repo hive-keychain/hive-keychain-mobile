@@ -134,7 +134,6 @@ const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
         keys = await validateFromObject(dataAcc);
       }
       if (wallet && KeyUtils.hasKeys(keys)) {
-        console.log('here');
         store.dispatch<any>(addAccount(dataAcc.name, keys, false, false, true));
       }
     }
