@@ -3,15 +3,24 @@ import axios from 'axios';
 import {TokenRequestParams} from 'src/interfaces/tokenRequestParams.interface';
 import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 
-const getSSC = () => new SSC(HiveEngineConfigUtils.getApi());
+const getSSC = () => {
+  const baseURL = HiveEngineConfigUtils.getApi();
+  // console.log('baseURL', baseURL);
+  return new SSC(baseURL);
+};
 
-const getHistoryApi = () =>
-  axios.create({
-    baseURL: HiveEngineConfigUtils.getAccountHistoryApi(),
+const getHistoryApi = () => {
+  const baseURL = HiveEngineConfigUtils.getAccountHistoryApi();
+  // console.log('baseURL', baseURL);
+  return axios.create({
+    baseURL: baseURL,
   });
+};
 
 const get = async <T>(params: TokenRequestParams): Promise<T> => {
-  const url = `${HiveEngineConfigUtils.getApi()}/contracts`;
+  const baseURL = HiveEngineConfigUtils.getApi();
+  // console.log('baseURL', baseURL);
+  const url = `${baseURL}/contracts`;
   return new Promise((resolve, reject) => {
     let start = Date.now();
     const controller = new AbortController();
