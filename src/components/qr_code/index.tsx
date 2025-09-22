@@ -1,6 +1,6 @@
 import {useHeaderHeight} from '@react-navigation/elements';
 import {BarcodeScanningResult, CameraView} from 'expo-camera';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useThemeContext} from 'src/context/theme.context';
@@ -15,9 +15,7 @@ type Props = {
 const QRCode = ({onSuccess, topContent}: Props) => {
   const {theme} = useThemeContext();
   const [scanned, setScanned] = useState(false);
-  const [isCameraActive, setIsCameraActive] = useState(true);
   const lastScannedTimestampRef = useRef(0);
-  useEffect(() => {}, []);
 
   const handleBarcodeScanned = (event: BarcodeScanningResult) => {
     const timestamp = Date.now();
@@ -27,7 +25,6 @@ const QRCode = ({onSuccess, topContent}: Props) => {
     }
     lastScannedTimestampRef.current = timestamp;
     setScanned(true);
-    setIsCameraActive(false);
     onSuccess(event);
   };
   return (
@@ -57,7 +54,12 @@ const QRCode = ({onSuccess, topContent}: Props) => {
         }}
         onBarcodeScanned={handleBarcodeScanned}
         style={{flexGrow: 1}}
-        active={isCameraActive}></CameraView>
+        // @ts-ignore ensure iOS doesn’t draw any default bg
+        isActive={true}
+        active
+        // Prevent any platform default background from showing at edges
+        // @ts-ignore (prop exists on native side)
+        enableTorch={false}></CameraView>
       <Marker />
     </View>
   );
