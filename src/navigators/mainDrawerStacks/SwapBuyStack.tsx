@@ -46,14 +46,12 @@ export default () => {
             <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              additionalContainerStyle={styles.marginLeft}
             />
           ),
           headerRight: () => (
             <CloseButton
               theme={theme}
               onPress={() => navigation.navigate('WalletScreen')}
-              additionalContainerStyle={styles.marginRight}
             />
           ),
         })}
@@ -80,7 +78,6 @@ export default () => {
                 }
                 navigation.goBack();
               }}
-              additionalContainerStyle={styles.marginLeft}
             />
           ),
         })}
@@ -111,14 +108,12 @@ export default () => {
             <BackNavigationButton
               theme={theme}
               onPress={() => navigation.navigate('SwapBuy')}
-              additionalContainerStyle={styles.marginLeft}
             />
           ),
           headerRight: () => (
             <CloseButton
               theme={theme}
               onPress={() => navigation.navigate('WalletScreen')}
-              additionalContainerStyle={styles.marginRight}
             />
           ),
         })}

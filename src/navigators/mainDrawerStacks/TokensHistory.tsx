@@ -87,7 +87,6 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
             <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              additionalContainerStyle={styles.marginLeft}
             />
           ),
         })}

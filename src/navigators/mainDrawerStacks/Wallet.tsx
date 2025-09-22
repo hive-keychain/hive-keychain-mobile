@@ -127,7 +127,6 @@ export default () => {
             <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              additionalContainerStyle={styles.marginLeft}
             />
           ),
         })}

@@ -61,7 +61,6 @@ const CreateAccount = ({showExternalOnboarding}: PropsFromRedux) => {
                             onPress={() => {
                               goBack();
                             }}
-                            additionalContainerStyle={{paddingTop: 5}}
                           />
                         </View>
                         <WebView
