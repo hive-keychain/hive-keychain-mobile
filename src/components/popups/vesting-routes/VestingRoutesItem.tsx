@@ -22,7 +22,7 @@ import {
   AccountVestingRoutesDifferences,
   VestingRoute,
   VestingRouteDifference,
-} from './vesting-routes.interface';
+} from './vestingRoutes.interface';
 
 interface Props {
   accountVestingRouteDifference: AccountVestingRoutesDifferences;

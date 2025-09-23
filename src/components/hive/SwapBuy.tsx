@@ -1,4 +1,4 @@
-import BuyCoinsComponent from 'components/operations/Buy-coins.component';
+import BuyCoinsComponent from 'components/operations/BuyCoins';
 import Swap from 'components/operations/Swap';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';

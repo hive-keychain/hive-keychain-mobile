@@ -6,7 +6,7 @@ import {
   UserVestingRoute,
   VestingRoute,
   VestingRouteDifference,
-} from 'components/popups/vesting-routes/vesting-routes.interface';
+} from 'components/popups/vesting-routes/vestingRoutes.interface';
 import _ from 'lodash';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Key} from 'src/interfaces/keys.interface';

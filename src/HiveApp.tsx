@@ -16,7 +16,7 @@ import {updateNavigationActiveScreen} from 'actions/navigation';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
-import RpcSwitcherComponent from 'components/popups/rpc-switcher/rpc-switcher.component';
+import RpcSwitcherComponent from 'components/popups/rpc-switcher/RpcSwitcher';
 import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';

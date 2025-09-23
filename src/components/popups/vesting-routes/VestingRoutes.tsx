@@ -20,7 +20,7 @@ import {
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation.utils';
-import {AccountVestingRoutesDifferences} from './vesting-routes.interface';
+import {AccountVestingRoutesDifferences} from './vestingRoutes.interface';
 import {VestingRoutesItemComponent} from './VestingRoutesItem';
 
 interface Props {
