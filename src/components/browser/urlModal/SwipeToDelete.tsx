@@ -12,6 +12,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
@@ -46,10 +47,9 @@ const SwipeableItem = memo(
         },
         onEnd: () => {
           if (translateX.value < SWIPE_THRESHOLD) {
-            translateX.value = withSpring(-SCREEN_WIDTH);
-            bgTranslateX.value = withSpring(-SCREEN_WIDTH, {}, () => {
-              runOnJS(onDismiss)(); // callback to remove from list
-            });
+            runOnJS(onDismiss)();
+            translateX.value = withTiming(-SCREEN_WIDTH, {duration: 150});
+            bgTranslateX.value = withTiming(-SCREEN_WIDTH, {duration: 150});
           } else {
             // Snap back
             translateX.value = withSpring(0);
