@@ -1,4 +1,4 @@
-import keychain from 'api/keychain';
+import keychain from 'api/keychain.api';
 import {Theme, ThemeOpacity} from 'src/context/theme.context';
 
 export type Colors = {

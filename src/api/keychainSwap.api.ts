@@ -1,5 +1,5 @@
 import {SwapsConfig} from 'utils/config.utils';
-import {BaseApi} from './base';
+import {BaseApi} from './base.api';
 
 const buildUrl = (url: string) => {
   const baseURL = SwapsConfig.baseURL;

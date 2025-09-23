@@ -1,5 +1,5 @@
 import {PeakdNotificationsConfig} from 'utils/config.utils';
-import {BaseApi} from './base';
+import {BaseApi} from './base.api';
 
 const buildUrl = (url: string) => {
   return `${PeakdNotificationsConfig.baseURL}/${url}`;

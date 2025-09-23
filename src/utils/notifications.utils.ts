@@ -1,6 +1,6 @@
 import {Asset, DynamicGlobalProperties} from '@hiveio/dhive';
 import {ActiveAccount} from 'actions/interfaces';
-import {PeakDNotificationsApi} from 'api/peakd-notifications';
+import {PeakDNotificationsApi} from 'api/peakdNotifications.api';
 import moment from 'moment';
 import {
   Notification,

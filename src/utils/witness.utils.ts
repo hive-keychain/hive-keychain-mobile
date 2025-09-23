@@ -1,7 +1,7 @@
 import {WitnessUpdateOperation} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
-import keychain from 'api/keychain';
+import keychain from 'api/keychain.api';
 import moment from 'moment';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Key} from 'src/interfaces/keys.interface';

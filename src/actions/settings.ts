@@ -1,4 +1,4 @@
-import KeychainApi from 'api/keychain';
+import KeychainApi from 'api/keychain.api';
 import {AppThunk} from 'hooks/redux';
 import {
   ActionPayload,

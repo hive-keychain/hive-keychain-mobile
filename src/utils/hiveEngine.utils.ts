@@ -1,5 +1,5 @@
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
-import {HiveEngineApi} from 'api/hiveEngine';
+import {HiveEngineApi} from 'api/hiveEngine.api';
 import {decodeMemo} from 'components/bridge';
 import {translate} from './localize';
 

@@ -1,4 +1,4 @@
-import api from 'api/keychain';
+import api from 'api/keychain.api';
 import Constants from 'expo-constants';
 import {name} from 'package.json';
 

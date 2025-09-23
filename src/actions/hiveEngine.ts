@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {HiveEngineApi} from 'api/hiveEngine';
+import {HiveEngineApi} from 'api/hiveEngine.api';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AppThunk} from 'src/hooks/redux';

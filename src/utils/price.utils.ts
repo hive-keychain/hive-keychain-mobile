@@ -1,7 +1,7 @@
 import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CurrencyPrices, TokenBalance, TokenMarket} from 'actions/interfaces';
-import api from 'api/keychain';
+import api from 'api/keychain.api';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {toHP} from 'utils/format.utils';
 import {getHiveEngineTokenValue} from './hiveEngine.utils';

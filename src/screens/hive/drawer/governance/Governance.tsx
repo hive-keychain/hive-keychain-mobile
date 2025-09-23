@@ -1,5 +1,5 @@
 import {KeyTypes, Witness as WitnessInterface} from 'actions/interfaces';
-import keychain from 'api/keychain';
+import keychain from 'api/keychain.api';
 import Background from 'components/ui/Background';
 import Loader from 'components/ui/Loader';
 import ScreenToggle from 'components/ui/ScreenToggle';

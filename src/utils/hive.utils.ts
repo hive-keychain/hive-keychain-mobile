@@ -4,7 +4,7 @@ import {
   Delegator,
   GlobalProperties,
 } from 'actions/interfaces';
-import api from 'api/keychain';
+import api from 'api/keychain.api';
 import {PendingOutgoingUndelegation} from 'src/interfaces/delegations.interface';
 import {getClient, getData} from './hiveLibs.utils';
 
