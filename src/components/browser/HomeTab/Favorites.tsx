@@ -22,7 +22,8 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
   const styles = getStyles(useSafeAreaInsets(), theme);
 
   const sortData = (params: DragEndParams<Page>) => {
-    updateFavorites([...params.data].reverse());
+    // Persist the order without reversing back/forth
+    updateFavorites(params.data);
   };
 
   const renderFavoriteItem = useCallback(
@@ -48,7 +49,7 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
     <View style={styles.container}>
       {favorites.length ? (
         <DraggableFlatList
-          data={[...favorites].reverse()}
+          data={favorites}
           scrollToOverflowEnabled
           keyExtractor={(item) => item.url}
           maxToRenderPerBatch={5}

@@ -80,7 +80,6 @@ export default memo(
       </View>
     );
   },
-  (prevProps, nextProps) => prevProps.indexItem === nextProps.indexItem,
 );
 
 const getStyles = (theme: Theme) =>
