@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native';
 import {showFloatingBar, toggleHideFloatingBar} from 'actions/floatingBar';
 import {
   Account,
@@ -118,7 +119,7 @@ export default memo(
       tabRef.current?.reload(); // reload the WebView
     };
     const styles = getStyles(insets);
-    useEffect(() => {
+    useFocusEffect(() => {
       if (!active) return;
       const backAction = () => {
         goBack();
@@ -131,7 +132,7 @@ export default memo(
       );
 
       return () => backHandler.remove();
-    }, [active]);
+    });
 
     const goBack = () => {
       const {current} = tabRef;
