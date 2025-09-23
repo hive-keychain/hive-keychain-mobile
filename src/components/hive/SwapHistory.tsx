@@ -16,7 +16,7 @@ import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
-import {BackToTopButton} from '../ui/Back-To-Top-Button';
+import {BackToTopButton} from '../ui/BackToTopButton';
 import SwapHistoryItem from './SwapHistoryItem';
 
 const SwapHistory = ({activeAccount}: PropsFromRedux) => {

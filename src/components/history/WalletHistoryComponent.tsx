@@ -24,7 +24,7 @@ import TransactionUtils, {
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import Icon from '../hive/Icon';
-import {BackToTopButton} from '../ui/Back-To-Top-Button';
+import {BackToTopButton} from '../ui/BackToTopButton';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 
 export interface WalletHistoryComponentProps {
