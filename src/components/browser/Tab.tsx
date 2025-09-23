@@ -291,7 +291,7 @@ export default memo(
           if (
             data.url !== 'about:blank' &&
             (icon !== data.icon || name !== data.name) &&
-            !isLoading // Don't update during loading/redirects
+            !isLoading
           ) {
             navigation.setParams({icon: data.icon});
             updateTab(id, {name: data.name, icon: data.icon});
@@ -461,44 +461,46 @@ export default memo(
                   />
                 )
               }>
-              <WebView
-                source={{
-                  uri: url === BrowserConfig.HOMEPAGE_URL ? undefined : url,
-                }}
-                domStorageEnabled={true}
-                allowFileAccess={true}
-                allowUniversalAccessFromFileURLs={true}
-                mixedContentMode={'always'}
-                ref={tabRef}
-                injectedJavaScriptBeforeContentLoaded={hive_keychain}
-                injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
-                mediaPlaybackRequiresUserAction={false}
-                onMessage={onMessage}
-                javaScriptEnabled
-                bounces={false}
-                pullToRefreshEnabled={false}
-                geolocationEnabled
-                allowsInlineMediaPlayback
-                allowsFullscreenVideo
-                onLoadEnd={onLoadEnd}
-                onLoadStart={onLoadStart}
-                onLoadProgress={onLoadProgress}
-                onError={(error) => {
-                  console.log('Error', error);
-                }}
-                onHttpError={(error) => {
-                  console.log('HttpError', error);
-                }}
-                onOpenWindow={(event) => {
-                  addTab(
-                    false,
-                    {url, icon, id},
-                    tabParentRef,
-                    event.nativeEvent.targetUrl,
-                  );
-                }}
-                useWebView2
-              />
+              {url !== BrowserConfig.HOMEPAGE_URL ? (
+                <WebView
+                  source={{
+                    uri: url,
+                  }}
+                  domStorageEnabled={true}
+                  allowFileAccess={true}
+                  allowUniversalAccessFromFileURLs={true}
+                  mixedContentMode={'always'}
+                  ref={tabRef}
+                  injectedJavaScriptBeforeContentLoaded={hive_keychain}
+                  injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
+                  mediaPlaybackRequiresUserAction={false}
+                  onMessage={onMessage}
+                  javaScriptEnabled
+                  bounces={false}
+                  pullToRefreshEnabled={false}
+                  geolocationEnabled
+                  allowsInlineMediaPlayback
+                  allowsFullscreenVideo
+                  onLoadEnd={onLoadEnd}
+                  onLoadStart={onLoadStart}
+                  onLoadProgress={onLoadProgress}
+                  onError={(error) => {
+                    console.log('Error', error);
+                  }}
+                  onHttpError={(error) => {
+                    // console.log('HttpError', error);
+                  }}
+                  onOpenWindow={(event) => {
+                    addTab(
+                      false,
+                      {url, icon, id},
+                      tabParentRef,
+                      event.nativeEvent.targetUrl,
+                    );
+                  }}
+                  useWebView2
+                />
+              ) : null}
             </ScrollView>
           </GestureDetector>
         </View>
