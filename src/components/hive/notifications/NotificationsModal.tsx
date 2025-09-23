@@ -52,7 +52,7 @@ const NotificationsModal = ({
   properties,
   addTab,
 }: Props) => {
-  const [settingNotifications, setSettingNotifications] = useState(false);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>(notifs);
@@ -73,7 +73,7 @@ const NotificationsModal = ({
   );
 
   const markAllAsRead = async () => {
-    setSettingNotifications(true);
+    setLoadingNotifications(true);
     await PeakDNotificationsUtils.markAllAsRead(user);
     setNotifications(
       notifications?.map((notif) => {
@@ -81,7 +81,7 @@ const NotificationsModal = ({
         return notif;
       }),
     );
-    setSettingNotifications(false);
+    setLoadingNotifications(false);
     SimpleToast.show(translate('components.notifications.mark_as_read'), {
       duration: SimpleToast.durations.LONG,
     });
@@ -142,7 +142,22 @@ const NotificationsModal = ({
 
   return (
     <View style={styles.modal}>
-      {!settingNotifications && (
+      <View style={styles.header}>
+        <Text style={getHeaderTitleStyle(theme, width)}>
+          {translate('settings.settings.notifications.title')}
+        </Text>
+        {notifications.find((e) => !e.read) ? (
+          <EllipticButton
+            title={translate(
+              'components.notifications.notification_set_all_as_read',
+            )}
+            onPress={markAllAsRead}
+            style={[getButtonStyle(theme, width).outline, styles.actionButton]}
+          />
+        ) : null}
+      </View>
+      <Separator />
+      {!loadingNotifications && (
         <FlatList
           ref={flatListRef}
           data={notifications}
@@ -152,30 +167,6 @@ const NotificationsModal = ({
           onEndReachedThreshold={0.5}
           renderItem={({item}) => renderItem(item)}
           keyExtractor={(notification) => notification.id}
-          ListHeaderComponent={() => {
-            return (
-              <>
-                <View style={styles.header}>
-                  <Text style={getHeaderTitleStyle(theme, width)}>
-                    {translate('settings.settings.notifications.title')}
-                  </Text>
-                  {notifications.find((e) => !e.read) ? (
-                    <EllipticButton
-                      title={translate(
-                        'components.notifications.notification_set_all_as_read',
-                      )}
-                      onPress={markAllAsRead}
-                      style={[
-                        getButtonStyle(theme, width).outline,
-                        styles.actionButton,
-                      ]}
-                    />
-                  ) : null}
-                </View>
-                <Separator />
-              </>
-            );
-          }}
           onEndReached={() => {
             if (hasMoreData) handleLoadMore();
           }}
@@ -184,15 +175,14 @@ const NotificationsModal = ({
           )}
         />
       )}
-      {!settingNotifications && displayScrollToTop && (
+      {!loadingNotifications && displayScrollToTop && (
         <BackToTopButton
           theme={theme}
           element={flatListRef}
           isScrollView={false}
-          addInsetBottom={false}
         />
       )}
-      {settingNotifications && (
+      {loadingNotifications && (
         <View style={styles.loaderContainer}>
           <Loader animating />
         </View>
@@ -215,6 +205,7 @@ const getStyles = (theme: Theme, width: number) =>
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      paddingHorizontal: 12,
       width: '100%',
     },
     modal: {
@@ -237,7 +228,7 @@ const getStyles = (theme: Theme, width: number) =>
       width: '40%',
     },
     loaderContainer: {
-      flexGrow: 1,
+      height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
     },
