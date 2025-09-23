@@ -55,7 +55,7 @@ import {SwapsConfig} from 'utils/config.utils';
 import {capitalize, withCommas} from 'utils/format.utils';
 import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation.utils';
+import {goBackAndNavigate, navigate} from 'utils/navigation.utils';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
 import {
   getAllTokens,
@@ -400,7 +400,7 @@ const Swap = ({
               'common.swap_sending_token_successful',
               MessageModalType.SUCCESS,
             );
-          navigation.navigate('SwapHistory');
+          goBackAndNavigate('SwapHistory');
         } else {
           if (!isMultisig)
             SimpleToast.show(

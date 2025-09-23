@@ -14,7 +14,7 @@ import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
+import {buildIOSHorizontalStackOptions, goBack} from 'utils/navigation.utils';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
 
 const Stack = createStackNavigator();
@@ -102,10 +102,7 @@ export default () => {
           ),
           headerTransparent: true,
           headerLeft: () => (
-            <BackNavigationButton
-              theme={theme}
-              onPress={() => navigation.navigate('SwapBuy')}
-            />
+            <BackNavigationButton theme={theme} onPress={() => goBack()} />
           ),
           headerRight: () => (
             <CloseButton

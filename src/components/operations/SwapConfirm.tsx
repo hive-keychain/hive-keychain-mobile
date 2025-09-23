@@ -37,7 +37,6 @@ const SwapConfirm = ({
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   const [loading, setLoading] = useState(false);
-
   return (
     <Background theme={theme}>
       <View style={{flexGrow: 1, paddingBottom: 16, paddingTop: 60}}>
@@ -105,7 +104,7 @@ const SwapConfirm = ({
             try {
               await processSwap(estimateId);
             } finally {
-              setLoading(false);
+              // setLoading(false);
             }
           }}
           isLoading={loading}
