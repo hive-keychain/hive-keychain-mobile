@@ -7,7 +7,7 @@ export default ({config}) => ({
     expo: {
       name: 'Hive Keychain',
       slug: 'hive-keychain',
-      version: '2.9.3',
+      version: '2.9.4',
       orientation: 'portrait',
       icon: './src/assets/images/icons/ios_launcher.png',
       userInterfaceStyle: 'light',
