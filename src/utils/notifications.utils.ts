@@ -891,7 +891,7 @@ const getAllNotifications = async (
     else if (a.createdAt < b.createdAt) return 1;
     else return 0;
   });
-  return {notifs: finalNotifications, hasMore: peakdHasMore};
+  return {list: finalNotifications, hasMore: peakdHasMore};
 };
 
 const markAllAsRead = async (activeAccount: ActiveAccount) => {

@@ -1,5 +1,6 @@
+import {loadNotifications} from 'actions/notifications';
 import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,7 +12,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {Dimensions} from 'src/interfaces/common.interface';
-import {Notification} from 'src/interfaces/notifications.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
@@ -21,48 +21,31 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {navigate} from 'utils/navigation.utils';
-import {PeakDNotificationsUtils} from 'utils/notifications.utils';
 import Icon from '../Icon';
 import NotificationsModal from './NotificationsModal';
 
-const Notifications = ({user, properties}: PropsFromRedux) => {
-  const [notifications, setNotifications] = useState<Notification[]>();
-  const [hasMoreData, setHasMoreData] = useState(false);
-
+const Notifications = ({
+  user,
+  notifications,
+  loadNotifications,
+}: PropsFromRedux) => {
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getStyles(theme, width);
-
   useEffect(() => {
-    if (user && user.name) init(user.name);
+    if (user && user.name) loadNotifications(user.name);
   }, [user]);
-
-  const init = async (username: string) => {
-    const {notifs, hasMore} = await PeakDNotificationsUtils.getAllNotifications(
-      username,
-      properties,
-    );
-    setNotifications(notifs);
-    setHasMoreData(hasMore);
-  };
 
   const showNotificationsModal = () => {
     navigate('ModalScreen', {
       name: 'NotificationsModal',
-      modalContent: (
-        <NotificationsModal
-          notifs={notifications}
-          user={user}
-          moreData={hasMoreData}
-          properties={properties}
-        />
-      ),
+      modalContent: <NotificationsModal user={user} />,
       modalContainerStyle: [getModalBaseStyle(theme).roundedTop],
       fixedHeight: 0.7,
     } as ModalScreenProps);
   };
 
-  if (notifications && notifications.length > 0)
+  if (notifications && notifications.list.length > 0)
     return (
       <>
         <TouchableOpacity
@@ -79,10 +62,10 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
             height={45}
             additionalContainerStyle={[{width: 24, height: 24}]}
           />
-          {notifications.filter((notif) => !notif.read).length > 0 && (
+          {notifications.list.filter((notif) => !notif.read).length > 0 && (
             <View style={styles.count}>
               <Text style={styles.countText}>
-                {notifications.filter((notif) => !notif.read).length}
+                {notifications.list.filter((notif) => !notif.read).length}
               </Text>
             </View>
           )}
@@ -166,9 +149,9 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
 const connector = connect(
   (state: RootState) => ({
     user: state.activeAccount,
-    properties: state.properties.globals,
+    notifications: state.notifications,
   }),
-  {},
+  {loadNotifications},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(Notifications);

@@ -17,6 +17,7 @@ import hiveUri from './hiveUri';
 import lastAccount from './lastAccount';
 import message from './message';
 import navigation from './navigation';
+import notifications from './notifications';
 import phishingAccounts from './phishing';
 import preferences from './preferences';
 import rpcSwitcher from './rpcSwitcher';
@@ -57,4 +58,5 @@ export default combineReducers({
   ecosystem,
   colors,
   navigation,
+  notifications,
 });
