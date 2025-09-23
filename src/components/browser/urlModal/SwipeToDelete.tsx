@@ -2,7 +2,6 @@ import Icon from 'components/hive/Icon';
 import React, {memo} from 'react';
 import {StyleSheet, View, ViewStyle, useWindowDimensions} from 'react-native';
 import {
-  GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
@@ -35,7 +34,7 @@ const SwipeableItem = memo(
     const translateX = useSharedValue(0);
     const bgTranslateX = useSharedValue(0);
     const SCREEN_WIDTH = useWindowDimensions().width;
-    const SWIPE_THRESHOLD = -SCREEN_WIDTH / 4;
+    const SWIPE_THRESHOLD = -SCREEN_WIDTH / 5;
     const gestureHandler =
       useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
         onStart: (_, ctx: any) => {
@@ -70,45 +69,41 @@ const SwipeableItem = memo(
       } as any;
     });
     return (
-      <GestureHandlerRootView>
-        <View style={[{width: '100%'}]}>
-          {/* Hidden Delete BG */}
+      <View style={[{width: '100%'}]}>
+        {/* Hidden Delete BG */}
+        <Animated.View
+          style={[
+            {
+              ...StyleSheet.absoluteFillObject,
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              marginLeft: 50,
+              backgroundColor: PRIMARY_RED_COLOR,
+              ...containerStyle,
+            },
+            bgStyle,
+          ]}>
+          <View style={styles.deleteIcon}>
+            <Icon color="white" name={Icons.REMOVE} width={25} height={25} />
+          </View>
+        </Animated.View>
+        <PanGestureHandler
+          enabled={enabled}
+          onGestureEvent={gestureHandler}
+          activeOffsetX={[-5, 5]}
+          hitSlop={draggable ? {left: 0, width: SCREEN_WIDTH - 60} : undefined}
+          failOffsetY={[-10, 10]}>
           <Animated.View
             style={[
               {
-                ...StyleSheet.absoluteFillObject,
                 justifyContent: 'center',
-                alignItems: 'flex-end',
-                marginLeft: 50,
-                backgroundColor: PRIMARY_RED_COLOR,
-                ...containerStyle,
               },
-              bgStyle,
+              animatedStyle,
             ]}>
-            <View style={styles.deleteIcon}>
-              <Icon color="white" name={Icons.REMOVE} width={25} height={25} />
-            </View>
+            {children}
           </Animated.View>
-          <PanGestureHandler
-            enabled={enabled}
-            onGestureEvent={gestureHandler}
-            activeOffsetX={[-10, 10]}
-            hitSlop={
-              draggable ? {left: 0, width: SCREEN_WIDTH * 0.7} : undefined
-            }
-            failOffsetY={[-5, 5]}>
-            <Animated.View
-              style={[
-                {
-                  justifyContent: 'center',
-                },
-                animatedStyle,
-              ]}>
-              {children}
-            </Animated.View>
-          </PanGestureHandler>
-        </View>
-      </GestureHandlerRootView>
+        </PanGestureHandler>
+      </View>
     );
   },
 );
