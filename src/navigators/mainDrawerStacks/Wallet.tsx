@@ -22,7 +22,6 @@ import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation.utils';
-import Browser from './Browser';
 import Operation from './Operation';
 import SwapBuyStack from './SwapBuyStack';
 import TokenDelegationsStack from './TokenDelegationsStack';
@@ -174,15 +173,6 @@ export default () => {
         options={{
           ...noHeader,
         }}
-      />
-      <Stack.Screen
-        name="Browser"
-        options={{
-          title: translate('navigation.browser'),
-          ...noHeader,
-          gestureEnabled: false,
-        }}
-        component={Browser}
       />
     </Stack.Navigator>
   );

@@ -12,6 +12,7 @@ import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation.utils';
 import {MainDrawerStackParam} from './MainDrawer.types';
 import Accounts from './mainDrawerStacks/Accounts';
+import Browser from './mainDrawerStacks/Browser';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import Help from './mainDrawerStacks/Help';
 
@@ -56,7 +57,6 @@ export default () => {
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="Wallet" component={WalletStack} options={noHeader} />
-
       <Drawer.Screen
         name="Governance"
         options={{
@@ -98,6 +98,14 @@ export default () => {
           popToTopOnBlur: true,
           ...noHeader,
         }}
+      />
+      <Drawer.Screen
+        name="Browser"
+        options={{
+          title: translate('navigation.browser'),
+          ...noHeader,
+        }}
+        component={Browser}
       />
     </Drawer.Navigator>
   );
