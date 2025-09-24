@@ -24,7 +24,7 @@ const get = async <T>(params: TokenRequestParams): Promise<T> => {
   return new Promise((resolve, reject) => {
     let start = Date.now();
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), 60000);
+    const id = setTimeout(() => controller.abort(), 15000);
     fetch(url, {
       method: 'POST',
       body: JSON.stringify({
