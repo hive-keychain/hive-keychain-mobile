@@ -1,13 +1,6 @@
-import HiveEngine from 'assets/images/hive/hive_engine.png';
-import {Image} from 'expo-image';
-import React, {memo, useState} from 'react';
-import {
-  Image as Img,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import CurrencyIcon from 'components/hive/CurrencyIcon';
+import React, {memo} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 // REMOVE: import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -44,8 +37,6 @@ const TokenSettingsItem = ({
   setChecked,
   colors,
 }: TokenSettingsItemProps) => {
-  const [hasError, setHasError] = useState(false);
-
   const styles = getStyles(
     theme,
     widthDevice,
@@ -58,28 +49,6 @@ const TokenSettingsItem = ({
   if (!token) {
     return null;
   }
-
-  const logo = hasError ? (
-    <Image
-      style={styles.iconBase}
-      source={{
-        uri: Img.resolveAssetSource(HiveEngine).uri,
-      }}
-      onError={() => {
-        console.log('default image');
-      }}
-    />
-  ) : (
-    <Image
-      style={[styles.iconBase, styles.iconBase]}
-      source={{
-        uri: token.metadata.icon,
-      }}
-      onError={() => {
-        setHasError(true);
-      }}
-    />
-  );
 
   return (
     <TouchableOpacity
@@ -97,13 +66,14 @@ const TokenSettingsItem = ({
       <View>
         <Text style={[styles.textBase, styles.title]}>{token.name}</Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View
-            style={[
-              styles.iconContainerBase,
-              !hasError ? styles.iconContainerBaseWithBg : undefined,
-            ]}>
-            {logo}
-          </View>
+          <CurrencyIcon
+            symbol={token.symbol}
+            containerStyle={styles.iconContainerBase}
+            addBackground
+            currencyName={token.symbol}
+            colors={colors}
+            tokenInfo={token}
+          />
           <Text style={styles.textBase}>{token.symbol} </Text>
           <Text style={styles.textBase}>
             {translate('wallet.operations.token_settings.issued_by')}

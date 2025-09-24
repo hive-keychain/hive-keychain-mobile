@@ -1,8 +1,15 @@
 import HiveEngine from 'assets/images/hive/hive_engine.png';
 import FastImageComponent from 'components/ui/FastImage';
 import {Image} from 'expo-image';
+import ImageUtils from 'hive-keychain-commons/lib/utils/images.utils';
 import React, {useState} from 'react';
-import {Image as Img, StyleSheet, View} from 'react-native';
+import {
+  Image as Img,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {Token} from 'src/interfaces/tokens.interface';
@@ -26,13 +33,16 @@ interface PropsHiveEngine {
   symbol: string;
 }
 
-type Props = PropsHive | PropsHiveEngine;
+type Props = (PropsHive | PropsHiveEngine) & {
+  containerStyle?: StyleProp<ViewStyle>;
+};
 const CurrencyIcon = ({
   currencyName,
   tokenInfo,
   addBackground,
   colors,
   symbol,
+  containerStyle,
 }: Props) => {
   const {theme} = useThemeContext();
   const [hasError, setHasError] = useState(0);
@@ -40,27 +50,17 @@ const CurrencyIcon = ({
   const getLogo = () => {
     switch (hasError) {
       case 0:
-        if (!tokenInfo.metadata.icon) setHasError(2);
+        if (!tokenInfo.metadata.icon) setHasError(1);
         return (
           <FastImageComponent
             style={styles.iconBase}
-            source={tokenInfo.metadata.icon}
+            source={ImageUtils.getImmutableImage(tokenInfo.metadata.icon)}
             onError={() => {
               setHasError(1);
             }}
           />
         );
       case 1:
-        return (
-          <FastImageComponent
-            style={styles.iconBase}
-            source={`https://images.hive.blog/0x0/${tokenInfo.metadata.icon}`}
-            onError={() => {
-              setHasError(2);
-            }}
-          />
-        );
-      case 2:
         return (
           <Image
             style={styles.iconBase}
@@ -108,6 +108,7 @@ const CurrencyIcon = ({
         <View
           style={[
             styles.iconContainerBase,
+            containerStyle,
             !hasError ? styles.iconContainerBaseWithBg : undefined,
           ]}>
           {getLogo()}
