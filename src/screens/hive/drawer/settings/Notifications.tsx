@@ -60,7 +60,7 @@ const Notifications = ({active}: PropsFromRedux) => {
                 setReady(false);
                 await PeakDNotificationsUtils.deleteAccountConfig(active);
               }
-              navigate('WalletScreen');
+              navigate('Wallet');
             }}
             title="settings.settings.notifications.activated"
           />
