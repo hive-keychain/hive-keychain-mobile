@@ -1,4 +1,5 @@
 import {Image} from 'expo-image';
+import ImageUtils from 'hive-keychain-commons/lib/utils/images.utils';
 import React from 'react';
 import {
   StyleSheet,
@@ -37,7 +38,10 @@ const DAppCard = ({dApp, updateTabUrl, theme}: Props) => {
         updateTabUrl(url);
       }}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{uri: dApp.icon}} />
+        <Image
+          style={styles.image}
+          source={{uri: ImageUtils.getImmutableImage(dApp.icon)}}
+        />
       </View>
       <Text style={[styles.textBase, styles.name]}>{dApp.name}</Text>
       <Text style={[styles.textBase, styles.desc]}>{dApp.description}</Text>
