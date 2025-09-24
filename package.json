@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "2.9.1",
+  "version": "2.9.5",
   "main": "index.js",
   "scripts": {
     "start": "expo start",
@@ -9,8 +9,8 @@
     "web": "expo start --web",
     "dep-clean": "rm -rf node_modules && npm install",
     "clean": "watchman watch-del-all &&npm run dep-clean ",
-    "bump": "npx react-native bump-version --type patch",
-    "bump:minor": "npx react-native bump-version --type minor",
+    "bump": "expo-version-bump --patch && expo prebuild --clean",
+    "bump:minor": "expo-version-bump --minor && expo prebuild --clean",
     "build:android": "eas build -p android",
     "build:ios": "eas build -p ios",
     "copy:aab": "echo builds/keychain.aab | pbcopy && echo '👉 builds/keychain.aab copied to clipboard'",
@@ -113,6 +113,7 @@
     "@types/validator": "^13.15.3",
     "babel-plugin-module-resolver": "^5.0.2",
     "eas-cli": "^16.18.1",
+    "expo-version-bump": "^1.0.2",
     "react-native-svg-transformer": "^1.5.1",
     "typescript": "^5.9.2",
     "url-parse": "^1.5.10"
