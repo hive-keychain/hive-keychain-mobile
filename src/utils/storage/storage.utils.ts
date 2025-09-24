@@ -37,7 +37,7 @@ const requireBiometricsLogin = async (mk: string, title: string) => {
       if (!(await LocalAuthentication.isEnrolledAsync())) return;
       navigate('ModalScreen', {
         name: ModalComponent.ENABLE_IOS_BIOMETRICS,
-        data: {title: translate(title)},
+        data: {title: title},
         fixedHeight: 0.35,
       });
     } else {

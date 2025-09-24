@@ -38,7 +38,7 @@ const EnableIosBiometrics = ({mk, data}: PropsFromRedux & Props) => {
             styles.textCentered,
             {fontSize: getFontSizeSmallDevices(width, styles.h4.fontSize)},
           ]}>
-          {title}
+          {translate(title)}
         </Text>
       </View>
       <View style={{flex: 1}}>
