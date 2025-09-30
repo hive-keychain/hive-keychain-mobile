@@ -27,7 +27,8 @@ export default ({config}) => ({
     ios: {
       ...base.expo.ios,
       bundleIdentifier: 'com.stoodkev.mobileKeychain',
-      supportsTablet: true,
+      supportsTablet: false,
+
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
           'We need your location to load maps.',
