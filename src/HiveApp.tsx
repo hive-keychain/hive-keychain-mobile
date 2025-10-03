@@ -17,12 +17,13 @@ import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
 import RpcSwitcherComponent from 'components/popups/rpc-switcher/RpcSwitcher';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
-import Orientation from 'react-native-orientation-locker';
+
 import {ConnectedProps, connect} from 'react-redux';
 import {BottomNavigationComponent} from 'screens/hive/wallet/BottomNavigation.component';
 import Modal from 'screens/Modal';
@@ -96,7 +97,7 @@ const App = ({
 
   useEffect(() => {
     setupLinking();
-    Orientation.lockToPortrait();
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     return () => {
       clearLinkingListeners();
     };

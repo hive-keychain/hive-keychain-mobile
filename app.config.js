@@ -33,6 +33,11 @@ export default ({config}) => ({
         NSLocationWhenInUseUsageDescription:
           'We need your location to load maps.',
         ITSAppUsesNonExemptEncryption: false,
+        UISupportedInterfaceOrientations: [
+          'UIInterfaceOrientationPortrait',
+          'UIInterfaceOrientationLandscapeLeft',
+          'UIInterfaceOrientationLandscapeRight',
+        ],
         CFBundleURLTypes: [
           {
             CFBundleTypeRole: 'Editor',

@@ -16,6 +16,7 @@ import Browser from 'components/browser';
 import BrowserTutorial from 'components/popups/browser-tutorial/BrowserTutorial';
 import ProposalReminder from 'components/popups/proposal-reminder';
 import SafeArea from 'components/ui/SafeArea';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {useEffect} from 'react';
 import Orientation from 'react-native-orientation-locker';
@@ -48,7 +49,7 @@ const BrowserScreen = ({
     const unsubscribe = navigation.addListener('focus', () => {
       Orientation.getAutoRotateState((s) => {
         if (s) {
-          Orientation.unlockAllOrientations();
+          ScreenOrientation.unlockAsync();
         }
       });
     });

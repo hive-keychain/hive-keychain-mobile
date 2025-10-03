@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "2.9.6",
+  "version": "2.9.7",
   "main": "index.js",
   "scripts": {
     "start": "expo start",
@@ -97,7 +97,8 @@
     "sscjs": "0.0.9",
     "stream": "0.0.3",
     "valid-url": "1.0.9",
-    "validator": "13.15.15"
+    "validator": "13.15.15",
+    "expo-screen-orientation": "~8.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
