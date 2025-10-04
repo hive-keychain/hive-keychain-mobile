@@ -63,7 +63,7 @@ const BrowserScreen = ({
   const {theme} = useThemeContext();
 
   return (
-    <SafeArea skipBottom>
+    <SafeArea>
       <Browser
         theme={theme}
         accounts={accounts}
