@@ -342,7 +342,7 @@ const Main = ({
 
   const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     showFloatingBar(
-      event.nativeEvent.contentOffset.y === 0 ||
+      event.nativeEvent.contentOffset.y <= 0 ||
         event.nativeEvent.contentOffset.y < lastScrollYValue,
     );
     setLastScrollYValue(event.nativeEvent.contentOffset.y);
