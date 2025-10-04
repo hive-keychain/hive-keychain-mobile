@@ -1,7 +1,7 @@
 import {ActionPayload} from 'actions/interfaces';
 import {CLEAR_WALLET_FILTERS, UPDATE_WALLET_FILTER} from 'actions/types';
 import {persistReducer} from 'redux-persist';
-import {WalletHistoryFilter} from 'src/types/wallet.history.types';
+import {WalletHistoryFilter} from 'src/interfaces/walletHistory.interface';
 import {persistConfig} from './configs';
 
 export const DEFAULT_WALLET_FILTER: WalletHistoryFilter = {

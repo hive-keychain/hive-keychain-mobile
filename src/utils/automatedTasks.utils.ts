@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ActiveAccount} from 'actions/interfaces';
 import {DropdownModalItem} from 'components/form/DropdownModal';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Token} from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {ClaimsConfig} from './config';
+import {ClaimsConfig} from './config.utils';
 
 const getClaims = async (username: string) => {
   const values: {[key: string]: any} = {};
@@ -115,8 +115,8 @@ const canClaimAccountErrorMessage = (
 
 const saveUserAutoStake = async (username: string, value: boolean) => {
   try {
-    const autoStake = JSON.parse(
-      await AsyncStorage.getItem(KeychainStorageKeyEnum.HE_AUTO_STAKE),
+    const autoStake = await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.HE_AUTO_STAKE,
     );
     let autoStakeUsers: any = autoStake ? JSON.parse(autoStake) : {};
     if (Object.keys(autoStakeUsers).length > 0) {
@@ -131,7 +131,9 @@ const saveUserAutoStake = async (username: string, value: boolean) => {
       KeychainStorageKeyEnum.HE_AUTO_STAKE,
       JSON.stringify(autoStakeUsers),
     );
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const getUserAutoStake = async (username: string) => {

@@ -4,11 +4,12 @@ import {
   Browser,
   BrowserPayload,
   Page,
-  TabFields,
+  Tab,
 } from 'actions/interfaces';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import {Image} from 'expo-image';
 import React from 'react';
 import {
   StyleSheet,
@@ -17,12 +18,12 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getInputContainerHeight} from 'src/styles/input';
@@ -32,17 +33,16 @@ import {
   button_link_primary_small,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {urlTransformer} from 'utils/browser';
-import {Dimensions} from 'utils/common.types';
-import {BrowserConfig} from 'utils/config';
+import {urlTransformer} from 'utils/browser.utils';
+import {BrowserConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 
-const HEART_PNG = require('assets/new_UI/heart.png');
-const HEART_EMPTY_PNG = require('assets/new_UI/heart-empty.png');
+const HEART_PNG = require('assets/images/browser/heart.png');
+const HEART_EMPTY_PNG = require('assets/images/browser/heart-empty.png');
 
 type Props = {
   browser: Browser;
-  updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
+  updateTab: (id: number, data: Partial<Tab>) => ActionPayload<BrowserPayload>;
   startSearch: (b: boolean) => void;
   addToFavorites: (page: Page) => ActionPayload<BrowserPayload>;
   removeFromFavorites: (url: string) => ActionPayload<BrowserPayload>;
@@ -70,7 +70,11 @@ const BrowserHeader = ({
   const styles = getStyles(useWindowDimensions(), insets, landscape, theme);
 
   const goHome = () => {
-    updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
+    updateTab(activeTab, {
+      url: BrowserConfig.HOMEPAGE_URL,
+      icon: BrowserConfig.HOMEPAGE_FAVICON,
+      name: translate('browser.home.title'),
+    });
   };
 
   if (
@@ -91,7 +95,7 @@ const BrowserHeader = ({
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
-          <FastImage source={HEART_PNG} style={styles.icons} />
+          <Image source={HEART_PNG} style={styles.icons} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -100,7 +104,7 @@ const BrowserHeader = ({
           onPress={() => {
             addToFavorites(active);
           }}>
-          <FastImage source={HEART_EMPTY_PNG} style={styles.icons} />
+          <Image source={HEART_EMPTY_PNG} style={styles.icons} />
         </TouchableOpacity>
       );
     };
@@ -114,7 +118,7 @@ const BrowserHeader = ({
         onSwipeRight={() => {
           swipeToTab(true);
         }}>
-        <FocusAwareStatusBar backgroundColor={'transparent'} />
+        <FocusAwareStatusBar backgroundColor={'black'} />
         <View style={[styles.topBar]}>
           {activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
             <>
@@ -122,13 +126,16 @@ const BrowserHeader = ({
                 theme={theme}
                 leftIcon={
                   activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
-                    <Icon
-                      theme={theme}
-                      name={Icons.HOME_BROWSER}
+                    <TouchableOpacity
                       onPress={goHome}
-                      color={PRIMARY_RED_COLOR}
-                      {...styles.icons}
-                    />
+                      style={styles.homeIconContainer}>
+                      <Icon
+                        theme={theme}
+                        name={Icons.HOME_BROWSER}
+                        color={PRIMARY_RED_COLOR}
+                        {...styles.icons}
+                      />
+                    </TouchableOpacity>
                   ) : null
                 }
                 rightIcon={
@@ -151,8 +158,9 @@ const BrowserHeader = ({
                   startSearch(true);
                 }}
                 disableFocus
+                leftIconContainerStyle={{paddingRight: 0}}
                 additionalContainerStyle={styles.searchBarContainer}
-                additionalCustomInputStyle={{fontSize: 13}}
+                additionalCustomInputStyle={{fontSize: 13, marginLeft: 0}}
               />
               {renderFavoritesButton()}
             </>
@@ -211,7 +219,6 @@ const getStyles = (
       width: '100%',
       paddingHorizontal: 16,
       flexDirection: 'row',
-      marginTop: 8,
     },
     paddingHorizontal: {
       paddingHorizontal: 15,
@@ -249,6 +256,12 @@ const getStyles = (
       justifyContent: 'center',
     },
     marginLeft: {marginLeft: 8},
+    homeIconContainer: {
+      width: getInputContainerHeight(width),
+      height: getInputContainerHeight(width),
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     favContainer: {
       width: getInputContainerHeight(width),
       height: getInputContainerHeight(width),
@@ -271,7 +284,7 @@ const getStyles = (
     searchBarContainer: {
       borderRadius: 30,
       height: getInputContainerHeight(width),
-      paddingHorizontal: 16,
+      paddingRight: 16,
       flex: 1,
       fontSize: 13,
     },

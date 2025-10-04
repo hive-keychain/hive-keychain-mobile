@@ -1,9 +1,9 @@
-import HasTitleLight from 'assets/new_UI/has_title_light.svg';
+import HasTitleLight from 'assets/images/has/has_title_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import React from 'react';
-import {Image, StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
@@ -14,9 +14,8 @@ import {
 } from 'src/styles/typography';
 import {clearHAS} from 'utils/hiveAuthenticationService';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 import StatusIndicator, {ConnectionStatus, Indicator} from './StatusIndicator';
-const TitleDarkPNG = require('assets/new_UI/has_title_dark.png');
 
 const HASInfo = () => {
   const {theme} = useThemeContext();
@@ -29,11 +28,7 @@ const HASInfo = () => {
           theme={theme}
           additionalContainerStyle={styles.hasContainer}
         />
-        {theme === Theme.LIGHT ? (
-          <HasTitleLight />
-        ) : (
-          <Image source={TitleDarkPNG} />
-        )}
+        {<HasTitleLight />}
       </View>
     );
   };
@@ -41,37 +36,39 @@ const HASInfo = () => {
   return (
     <Operation logo={fullHasLogo()} title="">
       <View style={styles.view}>
-        <Text style={[styles.title, styles.header]}>
-          {translate('wallet.has.info.h1')}
-        </Text>
-        <Text style={styles.textBase}>{translate('wallet.has.info.t1')}</Text>
-        <Text style={[styles.title, styles.header]}>
-          {translate('wallet.has.info.h2')}
-        </Text>
-        <Text style={styles.textBase}>{translate('wallet.has.info.t2')}</Text>
-        <Text style={[styles.title, styles.header]}>
-          {translate('wallet.has.info.h3')}
-        </Text>
-        <IndicatorDescription
-          status={ConnectionStatus.VOID}
-          rootString={'wallet.has.info.indicator.grey'}
-          theme={theme}
-          press
-        />
-        <IndicatorDescription
-          status={ConnectionStatus.CONNECTED}
-          rootString={'wallet.has.info.indicator.green'}
-          theme={theme}
-          press
-        />
-        <IndicatorDescription
-          status={ConnectionStatus.DISCONNECTED}
-          rootString={'wallet.has.info.indicator.red'}
-          theme={theme}
-          press
-          longPress
-        />
-        <Separator height={15} />
+        <View style={{flexGrow: 1}}>
+          <Text style={[styles.title, styles.header]}>
+            {translate('wallet.has.info.h1')}
+          </Text>
+          <Text style={styles.textBase}>{translate('wallet.has.info.t1')}</Text>
+          <Text style={[styles.title, styles.header]}>
+            {translate('wallet.has.info.h2')}
+          </Text>
+          <Text style={styles.textBase}>{translate('wallet.has.info.t2')}</Text>
+          <Text style={[styles.title, styles.header]}>
+            {translate('wallet.has.info.h3')}
+          </Text>
+          <IndicatorDescription
+            status={ConnectionStatus.VOID}
+            rootString={'wallet.has.info.indicator.grey'}
+            theme={theme}
+            press
+          />
+          <IndicatorDescription
+            status={ConnectionStatus.CONNECTED}
+            rootString={'wallet.has.info.indicator.green'}
+            theme={theme}
+            press
+          />
+          <IndicatorDescription
+            status={ConnectionStatus.DISCONNECTED}
+            rootString={'wallet.has.info.indicator.red'}
+            theme={theme}
+            press
+            longPress
+          />
+        </View>
+        <Separator height={30} />
         <EllipticButton
           title={translate('common.clear_all')}
           onPress={() => {
@@ -141,7 +138,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     view: {
       flex: 1,
-      marginVertical: 20,
+      marginTop: 10,
       flexDirection: 'column',
       justifyContent: 'space-between',
       paddingHorizontal: 15,

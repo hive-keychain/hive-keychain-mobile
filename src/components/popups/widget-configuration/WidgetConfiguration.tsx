@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
@@ -13,7 +13,7 @@ import {getModalBaseStyle} from 'src/styles/modal';
 import {getFontSizeSmallDevices} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 
 interface Props {
@@ -40,7 +40,7 @@ const WidgetConfiguration = ({
     if (show) {
       init();
     }
-  }, [show, accounts]);
+  }, [show, accounts.length]);
   const styles = getStyles(
     useThemeContext().theme,
     useWindowDimensions().width,

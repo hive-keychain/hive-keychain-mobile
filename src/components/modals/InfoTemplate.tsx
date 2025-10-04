@@ -1,20 +1,21 @@
+import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
-import React, { useState } from 'react';
-import { StyleSheet, Text, useWindowDimensions } from 'react-native';
-import { Theme, useThemeContext } from 'src/context/theme.context';
+import React, {useState} from 'react';
+import {StyleSheet, Text, useWindowDimensions} from 'react-native';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {
   InfoScreenData,
   InfoScreenItemList,
   InfoScreenType,
-} from 'src/reference-data/infoScreenItemList';
-import { getColors } from 'src/styles/colors';
+} from 'src/lists/infoScreenItem.list';
+import {getColors} from 'src/styles/colors';
 import {
   button_link_primary_small,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import { Dimensions } from 'utils/common.types';
-import { translate } from 'utils/localize';
+import {translate} from 'utils/localize';
 
 interface Props {
   info: InfoScreenType;
@@ -33,30 +34,35 @@ export default ({skipTranslation, info}: Props) => {
   };
 
   return (
-    <>
+    <SafeArea skipTop>
       <Text style={styles.h4}>{renderText(contentData.titleKey)}</Text>
       <Separator />
-      {contentData.textContentKeyList.map((t, index) => {
-        return (
-          <Text key={`${t}-${index}`} style={styles.textContent}>
-            {renderText(t)}
-          </Text>
-        );
-      })}
-    </>
+      <>
+        {contentData.textContentKeyList.map((t, index) => {
+          return (
+            <Text key={`${t}-${index}`} style={styles.textContent}>
+              {renderText(t)}
+            </Text>
+          );
+        })}
+      </>
+      <Separator />
+    </SafeArea>
   );
 };
 
-const getDimensionedStyles = ({width,height}: Dimensions, theme: Theme) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     h4: {
       ...headlines_primary_headline_2,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(width,headlines_primary_headline_2.fontSize)
+      fontSize: getFontSizeSmallDevices(
+        width,
+        headlines_primary_headline_2.fontSize,
+      ),
     },
     textContent: {
       ...button_link_primary_small,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(width,button_link_primary_small.fontSize)
     },
   });

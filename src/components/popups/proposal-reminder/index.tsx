@@ -1,24 +1,28 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addTab} from 'actions/browser';
+import {updateShowProposalReminder} from 'actions/floatingBar';
 import EllipticButton from 'components/form/EllipticButton';
-import {BrowserNavigation} from 'navigators/MainDrawer.types';
+import Separator from 'components/ui/Separator';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {useEffect} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import SimpleToast from 'react-native-simple-toast';
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import SimpleToast from 'react-native-root-toast';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {RootState} from 'store';
-import {toHP} from 'utils/format';
-import {getClient, updateProposalVote} from 'utils/hive';
-import {navigate} from 'utils/navigation';
+import {ProposalConfig} from 'utils/config.utils';
+import {toHP} from 'utils/format.utils';
+import {getClient, updateProposalVote} from 'utils/hiveLibs.utils';
+import {goBack, navigate} from 'utils/navigation.utils';
 interface Props {
-  navigation: BrowserNavigation;
+  navigation: BrowserScreenProps['navigation'];
 }
 
-const KEYCHAIN_PROPOSAL = 262;
+const KEYCHAIN_PROPOSAL = ProposalConfig.KEYCHAIN_PROPOSAL;
 const IMAGE_URI =
   'https://images.hive.blog/0x0/https://files.peakd.com/file/peakd-hive/stoodkev/23wXG62TYT2yVFnmLB3hwg9hsL9jmEHYow667J1bVk1ebowRwEnNu3ckaHxHohcatE5v8.png';
 
@@ -34,11 +38,11 @@ const hasVotedForProposal = async (
   return listProposalVotes[0].voter === username;
 };
 const getNotifiedVoters = async (): Promise<string[]> => {
+  // await AsyncStorage.removeItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED);
   const voters = JSON.parse(
     (await AsyncStorage.getItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED)) ||
       '[]',
   );
-
   try {
     if (!Array.isArray(voters)) return [];
     return voters;
@@ -61,6 +65,7 @@ const ProposalReminder = ({
   user,
   globalProps,
   addTab,
+  updateFloatingBar,
 }: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
 
@@ -76,12 +81,12 @@ const ProposalReminder = ({
       toHP(user.account.vesting_shares.toString(), globalProps) > 100 &&
       !(await hasVotedForProposal(user.name, KEYCHAIN_PROPOSAL))
     ) {
+      updateFloatingBar(true);
       Image.prefetch(IMAGE_URI).then((val) => {
         navigate('ModalScreen', {
           name: 'ProposalPopup',
           modalContent: renderContent(),
           modalContainerStyle: getModalBaseStyle(theme).roundedTop,
-
           onForceCloseModal: () => {},
         });
       });
@@ -90,7 +95,7 @@ const ProposalReminder = ({
 
   const renderContent = () => {
     return (
-      <View aria-label="whats-new-component" style={styles.rootContainer}>
+      <ScrollView aria-label="whats-new-component" style={styles.rootContainer}>
         <Text style={styles.title}>Support Keychain Development!</Text>
         <Image
           style={styles.image}
@@ -110,11 +115,13 @@ const ProposalReminder = ({
         <Text style={styles.text}>
           Read more{' '}
           <Text
-            style={{color: getColors(theme).secondaryText, fontWeight: 'bold'}}
+            style={{
+              color: getColors(theme).secondaryText,
+              fontWeight: 'bold',
+            }}
             onPress={() => {
-              addNotifiedVoter(user.name);
               addTab(`https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`);
-              navigation.navigate('BrowserScreen');
+              navigate('Browser');
             }}>
             here
           </Text>
@@ -145,7 +152,8 @@ const ProposalReminder = ({
               }}
               onPress={() => {
                 addNotifiedVoter(user.name);
-                navigation.navigate('BrowserScreen');
+                goBack();
+                updateFloatingBar(false);
               }}>
               I won't support
             </Text>
@@ -162,12 +170,14 @@ const ProposalReminder = ({
                 extensions: [],
               }).then(() => {
                 SimpleToast.show('Thanks for your support!');
-                navigation.navigate('BrowserScreen');
+                updateFloatingBar(false);
+                goBack();
               });
             }}
           />
         </View>
-      </View>
+        <Separator height={initialWindowMetrics.insets.bottom + 20} />
+      </ScrollView>
     );
   };
   return null;
@@ -178,6 +188,7 @@ const getStyles = (theme: Theme) =>
     rootContainer: {
       width: '100%',
       padding: 12,
+      paddingBottom: initialWindowMetrics.insets.bottom + 20,
     },
     title: {
       textAlign: 'center',
@@ -206,6 +217,9 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps, {addTab});
+const connector = connect(mapStateToProps, {
+  addTab,
+  updateFloatingBar: updateShowProposalReminder,
+});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(ProposalReminder);

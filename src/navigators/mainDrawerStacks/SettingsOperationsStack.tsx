@@ -1,0 +1,59 @@
+import {createStackNavigator} from '@react-navigation/stack';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
+import React from 'react';
+import {StyleSheet} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import Operations from 'screens/hive/drawer/settings/Operations';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {HEADER_ICON_MARGIN} from 'src/styles/headers';
+import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
+
+const Stack = createStackNavigator();
+
+export default () => {
+  const {theme} = useThemeContext();
+  const styles = getStyles(theme, useSafeAreaInsets());
+  return (
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
+      <Stack.Screen
+        name="SettingsOperationsScreen"
+        component={Operations}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.operations'} />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
+  StyleSheet.create({
+    header: {
+      backgroundColor: getColors(theme).primaryBackground,
+      borderWidth: 0,
+      elevation: 0,
+      shadowColor: 'transparent',
+      height: STACK_HEADER_HEIGHT + insets.top,
+    },
+    headerLeftContainer: {
+      marginLeft: HEADER_ICON_MARGIN,
+    },
+  });

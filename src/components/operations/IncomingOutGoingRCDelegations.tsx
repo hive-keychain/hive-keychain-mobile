@@ -2,7 +2,7 @@ import {loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import Separator from 'components/ui/Separator';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -15,7 +15,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
   RCDelegationValue,
   RcDelegation,
-} from 'src/interfaces/rc-delegation.interface';
+} from 'src/interfaces/rcDelegation.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -24,10 +24,10 @@ import {
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {formatBalance} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {formatBalance} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
+import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 import IncomingOutgoingRcDelegationItem from './IncomingOutgoingRcDelegationItem';
 import OperationThemed from './OperationThemed';
 
@@ -64,18 +64,19 @@ const IncomingOutGoingRCDelegations = ({
     }
   };
 
-  const renderListItem = (rcDelegation: RcDelegation) => {
-    return (
+  const renderRcDelegationItem = useCallback(
+    ({item}: {item: RcDelegation}) => (
       <IncomingOutgoingRcDelegationItem
         theme={theme}
         type={type}
-        item={rcDelegation}
+        item={item}
         available={available}
         isMultisig={isMultisig}
         twoFABots={twoFABots}
       />
-    );
-  };
+    ),
+    [theme, type, available, isMultisig, twoFABots],
+  );
 
   return (
     <OperationThemed
@@ -108,7 +109,7 @@ const IncomingOutGoingRCDelegations = ({
           {!isLoading && rcDelegations.length > 0 && (
             <FlatList
               data={rcDelegations}
-              renderItem={(rcDelegation) => renderListItem(rcDelegation.item)}
+              renderItem={renderRcDelegationItem}
               keyExtractor={(rcDelegation) =>
                 `${rcDelegation.value}-${rcDelegation.delegatee}`
               }

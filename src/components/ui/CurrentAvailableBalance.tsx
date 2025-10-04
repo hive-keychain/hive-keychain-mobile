@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   BACKGROUNDITEMDARKISH,
   DARKER_RED_COLOR,
@@ -17,7 +17,7 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {getFontSizeSmallDevices, getFormFontStyle} from 'src/styles/typography';
-import {formatBalanceCurrency} from 'utils/format';
+import {formatBalanceCurrency} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import SquareButton from './SquareButton';
 
@@ -70,7 +70,7 @@ const CurrentAvailableBalance = ({
         icon={
           <Icon
             theme={theme}
-            name={Icons.SEND_SQUARE}
+            name={Icons.VOTING_MANA}
             color="#FFF"
             additionalContainerStyle={styles.icon}
           />

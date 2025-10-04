@@ -2,19 +2,18 @@ import {Operation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import React from 'react';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {broadcast} from 'utils/hive';
-import {getAccountKeys} from 'utils/hiveUtils';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {
   RequestBroadcast,
   RequestError,
   RequestId,
   RequestSuccess,
   UsingHAS,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getAccountKeys} from 'utils/hive.utils';
+import {broadcast} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import CollapsibleData from './components/CollapsibleData';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -44,18 +43,25 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={(options: TransactionOptions) => {
         return performBroadcastOperation(accounts, request, options);
-      }}>
-      <RequestItem
-        content={`@${username}`}
-        title={translate('request.item.username')}
-      />
-      <RequestItem content={method} title={translate('request.item.method')} />
-      <CollapsibleData
-        content={JSON.stringify(operations, undefined, 2)}
-        title={translate('request.item.data')}
-        hidden={translate('request.item.hidden_data')}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: `@${username}`,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.method',
+          value: method,
+        },
+        {
+          title: 'request.item.data',
+          value: JSON.stringify(operations, undefined, 2),
+          hidden: translate('request.item.hidden_data'),
+          tag: ConfirmationDataTag.COLLAPSIBLE,
+        },
+      ]}
+    />
   );
 };
 

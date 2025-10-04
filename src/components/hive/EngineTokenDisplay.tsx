@@ -1,24 +1,16 @@
 import {TokenBalance, TokenMarket} from 'actions/interfaces';
-import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
-import React, {useState} from 'react';
-import {
-  Image as Img,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
-import Image from 'react-native-fast-image';
-import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
+import React, {memo, useCallback} from 'react';
+import {useWindowDimensions, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+import {useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
-import {Colors, getTokenBackgroundColor} from 'utils/colors';
-import {Width} from 'utils/common.types';
-import {formatBalance} from 'utils/format';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
-import {navigate} from 'utils/navigation';
+import {formatBalance} from 'utils/format.utils';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
+import {navigate} from 'utils/navigation.utils';
+import CurrencyIcon from './CurrencyIcon';
 import TokenDisplay from './TokenDisplay';
 
 type Props = {
@@ -40,50 +32,30 @@ const EngineTokenDisplay = ({
   colors,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
-  const {width, height} = useWindowDimensions();
-  const styles = getDimensionedStyles(
-    {width},
-    theme,
-    token.symbol,
-    colors,
-    addBackground,
-  );
-  const [hasError, setHasError] = useState(false);
-  const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
-  const tokenMarket = market.find((t) => t.symbol === token.symbol);
+  const {width} = useWindowDimensions();
 
-  if (!tokenInfo) return null;
-
-  const logo = hasError ? (
-    <Image
-      style={styles.iconBase}
-      source={{
-        uri: Img.resolveAssetSource(HiveEngine).uri,
-      }}
-      onError={() => {
-        console.log('default');
-      }}
-    />
-  ) : (
-    <Image
-      style={styles.iconBase}
-      source={{
-        uri: tokenInfo.metadata.icon,
-      }}
-      onError={() => {
-        setHasError(true);
-      }}
-    />
+  const tokenInfo = tokensList.find((t: Token) => t.symbol === token.symbol);
+  const tokenMarket = market.find(
+    (t: TokenMarket) => t.symbol === token.symbol,
   );
 
-  const onHandleGoToTokenHistory = () => {
+  const onHandleGoToTokenHistory = useCallback(() => {
     navigate('TokensHistory', {
       currency: token.symbol,
       tokenBalance: token.balance,
-      tokenLogo: logo,
+      tokenLogo: (
+        <CurrencyIcon
+          currencyName={token.symbol}
+          tokenInfo={tokenInfo}
+          colors={colors}
+          symbol={token.symbol}
+        />
+      ),
       theme: theme,
     } as TokenHistoryProps);
-  };
+  }, [token.symbol, token.balance, tokenInfo, colors, theme]);
+
+  if (!tokenInfo) return null;
 
   return (
     <View style={[getCardStyle(theme).wrapperCardItem, {zIndex: 11}]}>
@@ -106,13 +78,13 @@ const EngineTokenDisplay = ({
           ),
         }}
         logo={
-          <View
-            style={[
-              styles.iconContainerBase,
-              !hasError ? styles.iconContainerBaseWithBg : undefined,
-            ]}>
-            {logo}
-          </View>
+          <CurrencyIcon
+            currencyName={token.symbol}
+            addBackground={true}
+            tokenInfo={tokenInfo}
+            colors={colors}
+            symbol={token.symbol}
+          />
         }
         renderButtonOptions={false}
         theme={theme}
@@ -124,31 +96,6 @@ const EngineTokenDisplay = ({
   );
 };
 
-const getDimensionedStyles = (
-  {width}: Width,
-  theme: Theme,
-  symbol: string,
-  colors: Colors,
-  addBackground?: boolean,
-) =>
-  StyleSheet.create({
-    iconBase: {
-      width: 24,
-      height: 24,
-    },
-    iconContainerBase: {
-      padding: 5,
-      borderRadius: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    iconContainerBaseWithBg: {
-      backgroundColor: addBackground
-        ? getTokenBackgroundColor(colors, symbol, theme)
-        : undefined,
-    },
-  });
-
 const mapStateToProps = (state: RootState) => {
   return {
     hivePrice: state.currencyPrices?.hive?.usd,
@@ -159,4 +106,16 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(EngineTokenDisplay);
+const areEqualOwnProps = (
+  prevProps: Readonly<Props>,
+  nextProps: Readonly<Props>,
+) => {
+  return (
+    prevProps.toggled === nextProps.toggled &&
+    prevProps.token === nextProps.token &&
+    prevProps.tokensList === nextProps.tokensList &&
+    prevProps.market === nextProps.market
+  );
+};
+
+export default memo(connector(EngineTokenDisplay), areEqualOwnProps);

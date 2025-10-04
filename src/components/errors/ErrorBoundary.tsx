@@ -1,45 +1,45 @@
-import React, { type ComponentType, type ReactNode } from 'react';
+import crashlytics from '@react-native-firebase/crashlytics';
+import React, {type ComponentType, type ReactNode} from 'react';
 
-import crashlytics from "@react-native-firebase/crashlytics";
 import FallbackComponent, {
-  type Props as FallbackComponentProps
+  type Props as FallbackComponentProps,
 } from './FallbackComponent';
 
 export type Props = {
-  children: Exclude<NonNullable<ReactNode>, string | number | boolean>
-  FallbackComponent: ComponentType<FallbackComponentProps>
-  onError?: (error: Error, stackTrace: string) => void
-}
+  children: Exclude<NonNullable<ReactNode>, string | number | boolean>;
+  FallbackComponent: ComponentType<FallbackComponentProps>;
+  onError?: (error: Error, stackTrace: string) => void;
+};
 
-type State = { error: Error | null }
+type State = {error: Error | null};
 
 class ErrorBoundary extends React.Component<Props, State> {
-  state: State = { error: null }
+  state: State = {error: null};
 
   static defaultProps: {
-    FallbackComponent: ComponentType<FallbackComponentProps>
+    FallbackComponent: ComponentType<FallbackComponentProps>;
   } = {
     FallbackComponent: FallbackComponent,
-  }
+  };
 
   static getDerivedStateFromError(error: Error): State {
-    return { error }
+    return {error};
   }
 
-  componentDidCatch(error: Error, info: { componentStack: string }) {
-    console.log(' ========================= sending error',error)
-    crashlytics().recordError(error,error.name);
+  componentDidCatch(error: Error, info: {componentStack: string}) {
+    console.log(' ========================= sending error', error);
+    crashlytics().recordError(error, error.name);
     if (typeof this.props.onError === 'function') {
-      this.props.onError(error, info?.componentStack)
+      this.props.onError(error, info?.componentStack);
     }
   }
 
   resetError: () => void = () => {
-    this.setState({ error: null })
-  }
+    this.setState({error: null});
+  };
 
   render() {
-    const { FallbackComponent } = this.props
+    const {FallbackComponent} = this.props;
 
     return this.state.error ? (
       <FallbackComponent
@@ -48,8 +48,8 @@ class ErrorBoundary extends React.Component<Props, State> {
       />
     ) : (
       this.props.children
-    )
+    );
   }
 }
 
-export default ErrorBoundary
+export default ErrorBoundary;

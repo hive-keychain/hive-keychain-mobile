@@ -1,10 +1,13 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {
+  RequestId,
+  RequestRemoveProposal,
+} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {removeProposal} from 'utils/hive';
-import {RequestId, RequestRemoveProposal} from 'utils/keychain.types';
+import {removeProposal} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
@@ -44,12 +47,18 @@ export default ({
           },
           options,
         );
-      }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
-      <RequestItem title={translate('request.item.ids')} content={ids} />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.ids',
+          value: ids,
+        },
+      ]}
+    />
   );
 };

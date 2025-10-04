@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import {Dimensions} from 'utils/common.types';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {translate} from 'utils/localize';
 
 export type Category = {

@@ -1,22 +1,22 @@
-import Background from 'components/ui/Background';
 import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
 import {ISwap} from 'hive-keychain-commons';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
-import {SwapsConfig} from 'utils/config';
+import {SwapsConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
-import {BackToTopButton} from '../ui/Back-To-Top-Button';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
+import {BackToTopButton} from '../ui/BackToTopButton';
 import SwapHistoryItem from './SwapHistoryItem';
 
 const SwapHistory = ({activeAccount}: PropsFromRedux) => {
@@ -28,7 +28,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<ISwap>>(null);
 
   useEffect(() => {
     initSwapHistory();
@@ -78,6 +78,13 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
+  const renderSwapHistoryItem = useCallback(
+    ({item, index}: {item: ISwap; index: number}) => (
+      <SwapHistoryItem theme={theme} item={item} currentIndex={index} />
+    ),
+    [theme],
+  );
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -86,7 +93,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
     );
   } else {
     return (
-      <Background theme={theme} additionalBgSvgImageStyle={styles.hexagons}>
+      <View style={styles.container}>
         <>
           <BackgroundHexagons theme={theme} />
           <FocusAwareStatusBar />
@@ -118,13 +125,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
             ref={flatListRef}
             data={history}
             style={[getCardStyle(theme).roundedCardItem, styles.listContainer]}
-            renderItem={(item) => (
-              <SwapHistoryItem
-                theme={theme}
-                item={item.item}
-                currentIndex={item.index}
-              />
-            )}
+            renderItem={renderSwapHistoryItem}
             ListEmptyComponent={() => {
               return (
                 <View style={styles.flex}>
@@ -135,19 +136,26 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
               );
             }}
             onScroll={handleScroll}
-            ListFooterComponent={<Separator />}
+            ListFooterComponent={
+              <Separator height={initialWindowMetrics.insets.bottom + 70} />
+            }
           />
           {displayScrollToTop && (
             <BackToTopButton theme={theme} element={flatListRef} />
           )}
         </>
-      </Background>
+      </View>
     );
   }
 };
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: getColors(theme).primaryBackground,
+      paddingTop: 30,
+    },
     listContainer: {
       paddingTop: 15,
       paddingHorizontal: 10,

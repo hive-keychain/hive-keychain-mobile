@@ -1,15 +1,15 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import {decodeMemo} from 'components/bridge';
 import React from 'react';
-import {urlTransformer} from 'utils/browser';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {
   RequestDecode,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {urlTransformer} from 'utils/browser.utils';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -45,13 +45,20 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={() => {
         return performDecodeOperation(accounts, request);
-      }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
-      <RequestItem title={translate('request.item.method')} content={method} />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+
+        {
+          title: 'request.item.method',
+          value: method,
+        },
+      ]}
+    />
   );
 };
 

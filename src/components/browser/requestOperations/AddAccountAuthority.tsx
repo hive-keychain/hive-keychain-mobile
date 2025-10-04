@@ -1,11 +1,14 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {
+  RequestAddAccountAuthority,
+  RequestId,
+} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {addAccountAuth} from 'utils/hive';
-import {beautifyErrorMessage} from 'utils/keychain';
-import {RequestAddAccountAuthority, RequestId} from 'utils/keychain.types';
+import {addAccountAuth} from 'utils/hiveLibs.utils';
+import {beautifyErrorMessage} from 'utils/keychain.utils';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
@@ -40,21 +43,28 @@ const AddAccountAuthority = ({
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
         return await addAccountAuth(key, data, options);
-      }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
-      <RequestItem
-        title={translate('request.item.authorized_username')}
-        content={`@${authorizedUsername}`}
-      />
-      <RequestItem title={translate('request.item.role')} content={role} />
-      <RequestItem
-        title={translate('request.item.weight')}
-        content={weight + ''}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: `@${username}`,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.authorized_username',
+          value: `@${authorizedUsername}`,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.role',
+          value: role,
+        },
+        {
+          title: 'request.item.weight',
+          value: weight + '',
+        },
+      ]}
+    />
   );
 };
 

@@ -83,10 +83,12 @@
     "stake": "Stake",
     "unstake": "Unstake",
     "delegate": "Delegate",
+    "got_it": "Got it!",
     "deleg": "Deleg.",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
     "next": "Next",
+    "previous": "Previous",
     "account": "Account",
     "unknown_data": {
       "description": "Used when an operation didn't registered a field!",
@@ -136,6 +138,7 @@
     "users": "Users",
     "local_accounts": "Local Accounts",
     "exchanges": "Exchanges",
+    "exchange": "exchange",
     "yes": "Yes",
     "no": "No",
     "skip": "Skip",
@@ -208,7 +211,10 @@
             "success": "Savings withdrawal canceled succesfully"
           }
         },
-        "confirm": {"info": "Please confirm this savings operation."},
+        "confirm": {
+          "info": "Please confirm this savings operation.",
+          "balance": "Balance"
+        },
         "pending": "Withdrawing",
         "currency_savings_title": "{{currency}} Savings"
       },
@@ -230,7 +236,8 @@
           "amount": "Amount",
           "memo": "Memo",
           "recurrence": "Recurrence",
-          "recurrenceData": "{{exec}} times, every {{recurrence}} hours"
+          "recurrenceData": "{{exec}} times, every {{recurrence}} hours",
+          "balance": "Balance"
         },
         "warning": {
           "phishing": "This account has been listed as a potential phishing account, check the spelling and make sure it is the account you want to transfer to.",
@@ -238,7 +245,10 @@
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
           "missing_info": "Please fill the username and amount to proceed",
           "missing_amount": "Please fill the requested amount to proceed",
-          "insufficient": "Please fill the username and amount to proceed"
+          "insufficient": "Please fill the username and amount to proceed",
+          "private_key_in_memo": "Sending a private key as memo is a huge security risk.",
+          "exchange_vsc": "Most exchanges don't accept VSC transfers. If you proceed, your funds may be lost.",
+          "exchange_recurrent": "Most exchanges don't accept recurrent transfers. If you proceed, your funds may be lost."
         },
         "started_recurrent_transfer": "Started a recurrent transfer of {{amount}}",
         "fill_recurrent_transfer_out": "To @{{other}}: ({{remainingExecutions}} remaining)",
@@ -250,7 +260,10 @@
         "title": "Power up",
         "info_power_up": "Powered up {{amount}}",
         "info_text": "Power up HIVE to transform it in HP",
-        "confirm": {"info": "Please confirm this power up."}
+        "confirm": {
+          "info": "Please confirm this power up.",
+          "balance": "Balance"
+        }
       },
       "powerdown": {
         "confirm": {
@@ -281,16 +294,22 @@
         "outgoing_disclaimer": "After being canceled, delegations take 5 days to return to your available Hive Power balance",
         "pending_undelegations": "Pending Undelegations",
         "confirm_cancel_delegation": "Please confirm that you want to cancel this delegation?",
-        "confirm": {"info": "Please confirm the HP delegation."}
+        "confirm": {
+          "info": "Please confirm the HP delegation.",
+          "balance": "Balance"
+        }
       },
       "rc_delegation": {
-        "confirm": {"info": "Please confirm the RC delegation."},
+        "confirm": {
+          "info": "Please confirm the RC delegation.",
+          "balance": "Balance"
+        },
         "title_button": "RC Deleg.",
         "title": "RC Delegation",
         "total_incoming": "Total Incoming",
         "total_outgoing": "Total Outgoing",
         "giga_rc": "G RC",
-        "disclaimer": "You may delegate your Hive Power (HP) to another user. Click on the Outgoing amount to review or make change",
+        "disclaimer": "You may delegate your Resource Credits (RC) to another user. Click on the Outgoing amount to review or make change",
         "delegate_to_user": "Delegate to user",
         "warning": {
           "no_username_or_amount": "Please fill valid username and amount to proceed"
@@ -315,7 +334,7 @@
         "start_convert": "Started a {{amount}} conversion",
         "start_collateralized": "Started a {{amount}} collateralized conversion",
         "pending": "Pending",
-        "no_pending": "No pending {{currency}} convertions to show.",
+        "no_pending": "No pending {{currency}} conversion to show.",
         "warning": {
           "missing_info": "Please fill the amount to proceed"
         },
@@ -326,7 +345,10 @@
         "title": "Transfer Token"
       },
       "token_stake": {
-        "confirm": {"info": "Please confirm that you want to stake tokens."},
+        "confirm": {
+          "info": "Please confirm that you want to stake tokens.",
+          "balance": "Balance"
+        },
         "title": "Stake",
         "titled": "Staked",
         "staking": "Staking",
@@ -334,7 +356,10 @@
         "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient."
       },
       "token_unstake": {
-        "confirm": {"info": "Please confirm that you want to unstake tokens."},
+        "confirm": {
+          "info": "Please confirm that you want to unstake tokens.",
+          "balance": "Balance"
+        },
         "title": "Unstake",
         "unstaking_token": "Unstaking {{currency}}",
         "unstaking": "Unstaking",
@@ -435,6 +460,7 @@
         "swap_token_confirm_message": "You are about to initiate a token swap using Keychain. You can track its status from the swap history screen.",
         "swap_id_title": "Swap ID",
         "swap_estimation": "Swap Estimation",
+        "estimation": "Estimation",
         "swap_min_hive_value_error": "Minimum value should be equivalent to 1 HIVE (currently {{currently}} HIVE)",
         "swap_refresh_countdown": "Refreshing in {{count}}s",
         "swap_slippage_step": "{{slippage}}% (for each step)",
@@ -527,7 +553,9 @@
       "show_qr_code": "Show QR Code",
       "qr": {
         "title": "Export your keys!",
-        "caption": "This QR Code contains all your private keys for this account and should only be used to import your keys to the Hive Keychain mobile App. DO NOT share it with anyone!"
+        "caption": "This QR Code contains all your private keys for this account and should only be used to import your keys to the Hive Keychain mobile App. DO NOT share it with anyone!",
+        "check1": "I am not sharing my screen or planning to share a screenshot of this QR Code with anyone",
+        "check2": "I understand that sharing this QR Code with anyone may result in a loss of funds"
       },
       "disclaimer": [
         {
@@ -571,6 +599,16 @@
       "export_transactions": {
         "title": "Export Transactions"
       },
+      "security": {
+        "title": "Security",
+        "disclaimer": "You can use your biometrics for a faster login experience",
+        "biometrics": "Enable biometrics login",
+        "checkbox": "Biometrics login",
+        "error_no_biometrics": "No biometrics enrolled",
+        "biometrics_refused": "Enable Fingerprint or Face ID for Hive Keychain in your iOS settings",
+        "enable_biometrics": "Enable biometrics",
+        "enable_biometrics_description": "Enable biometrics login to access your Hive Keychain wallet faster. You can change this setting in Settings > Security."
+      },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
@@ -580,6 +618,7 @@
       "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for operations",
       "switch_auto": "Switch Automatically",
       "switch_auto_info": "Will always select the best Hive RPC node for you",
+      "switch_auto_info_he": "Will always select the best Hive Engine RPC node for you",
       "hive_rpc": "Hive RPC",
       "add_rpc_title": "Add Your RPC node here",
       "rpc_node": "RPC Node",
@@ -607,11 +646,9 @@
       "text4": "If you use a Master Key, it will NOT be saved and will only be used to generate your other Keys. You may add/edit Accounts or Keys at any time."
     },
     "accountCreationPeerToPeer": {
-      "title": "Peer to Peer onboarding, thanks to a good friend!",
-      "text1": "As soon as you choose a valid username and click on Create",
-      "text2": "the app will give you your keys, PLEASE STORE them in a safe place.",
-      "text3": "Then after confirm that the keys are safely stored,",
-      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation.",
+      "title": "Peer to Peer onboarding",
+      "text1": "Once the account is created, make sure to store your keys in a safe place.",
+      "text2": "You will then get a QR code. Show it to your onboarder to proceed with the account creation.",
       "not_enough_rc_exception": "You don't have enough RC to perform this transaction. Please power up or receive an RC delegation."
     },
     "infoQR": {
@@ -633,8 +670,8 @@
     },
     "forgotPIN": {
       "title": "Reset wallet?",
-      "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to enter all your keys again.",
-      "button": "Reset Key"
+      "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to import all your accounts again.",
+      "button": "Reset Wallet"
     },
     "pinCode": {
       "unsupportedBiometrics": {
@@ -672,6 +709,13 @@
     "copy_keys": {
       "title": "Copy a Key",
       "text1": "If you need to copy a public or private key, perform a long press on the key."
+    },
+    "export_qr_accounts": {
+      "qr_exported_set_disclaimer1": "This QR Code contains all your private keys for this set of accounts, and should only be used to import your keys to the Hive Keychain mobile App.",
+      "qr_disclaimer2": "DO NOT share it with anyone!",
+      "scanning": "Please scan page {{page}}/{{total}}",
+      "check1": "I am not sharing my screen or planning to share a screenshot of these QR Codes with anyone",
+      "check2": "I understand that sharing these QR Codes with anyone may result in a loss of funds"
     },
     "notifications": {
       "mark_as_read": "The notifications have been marked as read!",
@@ -731,11 +775,13 @@
     }
   },
   "toast": {
+    "error_camera_permission": "Camera permission is required to scan QR codes",
     "receive_success": "The transfer has been received successfully",
     "error_witness_account_update": "Error while updating witness account @{{account}}",
     "noMatch": "The PIN codes do not match",
     "authFailed": "Authentication failed",
-    "account_already": "You already registered this account",
+    "account_already": "You already registered @{{account}}",
+    "added_account": "Account @{{account}} added!",
     "transfer_success": "Your transfer was successful!",
     "recurrent_transfer_success": "Your recurrent transfer started successfully!",
     "transfer_token_confirmed": "Your transfer was successfully broadcasted to Hive. Your balance might take a little while to update.",
@@ -788,12 +834,20 @@
     "missing_memo_key": "The account @{{account}} is missing the memo key to encrypt the message!",
     "tokens_timeout": "This node is not replying. Please go to token settings and change the Hive Engine RPC node",
     "account_not_in_hive": "The account @{{account}} does not exist, please check the username.",
-    "account_removed": "The account @{{account}} has been removed from Keychain."
+    "account_removed": "The account @{{account}} has been removed from Keychain.",
+    "export_qr_accounts": {
+      "scan_next": "Page: {{index}} of {{total}}, scan next page!",
+      "scan_page_first": "Scan page {{page}} first!",
+      "scan_completed": "Scan completed, loading accounts!",
+      "already_scanned": "Page already scanned, please move to page {{page}}!"
+    }
   },
   "navigation": {
     "log_out": "Logout",
     "accounts": "Accounts",
     "add_account": "Add Account",
+    "import_all": "Import all accounts",
+    "export_accounts_qr": "Export Accounts",
     "add_account_by_auth": "Auth. Account",
     "manage": "Manage Keys",
     "settings": "Settings",
@@ -852,7 +906,8 @@
       "addAccount": "Add Account",
       "convert": "Convert",
       "recurrentTransfer": "Recurrent Transfers",
-      "multisig": "Multisig"
+      "multisig": "Multisig",
+      "swap": "Keychain Swap"
     },
     "message": {
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
@@ -886,7 +941,7 @@
       "ids": "Proposal IDs",
       "keys": "Keys",
       "role": "Role",
-      "authorized_username": "Authorized Account",
+      "authorized_username": "Authorized",
       "authorized_key": "Authorized Key",
       "recurrence": "Recurrence",
       "creator": "Creator",
@@ -899,12 +954,15 @@
       "duration": "Duration",
       "daily_pay": "Daily Pay",
       "initiator": "Initiator",
-      "key": "Key"
+      "key": "Key",
+      "swap": "Swap",
+      "slippage": "Slippage"
     },
     "error": {
       "no_account": "The current website is trying to send a request to Hive Keychain for account @{{account}} which has not been added to the wallet.",
       "no_auth": "The current website is trying to send a request to Hive Keychain for account @{{account}} using the {{auth}} key, which has not been added to the wallet.",
-      "no_active_auth": "The current website is trying to send a request to Hive Keychain using active authority, but no account has been adeed with active key.",
+      "no_required_auth": "The current website is trying to send a request to Hive Keychain for account @{{account}} using {{required_auth}} authority, but @{{account}} has NOT been added with {{required_auth}} key.",
+      "no_required_auth_anonymous": "The current website is trying to send an anonymous request to Hive Keychain {{required_auth}} authority, but there are no accounts added with {{required_auth}} key.",
       "decode": "Could not verify key.",
       "encode": "Could not encode the message.",
       "signBuffer": "Could not sign.",
@@ -913,10 +971,15 @@
       "unknown": "Something went wrong! Please try again!",
       "broadcasting": "There was an error broadcasting this transaction, please try again.",
       "addAccount": "There was an error adding this account. Please verify its username and keys.",
+      "timeout": "Request timeout",
       "transfer": {
         "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
         "get_account": "Cannot find account @{{to}}",
         "encrypt": "Please add your memo key to encrypt memos."
+      },
+      "swap": {
+        "fetching_balance": "Error fetching account data.",
+        "insufficient_balance": "Insufficient balance."
       }
     },
     "success": {
@@ -949,7 +1012,8 @@
       "recurrentTransfer": "Successfully started a recurrent transfer. {{amount}} {{currency}} will be sent to {{to}} {{executions}} times, every {{recurrence}} hours.",
       "createClaimedAccount": "Succesfully claimed account @{{new_account}}",
       "createProposal": "Succesfully created a new proposal!",
-      "removeProposal": "Succesfully removed proposal(s) {{ids}}."
+      "removeProposal": "Succesfully removed proposal(s) {{ids}}.",
+      "swap": "Succesfully started the swap of {{amount}} {{from}} to {{to}}."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}.",
@@ -958,9 +1022,12 @@
   "browser": {
     "search": "Search or enter url",
     "clear_all": "All your browser tabs have been closed",
-    "history": {"clear": "Clear History"},
+    "history": {
+      "clear": "Clear History",
+      "clear_cache": "Clear Cache"
+    },
     "home": {
-      "title": "HOME",
+      "title": "Home",
       "menu": {
         "ecosystem": "Ecosystem",
         "recent": "Recent",
@@ -1079,11 +1146,17 @@
     }
   },
   "popup": {
+    "browser_tutorial": {
+      "title": "Keychain Browser",
+      "description": "Welcome to your Keychain Browser! Here are a few navigation elements you should know:",
+      "swipe_right": "Swipe right to go back",
+      "double_tap": "Tap with two fingers to hide/show the floating bar",
+      "swipe_left": "Swipe left to go forward",
+      "swipe_down": "Swipe down to refresh",
+      "browser_button": "Press to switch between main and browser bottom bars. Long press to close all tabs."
+    },
     "whats_new": {
-      "intro": "What's new in {{content_version}}",
-      "next": "Next",
-      "previous": "Previous",
-      "got_it": "Got it!"
+      "intro": "What's new in {{content_version}}"
     },
     "widget_configuration": {
       "title": "Portfolio Widget",
@@ -1149,5 +1222,27 @@
   },
   "multichain": {
     "switch_chain": "Switch Chain"
+  },
+  "encryption": {
+    "save": "We are moving to a new encryption method. Use your biometrics for a faster login.",
+    "retrieve": "Use your biometrics to login"
+  },
+  "lockout": {
+    "warning_after_third": "Warning: You will be temporarily locked out after the 5th attempt.",
+    "active": "Too many failed attempts. Try again in {{time}}.",
+    "locked_for": "Too many failed attempts. Locked for {{time}}.",
+    "duration": {
+      "hour": "1 hour",
+      "fifteen_minutes": "15 minutes",
+      "five_minutes": "5 minutes",
+      "minute": "1 minute",
+      "thirty_seconds": "30 seconds"
+    },
+    "time": {
+      "h": "h",
+      "m": "m",
+      "s": "s",
+      "separator": " "
+    }
   }
 }

@@ -2,12 +2,16 @@ import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {
+  EdgeInsets,
+  initialWindowMetrics,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Transaction} from 'src/interfaces/transaction.interface';
 import {getColors} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
@@ -20,7 +24,7 @@ import TransactionUtils, {
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import Icon from '../hive/Icon';
-import {BackToTopButton} from '../ui/Back-To-Top-Button';
+import {BackToTopButton} from '../ui/BackToTopButton';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 
 export interface WalletHistoryComponentProps {
@@ -56,7 +60,7 @@ const WallettHistory = ({
 
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<Transaction>>(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -158,16 +162,17 @@ const WallettHistory = ({
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets());
 
-  const renderListItem = (transaction: Transaction) => {
-    return (
+  const renderWalletHistoryItem = useCallback(
+    ({item}: {item: Transaction}) => (
       <WalletHistoryItemComponent
-        transaction={transaction}
+        transaction={item}
         user={activeAccount}
         locale={locale}
         theme={theme}
       />
-    );
-  };
+    ),
+    [activeAccount, locale, theme],
+  );
 
   const tryToLoadMore = () => {
     if (loading) return;
@@ -206,7 +211,7 @@ const WallettHistory = ({
             initialNumToRender={20}
             scrollEnabled
             onEndReachedThreshold={0.5}
-            renderItem={(transaction) => renderListItem(transaction.item)}
+            renderItem={renderWalletHistoryItem}
             keyExtractor={(transaction) => transaction.key}
             style={styles.transactionsList}
             onScroll={handleScroll}
@@ -239,7 +244,8 @@ const WallettHistory = ({
                         </Text>
                         <Icon
                           name={Icons.ADD_CIRCLE_OUTLINE}
-                          theme={theme}
+                          fill={getColors(theme).iconBW}
+                          height={15}
                           additionalContainerStyle={{marginLeft: 5}}
                         />
                       </TouchableOpacity>
@@ -251,6 +257,18 @@ const WallettHistory = ({
                     </View>
                   )}
                   {/* END BOTTOM LOADER */}
+                  <Separator
+                    height={
+                      initialWindowMetrics.insets.bottom +
+                      (transactions.list[transactions.list.length - 1]?.last ===
+                        false &&
+                      transactions.lastUsedStart !== 0 &&
+                      !loading &&
+                      !bottomLoader
+                        ? 20
+                        : 70)
+                    }
+                  />
                 </>
               );
             }}
@@ -364,6 +382,7 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...fields_primary_text_1,
+      paddingTop: 1,
     },
   });
 

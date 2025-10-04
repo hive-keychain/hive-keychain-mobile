@@ -1,10 +1,11 @@
 import {loadAccount} from 'actions/index';
 import {KeyTypes, TokenBalance} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -16,6 +17,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -23,23 +25,23 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {capitalize} from 'utils/format.utils';
 import {
   TokenDelegation,
   getIncomingTokenDelegations,
   getOutgoingTokenDelegations,
-} from 'utils/hiveEngine';
-import {getCurrencyProperties} from 'utils/hiveReact';
+} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
 import IncomingOutGoingTokenDelegationItem from './IncomingOutgoingTokenDelegationItem';
-import {TokenDelegationType} from './MoreTokenInfo';
 import OperationThemed from './OperationThemed';
+
+export type TokenDelegationType = 'Outgoing' | 'Incoming';
 
 type Props = PropsFromRedux & {
   delegationType: TokenDelegationType;
   total: string;
   token: TokenBalance;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
   tokenInfo: Token;
   gobackAction?: () => void;
 };
@@ -75,10 +77,14 @@ const IncomingOutGoingTokenDelegations = ({
     setLoading(false);
   };
 
-  const renderListItem = (tokenDelegation: TokenDelegation) => {
-    return (
+  const {theme} = useThemeContext();
+  const {color} = getCurrencyProperties(token.symbol);
+  const styles = getDimensionedStyles(color, theme, width);
+
+  const renderListItem = useCallback(
+    ({item}: {item: TokenDelegation}) => (
       <IncomingOutGoingTokenDelegationItem
-        tokenDelegation={tokenDelegation}
+        tokenDelegation={item}
         delegationType={delegationType}
         tokenLogo={tokenLogo}
         token={token}
@@ -87,18 +93,24 @@ const IncomingOutGoingTokenDelegations = ({
         isMultisig={isMultisig}
         twoFABots={twoFABots}
       />
-    );
-  };
-
-  const {theme} = useThemeContext();
-  const {color} = getCurrencyProperties(token.symbol);
-  const styles = getDimensionedStyles(color, theme, width);
+    ),
+    [
+      delegationType,
+      tokenLogo,
+      token,
+      tokenInfo,
+      theme,
+      isMultisig,
+      twoFABots,
+      user,
+    ],
+  );
 
   return (
     <OperationThemed
       childrenTop={<Separator />}
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           {delegationType === 'Outgoing' && (
             <>
               <Caption
@@ -145,9 +157,7 @@ const IncomingOutGoingTokenDelegations = ({
               contentContainerStyle={{width: '100%', height: '100%'}}>
               <FlatList
                 data={delegationList}
-                renderItem={(tokenDelegation) =>
-                  renderListItem(tokenDelegation.item)
-                }
+                renderItem={renderListItem}
                 keyExtractor={(tokenDelegation) =>
                   tokenDelegation.created.toString()
                 }
@@ -173,6 +183,7 @@ const getDimensionedStyles = (color: string, theme: Theme, width: number) =>
       alignItems: 'center',
     },
     flexRowBetween: {
+      paddingHorizontal: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
@@ -196,7 +207,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount},
+  {loadAccount, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

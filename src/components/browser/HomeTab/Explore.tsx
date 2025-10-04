@@ -10,9 +10,11 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {useChainContext} from 'src/context/multichain.context';
 import {Theme} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   MARGIN_LEFT_RIGHT_MIN,
@@ -24,7 +26,6 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import DAppCard from './components/DAppCard';
 
@@ -89,7 +90,7 @@ const Explore = ({
     setLoadingDapps(false);
   };
 
-  const styles = getStyles(useWindowDimensions(), theme);
+  const styles = getStyles(useSafeAreaInsets(), useWindowDimensions(), theme);
 
   return !loadingDapps ? (
     <View style={styles.container}>
@@ -148,7 +149,11 @@ const Explore = ({
   );
 };
 
-const getStyles = ({width, height}: Dimensions, theme: Theme) =>
+const getStyles = (
+  insets: EdgeInsets,
+  {width, height}: Dimensions,
+  theme: Theme,
+) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
@@ -159,6 +164,8 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       overflow: 'hidden',
+      paddingBottom:
+        Platform.OS === 'ios' ? insets.bottom / 2 + 70 : insets.bottom + 70,
     },
     scrollviewContentContainer: {
       paddingLeft: MARGIN_LEFT_RIGHT_MIN,

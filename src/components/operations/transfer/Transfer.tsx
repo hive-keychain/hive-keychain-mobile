@@ -6,15 +6,18 @@ import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
+import {ExchangesUtils} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {default as Toast} from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
+import {Dimensions} from 'src/interfaces/common.interface';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight} from 'src/styles/button';
@@ -22,33 +25,33 @@ import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {FavoriteUserUtils} from 'utils/favorite-user.utils';
+import {FavoriteUserUtils} from 'utils/favoriteUsers.utils';
 import {
   beautifyTransferError,
   capitalize,
   getCleanAmountValue,
   withCommas,
-} from 'utils/format';
-import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
+} from 'utils/format.utils';
 import {
   getAccountKeys,
   sanitizeAmount,
   sanitizeUsername,
-} from 'utils/hiveUtils';
+} from 'utils/hive.utils';
+import {tryConfirmTransaction} from 'utils/hiveEngine.utils';
+import {recurrentTransfer, sendToken, transfer} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {getTransferWarning} from 'utils/transferValidator';
+import {navigate} from 'utils/navigation.utils';
+import {TransferUtils} from 'utils/transfer.utils';
 import Balance from '../Balance';
 import {ConfirmationPageProps} from '../Confirmation';
+import {createBalanceData} from '../ConfirmationCard';
 import OperationThemed from '../OperationThemed';
 
 export type TransferOperationProps = {
   currency: string;
   engine: boolean;
   tokenBalance: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
 };
 type Props = PropsFromRedux & TransferOperationProps;
 const Transfer = ({
@@ -72,11 +75,10 @@ const Transfer = ({
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
 
-  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
-    AutoCompleteValues
-  >({
-    categories: [],
-  });
+  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] =
+    useState<AutoCompleteValues>({
+      categories: [],
+    });
   const [availableBalance, setAvailableBalance] = useState('');
   const [toggleIndex, setToggleIndex] = useState(0);
   const {theme} = useThemeContext();
@@ -86,11 +88,12 @@ const Transfer = ({
   }, []);
 
   const loadAutocompleteTransferUsernames = async () => {
-    const autoCompleteListByCategories: AutoCompleteValues = await FavoriteUserUtils.getAutocompleteListByCategories(
-      user.name!,
-      localAccounts,
-      {addExchanges: true, token: currency.toUpperCase()},
-    );
+    const autoCompleteListByCategories: AutoCompleteValues =
+      await FavoriteUserUtils.getAutocompleteListByCategories(
+        user.name!,
+        localAccounts,
+        {addExchanges: true, token: currency.toUpperCase()},
+      );
     setAutocompleteFavoriteUsers(autoCompleteListByCategories);
   };
 
@@ -167,8 +170,8 @@ const Transfer = ({
           MessageModalType.SUCCESS,
         );
       } else {
-        const {id} = await transferToken(options);
-        const {confirmed} = await tryConfirmTransaction(id);
+        const {id, tx_id} = await transferToken(options);
+        const {confirmed} = await tryConfirmTransaction(id || tx_id);
         if (options.multisig) return;
         showModal(
           confirmed
@@ -202,7 +205,6 @@ const Transfer = ({
       );
       return;
     }
-    console.log(currency);
     navigate('ReceiveTransfer', [
       'transfer',
       {
@@ -228,36 +230,45 @@ const Transfer = ({
         }),
       );
     } else {
-      //TODO : Call confirmation page
       const confirmationData: ConfirmationPageProps = {
         title: 'wallet.operations.transfer.confirm.info',
         onSend,
         skipWarningTranslation: true,
-        warningText: getTransferWarning(
-          phishingAccounts,
+        warningText: TransferUtils.getTransferWarningLabel(
           to,
           currency,
-          !!memo,
           memo,
-        ).warning,
+          phishingAccounts,
+          isRecurrent,
+          false,
+        ),
         data: [
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
-            value: `@${to} ${
-              getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
-                .exchange
-                ? '(exchange)'
+            title: 'wallet.operations.transfer.confirm.to',
+            value: `@${to}${
+              ExchangesUtils.isExchange(to)
+                ? ` (${translate('common.exchange')})`
                 : ''
             }`,
-            title: 'wallet.operations.transfer.confirm.to',
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: `${withCommas(amount)}`,
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
           },
+          createBalanceData(
+            'wallet.operations.transfer.confirm.balance',
+            parseFloat(availableBalance.replace(/,/g, '')),
+            parseFloat(amount),
+            currency,
+          ),
         ],
         keyType: KeyType.ACTIVE,
       };

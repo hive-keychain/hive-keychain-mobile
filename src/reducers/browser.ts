@@ -8,8 +8,10 @@ import {
   CLOSE_ALL_BROWSER_TABS,
   CLOSE_BROWSER_TAB,
   REMOVE_FROM_BROWSER_FAVORITES,
+  REMOVE_FROM_BROWSER_HISTORY,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
+  UPDATE_FAVORITES,
   UPDATE_MANAGEMENT,
 } from 'actions/types';
 import {translate} from 'utils/localize';
@@ -27,25 +29,68 @@ const browserReducer = (
 ) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
-      if (state.history.find((e) => e!.url === payload!.history!.url)) {
+      if (payload!.history!.url === 'about:blank') {
         return state;
       }
+      const newFavorites = state.favorites.map((e) => {
+        if (e.url === payload!.history!.url) {
+          return payload!.history!;
+        }
+        return e;
+      });
       return {
         ...state,
-        history: [...state.history, payload!.history!],
+        history: [
+          ...state.history.filter((e) => e!.url !== payload!.history!.url),
+          payload!.history!,
+        ],
+        favorites: newFavorites,
       };
-    case ADD_TO_BROWSER_FAVORITES:
-      const newFavorite = state.favorites;
-      newFavorite.push(payload!.favorite);
+    case ADD_TO_BROWSER_FAVORITES: {
+      const favoriteToAdd = payload!.favorite!;
+      const existingIndex = state.favorites.findIndex(
+        (fav) => fav.url === favoriteToAdd.url,
+      );
+      const favorites =
+        existingIndex !== -1
+          ? state.favorites.map((fav) =>
+              fav.url === favoriteToAdd.url ? favoriteToAdd : fav,
+            )
+          : [...state.favorites, favoriteToAdd];
       return {
         ...state,
-        favorites: newFavorite,
+        favorites,
+      };
+    }
+    case REMOVE_FROM_BROWSER_HISTORY:
+      console.log('removeFromHistory reducer', payload.url);
+      console.log(
+        'state.history',
+        state.history.filter((item) => item.url !== payload.url),
+      );
+      return {
+        ...state,
+        history: state.history.filter((item) => item.url !== payload.url),
       };
     case REMOVE_FROM_BROWSER_FAVORITES:
       return {
         ...state,
         favorites: state.favorites.filter((item) => item.url !== payload.url),
       };
+    case UPDATE_FAVORITES: {
+      // ensure immutability and dedupe by url
+      const seen: Record<string, boolean> = {};
+      const favorites = payload!.favorites!.filter((fav) => {
+        if (!fav || !fav.url) return false;
+        if (seen[fav.url]) return false;
+        seen[fav.url] = true;
+        return true;
+      });
+      return {
+        ...state,
+        favorites,
+      };
+    }
     case CLEAR_BROWSER_HISTORY:
       return {
         ...state,
@@ -58,7 +103,6 @@ const browserReducer = (
       };
     case ADD_BROWSER_TAB:
       if (payload!.id && payload!.url) {
-        console.log('new tab', translate('browser.home.title'));
         return {
           ...state,
           activeTab: payload!.id,

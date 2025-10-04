@@ -9,7 +9,7 @@ const authReducer = (
     case SIGN_UP:
       return {mk: payload!};
     case LOCK:
-      return {mk: null};
+      return {mk: null, ignoreNextBiometrics: true};
     case UNLOCK:
       return {mk: payload!};
     default:

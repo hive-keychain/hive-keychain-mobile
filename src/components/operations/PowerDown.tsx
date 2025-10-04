@@ -13,13 +13,15 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -32,12 +34,11 @@ import {
   getCleanAmountValue,
   toHP,
   withCommas,
-} from 'utils/format';
-import {getCurrency, powerDown} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {sanitizeAmount} from 'utils/hiveUtils';
+} from 'utils/format.utils';
+import {sanitizeAmount} from 'utils/hive.utils';
+import {getCurrency, powerDown} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
@@ -140,16 +141,20 @@ const PowerDown = ({
               {
                 title: 'common.account',
                 value: `@${user.name}`,
+                tag: ConfirmationDataTag.USERNAME,
               },
             ]
           : [
               {
                 title: 'common.account',
                 value: `@${user.name}`,
+                tag: ConfirmationDataTag.USERNAME,
               },
               {
                 title: 'wallet.operations.transfer.confirm.amount',
-                value: `${withCommas(amount)} ${currency}`,
+                value: withCommas(amount),
+                tag: ConfirmationDataTag.AMOUNT,
+                currency: currency,
               },
             ],
       };
@@ -225,7 +230,7 @@ const PowerDown = ({
                 </View>
                 <Icon
                   theme={theme}
-                  name={Icons.GIFT_DELETE}
+                  name={Icons.REMOVE}
                   onPress={() => {
                     onPowerDownConfirmation(true);
                   }}
@@ -237,7 +242,7 @@ const PowerDown = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           <Caption text="wallet.operations.powerdown.powerdown_text" />
           <View style={styles.flexRowBetween}>
             <OperationInput

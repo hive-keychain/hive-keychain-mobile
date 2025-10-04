@@ -9,7 +9,7 @@ import {
 import {useThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getFormFontStyle} from 'src/styles/typography';
-import {getCurrency} from 'utils/hive';
+import {getCurrency} from 'utils/hiveLibs.utils';
 
 interface Props {
   valueLabelList: number[];

@@ -1,19 +1,52 @@
 import React from 'react';
 import {Platform, StyleProp, View, ViewStyle} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  Edge,
+  initialWindowMetrics,
+  SafeAreaView,
+} from 'react-native-safe-area-context';
+import {useOrientation} from 'src/context/orientation.context';
 
 type Props = {
   style?: StyleProp<ViewStyle>;
-  children: JSX.Element | JSX.Element[];
+  skipTop?: boolean;
+  skipBottom?: boolean;
+  children: React.ReactNode | React.ReactNode[];
 };
 
-const SafeArea = ({style, children}: Props) => {
-  switch (Platform.OS) {
-    case 'ios':
-      return <SafeAreaView style={style}>{children}</SafeAreaView>;
-    default:
-      return <View style={style}>{children}</View>;
+const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
+  const orientation = useOrientation();
+  const edges: Edge[] = ['left', 'right'];
+  if (!skipTop) {
+    edges.push('top');
   }
+  if (!skipBottom) {
+    edges.push('bottom');
+  }
+
+  const isAndroid35 = Platform.OS === 'android' && Platform.Version >= 35;
+  const bottomSpacerHeight =
+    !isAndroid35 && skipBottom ? initialWindowMetrics.insets.bottom : 0;
+
+  return (
+    <SafeAreaView
+      style={[
+        {
+          paddingTop: skipTop ? 16 : 12,
+          paddingBottom:
+            skipBottom && isAndroid35 && !orientation.startsWith('LANDSCAPE')
+              ? initialWindowMetrics.insets.bottom
+              : 0,
+        },
+        style,
+      ]}
+      edges={edges}>
+      {children}
+      {bottomSpacerHeight > 0 ? (
+        <View style={{height: bottomSpacerHeight}} />
+      ) : null}
+    </SafeAreaView>
+  );
 };
 
 export default SafeArea;

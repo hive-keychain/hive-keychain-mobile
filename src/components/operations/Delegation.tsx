@@ -4,7 +4,7 @@ import Icon from 'components/hive/Icon';
 import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -13,13 +13,15 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -35,14 +37,13 @@ import {
   getCleanAmountValue,
   toHP,
   withCommas,
-} from 'utils/format';
-import {delegate, getCurrency} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+} from 'utils/format.utils';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hive.utils';
+import {delegate, getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {ConfirmationPageProps} from './Confirmation';
-import DelegationsList from './DelegationsList';
+import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export interface DelegationOperationProps {
@@ -108,21 +109,30 @@ const Delegation = ({
       const confirmationData: ConfirmationPageProps = {
         onSend: onDelegate,
         keyType: KeyType.ACTIVE,
-
         title: 'wallet.operations.delegation.confirm.info',
         data: [
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
-            value: `@${to}`,
             title: 'wallet.operations.transfer.confirm.to',
+            value: `@${to}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
           },
+          createBalanceData(
+            'wallet.operations.delegation.confirm.balance',
+            parseFloat(available.replace(/,/g, '')),
+            parseFloat(amount),
+            currency,
+          ),
         ],
       };
       navigate('ConfirmationPage', confirmationData);
@@ -157,10 +167,7 @@ const Delegation = ({
   const available = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(3);
 
   const onHandleNavigateToDelegations = (type: 'incoming' | 'outgoing') => {
-    navigate('TemplateStack', {
-      titleScreen: translate(`common.${type}`),
-      component: <DelegationsList type={type} theme={theme} />,
-    } as TemplateStackProps);
+    navigate('HPDelegations', {type});
   };
 
   return (
@@ -213,7 +220,7 @@ const Delegation = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           <Caption text="wallet.operations.delegation.delegation_disclaimer" />
           <OperationInput
             labelInput={translate('common.username')}

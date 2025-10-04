@@ -1,5 +1,5 @@
 import {ActiveAccount} from 'actions/interfaces';
-import React from 'react';
+import React, {memo} from 'react';
 import {View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Transaction} from 'src/interfaces/transaction.interface';
@@ -35,4 +35,4 @@ const WalletHistoryItemComponent = ({
   );
 };
 
-export default WalletHistoryItemComponent;
+export default memo(WalletHistoryItemComponent);

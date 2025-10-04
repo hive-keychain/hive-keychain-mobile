@@ -1,8 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import reducers from 'reducers/index';
-import {applyMiddleware, createStore} from 'redux';
+import {
+  AnyAction,
+  applyMiddleware,
+  createStore,
+  Middleware,
+  Reducer,
+} from 'redux';
 import {persistReducer, persistStore} from 'redux-persist';
-import thunk from 'redux-thunk';
+import {thunk} from 'redux-thunk';
 import transforms from './transforms';
 
 const persistConfig = {
@@ -26,10 +32,28 @@ const persistConfig2 = {
   whitelist: ['lastAccount', 'settings', 'browser', 'preferences'],
 };
 
-const persistedReducers = persistReducer(persistConfig, reducers);
-const store = createStore(persistedReducers, applyMiddleware(thunk));
-const persistedReducers2 = persistReducer(persistConfig2, reducers);
-const store2 = createStore(persistedReducers2, applyMiddleware(thunk));
+const persistedReducers = persistReducer<
+  ReturnType<typeof reducers>,
+  AnyAction
+>(
+  persistConfig,
+  reducers as unknown as Reducer<ReturnType<typeof reducers>, AnyAction>,
+);
+const store = createStore(
+  persistedReducers,
+  applyMiddleware(thunk as unknown as Middleware),
+);
+const persistedReducers2 = persistReducer<
+  ReturnType<typeof reducers>,
+  AnyAction
+>(
+  persistConfig2,
+  reducers as unknown as Reducer<ReturnType<typeof reducers>, AnyAction>,
+);
+const store2 = createStore(
+  persistedReducers2,
+  applyMiddleware(thunk as unknown as Middleware),
+);
 const persistor = persistStore(store);
 
 const getSafeState = () => {

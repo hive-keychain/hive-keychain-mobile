@@ -1,15 +1,15 @@
 import {Asset} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {loadAccount} from 'actions/index';
+import {loadAccount} from 'actions/hive';
 import moment from 'moment';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';
-import {ClaimsConfig} from 'utils/config';
+import {ClaimsConfig} from 'utils/config.utils';
 import {RewardsUtils} from 'utils/rewards.utils';
 import {SavingsUtils} from 'utils/savings.utils';
-import {ActiveAccountModule} from './active-account.module';
+import {ActiveAccountModule} from './activeAccount.module';
 
 const start = async () => {
   console.log(`Will autoclaim every ${ClaimsConfig.FREQUENCY}mn`);

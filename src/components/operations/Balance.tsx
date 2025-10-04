@@ -1,5 +1,5 @@
 import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
@@ -9,8 +9,8 @@ import {
   getFontSizeSmallDevices,
   headerH2Primary,
 } from 'src/styles/typography';
-import {toHP, withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {toHP, withCommas} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
   globalProperties?: DynamicGlobalProperties;
   isHiveEngine?: boolean;
   tokenBalance?: string;
-  tokenLogo?: JSX.Element;
+  tokenLogo?: React.ReactNode;
   setAvailableBalance?: (value: string) => void;
   theme?: Theme;
 };
@@ -67,12 +67,19 @@ const Balance = ({
         tempBalance = hpBalance;
         break;
     }
-    if (setAvailableBalance)
-      setAvailableBalance(withCommas(tempBalance.toString()));
     return tempBalance;
   };
 
+  // Calculate parsedValue for display
   let parsedValue = getParsedValue(currency, account, isHiveEngine);
+
+  useEffect(() => {
+    if (setAvailableBalance) {
+      setAvailableBalance(
+        withCommas(getParsedValue(currency, account, isHiveEngine).toString()),
+      );
+    }
+  }, [currency, account, isHiveEngine, tokenBalance, globalProperties, pd]);
 
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({

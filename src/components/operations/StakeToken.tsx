@@ -11,30 +11,32 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {stakeToken} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hive.utils';
+import {stakeToken} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
 import {ConfirmationPageProps} from './Confirmation';
+import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export interface StakeTokenOperationProps {
   currency: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
   balance: string;
   gobackAction?: () => void;
 }
@@ -71,9 +73,10 @@ const StakeToken = ({
       if (options.multisig) return;
 
       if (tokenOperationResult && tokenOperationResult.tx_id) {
-        let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-          tokenOperationResult.tx_id,
-        );
+        let confirmationResult: any =
+          await BlockchainTransactionUtils.tryConfirmTransaction(
+            tokenOperationResult.tx_id,
+          );
 
         if (confirmationResult && confirmationResult.confirmed) {
           if (confirmationResult.error) {
@@ -121,12 +124,23 @@ const StakeToken = ({
           {
             title: 'common.account',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
-
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
+            currentBalance: balance,
+            amount: amount,
+            finalBalance: (parseFloat(balance) - parseFloat(amount)).toString(),
           },
+          createBalanceData(
+            'wallet.operations.token_stake.confirm.balance',
+            parseFloat(balance.replace(/,/g, '')),
+            parseFloat(amount),
+            currency,
+          ),
         ],
       };
       navigate('ConfirmationPage', confirmationData);
@@ -186,9 +200,7 @@ const StakeToken = ({
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => {
-                      setAmount(
-                        parseFloat(getCleanAmountValue(balance)).toFixed(3),
-                      );
+                      setAmount(getCleanAmountValue(balance));
                     }}>
                     <Text
                       style={
@@ -218,6 +230,7 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
       paddingHorizontal: 15,
     },
     childrenMiddle: {
+      flex: 1,
       paddingHorizontal: 10,
     },
     flexRowBetween: {

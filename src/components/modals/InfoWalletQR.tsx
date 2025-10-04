@@ -1,19 +1,20 @@
+import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Height} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
   button_link_primary_small,
 } from 'src/styles/typography';
-import {Height} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 export default ({theme}: {theme: Theme}) => {
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   return (
-    <>
+    <SafeArea skipTop>
       <Text style={[styles.textBase, styles.bold, styles.h4]}>
         {translate('components.infoWalletQR.title')}
       </Text>
@@ -32,7 +33,7 @@ export default ({theme}: {theme: Theme}) => {
           {translate('components.infoWalletQR.text4')}
         </Text>
       </Text>
-    </>
+    </SafeArea>
   );
 };
 

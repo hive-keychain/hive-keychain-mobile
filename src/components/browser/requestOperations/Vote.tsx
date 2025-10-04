@@ -1,16 +1,16 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {vote} from 'utils/hive';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {
   RequestError,
   RequestId,
   RequestSuccess,
   RequestVote,
   UsingHAS,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {vote} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -45,24 +45,28 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={(options: TransactionOptions) => {
         return performVoteOperation(accounts, request, options);
-      }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
-      <RequestItem
-        title={translate('request.item.author')}
-        content={`@${author}`}
-      />
-      <RequestItem
-        title={translate('request.item.permlink')}
-        content={permlink}
-      />
-      <RequestItem
-        title={translate('request.item.weight')}
-        content={`${(+weight / 100).toFixed(2)}%`}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.author',
+          value: author,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.permlink',
+          value: permlink,
+        },
+        {
+          title: 'request.item.weight',
+          value: `${(+weight / 100).toFixed(2)}%`,
+        },
+      ]}
+    />
   );
 };
 

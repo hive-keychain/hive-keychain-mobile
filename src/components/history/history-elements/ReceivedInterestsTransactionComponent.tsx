@@ -1,13 +1,13 @@
 import {ActiveAccount} from 'actions/interfaces';
-import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import BackgroundIconRed from 'assets/images/background/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {ReceivedInterests} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {withCommas} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import Icon from '../../hive/Icon';
 
@@ -29,7 +29,7 @@ const ReceivedInterestTransactionComponent = ({
 }: Props) => {
   const {timestamp, interest} = transaction;
   const date = new Date(
-    token ? ((timestamp as unknown) as number) * 1000 : timestamp,
+    token ? (timestamp as unknown as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
     year: '2-digit',
     month: '2-digit',
@@ -47,6 +47,8 @@ const ReceivedInterestTransactionComponent = ({
             name={Icons.SAVINGS}
             theme={theme}
             bgImage={<BackgroundIconRed />}
+            height={26}
+            width={26}
             color={PRIMARY_RED_COLOR}
           />
         ) : null

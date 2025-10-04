@@ -1,7 +1,9 @@
+import {NavigationProp} from '@react-navigation/native';
 import {showModal} from 'actions/message';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
-import {encodeOp} from 'hive-uri';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
+import * as hiveUri from 'hive-uri';
 import {
   ReceiveTransferProps,
   ReceiveTransferRoute,
@@ -11,19 +13,22 @@ import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import QRCode from 'react-qr-code';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
 import {TokenUtils} from 'utils/tokens.utils';
 import TransactionUtils from 'utils/transactions.utils';
 
 const Receive = ({
   route,
   showModal,
-}: {route: ReceiveTransferRoute} & PropsFromRedux) => {
+  navigation,
+}: {
+  route: ReceiveTransferRoute;
+  navigation: NavigationProp<any>;
+} & PropsFromRedux) => {
   const theme = useThemeContext().theme;
   const params = route.params;
   const {width} = useWindowDimensions();
@@ -47,12 +52,12 @@ const Receive = ({
       if (res) {
         clearInterval(interval);
         showModal('toast.receive_success', MessageModalType.SUCCESS);
-        resetStackAndNavigate('WALLET');
+        navigation.getParent()?.goBack();
       }
     }, 3000);
   }, []);
   return (
-    <Background theme={theme}>
+    <Background theme={theme} skipTop>
       <View
         style={{justifyContent: 'space-around', alignItems: 'center', flex: 1}}>
         <View style={{width: '80%'}}>
@@ -61,13 +66,7 @@ const Receive = ({
               <Text style={[getFormFontStyle(width, theme).title]}>
                 {translate('request.item.to')}
               </Text>
-              <Text
-                style={[
-                  getFormFontStyle(width, theme).title,
-                  styles.textContent,
-                ]}>
-                {`@${params[1].to}`}
-              </Text>
+              <UsernameWithAvatar username={params[1].to} />
             </View>
             <Separator
               drawLine
@@ -115,7 +114,7 @@ const Receive = ({
           size={width * 0.8}
           fgColor={getColors(theme).primaryText}
           bgColor={'transparent'}
-          value={encodeOp(params)}
+          value={hiveUri.encodeOp(params)}
         />
       </View>
     </Background>

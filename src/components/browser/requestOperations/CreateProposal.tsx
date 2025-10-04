@@ -1,10 +1,13 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {
+  RequestCreateProposal,
+  RequestId,
+} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {createProposal} from 'utils/hive';
-import {RequestCreateProposal, RequestId} from 'utils/keychain.types';
+import {createProposal} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
@@ -30,6 +33,24 @@ export default ({
     daily_pay,
     extensions,
   } = data;
+  const performOperation = async (options: TransactionOptions) => {
+    const account = accounts.find((e) => e.name === request.username);
+    const key = account.keys.active;
+    return await createProposal(
+      key,
+      {
+        creator: username,
+        receiver,
+        start_date: start,
+        end_date: end,
+        daily_pay,
+        subject,
+        permlink,
+        extensions: JSON.parse(extensions),
+      },
+      options,
+    );
+  };
 
   return (
     <RequestOperation
@@ -40,48 +61,40 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async (options: TransactionOptions) => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys.active;
-        return await createProposal(
-          key,
-          {
-            creator: username,
-            receiver,
-            start_date: start,
-            end_date: end,
-            daily_pay,
-            subject,
-            permlink,
-            extensions: JSON.parse(extensions),
-          },
-          options,
-        );
-      }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
-      <RequestItem
-        title={translate('request.item.receiver')}
-        content={`@${receiver}`}
-      />
-      <RequestItem title={translate('request.item.title')} content={subject} />
-      <RequestItem
-        title={translate('request.item.permlink')}
-        content={permlink}
-      />
-      <RequestItem
-        title={translate('request.item.duration')}
-        content={`${start.split('T')[0]} - ${end.split('T')[0]} (${
-          (new Date(end).getTime() - new Date(start).getTime()) /
-          (24 * 60 * 60 * 1000)
-        } days)`}
-      />
-      <RequestItem
-        title={translate('request.item.daily_pay')}
-        content={daily_pay}
-      />
-    </RequestOperation>
+      performOperation={performOperation}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.receiver',
+          value: receiver,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.title',
+          value: subject,
+        },
+        {
+          title: 'request.item.permlink',
+          value: permlink,
+        },
+        {
+          title: 'request.item.duration',
+          value: `${start.split('T')[0]} - ${end.split('T')[0]} (${
+            (new Date(end).getTime() - new Date(start).getTime()) /
+            (24 * 60 * 60 * 1000)
+          } days)`,
+        },
+        {
+          title: 'request.item.daily_pay',
+          value: daily_pay.split(' ')[0],
+          tag: ConfirmationDataTag.AMOUNT,
+          currency: 'HBD',
+        },
+      ]}
+    />
   );
 };

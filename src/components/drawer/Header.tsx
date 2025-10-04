@@ -19,7 +19,7 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
-const HEART_PNG = require('assets/new_UI/heart.png');
+const HEART_PNG = require('assets/images/browser/heart.png');
 
 //TODO uncomment chain switcher when needed & implented.
 export default ({

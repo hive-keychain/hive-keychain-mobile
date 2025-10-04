@@ -10,11 +10,15 @@ import {DelegationOperationProps} from 'components/operations/Delegation';
 import {PowerDownOperationProps} from 'components/operations/PowerDown';
 import {PowerUpOperationProps} from 'components/operations/PowerUp';
 import {RCDelegationOperationProps} from 'components/operations/RCDelegation';
-import {SavingOperationProps} from 'components/operations/Savings';
+import {
+  SavingOperationProps,
+  SavingsOperations,
+} from 'components/operations/Savings';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
 import {TransferOperationProps} from 'components/operations/transfer/Transfer';
 import {StyleProp, ViewStyle} from 'react-native';
+import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 
 export type ModalPosition =
   | 'flex-start'
@@ -26,7 +30,7 @@ export type ModalPosition =
   | undefined;
 
 export interface ModalScreenProps {
-  modalContent?: JSX.Element;
+  modalContent?: React.JSX.Element;
   onForceCloseModal?: () => void;
   name: string;
   data?: any;
@@ -36,15 +40,10 @@ export interface ModalScreenProps {
   additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
   modalPosition?: ModalPosition;
   bottomHalf?: boolean;
-  renderButtonElement?: JSX.Element;
+  renderButtonElement?: React.JSX.Element;
 }
 
-export interface TemplateStackProps {
-  titleScreen: string;
-  component: JSX.Element;
-  hideCloseButton?: boolean;
-  extraActionOnBack?: () => void;
-}
+// TemplateStack removed; use concrete screens instead
 
 export type RootStackParam = {
   Main: undefined;
@@ -74,7 +73,24 @@ export type RootStackParam = {
       | RCDelegationOperationProps
       | PowerDownOperationProps;
   };
-  TemplateStack: TemplateStackProps;
+  // Nested under Operation stack
+  HPDelegations: {type: 'incoming' | 'outgoing'};
+  RcDelegations: {
+    type: 'incoming' | 'outgoing';
+    total: {gigaRcValue: string; hpValue: string};
+    available: {gigaRcValue: string; hpValue: string};
+  };
+  PendingSavings: {
+    currency: string;
+    operation: SavingsOperations;
+    currentWithdrawingList: SavingsWithdrawal[];
+    onUpdate: (list: SavingsWithdrawal[]) => void;
+  };
+  PendingConversions: {
+    currency: 'HIVE' | 'HBD';
+    currentPendingConversionList: any[];
+  };
+  // TemplateStack: removed
   WalletHistory: WalletHistoryComponentProps;
   SwapBuyStack: undefined;
   SwapHistory: undefined;
@@ -122,20 +138,7 @@ export type OperationNavigationProps = {
   route: OperationNavigationRoute;
 };
 
-export type TemplateStackNavigation = StackNavigationProp<
-  RootStackParam,
-  'TemplateStack'
->;
-
-export type TemplateStackNavigationRoute = RouteProp<
-  RootStackParam,
-  'TemplateStack'
->;
-
-export type TemplateStackNavigationProps = {
-  navigation: TemplateStackNavigation;
-  route: TemplateStackNavigationRoute;
-};
+// TemplateStack types removed
 
 export type ConfirmationPageRoute = RouteProp<
   RootStackParam,

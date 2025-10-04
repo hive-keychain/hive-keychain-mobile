@@ -3,19 +3,18 @@ import {
   showHASInitRequestAsTreated,
   updateInstanceConnectionStatus,
 } from 'actions/hiveAuthenticationService';
-import assert from 'assert';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
+import {ModalComponent} from 'src/enums/modal.enum';
 import {RootState, store} from 'store';
 import {translate} from 'utils/localize';
-import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {HAS_Session} from './has.types';
 import {answerAuthReq} from './helpers/auth';
 import {prepareRegistrationChallenge} from './helpers/challenge';
 import {onMessageReceived} from './messages';
 import {processAuthenticationRequest} from './messages/authenticate';
-import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
+import {HAS_AuthPayload} from './payloads.types';
 
 let previousState: RootState = store.getState();
 
@@ -174,7 +173,9 @@ class HAS {
       app: 'Hive Keychain',
       accounts,
     };
-    SimpleToast.show(translate('wallet.has.toast.register'), SimpleToast.SHORT);
+    SimpleToast.show(translate('wallet.has.toast.register'), {
+      duration: SimpleToast.durations.SHORT,
+    });
     this.send(JSON.stringify(request));
   };
 
@@ -190,48 +191,10 @@ class HAS {
   // Keys
 
   getServerKey = () => {
-    return (store.getState() as RootState).hive_authentication_service.instances.find(
-      (e) => e.host === this.host,
-    )?.server_key;
-  };
-
-  // static
-
-  static checkPayload = (payload: HAS_SignPayload | HAS_AuthPayload) => {
-    if (payload.uuid) {
-      // validate APP request forwarded by HAS
-      assert(
-        payload.uuid && typeof payload.uuid == 'string',
-        `invalid payload (uuid)`,
-      );
-      assert(
-        payload.expire && typeof payload.expire == 'number',
-        `invalid payload (expire)`,
-      );
-      assert(
-        payload.account && typeof payload.account == 'string',
-        `invalid payload (account)`,
-      );
-      assert(
-        Date.now() < payload.expire,
-        `request expired - now:${Date.now()} > expire:${payload.expire}}`,
-      );
-    }
-  };
-
-  static findSessionByUUID = (uuid: string) => {
-    return (store.getState() as RootState).hive_authentication_service.sessions.find(
-      (e) => e.uuid === uuid,
-    );
-  };
-
-  static findSessionByToken = (token: string) => {
-    return (store.getState() as RootState).hive_authentication_service.sessions.find(
-      (e) => {
-        if (e.token) return e.token.token === token;
-        else return false;
-      },
-    );
+    return (
+      store.getState() as RootState
+    ).hive_authentication_service.instances.find((e) => e.host === this.host)
+      ?.server_key;
   };
 }
 

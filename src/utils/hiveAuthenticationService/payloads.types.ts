@@ -4,7 +4,7 @@ import {
   KeychainRequest,
   RequestError,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
 
 export enum HAS_PayloadType {
   AUTH = 'auth_req',
@@ -72,6 +72,7 @@ export type HAS_SignDecrypted = {
   key_type: KeyTypes;
   ops: Operation[];
   broadcast: boolean;
+  nonce: number;
 };
 
 export type HAS_BroadcastModalPayload = {

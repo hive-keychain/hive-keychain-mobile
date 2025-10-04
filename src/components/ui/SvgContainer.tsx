@@ -13,11 +13,11 @@ export interface ContainerStylesProps {
   borderRadius?: number;
   borderWidth?: number;
   margin?: number;
-  svgContainerWidth?: number | string;
+  svgContainerWidth?: number | `${number}%`;
 }
 
 interface SvgContainerProps {
-  svgFile: JSX.Element;
+  svgFile: React.ReactNode;
   containerStyles?: ContainerStylesProps;
 }
 const SvgContainer = (props: SvgContainerProps) => {
@@ -36,7 +36,7 @@ const getAppliedStyles = (containerStyles: ContainerStylesProps) =>
   StyleSheet.create({
     container: {
       justifyContent: 'center',
-      backgroundColor: containerStyles?.backgroundColor ?? 'none',
+      backgroundColor: containerStyles?.backgroundColor ?? 'transparent',
       padding: containerStyles?.padding ?? 8,
       borderRadius: containerStyles?.borderRadius ?? 8,
       borderWidth: containerStyles?.borderWidth ?? 1,
@@ -50,7 +50,10 @@ const getAppliedStyles = (containerStyles: ContainerStylesProps) =>
       alignItems: 'center',
     },
     svgContainer: {
-      width: containerStyles?.svgContainerWidth ?? '70%',
+      width:
+        typeof containerStyles?.svgContainerWidth === 'number'
+          ? containerStyles.svgContainerWidth
+          : ((containerStyles?.svgContainerWidth ?? '70%') as `${number}%`),
       height: 60,
       justifyContent: 'center',
       alignItems: 'center',

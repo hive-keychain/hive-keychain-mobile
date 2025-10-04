@@ -1,4 +1,4 @@
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {ActionPayload, MessageModalPayload} from './interfaces';
 import {RESET_MODAL, SHOW_MODAL} from './types';
 

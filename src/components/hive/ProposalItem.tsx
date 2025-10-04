@@ -1,7 +1,8 @@
 import {ActiveAccount} from 'actions/interfaces';
-import Vote from 'assets/governance/arrow_circle_up.svg';
+import Vote from 'assets/images/governance/arrow_circle_up.svg';
 import TwoFaModal from 'components/modals/TwoFaModal';
 import Loader from 'components/ui/Loader';
+import {Image} from 'expo-image';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {
@@ -13,11 +14,10 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
@@ -25,11 +25,11 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {withCommas} from 'utils/format';
-import {updateProposalVote} from 'utils/hive';
+import {withCommas} from 'utils/format.utils';
+import {updateProposalVote} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {FundedOption, Proposal} from 'utils/proposals';
+import {navigate} from 'utils/navigation.utils';
+import {FundedOption, Proposal} from 'utils/proposals.utils';
 import Icon from './Icon';
 
 interface ProposalItemProps {
@@ -55,10 +55,8 @@ const ProposalItem = ({
 }: ProposalItemProps) => {
   const [isExpandablePanelOpened, setExpandablePanelOpened] = useState(false);
   const [isPressVote, setIsPressVote] = useState(false);
-  const [
-    isVotingUnvotingForProposal,
-    setIsVotingUnvotingForProposal,
-  ] = useState('');
+  const [isVotingUnvotingForProposal, setIsVotingUnvotingForProposal] =
+    useState('');
   const goTo = (link: Proposal['link']) => {
     Linking.openURL(link);
   };
@@ -163,7 +161,7 @@ const ProposalItem = ({
         </View>
         <Icon
           theme={theme}
-          name={Icons.EXPAND_THIN}
+          name={Icons.EXPAND}
           {...styles.expander}
           additionalContainerStyle={[
             styles.marginRight,
@@ -176,7 +174,7 @@ const ProposalItem = ({
           <TouchableOpacity
             activeOpacity={1}
             onLongPress={() => goToCreator(proposal.creator)}>
-            <FastImage
+            <Image
               source={{
                 uri: `https://images.hive.blog/u/${proposal.creator}/avatar`,
               }}
@@ -241,7 +239,7 @@ const ProposalItem = ({
             <View style={styles.detail}>
               <Icon
                 theme={theme}
-                name={Icons.MONEY}
+                name={Icons.DHF_AMOUNT}
                 additionalContainerStyle={styles.detailIcon}
                 {...styles.icon}
                 color={getColors(theme).iconBW}

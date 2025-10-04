@@ -1,17 +1,18 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Tokens from 'screens/hive/wallet/Tokens';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +21,11 @@ export default () => {
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="Tokens"
         component={Tokens}
@@ -32,19 +37,15 @@ export default () => {
             <Icon
               name={Icons.CLOSE_CIRCLE}
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('Wallet')}
               color={getColors(theme).iconBW}
             />
           ),
           cardStyle: styles.cardStyle,
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <BackNavigationButton
               theme={theme}
-              onPress={() =>
-                (navigation as DrawerNavigationHelpers).openDrawer()
-              }
-              color={getColors(theme).iconBW}
+              onPress={() => navigation.goBack()}
             />
           ),
         })}

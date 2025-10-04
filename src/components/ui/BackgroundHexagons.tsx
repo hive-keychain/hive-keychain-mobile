@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
 
-const hexagonsLight = require('assets/new_UI/hexagons-bg-light.png');
-const hexagonsDark = require('assets/new_UI/hexagons-bg-dark.png');
+const hexagonsLight = require('assets/images/background/hexagons-bg-light.png');
+const hexagonsDark = require('assets/images/background/hexagons-bg-dark.png');
 
 interface Props {
   theme: Theme;

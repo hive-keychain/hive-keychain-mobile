@@ -1,9 +1,11 @@
 import {clearTokenHistory, loadTokenHistory} from 'actions/index';
-import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
+import {BackToTopButton} from 'components/ui/BackToTopButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
-import React, {useEffect, useRef, useState} from 'react';
+import Separator from 'components/ui/Separator';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {HiveEngineFilterTypes} from 'reducers/tokensFilters';
 import {Theme} from 'src/context/theme.context';
@@ -21,12 +23,12 @@ import {
   IN_TOKENS_TRANSACTIONS,
   OUT_TOKENS_TRANSACTIONS,
   TokenTransactionUtils,
-} from 'utils/token-transaction.utils';
+} from 'utils/tokenTransaction.utils';
 import {TokenHistoryItemComponent} from './TokenHistoryItem';
 
 export type TokenHistoryProps = {
   tokenBalance: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.JSX.Element;
   currency: string;
   theme: Theme;
 };
@@ -46,7 +48,7 @@ const TokensHistory = ({
   >([]);
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<TokenTransaction>>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -152,15 +154,16 @@ const TokensHistory = ({
 
   const styles = getStyles(theme);
 
-  const renderItem = (transaction: TokenTransaction) => {
-    return (
+  const renderTokenHistoryItem = useCallback(
+    ({item}: {item: TokenTransaction}) => (
       <TokenHistoryItemComponent
         theme={theme}
-        transaction={transaction}
+        transaction={item}
         useIcon={true}
       />
-    );
-  };
+    ),
+    [theme],
+  );
 
   return (
     <View style={styles.flex}>
@@ -176,10 +179,13 @@ const TokensHistory = ({
           <FlatList
             ref={flatListRef}
             data={displayedTransactions}
-            renderItem={(transaction) => renderItem(transaction.item)}
+            renderItem={renderTokenHistoryItem}
             keyExtractor={(transaction) => transaction._id}
             onScroll={handleScroll}
             style={styles.listContainer}
+            ListFooterComponent={() => (
+              <Separator height={initialWindowMetrics.insets.bottom + 70} />
+            )}
           />
         </View>
       )}

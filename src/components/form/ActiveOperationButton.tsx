@@ -1,14 +1,14 @@
-import {KeyTypes} from 'actions/interfaces';
-import React from 'react';
-import {StyleProp, TextStyle, ViewStyle} from 'react-native';
-import SimpleToast from 'react-native-simple-toast';
-import {ConnectedProps, connect} from 'react-redux';
-import {RootState} from 'store';
-import {translate} from 'utils/localize';
-import EllipticButton from './EllipticButton';
+import { KeyTypes } from "actions/interfaces";
+import React from "react";
+import { StyleProp, TextStyle, ViewStyle } from "react-native";
+import SimpleToast from "react-native-root-toast";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "store";
+import { translate } from "utils/localize";
+import EllipticButton from "./EllipticButton";
 
 type Props = {
-  method?: KeyTypes | 'none';
+  method?: KeyTypes | "none";
   title: string;
   style: StyleProp<ViewStyle>;
   onPress: () => void;
@@ -23,7 +23,7 @@ const ActiveOperationButton = ({
   ...props
 }: Props) => {
   const disabled =
-    method !== 'none' && !props.user.keys[method || KeyTypes.active];
+    method !== "none" && !props.user.keys[method || KeyTypes.active];
   return (
     <>
       <EllipticButton
@@ -34,7 +34,9 @@ const ActiveOperationButton = ({
           if (disabled) {
             SimpleToast.show(
               translate(`wallet.add_${method || KeyTypes.active}`),
-              SimpleToast.LONG,
+              {
+                duration: SimpleToast.durations.LONG,
+              }
             );
           } else {
             onPress();
@@ -47,7 +49,7 @@ const ActiveOperationButton = ({
 };
 
 const connector = connect((state: RootState) => {
-  return {user: state.activeAccount};
+  return { user: state.activeAccount };
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(ActiveOperationButton);

@@ -10,7 +10,7 @@ import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import moment from 'moment';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -22,8 +22,8 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -36,15 +36,20 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {fromHP, getCleanAmountValue, toHP, withCommas} from 'utils/format';
-import {delegate, getCurrency} from 'utils/hive';
+import {
+  fromHP,
+  getCleanAmountValue,
+  toHP,
+  withCommas,
+} from 'utils/format.utils';
 import {
   getPendingOutgoingUndelegation,
   sanitizeAmount,
   sanitizeUsername,
-} from 'utils/hiveUtils';
+} from 'utils/hive.utils';
+import {delegate, getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import OperationThemed from './OperationThemed';
 
 interface DelegationListProps {
@@ -64,17 +69,15 @@ const DelegationsList = ({
   showModal,
   theme,
 }: Props) => {
-  const [totalDelegationsAmount, setTotalDelegationsAmount] = useState<number>(
-    0,
-  );
+  const [totalDelegationsAmount, setTotalDelegationsAmount] =
+    useState<number>(0);
   const [
     totalPendingOutgoingUndelegation,
     setTotalPendingOutgoingUndelegation,
   ] = useState<number>(0);
   const [pendingUndelegationsList, setPendingList] = useState<any[]>([]);
-  const [selectedOutgoingItem, setSelectedOutgoingItem] = useState<
-    VestingDelegation
-  >();
+  const [selectedOutgoingItem, setSelectedOutgoingItem] =
+    useState<VestingDelegation>();
   const [
     showCancelConfirmationDelegation,
     setShowCancelConfirmationDelegation,
@@ -96,24 +99,30 @@ const DelegationsList = ({
         loadPendingOutgoingUndelegations();
       }
     }
-  }, [loadDelegatees, loadDelegators, user, type]);
+  }, [loadDelegatees, loadDelegators, user.name, type, totalDelegationsAmount]);
 
   const loadPendingOutgoingUndelegations = async () => {
     const pendingOutgoingList = await getPendingOutgoingUndelegation(user.name);
+    let totalOutgoing = 0;
     if (pendingOutgoingList.length > 0) {
       setPendingList(pendingOutgoingList);
-      const totalOutgoing = pendingOutgoingList.reduce(
+      totalOutgoing = pendingOutgoingList.reduce(
         (acc: number, current: any) =>
           acc + toHP(current.vesting_shares + '', properties.globals),
         0,
       );
       setTotalPendingOutgoingUndelegation(totalOutgoing);
-      const totalHp = toHP(
-        user.account.vesting_shares as string,
-        properties.globals,
-      );
-      setAvailable(Math.max(totalHp - Number(totalOutgoing) - 5, 0).toFixed(4));
     }
+    const totalHp = toHP(
+      user.account.vesting_shares as string,
+      properties.globals,
+    );
+    setAvailable(
+      Math.max(
+        totalHp - Number(totalOutgoing) - totalDelegationsAmount - 5,
+        0,
+      ).toFixed(3),
+    );
   };
 
   useEffect(() => {
@@ -222,7 +231,7 @@ const DelegationsList = ({
             )} ${getCurrency('HP')}`}</Text>
             <Icon
               theme={theme}
-              name={Icons.EXPAND_THIN}
+              name={Icons.EXPAND}
               additionalContainerStyle={[
                 styles.logo,
                 getRotateStyle(
@@ -266,7 +275,7 @@ const DelegationsList = ({
                 style={styles.button}
                 onPress={() => setShowCancelConfirmationDelegation(true)}>
                 <Icon
-                  name={Icons.GIFT_DELETE}
+                  name={Icons.REMOVE}
                   theme={theme}
                   additionalContainerStyle={styles.roundButton}
                   {...styles.icon}
@@ -313,11 +322,16 @@ const DelegationsList = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() =>
+                    onPress={() => {
                       setEditedAmountDelegation(
-                        getCleanAmountValue(available.toString()),
-                      )
-                    }>
+                        getCleanAmountValue(
+                          (
+                            +available +
+                            toHP(item.vesting_shares + '', properties.globals)
+                          ).toString(),
+                        ),
+                      );
+                    }}>
                     <Text style={[styles.textBase, styles.redText]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
@@ -344,37 +358,45 @@ const DelegationsList = ({
     );
   };
 
-  const renderIncomingItem = (item: IncomingDelegation) => {
-    return (
-      <View style={[getCardStyle(theme, 28).defaultCardItem, styles.container]}>
-        <View style={styles.row}>
-          <Icon theme={theme} name={Icons.AT} />
-          <Text style={styles.textBase}> {`${item.delegator}`}</Text>
+  const renderIncomingItem = useCallback(
+    (item: IncomingDelegation) => {
+      return (
+        <View
+          style={[getCardStyle(theme, 28).defaultCardItem, styles.container]}>
+          <View style={styles.row}>
+            <Icon theme={theme} name={Icons.AT} />
+            <Text style={styles.textBase}> {`${item.delegator}`}</Text>
+          </View>
+          <Text style={styles.textBase}>
+            {`${withCommas(
+              toHP(item.vesting_shares + '', properties.globals) + '',
+            )} ${getCurrency('HP')}`}
+          </Text>
         </View>
-        <Text style={styles.textBase}>
-          {`${withCommas(
-            toHP(item.vesting_shares + '', properties.globals) + '',
-          )} ${getCurrency('HP')}`}
-        </Text>
-      </View>
-    );
-  };
+      );
+    },
+    [theme, styles, properties.globals],
+  );
 
-  const renderPendingOutgoingItem = (item: any) => {
-    return (
-      <View style={[getCardStyle(theme, 28).defaultCardItem, styles.container]}>
-        <Text style={styles.textBase}>
-          {' '}
-          {`${moment(item.expiration_date).format('L')}`}
-        </Text>
-        <Text style={styles.textBase}>
-          {`${withCommas(
-            toHP(item.vesting_shares + '', properties.globals) + '',
-          )} ${getCurrency('HP')}`}
-        </Text>
-      </View>
-    );
-  };
+  const renderPendingOutgoingItem = useCallback(
+    (item: any) => {
+      return (
+        <View
+          style={[getCardStyle(theme, 28).defaultCardItem, styles.container]}>
+          <Text style={styles.textBase}>
+            {' '}
+            {`${moment(item.expiration_date).format('L')}`}
+          </Text>
+          <Text style={styles.textBase}>
+            {`${withCommas(
+              toHP(item.vesting_shares + '', properties.globals) + '',
+            )} ${getCurrency('HP')}`}
+          </Text>
+        </View>
+      );
+    },
+    [theme, styles, properties.globals],
+  );
 
   const renderIncoming = () => {
     return (
@@ -414,6 +436,7 @@ const DelegationsList = ({
       childrenTop={<Separator height={40} />}
       childrenMiddle={
         <View>
+          <Separator height={20} />
           {type === 'outgoing' && (
             <>
               <Caption text="wallet.operations.delegation.outgoing_disclaimer" />
@@ -469,7 +492,11 @@ const getDimensionedStyles = (theme: Theme, width: number) =>
       marginTop: MARGIN_PADDING,
     },
     logo: {marginLeft: 10},
-    flexRow: {flexDirection: 'row', justifyContent: 'space-between'},
+    flexRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 10,
+    },
     textBase: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,

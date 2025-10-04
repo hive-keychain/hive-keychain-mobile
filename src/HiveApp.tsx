@@ -1,4 +1,5 @@
 import {
+  DefaultTheme,
   NavigationContainer,
   NavigationContainerRef,
 } from '@react-navigation/native';
@@ -11,35 +12,42 @@ import {
   setRpc as setRpcAction,
 } from 'actions/index';
 import {Rpc} from 'actions/interfaces';
+import {updateNavigationActiveScreen} from 'actions/navigation';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
-import RpcSwitcherComponent from 'components/popups/rpc-switcher/rpc-switcher.component';
+import RpcSwitcherComponent from 'components/popups/rpc-switcher/RpcSwitcher';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
-import RNBootSplash from 'react-native-bootsplash';
-import Orientation from 'react-native-orientation-locker';
+
 import {ConnectedProps, connect} from 'react-redux';
+import {BottomNavigationComponent} from 'screens/hive/wallet/BottomNavigation.component';
 import Modal from 'screens/Modal';
 import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_HE_RPC_NODE,
-} from 'screens/hive/settings/RpcNodes';
-import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
+} from 'src/interfaces/hiveEngineRpc.interface';
 import {RootState} from 'store';
-import {logScreenView} from 'utils/analytics';
-import {setRpc} from 'utils/hive';
-import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
-import {processQRCodeOp} from 'utils/hive-uri';
-import setupLinking, {clearLinkingListeners} from 'utils/linking';
-import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
-import {useWorkingRPC} from 'utils/rpc-switcher.utils';
+import {logScreenView} from 'utils/analytics.utils';
+import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
+import {setRpc} from 'utils/hiveLibs.utils';
+import {processQRCodeOp} from 'utils/hiveUri.utils';
+import setupLinking, {clearLinkingListeners} from 'utils/linking.utils';
+import {
+  iosHorizontalSwipeBack,
+  noHeader,
+  setNavigator,
+} from 'utils/navigation.utils';
 import {checkRpcStatus} from 'utils/rpc.utils';
+import {useWorkingRPC} from 'utils/rpcSwitcher.utils';
+import {useThemeContext} from './context/theme.context';
+import {FLOATINGBAR_ALLOWED_SCREENS} from './lists/floatingBarAllowedScreens.list';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
-import {FLOATINGBAR_ALLOWED_SCREENS} from './reference-data/FloatingScreenList';
+import {getColors} from './styles/colors';
 const Root = createStackNavigator<RootStackParam>();
 let rpc: string | undefined = '';
 
@@ -56,13 +64,16 @@ const App = ({
   accountHistoryAPIRpc,
   getTokensBackgroundColors,
   getSettings,
+  updateNavigationActiveScreen,
 }: PropsFromRedux) => {
-  let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
-
+  let navigationRef: React.MutableRefObject<NavigationContainerRef<any>> =
+    useRef(null);
+  let lastRouteName: string | undefined = undefined;
   useEffect(() => {
     getSettings();
     initApplication();
   }, []);
+  const {theme} = useThemeContext();
 
   const initApplication = async () => {
     HiveEngineConfigUtils.setActiveApi(hiveEngineRpc ?? DEFAULT_HE_RPC_NODE);
@@ -86,19 +97,18 @@ const App = ({
 
   useEffect(() => {
     setupLinking();
-    RNBootSplash.hide({fade: true});
-    Orientation.lockToPortrait();
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     return () => {
       clearLinkingListeners();
     };
   }, []);
 
   useEffect(() => {
-    if (accounts.length && requestedOp) {
-      processQRCodeOp(requestedOp);
+    if (accounts.length && requestedOp.opType && requestedOp.operation) {
+      processQRCodeOp(requestedOp.opType, requestedOp.operation);
       forgetRequestedOperation();
     }
-  }, [accounts, requestedOp]);
+  }, [accounts.length, requestedOp]);
 
   useEffect(() => {
     if (activeRpc?.uri !== 'NULL' && activeRpc?.uri !== rpc) {
@@ -111,26 +121,47 @@ const App = ({
     if (!hasAccounts) {
       // No accounts, sign up process
       return (
-        <Root.Screen name="Main" component={SignUpStack} options={noHeader} />
+        <Root.Screen
+          name="Main"
+          component={SignUpStack}
+          options={{...noHeader}}
+        />
       );
     } else if (!auth.mk) {
       // Login process
       return (
-        <Root.Screen name="Main" component={UnlockStack} options={noHeader} />
+        <Root.Screen
+          name="Main"
+          component={UnlockStack}
+          options={{...noHeader}}
+        />
       );
     } else {
       // Main page
       return (
-        <Root.Screen name="Main" component={MainDrawer} options={noHeader} />
+        <Root.Screen
+          name="Main"
+          component={MainDrawer}
+          options={{...noHeader}}
+        />
       );
     }
   };
 
   const renderRootNavigator = () => {
     return (
-      <Root.Navigator>
+      <Root.Navigator id={undefined} screenOptions={iosHorizontalSwipeBack}>
         {renderMainNavigator()}
-        <Root.Screen name="ModalScreen" component={Modal} {...modalOptions} />
+        <Root.Screen
+          name="ModalScreen"
+          component={Modal}
+          options={{
+            headerShown: false,
+            presentation: 'transparentModal',
+            cardStyle: {backgroundColor: 'transparent'},
+            animation: 'fade',
+          }}
+        />
       </Root.Navigator>
     );
   };
@@ -145,13 +176,25 @@ const App = ({
         const currentRouteName = navigationRef.current.getCurrentRoute().name;
         logScreenView(currentRouteName);
       }}
+      theme={{
+        ...DefaultTheme,
+        colors: {
+          ...DefaultTheme.colors,
+          background: getColors(theme).primaryBackground,
+        },
+      }}
       onStateChange={async (state) => {
         let currentRouteName = navigationRef.current.getCurrentRoute().name;
+        if (lastRouteName === currentRouteName) {
+          return;
+        }
+        lastRouteName = currentRouteName;
         showFloatingBar(
           !!FLOATINGBAR_ALLOWED_SCREENS.find(
             (route) => route === currentRouteName,
           ),
         );
+        updateNavigationActiveScreen(currentRouteName);
         const p = navigationRef.current.getCurrentRoute().params;
         if (currentRouteName === 'WalletScreen') {
           currentRouteName = getToggleElement() || 'WalletScreen';
@@ -163,7 +206,7 @@ const App = ({
       }}>
       {renderRootNavigator()}
       <MessageModal />
-      <FloatingBar />
+      <BottomNavigationComponent />
       <RpcSwitcherComponent initialRpc={activeRpc} />
       <Bridge />
     </NavigationContainer>
@@ -176,7 +219,7 @@ const mapStateToProps = (state: RootState) => {
     auth: state.auth,
     activeRpc: state.settings.rpc,
     accounts: state.accounts,
-    requestedOp: state.hiveUri.operation,
+    requestedOp: state.hiveUri,
     rpcSwitcher: state.rpcSwitcher,
     hiveEngineRpc: state.settings.hiveEngineRpc,
     accountHistoryAPIRpc: state.settings.accountHistoryAPIRpc,
@@ -191,6 +234,7 @@ const connector = connect(mapStateToProps, {
   setActiveRpc: setRpcAction,
   getTokensBackgroundColors,
   getSettings,
+  updateNavigationActiveScreen,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

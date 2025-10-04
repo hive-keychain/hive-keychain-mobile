@@ -2,11 +2,10 @@ import {showModal} from 'actions/message';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
-import PendingSavingsWithdrawalPageComponent from 'components/hive/PendingSavingsWithdrawalPage.component';
 import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -15,14 +14,17 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -34,14 +36,13 @@ import {
   getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {depositToSavings, withdrawFromSavings} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {depositToSavings, withdrawFromSavings} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {SavingsUtils} from 'utils/savings.utils';
 import {ConfirmationPageProps} from './Confirmation';
+import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export enum SavingsOperations {
@@ -66,15 +67,12 @@ const Savings = ({
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
     SavingsWithdrawal[]
   >([]);
-  const [
-    totalPendingSavingsWithdrawals,
-    setTotalPendingSavingsWithdrawals,
-  ] = useState(0);
+  const [totalPendingSavingsWithdrawals, setTotalPendingSavingsWithdrawals] =
+    useState(0);
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState(c);
-  const [operationType, setOperationType] = useState<SavingsOperations>(
-    operation,
-  );
+  const [operationType, setOperationType] =
+    useState<SavingsOperations>(operation);
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const {width, height} = useWindowDimensions();
@@ -102,9 +100,8 @@ const Savings = ({
 
   const init = async () => {
     if (userSavingsWithdrawRequests > 0) {
-      const pendingSavingsWithdrawalsList: SavingsWithdrawal[] = await SavingsUtils.getSavingsWitdrawFrom(
-        user.name!,
-      );
+      const pendingSavingsWithdrawalsList: SavingsWithdrawal[] =
+        await SavingsUtils.getSavingsWitdrawFrom(user.name!);
       setCurrentWithdrawingList(pendingSavingsWithdrawalsList);
       if (pendingSavingsWithdrawalsList.length > 0) {
         updateTotalSavingWithdrawals(pendingSavingsWithdrawalsList);
@@ -198,19 +195,34 @@ const Savings = ({
             title: 'common.operation_type',
             value: operationTypeList.find((e) => e.value === operationType)
               .label,
+            tag: ConfirmationDataTag.OPERATION_TYPE,
           },
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
-            value: `@${to}`,
             title: 'wallet.operations.transfer.confirm.to',
+            value: `@${to}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
           },
+          createBalanceData(
+            'wallet.operations.savings.confirm.balance',
+            operationType === SavingsOperations.deposit
+              ? parseFloat((availableBalance as string).replace(/,/g, ''))
+              : parseFloat((currentBalance as string).replace(/,/g, '')),
+            operationType === SavingsOperations.deposit
+              ? parseFloat(amount)
+              : -parseFloat(amount),
+            currency,
+          ),
         ],
       };
       navigate('ConfirmationPage', confirmationData);
@@ -241,21 +253,14 @@ const Savings = ({
           {totalPendingSavingsWithdrawals > 0 && (
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => {
-                navigate('TemplateStack', {
-                  titleScreen: capitalize(
-                    translate(`wallet.operations.savings.pending`),
-                  ),
-                  component: (
-                    <PendingSavingsWithdrawalPageComponent
-                      currency={c}
-                      operation={operationType}
-                      currentWithdrawingList={currentWithdrawingList}
-                      onUpdate={onHandleUpdate}
-                    />
-                  ),
-                } as TemplateStackProps);
-              }}
+              onPress={() =>
+                navigate('PendingSavings', {
+                  currency: c,
+                  operation: operationType,
+                  currentWithdrawingList,
+                  onUpdate: onHandleUpdate,
+                })
+              }
               style={[
                 getCardStyle(theme).defaultCardItem,
                 styles.displayAction,
@@ -280,7 +285,7 @@ const Savings = ({
               </View>
               <Icon
                 theme={theme}
-                name={Icons.EXPAND_THIN}
+                name={Icons.EXPAND}
                 additionalContainerStyle={getRotateStyle('90')}
                 width={15}
                 height={15}
@@ -291,7 +296,7 @@ const Savings = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           {(currency !== 'HIVE' ||
             operationType !== SavingsOperations.deposit) && (
             <View>
@@ -329,16 +334,7 @@ const Savings = ({
               },
             ]}
             dropdownIconScaledSize={{width: 15, height: 15}}
-            showSelectedIcon={
-              <Icon
-                name={Icons.CHECK}
-                theme={theme}
-                width={18}
-                height={18}
-                strokeWidth={2}
-                color={PRIMARY_RED_COLOR}
-              />
-            }
+            showSelectedIcon
             additionalLineStyle={styles.bottomLineDropdownItem}
             dropdownTitle={'common.operation_type'}
           />
@@ -399,6 +395,7 @@ const Savings = ({
               }
             />
           </View>
+          <Separator />
         </View>
       }
       buttonTitle={`wallet.operations.savings.${operationType}_button`}

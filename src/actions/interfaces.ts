@@ -6,8 +6,8 @@ import {
 } from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
 import {PlatformOSType} from 'react-native';
-import {MessageModalType} from 'src/enums/messageModal.enums';
-import {RcDelegationsInfo} from '../interfaces/rc-delegation.interface';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {RcDelegationsInfo} from '../interfaces/rcDelegation.interface';
 
 export interface ActionPayload<T> {
   readonly type: string;
@@ -23,6 +23,7 @@ export type NullableString = string | null;
 
 export interface Auth {
   mk: NullableString;
+  ignoreNextBiometrics?: boolean;
 }
 
 export interface Rpc {
@@ -59,14 +60,7 @@ export interface Tab {
   name?: string;
   icon?: string;
   image?: string;
-}
-
-export interface TabFields {
-  id?: number;
-  url?: string;
-  name?: string;
-  icon?: string;
-  image?: string;
+  desktop?: boolean;
 }
 
 export interface BrowserPayload {
@@ -74,9 +68,10 @@ export interface BrowserPayload {
   history?: Page;
   shouldFocus?: boolean;
   id?: number | null;
-  data?: TabFields;
+  data?: Partial<Tab>;
   showManagement?: boolean;
   favorite?: Page;
+  favorites?: Page[];
 }
 
 export interface Browser {
@@ -245,10 +240,11 @@ export interface MessageModalPayload {
 }
 
 export interface FloatingBarPayload {
-  show: boolean;
+  showBasedOnScroll: boolean;
   isLoadingScreen: boolean;
   isDrawerOpened: boolean;
   isProposalRequestDisplayed: boolean;
+  hide: boolean;
 }
 
 export interface AccountsPayload {

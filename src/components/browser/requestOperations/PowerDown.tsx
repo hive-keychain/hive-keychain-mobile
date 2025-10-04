@@ -1,14 +1,14 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {RequestId, RequestPowerDown} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RootState} from 'store';
-import {fromHP} from 'utils/format';
-import {powerDown} from 'utils/hive';
-import {sanitizeAmount} from 'utils/hiveUtils';
-import {RequestId, RequestPowerDown} from 'utils/keychain.types';
+import {fromHP} from 'utils/format.utils';
+import {sanitizeAmount} from 'utils/hive.utils';
+import {powerDown} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
@@ -27,50 +27,56 @@ const PowerDown = ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {username, steem_power: hp} = data;
-
+  const performOperation = async (options: TransactionOptions) => {
+    const account = accounts.find((e) => e.name === request.username);
+    const key = account.keys.active;
+    const vesting_shares = sanitizeAmount(
+      fromHP(sanitizeAmount(hp), properties.globals).toString(),
+      'VESTS',
+      6,
+    );
+    return await powerDown(
+      key,
+      {
+        account: username,
+        vesting_shares,
+      },
+      options,
+    );
+  };
+  const successMessage = translate(
+    `request.success.${
+      parseFloat(hp) === 0 ? 'stop_power_down' : 'power_down'
+    }`,
+    {
+      username,
+      hp,
+    },
+  );
   return (
     <RequestOperation
       sendResponse={sendResponse}
       sendError={sendError}
-      successMessage={translate(
-        `request.success.${
-          parseFloat(hp) === 0 ? 'stop_power_down' : 'power_down'
-        }`,
-        {
-          username,
-          hp,
-        },
-      )}
+      successMessage={successMessage}
       beautifyError
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async (options: TransactionOptions) => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys.active;
-        const vesting_shares = sanitizeAmount(
-          fromHP(sanitizeAmount(hp), properties.globals).toString(),
-          'VESTS',
-          6,
-        );
-        return await powerDown(
-          key,
-          {
-            account: username,
-            vesting_shares,
-          },
-          options,
-        );
-      }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
-      <RequestItem
-        title={translate('request.item.amount')}
-        content={`${hp} HP`}
-      />
-    </RequestOperation>
+      performOperation={performOperation}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.amount',
+          value: hp,
+          currency: 'HP',
+          tag: ConfirmationDataTag.AMOUNT,
+        },
+      ]}
+    />
   );
 };
 const connector = connect((state: RootState) => {

@@ -1,17 +1,21 @@
-import CollapsibleData from 'components/browser/requestOperations/components/CollapsibleData';
-import RequestItem from 'components/browser/requestOperations/components/RequestItem';
 import RequestMessage from 'components/browser/requestOperations/components/RequestMessage';
 import EllipticButton from 'components/form/EllipticButton';
+import ConfirmationCard from 'components/operations/ConfirmationCard';
 import Operation from 'components/operations/Operation';
 import {useHasExpiration} from 'hooks/useHasExpiration';
 import React from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {SignatureRequest, Signer} from 'src/interfaces/multisig.interface';
+import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {title_primary_body_2} from 'src/styles/typography';
+import {RootState} from 'store';
+import {Colors} from 'utils/colors.utils';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -24,6 +28,8 @@ type Props = {
     key: string;
   };
   expiration?: number;
+  tokens: Token[];
+  colors: Colors;
 };
 
 const RequestMultisig = ({
@@ -31,11 +37,14 @@ const RequestMultisig = ({
   onForceCloseModal,
   approve,
   expiration,
+  tokens,
+  colors,
 }: Props) => {
   useHasExpiration(expiration);
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getStyles(theme, width);
+  console.log('request', {signer, signatureRequest, decodedTransaction, key});
   const renderOperationDetails = () => {
     return (
       <View>
@@ -46,19 +55,29 @@ const RequestMultisig = ({
             {paddingHorizontal: 0, marginTop: 0},
           ]}
         />
-        <RequestItem
-          title={translate('request.item.username')}
-          content={`@${signer}`}
-        />
-        <RequestItem title={translate('request.item.key')} content={key} />
-        <RequestItem
-          title={translate('request.item.initiator')}
-          content={`@${signatureRequest.initiator}`}
-        />
-        <CollapsibleData
-          title={translate('request.item.transaction')}
-          content={JSON.stringify(decodedTransaction, undefined, 2)}
-          hidden={translate('request.item.hidden_data')}
+
+        <ConfirmationCard
+          data={[
+            {
+              title: 'request.item.username',
+              value: `@${(signer + '').split(',')[0]}`,
+              tag: ConfirmationDataTag.USERNAME,
+            },
+            {title: 'request.item.key', value: key},
+            {
+              title: 'request.item.initiator',
+              value: `@${signatureRequest.initiator}`,
+              tag: ConfirmationDataTag.USERNAME,
+            },
+            {
+              title: 'request.item.transaction',
+              value: JSON.stringify(decodedTransaction, undefined, 2),
+              tag: ConfirmationDataTag.COLLAPSIBLE,
+              hidden: translate('request.item.hidden_data'),
+            },
+          ]}
+          tokens={tokens}
+          colors={colors}
         />
         <EllipticButton
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
@@ -70,14 +89,15 @@ const RequestMultisig = ({
       </View>
     );
   };
-
-  return (
-    <Operation
-      title={translate('request.title.multisig')}
-      onClose={onForceCloseModal}>
-      {renderOperationDetails()}
-    </Operation>
-  );
+  if (signer)
+    return (
+      <Operation
+        title={translate('request.title.multisig')}
+        onClose={onForceCloseModal}>
+        {renderOperationDetails()}
+      </Operation>
+    );
+  else return null;
 };
 
 const getStyles = (theme: Theme, width: number) =>
@@ -89,5 +109,9 @@ const getStyles = (theme: Theme, width: number) =>
     button: {marginTop: 16, marginBottom: 16, height: getButtonHeight(width)},
     whiteText: {color: '#FFF'},
   });
-
-export default RequestMultisig;
+const connector = connect((state: RootState) => ({
+  tokens: state.tokens,
+  colors: state.colors,
+}));
+type TypesFromRedux = ConnectedProps<typeof connector>;
+export default connector(RequestMultisig);

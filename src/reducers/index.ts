@@ -12,10 +12,12 @@ import ecosystem from './ecosystem';
 import floatingBar from './floatingBar';
 import properties from './globalProperties';
 import historyFilters from './historyFilters';
-import hiveUri from './hive-uri';
 import hive_authentication_service from './hiveAuthenticationService';
+import hiveUri from './hiveUri';
 import lastAccount from './lastAccount';
 import message from './message';
+import navigation from './navigation';
+import notifications from './notifications';
 import phishingAccounts from './phishing';
 import preferences from './preferences';
 import rpcSwitcher from './rpcSwitcher';
@@ -55,4 +57,6 @@ export default combineReducers({
   accountValueDisplay,
   ecosystem,
   colors,
+  navigation,
+  notifications,
 });

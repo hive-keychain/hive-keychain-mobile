@@ -5,13 +5,14 @@ import HASChallengeRequest from 'components/hive_authentication_service/Challeng
 import HASError from 'components/hive_authentication_service/Error';
 import HASInfo from 'components/hive_authentication_service/Info';
 import CustomModal from 'components/modals/CustomModal';
+import EnableIosBiometrics from 'components/modals/EnableIosBiometrics';
 import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
 import {StatusBar, StyleProp, ViewStyle} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
+import {ModalComponent} from 'src/enums/modal.enum';
 import {getColors} from 'src/styles/colors';
 import {HAS_BroadcastModalPayload} from 'utils/hiveAuthenticationService/payloads.types';
-import {ModalComponent} from 'utils/modal.enum';
 
 export default ({navigation, route}: ModalNavigationProps) => {
   const {theme} = useThemeContext();
@@ -43,6 +44,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       padding: 10,
+      paddingBottom: 0,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
     } as StyleProp<ViewStyle>;
@@ -64,6 +66,8 @@ export default ({navigation, route}: ModalNavigationProps) => {
         return <HASInfo />;
       case ModalComponent.SWAP_INFO:
         return <SwapInfo />;
+      case ModalComponent.ENABLE_IOS_BIOMETRICS:
+        return <EnableIosBiometrics data={data as any} />;
       default:
         return null;
     }
@@ -79,8 +83,9 @@ export default ({navigation, route}: ModalNavigationProps) => {
       }
       fixedHeight={fixedHeight}
       bottomHalf={bottomHalf === undefined ? true : bottomHalf}
-      containerStyle={containerStyle}
+      containerStyle={[containerStyle]}
       additionalWrapperFixedStyle={wrapperFixedStyle}
+      additionalClickeableAreaStyle={{opacity: 0.5, backgroundColor: 'black'}}
       modalPosition={modalPosition}
       theme={theme}
       buttonElement={buttonElement}>

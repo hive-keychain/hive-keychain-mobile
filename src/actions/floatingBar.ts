@@ -1,26 +1,26 @@
 import {ActionPayload} from './interfaces';
 import {
   HIDE_FLOATING_BAR,
+  SCROLL_SHOW_FLOATING_BAR,
   SET_IS_DRAWER_OPEN,
   SET_IS_LOADING_SCREEN,
-  SHOW_FLOATING_BAR,
-  UPDATE_FLOATING_BAR,
+  UPDATE_SHOW_PROPOSAL_REMINDER,
 } from './types';
 
 export const showFloatingBar = (
-  show: boolean,
-): ActionPayload<{show: boolean}> => {
+  showBasedOnScroll: boolean,
+): ActionPayload<{showBasedOnScroll: boolean}> => {
   return {
-    type: SHOW_FLOATING_BAR,
-    payload: {show},
+    type: SCROLL_SHOW_FLOATING_BAR,
+    payload: {showBasedOnScroll},
   };
 };
 
-export const updateFloatingBar = (
+export const updateShowProposalReminder = (
   isProposalRequestDisplayed: boolean,
 ): ActionPayload<{isProposalRequestDisplayed: boolean}> => {
   return {
-    type: UPDATE_FLOATING_BAR,
+    type: UPDATE_SHOW_PROPOSAL_REMINDER,
     payload: {isProposalRequestDisplayed},
   };
 };
@@ -43,7 +43,7 @@ export const setIsDrawerOpen = (
   };
 };
 
-export const hideFloatingBar = () => {
+export const toggleHideFloatingBar = () => {
   return {
     type: HIDE_FLOATING_BAR,
   };

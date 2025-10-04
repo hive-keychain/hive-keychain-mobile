@@ -3,7 +3,7 @@ import CustomAmountLabel, {
 } from 'components/form/CustomAmountLabel';
 import Icon from 'components/hive/Icon';
 import moment from 'moment';
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import {
   ScaledSize,
   StyleSheet,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   AuthorCurationTransaction,
   CommentCurationTransaction,
@@ -33,7 +33,7 @@ import {
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {formatBalanceCurrency} from 'utils/format';
+import {formatBalanceCurrency} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 interface TokenHistoryItemProps {
@@ -402,4 +402,6 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
     label: {flex: 1, marginHorizontal: 8},
   });
 
-export const TokenHistoryItemComponent = connector(TokenHistoryItem);
+export const TokenHistoryItemComponent = memo(
+  connect(mapStateToProps)(TokenHistoryItem),
+);

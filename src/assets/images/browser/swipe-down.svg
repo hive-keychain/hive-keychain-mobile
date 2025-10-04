@@ -1,0 +1,10 @@
+<svg width="24" height="24" viewBox="6 2 12 12" fill="none" stroke="currentColor" stroke-width="0.7">
+  <!-- Left edge -->
+  <path d="M7 3h10" stroke-linecap="round" stroke-width="1"/>
+  <!-- Swipe line -->
+  <path d="M12 6v6" stroke-linecap="round"/>
+  <!-- Arrow -->
+  <path d="M10 10l2 2 2-2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Incomplete circle at arrow origin -->
+  <path d="M9 7.5a3 3 0 0 1 6.4 0" stroke-linecap="round"/>
+</svg>

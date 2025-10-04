@@ -1,12 +1,13 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
-import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import {
+  CardStyleInterpolators,
+  HeaderStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
 import {WalletHistoryComponent} from 'components/history/WalletHistoryComponent';
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
@@ -14,13 +15,19 @@ import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Wallet from 'screens/hive/wallet/Main';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
-
+import {noHeader} from 'utils/navigation.utils';
+import Operation from './Operation';
+import SwapBuyStack from './SwapBuyStack';
+import TokenDelegationsStack from './TokenDelegationsStack';
+import Tokens from './Tokens';
+import TokenSettingsStack from './TokenSettingsStack';
+import TokensHistory from './TokensHistory';
 const Stack = createStackNavigator();
 
 export default () => {
@@ -29,15 +36,23 @@ export default () => {
   const styles = getStyles({width, height}, theme, useSafeAreaInsets());
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+        detachPreviousScreen: false,
+        cardShadowEnabled: false,
+        cardOverlayEnabled: false,
+        cardStyle: {backgroundColor: getColors(theme).primaryBackground},
+      }}>
       <Stack.Screen
         name="WalletScreen"
         component={Wallet}
         options={({navigation}) => ({
-          headerStyle: styles.noStyle,
-          headerTransparent: true,
-          animationEnabled: false,
-          title: '',
+          headerShown: false,
         })}
       />
       <Stack.Screen
@@ -50,20 +65,17 @@ export default () => {
           ),
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animationEnabled: false,
+          unmountOnBlur: true,
+          cardStyle: styles.cardStyle,
           headerRight: () => {
             return <MoreInformation type={Info.QR_WALLET} />;
           },
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => {
-                (navigation as DrawerNavigationHelpers).navigate(
-                  'WalletScreen',
-                );
+                navigation.goBack();
               }}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -74,14 +86,13 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,
           headerTitleAlign: 'center',
-          animationEnabled: false,
           headerTitle: () => (
             <NavigatorTitle title={'navigation.wallet_history'} />
           ),
           cardStyle: styles.cardStyle,
           headerRight: () => (
             <Icon
-              name={Icons.SETTINGS_4}
+              name={Icons.FILTERS}
               theme={theme}
               onPress={() =>
                 navigation.navigate('ModalScreen', {
@@ -100,11 +111,10 @@ export default () => {
                   renderButtonElement: (
                     <View style={styles.overlayButtonElement}>
                       <Icon
-                        name={Icons.SETTINGS_4}
+                        name={Icons.FILTERS}
                         theme={theme}
                         additionalContainerStyle={styles.iconButton}
                       />
-                      <Icon theme={theme} name={Icons.CARRET_UP} />
                     </View>
                   ),
                 })
@@ -113,16 +123,56 @@ export default () => {
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
-              onPress={() => navigation.navigate('WalletScreen')}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
-              additionalContainerStyle={styles.marginLeft}
+              onPress={() => navigation.goBack()}
             />
           ),
         })}
         component={WalletHistoryComponent}
+      />
+      <Stack.Screen
+        name="SwapBuyStack"
+        component={SwapBuyStack}
+        options={{
+          ...noHeader,
+        }}
+      />
+      <Stack.Screen
+        name="Tokens"
+        component={Tokens}
+        options={{
+          ...noHeader,
+        }}
+      />
+      <Stack.Screen
+        name="TokensHistory"
+        children={(props: any) => <TokensHistory {...props} />}
+        options={{
+          ...noHeader,
+        }}
+      />
+      <Stack.Screen
+        name="Operation"
+        options={{
+          ...noHeader,
+        }}
+        children={(props: any) => <Operation {...props} />}
+      />
+      <Stack.Screen
+        name="TokenSettings"
+        component={TokenSettingsStack}
+        options={{
+          ...noHeader,
+        }}
+      />
+
+      <Stack.Screen
+        name="TokenDelegations"
+        component={TokenDelegationsStack}
+        options={{
+          ...noHeader,
+        }}
       />
     </Stack.Navigator>
   );
@@ -150,7 +200,7 @@ const getStyles = (
       backgroundColor: getColors(theme).primaryBackground,
     },
     wrapperFixed: {
-      top: 55,
+      top: 55 + insets.top,
       bottom: undefined,
       left: undefined,
       right: 10,
@@ -161,6 +211,7 @@ const getStyles = (
       width: 'auto',
       backgroundColor: 'none',
       borderWidth: 0,
+      borderRadius: 53,
     },
     overlayButtonElement: {
       position: 'absolute',
@@ -187,9 +238,9 @@ const getStyles = (
       marginLeft: HEADER_ICON_MARGIN,
     },
     headerRightContainer: {
-      marginRight: HEADER_ICON_MARGIN,
+      paddingRight: HEADER_ICON_MARGIN,
     },
     headerLeftContainer: {
-      marginLeft: HEADER_ICON_MARGIN,
+      paddingLeft: HEADER_ICON_MARGIN,
     },
   });

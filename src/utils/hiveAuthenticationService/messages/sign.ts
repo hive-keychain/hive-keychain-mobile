@@ -2,10 +2,9 @@ import {CommentOperation, VoteOperation} from '@hiveio/dhive';
 import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationService';
 import {KeyTypes} from 'actions/interfaces';
 import assert from 'assert';
-import Crypto from 'crypto-js';
-import SimpleToast from 'react-native-simple-toast';
-import {RootState, store} from 'store';
-import {getRequiredWifType} from 'utils/keychain';
+import Crypto from 'crypto-es';
+import SimpleToast from 'react-native-root-toast';
+import {ModalComponent} from 'src/enums/modal.enum';
 import {
   KeychainKeyTypes,
   KeychainRequest,
@@ -15,29 +14,32 @@ import {
   RequestPost,
   RequestSuccess,
   RequestVote,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {RootState, store} from 'store';
+import {getRequiredWifType} from 'utils/keychain.utils';
 import {translate} from 'utils/localize';
-import {ModalComponent} from 'utils/modal.enum';
-import {goBack, navigate} from 'utils/navigation';
-import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
+import {goBack, navigate} from 'utils/navigation.utils';
+import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation.utils';
 import HAS from '..';
 import {
   answerFailedBroadcastReq,
   answerSuccessfulBroadcastReq,
+  isNonceValid,
 } from '../helpers/sign';
 import {
   HAS_BroadcastModalPayload,
   HAS_SignDecrypted,
   HAS_SignPayload,
 } from '../payloads.types';
+import {checkPayload, findSessionByToken} from '../static';
 
 export const processSigningRequest = async (
   has: HAS,
   payload: HAS_SignPayload,
 ) => {
   try {
-    HAS.checkPayload(payload);
-    const session = HAS.findSessionByToken(payload.token);
+    checkPayload(payload);
+    const session = findSessionByToken(payload.token);
     assert(session, 'This account has not been connected through HAS.');
     const auth =
       session.token.token === payload.token &&
@@ -52,6 +54,12 @@ export const processSigningRequest = async (
         Crypto.enc.Utf8,
       ),
     );
+
+    if (!(await isNonceValid(opsData.nonce)) || payload.expire < Date.now()) {
+      console.log('nonce already used or expired');
+      return;
+    }
+
     const {ops, key_type} = opsData;
     payload.decryptedData = opsData;
     let request: KeychainRequest;
@@ -106,10 +114,9 @@ export const processSigningRequest = async (
       session.whitelist.includes(request.type) &&
       getRequiredWifType(request) !== KeyTypes.active
     ) {
-      SimpleToast.show(
-        translate('wallet.has.toast.broadcast'),
-        SimpleToast.SHORT,
-      );
+      SimpleToast.show(translate('wallet.has.toast.broadcast'), {
+        duration: SimpleToast.durations.SHORT,
+      });
 
       requestWithoutConfirmation(
         (store.getState() as RootState).accounts,
@@ -151,6 +158,8 @@ export const processSigningRequest = async (
     }
   } catch (e) {
     console.log(e);
-    SimpleToast.show(e + '', SimpleToast.LONG);
+    SimpleToast.show(e + '', {
+      duration: SimpleToast.durations.LONG,
+    });
   }
 };

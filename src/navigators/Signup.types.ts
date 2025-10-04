@@ -9,7 +9,7 @@ export type SignupStackParamList = {
   ChooseAccountOptionsScreen: undefined;
   AddAccountByKeyScreen: undefined;
   ScanQRScreen: undefined;
-  TemplateStackScreen: undefined;
+  CreateAccountConfirmationScreen: undefined;
 };
 
 export type SignupNavigation = StackNavigationProp<

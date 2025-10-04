@@ -1,3 +1,4 @@
+import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {
@@ -12,7 +13,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
+import {Icons} from 'src/enums/icons.enum';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {PADDING_LEFT_MAIN_MENU} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
@@ -24,8 +26,9 @@ interface PropsDrawerContentItem {
   labelTranslationKey: string;
   theme: Theme;
   onPress: () => void;
-  iconImage: JSX.Element;
-  leftSideComponent?: JSX.Element;
+  iconImage: React.JSX.Element;
+  iconName?: Icons;
+  leftSideComponent?: React.JSX.Element;
   drawBottomLine?: boolean;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalPressedStyle?: StyleProp<ViewStyle>;
@@ -39,12 +42,24 @@ const MenuItem = (props: Props) => {
   const {height} = dimensions;
   const styles = getStyles(props.theme, dimensions, !!props.leftSideComponent);
 
+  const renderIcon = () => {
+    return props.iconName ? (
+      <Icon
+        theme={props.theme}
+        name={Icons.SCANNER}
+        color={PRIMARY_RED_COLOR}
+      />
+    ) : (
+      props.iconImage
+    );
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={1}
       onPress={props.onPress}
       style={[styles.container, props.additionalContainerStyle]}>
-      <View style={styles.iconContainer}>{props.iconImage}</View>
+      <View style={styles.iconContainer}>{renderIcon()}</View>
       <View style={[styles.flexShrinkHeightFixed]}>
         <View
           style={[

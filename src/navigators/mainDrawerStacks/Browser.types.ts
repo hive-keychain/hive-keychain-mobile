@@ -1,5 +1,5 @@
 import {RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 
 export type BrowserParamList = {
   BrowserScreen: {icon: string};
@@ -12,3 +12,8 @@ export type BrowserNavigationProps = {
   navigation: BrowserNavigation;
   route: BrowserNavigationRoute;
 };
+
+export type BrowserScreenProps = StackScreenProps<
+  BrowserParamList,
+  'BrowserScreen'
+>;

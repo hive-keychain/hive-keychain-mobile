@@ -1,22 +1,23 @@
-import BackspaceDark from 'assets/new_UI/backspace_dark_theme.svg';
-import BackspaceLight from 'assets/new_UI/backspace_light_theme.svg';
-import React from 'react';
+import BackspaceDark from 'assets/images/common-ui/backspace_dark_theme.svg';
+import BackspaceLight from 'assets/images/common-ui/backspace_light_theme.svg';
+import {LinearGradient} from 'expo-linear-gradient';
+import React, {useState} from 'react';
 import {
+  ColorValue,
   Pressable,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
   headerH3Primary,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 
 interface Props {
   number?: number;
@@ -26,10 +27,16 @@ interface Props {
   onPressElement: (number: number | undefined, back?: boolean) => void;
 }
 
-export default ({number, refNumber, helper, back, onPressElement}: Props) => {
+const PinElement = ({
+  number,
+  refNumber,
+  helper,
+  back,
+  onPressElement,
+}: Props) => {
   const {theme} = useThemeContext();
-  const [activeShape, setActiveshape] = React.useState(null);
-  const [pressed, setPressed] = React.useState(false);
+  const [activeShape, setActiveshape] = useState(null);
+  const [pressed, setPressed] = useState(false);
   const dimensionReducer = 0.2;
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height}, dimensionReducer, pressed);
@@ -66,7 +73,13 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
         style={styles.pinElements}
         start={{x: 1, y: 0.5}} //initially as {x: 1, y: 0.5}
         end={{x: 1, y: 1.8}} //initially as {x: 1, y: 1.8}
-        colors={getColors(theme).gradientShapes}>
+        colors={
+          getColors(theme).gradientShapes as unknown as readonly [
+            ColorValue,
+            ColorValue,
+            ...ColorValue[],
+          ]
+        }>
         {renderPinElements(pressed)}
       </LinearGradient>
     ) : (
@@ -78,7 +91,7 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     <Pressable
       onPress={() => onPressElement(number, back)}
       style={({pressed}) => {
-        return pressed && refNumber !== 12
+        return pressed && refNumber !== 12 && refNumber !== 10
           ? [styles.pinElements, styles.pinElementPressed]
           : styles.pinElements;
       }}>
@@ -93,6 +106,8 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     </Pressable>
   );
 };
+
+export default React.memo(PinElement);
 
 const getStyles = (
   theme: Theme,
@@ -110,7 +125,6 @@ const getStyles = (
       width: width * dimensionReducer,
       height: Math.round(width * dimensionReducer),
       borderRadius: width * dimensionReducer,
-      transition: 2,
     },
     pinElementPressed: {
       backgroundColor: getColors(theme).primaryRedShape,

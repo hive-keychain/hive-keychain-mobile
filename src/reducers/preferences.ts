@@ -3,7 +3,7 @@ import {ADD_PREFERENCE, REMOVE_PREFERENCE} from 'actions/types';
 import {
   addPreferenceToState,
   removePreferenceFromState,
-} from 'utils/preferences';
+} from 'utils/preferences.utils';
 import {PreferencePayload, UserPreference} from './preferences.types';
 
 const preferences = (

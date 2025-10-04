@@ -2,17 +2,16 @@ import {addAccount} from 'actions/index';
 import {AccountKeys} from 'actions/interfaces';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
-import {getClient} from 'utils/hive';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {
   RequestAddAccount,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
-import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
+} from 'src/interfaces/keychain.interface';
+import {getClient} from 'utils/hiveLibs.utils';
+import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation.utils';
 import {translate} from 'utils/localize';
-import CollapsibleData from './components/CollapsibleData';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -43,17 +42,21 @@ const AddAccount = ({
       closeGracefully={closeGracefully}
       performOperation={async () => {
         return performAddAccountOperation(request, addAccount);
-      }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={username}
-      />
-      <CollapsibleData
-        title={translate('request.item.keys')}
-        hidden={translate('request.item.hidden_data')}
-        content={JSON.stringify(keys, undefined, 2)}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: `@${username}`,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.keys',
+          value: JSON.stringify(keys, undefined, 2),
+          tag: ConfirmationDataTag.COLLAPSIBLE,
+          hidden: translate('request.item.hidden_data'),
+        },
+      ]}
+    />
   );
 };
 

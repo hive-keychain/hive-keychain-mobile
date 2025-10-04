@@ -1,5 +1,5 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import QRLogo from 'assets/addAccount/icon_scan-qr.svg';
+import QRLogo from 'assets/images/addAccount/icon_scan-qr.svg';
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 

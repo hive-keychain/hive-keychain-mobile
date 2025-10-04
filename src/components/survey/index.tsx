@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EllipticButton from 'components/form/EllipticButton';
+import {Image} from 'expo-image';
 import moment from 'moment';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect} from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
@@ -13,7 +13,7 @@ import {
   title_primary_body_2,
   title_primary_title_1,
 } from 'src/styles/typography';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {SurveyData} from './surveyData';
 
 type Props = {
@@ -47,13 +47,13 @@ const Survey = ({navigation}: Props): null => {
   const renderContent = () => (
     <View style={styles.container}>
       <Text style={[styles.textBase, styles.title]}>{SurveyData.title}</Text>
-      <FastImage
+      <Image
         style={[
           styles.image,
           generateBoxShadowStyle(10, 10, shadowColor, 0.8, 10, 20, shadowColor),
         ]}
         source={{uri: SurveyData.image}}
-        resizeMode={FastImage.resizeMode.contain}
+        contentFit="contain"
       />
       {SurveyData.description.map((paragraph) => (
         <Text style={[styles.textBase, styles.description]}>{paragraph}</Text>

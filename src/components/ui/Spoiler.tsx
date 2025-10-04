@@ -3,14 +3,14 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getColors} from 'src/styles/colors';
 import {title_primary_title_1} from 'src/styles/typography';
 
 type Props = {
   title: string;
   initiallyOpened?: boolean;
-  children: JSX.Element;
+  children: React.ReactNode;
 };
 const Spoiler = ({title, initiallyOpened, children}: Props) => {
   const [isOpened, setIsOpened] = useState(initiallyOpened || false);
@@ -25,7 +25,7 @@ const Spoiler = ({title, initiallyOpened, children}: Props) => {
         }}>
         <Text style={styles.headerText}>{title}</Text>
         <Icon
-          name={Icons.EXPAND_THIN}
+          name={Icons.EXPAND}
           theme={theme}
           additionalContainerStyle={styles.expand}
           color={getColors(theme).primaryText}

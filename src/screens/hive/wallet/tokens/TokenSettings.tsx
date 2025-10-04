@@ -1,11 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadTokens} from 'actions/index';
-import CustomSearchBar from 'components/form/CustomSearchBar';
-import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -13,16 +11,16 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {ConnectedProps, connect} from 'react-redux';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
+import {ConnectedProps, connect, useSelector} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Token} from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {hiveEngineWebsiteURL} from 'utils/config';
+import {hiveEngineWebsiteURL} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 import TokenSettingsItem from './TokenSettingsItem';
 
@@ -94,6 +92,22 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {height, width} = useWindowDimensions();
   const styles = getStyles(theme, height);
+  const colors = useSelector((state: RootState) => state.colors);
+
+  const renderTokenSettingsItem = useCallback(
+    ({item}: {item: Token}) => (
+      <TokenSettingsItem
+        token={item}
+        theme={theme}
+        heightDevice={height}
+        widthDevice={width}
+        checkedValue={!hiddenTokens.find((symbol) => symbol === item.symbol)}
+        setChecked={() => toogleHiddenToken(item.symbol)}
+        colors={colors}
+      />
+    ),
+    [theme, height, width, hiddenTokens, toogleHiddenToken, colors],
+  );
 
   return (
     <View style={styles.container}>
@@ -107,15 +121,6 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
           {hiveEngineWebsiteURL}{' '}
         </Text>
       </Text>
-      <Separator height={10} />
-      <CustomSearchBar
-        theme={theme}
-        rightIcon={<Icon name={Icons.SEARCH} theme={theme} />}
-        value={searchValue}
-        onChangeText={(text) => setSearchValue(text)}
-        disabled={loadingTokens}
-        additionalContainerStyle={styles.searchBar}
-      />
       <Separator height={10} />
       {/* {!loadingTokens && hiddenTokens.length > 0 && (
         <View style={styles.flexEnd}>
@@ -155,18 +160,7 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
       ) : (
         <FlatList
           data={filteredTokens}
-          renderItem={({item}) => (
-            <TokenSettingsItem
-              token={item}
-              theme={theme}
-              heightDevice={height}
-              widthDevice={width}
-              checkedValue={
-                !hiddenTokens.find((symbol) => symbol === item.symbol)
-              }
-              setChecked={() => toogleHiddenToken(item.symbol)}
-            />
-          )}
+          renderItem={renderTokenSettingsItem}
           ListEmptyComponent={
             <View style={[styles.containerCentered, styles.marginTop]}>
               <Text style={[styles.textBase]}>
@@ -174,6 +168,9 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
               </Text>
             </View>
           }
+          ListFooterComponent={() => (
+            <Separator height={initialWindowMetrics.insets.bottom} />
+          )}
         />
       )}
     </View>

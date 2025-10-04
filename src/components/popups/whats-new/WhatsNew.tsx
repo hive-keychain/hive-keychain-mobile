@@ -1,23 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Carousel from 'components/carousel/carousel';
+import {addTab} from 'actions/browser';
+import Carousel from 'components/carousel/CustomCarousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
-import {Image, Linking, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
   body_primary_body_3,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {VersionLogUtils} from 'utils/version-log.utils';
-import {WhatsNewUtils} from 'utils/whats-new.utils';
-import {Feature, WhatsNewContent} from './whats-new.interface';
-
+import {navigate} from 'utils/navigation.utils';
+import {VersionLogUtils} from 'utils/version.utils';
+import {WhatsNewUtils} from 'utils/whatsNew.utils';
+import {Feature, WhatsNewContent} from './whatsNew.interface';
 interface Props {
   navigation: WalletNavigation;
 }
@@ -38,7 +39,7 @@ export function prefetchImage(url: string) {
 export function isPrefetched(url: string) {
   return prefetchedImages[url] !== undefined;
 }
-const WhatsNew = ({navigation}: Props): null => {
+const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
   const [index, setIndex] = useState(0);
   const locale = 'en'; // later use getUILanguage()
@@ -52,6 +53,7 @@ const WhatsNew = ({navigation}: Props): null => {
     const lastVersionStorage = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
     );
+
     const lastVersionAPI = await VersionLogUtils.getLastVersion();
     const mobileAppVersion = VersionLogUtils.getCurrentMobileAppVersion()
       .version.split('.')
@@ -90,32 +92,44 @@ const WhatsNew = ({navigation}: Props): null => {
 
   const styles = getStyles(theme);
 
-  const handleOnClickItem = (content: WhatsNewContent, feature: Feature) => {
+  const handleOnClickItem = async (
+    content: WhatsNewContent,
+    feature: Feature,
+  ) => {
     if (feature.externalUrl) {
-      Linking.openURL(feature.externalUrl);
+      addTab(feature.externalUrl);
     } else {
-      Linking.openURL(`${content.url}#${feature.anchor}`);
+      addTab(`${content.url}#${feature.anchor}`);
     }
+    await finish();
+    navigation.navigate('Browser');
   };
 
-  const renderItem = (feature: Feature) => {
-    return (
-      <View key={`carousel-item-${feature.title}`} style={styles.itemContainer}>
-        <Image
-          style={styles.image}
-          source={{uri: feature.image}}
-          resizeMode={'contain'}
-        />
-        <Text style={styles.titleText}>{feature.title}</Text>
-        <Text style={styles.descriptionText}>{feature.description}</Text>
-        <Text
-          style={styles.readMoreText}
-          onPress={() => handleOnClickItem(whatsNewContent, feature)}>
-          {feature.overrideReadMoreLabel ?? translate('common.popup_read_more')}
-        </Text>
-      </View>
-    );
-  };
+  const renderItem = useCallback(
+    (feature: Feature) => {
+      return (
+        <View
+          key={`carousel-item-${feature.title}`}
+          style={styles.itemContainer}>
+          <Image
+            style={styles.image}
+            source={{uri: feature.image}}
+            resizeMode={'contain'}
+          />
+          <Text style={styles.titleText}>{feature.title}</Text>
+          <Text style={styles.descriptionText}>{feature.description}</Text>
+          <Text style={styles.descriptionText}>{feature.extraInformation}</Text>
+          <Text
+            style={styles.readMoreText}
+            onPress={() => handleOnClickItem(whatsNewContent, feature)}>
+            {feature.overrideReadMoreLabel ??
+              translate('common.popup_read_more')}
+          </Text>
+        </View>
+      );
+    },
+    [styles, handleOnClickItem, whatsNewContent, translate],
+  );
 
   const renderContent = () => {
     return (
@@ -126,10 +140,11 @@ const WhatsNew = ({navigation}: Props): null => {
           })}
         </Text>
         <Carousel
+          enableSwipe
           buttonsConfig={{
-            prevTitle: translate('popup.whats_new.previous'),
-            nextTitle: translate('popup.whats_new.next'),
-            lastTitle: translate('popup.whats_new.got_it'),
+            prevTitle: translate('common.previous'),
+            nextTitle: translate('common.next'),
+            lastTitle: translate('common.got_it'),
             lastSlideAction: finish,
           }}
           content={whatsNewContent.features[locale]}
@@ -183,4 +198,7 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-export default WhatsNew;
+const connector = connect(null, {addTab});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(WhatsNew);

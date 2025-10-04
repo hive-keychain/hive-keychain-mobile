@@ -1,7 +1,8 @@
 import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import debounce from 'lodash/debounce';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {FlatList, Platform, StyleSheet, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {RootState, store} from 'store';
@@ -22,6 +23,16 @@ const UrlAutocomplete = ({
   ecosystem,
 }: Props & PropsFromRedux) => {
   const [candidates, setCandidates] = useState([]);
+  const [debouncedInput, setDebouncedInput] = useState(input);
+
+  // Debounce input changes
+  const debouncedSetInput = useRef(
+    debounce((val) => setDebouncedInput(val), 200),
+  ).current;
+
+  useEffect(() => {
+    debouncedSetInput(input);
+  }, [input, debouncedSetInput]);
 
   useEffect(() => {
     const flatEcosystem: DApp[] = ecosystem.reduce((a, b): DApp[] => {
@@ -51,52 +62,77 @@ const UrlAutocomplete = ({
       isCaseSensitive: false,
       useExtendedSearch: true,
       ignoreLocation: true,
-      //maxPatternLength: 32,
       minMatchCharLength: 0,
       keys: [
         {name: 'name', weight: 0.5},
         {name: 'url', weight: 0.5},
       ],
     });
-    const fuseSearchResult = fuse.search(input);
+    const fuseSearchResult = fuse.search(debouncedInput).slice(0, 8);
     if (Array.isArray(fuseSearchResult)) {
       setCandidates(fuseSearchResult.map((e) => e.item));
     } else {
       setCandidates([]);
     }
-  }, [input, history, ecosystem]);
+  }, [debouncedInput, history, ecosystem]);
+  const renderCandidateItem = useCallback(
+    ({item, index}: {item: Page; index: number}) => (
+      <HistoryItem
+        theme={theme}
+        onSubmit={onSubmit}
+        data={item}
+        indexItem={index}
+        enabled={false}
+      />
+    ),
+    [theme, onSubmit],
+  );
+  const renderHistoryItem = useCallback(
+    ({item, index}: {item: Page; index: number}) => (
+      <HistoryItem
+        theme={theme}
+        onSubmit={onSubmit}
+        data={item}
+        indexItem={index}
+        enabled={false}
+      />
+    ),
+    [theme, onSubmit],
+  );
   if (candidates.length)
     return (
       <View style={styles.wrapper}>
-        {candidates.map((e, index) => (
-          <HistoryItem
-            theme={theme}
-            onSubmit={onSubmit}
-            data={e}
-            indexItem={index}
-          />
-        ))}
+        <FlatList
+          data={candidates}
+          keyExtractor={(item, index) => `${item.url}-${index}`}
+          windowSize={5}
+          scrollEnabled
+          removeClippedSubviews={Platform.OS === 'android'}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderCandidateItem}
+        />
       </View>
     );
   else {
-    let historyCopy = [...history].reverse().slice(0, 10);
+    let historyCopy = [...history].reverse().slice(0, 8);
     return (
       <View style={styles.wrapper}>
-        {historyCopy.map((e, index) => (
-          <HistoryItem
-            theme={theme}
-            onSubmit={onSubmit}
-            data={e}
-            indexItem={index}
-          />
-        ))}
+        <FlatList
+          data={historyCopy}
+          keyExtractor={(item, index) => `${item.url}-${index}`}
+          windowSize={5}
+          removeClippedSubviews={Platform.OS === 'android'}
+          scrollEnabled
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderHistoryItem}
+        />
       </View>
     );
   }
 };
 
 const styles = StyleSheet.create({
-  wrapper: {marginTop: 20},
+  wrapper: {marginTop: 20, flex: 1},
 });
 
 const connector = connect((state: RootState) => {

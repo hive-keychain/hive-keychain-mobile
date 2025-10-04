@@ -1,17 +1,16 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {post} from 'utils/hive';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {
   RequestError,
   RequestId,
   RequestPost,
   RequestSuccess,
   UsingHAS,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {post} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import CollapsibleData from './components/CollapsibleData';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -51,46 +50,53 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={(options: TransactionOptions) => {
         return performPostOperation(accounts, request, options);
-      }}>
-      <RequestItem
-        content={`@${username}`}
-        title={translate('request.item.username')}
-      />
-      {title ? (
-        <RequestItem title={translate('request.item.title')} content={title} />
-      ) : null}
-      <RequestItem
-        title={translate('request.item.permlink')}
-        content={permlink}
-      />
-      <CollapsibleData
-        title={translate('request.item.body')}
-        hidden={translate('request.item.hidden_data')}
-        content={body}
-      />
-      {parent_username ? (
-        <RequestItem
-          content={`@${parent_username}`}
-          title={translate('request.item.parent_username')}
-        />
-      ) : null}
-      <RequestItem
-        content={parent_perm}
-        title={translate('request.item.parent_perm')}
-      />
-      <CollapsibleData
-        content={JSON.stringify(JSON.parse(json_metadata), undefined, 2)}
-        title={translate('request.item.json_metadata')}
-        hidden={translate('request.item.hidden_data')}
-      />
-      {comment_options ? (
-        <CollapsibleData
-          content={JSON.stringify(comment_options, undefined, 2)}
-          title={translate('request.item.comment_options')}
-          hidden={translate('request.item.hidden_data')}
-        />
-      ) : null}
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        title && {
+          title: 'request.item.title',
+          value: title,
+        },
+        {
+          title: 'request.item.permlink',
+          value: permlink,
+        },
+        {
+          title: 'request.item.body',
+          value: body,
+          hidden: translate('request.item.hidden_data'),
+
+          tag: ConfirmationDataTag.COLLAPSIBLE,
+        },
+        parent_username && {
+          title: 'request.item.parent_username',
+          value: parent_username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.parent_perm',
+          value: parent_perm,
+        },
+        {
+          title: 'request.item.json_metadata',
+          value: JSON.stringify(JSON.parse(json_metadata), undefined, 2),
+          hidden: translate('request.item.hidden_data'),
+
+          tag: ConfirmationDataTag.COLLAPSIBLE,
+        },
+        comment_options && {
+          title: 'request.item.comment_options',
+          value: JSON.stringify(JSON.parse(comment_options), undefined, 2),
+          hidden: translate('request.item.hidden_data'),
+
+          tag: ConfirmationDataTag.COLLAPSIBLE,
+        },
+      ].filter(Boolean)}
+    />
   );
 };
 

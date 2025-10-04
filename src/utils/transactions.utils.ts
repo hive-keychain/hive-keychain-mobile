@@ -3,8 +3,8 @@ import {
   TransferOperation,
   utils as dHiveUtils,
 } from '@hiveio/dhive';
-import { decodeMemo } from 'components/bridge';
-import { ReceiveTransferProps } from 'navigators/Root.types';
+import {decodeMemo} from 'components/bridge';
+import {ReceiveTransferProps} from 'navigators/Root.types';
 import {
   ClaimAccount,
   ClaimReward,
@@ -26,9 +26,9 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
-import { getSymbol, toHP } from './format';
-import { getClient } from './hive';
-import { translate } from './localize';
+import {getSymbol, toHP} from './format.utils';
+import {getClient} from './hiveLibs.utils';
+import {translate} from './localize';
 
 export const MINIMUM_FETCHED_TRANSACTIONS = 1;
 export const NB_TRANSACTION_FETCHED = 200;
@@ -79,12 +79,13 @@ const getAccountTransactions = async (
 
     if (limit <= 0) return [[], 0];
 
-    const transactionsFromBlockchain = await getClient().database.getAccountHistory(
-      accountName,
-      start,
-      limit,
-      operationsBitmask,
-    );
+    const transactionsFromBlockchain =
+      await getClient().database.getAccountHistory(
+        accountName,
+        start,
+        limit,
+        operationsBitmask,
+      );
     let transactions: Transaction[] = [];
     for (const e of transactionsFromBlockchain) {
       let specificTransaction = null;
@@ -337,12 +338,13 @@ const getLastTransaction = async (accountName: string) => {
     number,
     number,
   ];
-  const transactionsFromBlockchain = await getClient().database.getAccountHistory(
-    accountName,
-    -1,
-    1,
-    allOperationsBitmask,
-  );
+  const transactionsFromBlockchain =
+    await getClient().database.getAccountHistory(
+      accountName,
+      -1,
+      1,
+      allOperationsBitmask,
+    );
   return transactionsFromBlockchain.length > 0
     ? transactionsFromBlockchain[0][0]
     : -1;

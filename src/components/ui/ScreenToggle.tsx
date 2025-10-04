@@ -10,16 +10,16 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
   title_primary_body_2,
   title_primary_title_1,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 
 type Props = {
-  components: JSX.Element[];
+  components: React.ReactNode[];
   menu: string[];
   toUpperCase: boolean;
   style?: StyleProp<ViewStyle>;
@@ -53,12 +53,7 @@ const ScreenToggle = ({
               setToggleElement(menuItem);
             }}
             key={menuItem}
-            style={[
-              styles.headerItemBase,
-              i === active
-                ? [styles.headerElt, styles.headerActiveElt]
-                : styles.headerElt,
-            ]}>
+            style={[styles.headerElt, i === active && styles.headerActiveElt]}>
             <Text
               style={[
                 styles.headerText,
@@ -90,7 +85,8 @@ const getStyles = (nb: number, theme: Theme, {width, height}: Dimensions) =>
       justifyContent: 'space-between',
     },
     headerElt: {
-      minWidth: `${Math.round(90 / nb)}%`,
+      paddingVertical: 8,
+      minWidth: `${Math.round(90 / nb) - 1}%`,
     },
     headerText: {
       ...title_primary_title_1,
@@ -113,14 +109,11 @@ const getStyles = (nb: number, theme: Theme, {width, height}: Dimensions) =>
       backgroundColor: PRIMARY_RED_COLOR,
       borderRadius: 26,
       alignItems: 'center',
+      marginHorizontal: 1,
     },
     pane: {
       width: '100%',
       flex: 1,
-    },
-    headerItemBase: {
-      paddingHorizontal: 10,
-      paddingVertical: 8,
     },
   });
 

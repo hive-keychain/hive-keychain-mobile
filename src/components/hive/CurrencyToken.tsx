@@ -10,18 +10,13 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
-import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
-import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
+import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
+import {getHBDButtonList} from 'src/lists/hbdOperationButton.list';
+import {getHiveButtonList} from 'src/lists/hiveOperationButton.list';
+import {getHPButtonList} from 'src/lists/hpOperationButton.list';
 import {getCardStyle} from 'src/styles/card';
-import {
-  GREEN_SUCCESS,
-  HBDICONBGCOLOR,
-  HIVEICONBGCOLOR,
-  PRIMARY_RED_COLOR,
-  getColors,
-} from 'src/styles/colors';
+import {GREEN_SUCCESS, PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   body_primary_body_2,
   button_link_primary_medium,
@@ -29,17 +24,16 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {formatBalance, toHP} from 'utils/format';
+import {formatBalance, toHP} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {WalletHistoryComponentProps} from '../history/WalletHistoryComponent';
+import CurrencyIcon from './CurrencyIcon';
 import Icon from './Icon';
-import IconHP from './IconHP';
 
 interface Props {
   theme: Theme;
-  currencyName: string;
+  currencyName: 'HIVE' | 'HBD' | 'HP' | 'TESTS' | 'TBD' | 'TP';
   itemIndex: number;
   onPress: () => void;
 }
@@ -65,14 +59,17 @@ const CurrencyToken = ({
   const getButtons = (currency: string) => {
     switch (currency) {
       case 'HIVE':
+      case 'TESTS':
         return getHiveButtonList(user, theme);
       case 'HBD':
+      case 'TBD':
         return getHBDButtonList(user, theme);
       case 'HP':
+      case 'TP':
         return getHPButtonList(theme, user.name!);
     }
   };
-  const [buttons, setButtons] = useState<JSX.Element[]>(
+  const [buttons, setButtons] = useState<React.JSX.Element[]>(
     getButtons(currencyName),
   );
 
@@ -88,7 +85,7 @@ const CurrencyToken = ({
 
   useEffect(() => {
     if (user && user.name && Object.keys(user.account).length > 0) {
-      if (currencyName === 'HIVE') {
+      if (currencyName === 'HIVE' || currencyName === 'TESTS') {
         setValue(parseFloat(user.account.balance as string));
         setSubValue(
           parseFloat(user.account.savings_balance as string) > 0
@@ -98,7 +95,7 @@ const CurrencyToken = ({
         setPreFixSubValue(
           getPlusPrefix(user.account.savings_balance as string),
         );
-      } else if (currencyName === 'HBD') {
+      } else if (currencyName === 'HBD' || currencyName === 'TBD') {
         setValue(parseFloat(user.account.hbd_balance as string));
         setSubValue(
           parseFloat(user.account.savings_hbd_balance as string) > 0
@@ -110,7 +107,7 @@ const CurrencyToken = ({
             ? '+'
             : undefined,
         );
-      } else if (currencyName === 'HP') {
+      } else if (currencyName === 'HP' || currencyName === 'TP') {
         setValue(
           toHP(user.account.vesting_shares as string, properties.globals),
         );
@@ -141,39 +138,8 @@ const CurrencyToken = ({
     } as WalletHistoryComponentProps);
   };
 
-  const getCurrencyLogo = () => {
-    switch (currencyName) {
-      case 'HIVE':
-        return (
-          <Icon
-            theme={theme}
-            name={Icons.HIVE_CURRENCY_LOGO}
-            additionalContainerStyle={styles.hiveIconContainer}
-            {...styles.icon}
-          />
-        );
-      case 'HBD':
-        return (
-          <Icon
-            theme={theme}
-            name={Icons.HBD_CURRENCY_LOGO}
-            additionalContainerStyle={[
-              styles.hiveIconContainer,
-              styles.hbdIconBgColor,
-            ]}
-            {...styles.icon}
-          />
-        );
-      case 'HP':
-        return (
-          <IconHP theme={theme} additionalContainerStyle={{marginTop: 8}} />
-        );
-    }
-  };
-
   const getTokenPrice = () => {
     let variation, coinPrice, isPositive;
-
     if (currencyName === 'HIVE') {
       coinPrice = price.hive.usd;
       variation = price.hive.usd_24h_change;
@@ -183,6 +149,7 @@ const CurrencyToken = ({
       variation = price.hive_dollar.usd_24h_change;
       isPositive = price.hive_dollar.usd_24h_change >= 0;
     } else return null;
+    if (!coinPrice) return null;
     return (
       <>
         <Separator />
@@ -210,7 +177,7 @@ const CurrencyToken = ({
                 transform: !isPositive ? [{rotate: '180deg'}] : undefined,
               }}>
               <Icon
-                name={Icons.CARRET_UP}
+                name={Icons.CARET_UP}
                 color={isPositive ? GREEN_SUCCESS : PRIMARY_RED_COLOR}
                 height={10}
               />
@@ -232,7 +199,7 @@ const CurrencyToken = ({
           }}
           style={styles.rowContainer}>
           <View style={styles.leftContainer}>
-            {getCurrencyLogo()}
+            <CurrencyIcon currencyName={currencyName} />
             <Text style={[styles.textSymbol, styles.marginLeft]}>
               {currencyName}
             </Text>
@@ -258,7 +225,7 @@ const CurrencyToken = ({
             {isExpanded && (
               <Icon
                 key={`show-token-history-${currencyName}`}
-                name={Icons.BACK_TIME}
+                name={Icons.HISTORY}
                 onPress={onHandleGoToWalletHistory}
                 additionalContainerStyle={styles.squareButton}
                 theme={theme}
@@ -343,18 +310,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       flexWrap: 'wrap',
       justifyContent: 'center',
     },
-    icon: {
-      width: 20,
-      height: 20,
-    },
-    hiveIconContainer: {
-      borderRadius: 50,
-      padding: 5,
-      backgroundColor: HIVEICONBGCOLOR,
-    },
-    hbdIconBgColor: {
-      backgroundColor: HBDICONBGCOLOR,
-    },
+
     priceText: {
       ...fields_primary_text_2,
       color: getColors(theme).secondaryText,

@@ -1,16 +1,17 @@
-import Crypto from 'crypto-js';
-import {ModalComponent} from 'utils/modal.enum';
-import {goBack, navigate} from 'utils/navigation';
+import Crypto from 'crypto-es';
+import {ModalComponent} from 'src/enums/modal.enum';
+import {goBack, navigate} from 'utils/navigation.utils';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {getChallengeData} from '../helpers/challenge';
 import {HAS_ChallengePayload} from '../payloads.types';
+import {findSessionByToken} from '../static';
 
 export const processChallengeRequest = (
   has: HAS,
   payload: HAS_ChallengePayload,
 ) => {
-  const session = HAS.findSessionByToken(payload.token);
+  const session = findSessionByToken(payload.token);
   const token = session.token;
   if (token && token.expiration > Date.now()) {
     const decrypted_data = Crypto.AES.decrypt(

@@ -1,16 +1,16 @@
 import {WitnessUpdateOperation} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
-import keychain from 'api/keychain';
+import keychain from 'api/keychain.api';
 import moment from 'moment';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Key} from 'src/interfaces/keys.interface';
 import {
   LastSigningKeys,
   WitnessInfo,
   WitnessParamsForm,
 } from 'src/interfaces/witness.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {WitnessesConfig} from './config';
+import {WitnessesConfig} from './config.utils';
 import {
   fromNaiAndSymbol,
   getAmountFromNai,
@@ -18,8 +18,8 @@ import {
   nFormatter,
   toFormattedHP,
   toHP,
-} from './format';
-import {broadcast, getClient} from './hive';
+} from './format.utils';
+import {broadcast, getClient} from './hiveLibs.utils';
 
 export const MAX_WITNESS_VOTE = 30;
 

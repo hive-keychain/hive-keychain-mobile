@@ -2,16 +2,16 @@ import {Account, KeyTypes, PubKeyTypes} from 'actions/interfaces';
 import {signBuffer} from 'components/bridge';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
-import {urlTransformer} from 'utils/browser';
-import {beautifyIfJSON} from 'utils/format';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {
   RequestError,
   RequestId,
   RequestSignBuffer,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {urlTransformer} from 'utils/browser.utils';
+import {beautifyIfJSON} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -30,27 +30,21 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {domain, method, username, message} = data;
-  const {
-    getAccountKey,
-    getAccountPublicKey,
-    RequestUsername,
-    getUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
-
+  const {getAccountKey, getAccountPublicKey, RequestUsername, getUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
+  const messageString = username
+    ? translate('request.message.signBuffer', {
+        domain: urlTransformer(domain).hostname,
+        method,
+        username,
+      })
+    : translate('request.message.signBufferNoUsername', {
+        domain: urlTransformer(domain).hostname,
+        method,
+      });
   return (
     <RequestOperation
-      message={
-        username
-          ? translate('request.message.signBuffer', {
-              domain: urlTransformer(domain).hostname,
-              method,
-              username,
-            })
-          : translate('request.message.signBufferNoUsername', {
-              domain: urlTransformer(domain).hostname,
-              method,
-            })
-      }
+      message={messageString}
       sendResponse={sendResponse}
       sendError={sendError}
       successMessage={translate('request.success.signBuffer')}
@@ -62,19 +56,26 @@ export default ({
         publicKey: getAccountPublicKey(),
       }}
       selectedUsername={getUsername()}
+      RequestUsername={RequestUsername}
+      confirmationData={[
+        {tag: ConfirmationDataTag.REQUEST_USERNAME, title: '', value: ''},
+        {
+          title: 'request.item.method',
+          value: method,
+        },
+        {
+          title: 'request.item.message',
+          value: beautifyIfJSON(
+            message.length > 500 ? message.substring(0, 500) + ' ...' : message,
+          ),
+        },
+      ]}
       performOperation={async () => {
         return performSignBufferOperation(getAccountKey(), message);
-      }}>
-      <RequestUsername />
-      <RequestItem title={translate('request.item.method')} content={method} />
-      <RequestItem
-        title={translate('request.item.message')}
-        content={beautifyIfJSON(message)}
-      />
-    </RequestOperation>
+      }}
+    />
   );
 };
-
 const performSignBufferOperation = async (key: string, message: string) => {
   return await signBuffer(key, message);
 };

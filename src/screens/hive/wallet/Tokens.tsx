@@ -7,8 +7,8 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+// import {TemplateStackProps} from 'navigators/Root.types';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Linking,
@@ -21,9 +21,9 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
@@ -32,12 +32,11 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {logScreenView} from 'utils/analytics';
-import {hiveEngineWebsiteURL} from 'utils/config';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
+import {logScreenView} from 'utils/analytics.utils';
+import {hiveEngineWebsiteURL} from 'utils/config.utils';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import TokenSettings from './tokens/TokenSettings';
+import {navigate} from 'utils/navigation.utils';
 
 interface TokensProps {}
 /**Note: Currently component not being called or used. */
@@ -51,10 +50,8 @@ const Tokens = ({
   prices,
   tokensMarket,
 }: PropsFromRedux & TokensProps) => {
-  const [
-    filteredUserTokenBalanceList,
-    setFilteredUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
+  const [filteredUserTokenBalanceList, setFilteredUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
   const [search, setSearch] = useState<string>('');
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
 
@@ -119,6 +116,22 @@ const Tokens = ({
 
   const styles = getStyles(theme, useWindowDimensions());
 
+  const renderEngineTokenDisplay = useCallback(
+    ({item}: {item: TokenBalance}) => (
+      <EngineTokenDisplay
+        token={item}
+        tokensList={tokens}
+        market={tokensMarket}
+        toggled={toggled === item._id}
+        setToggle={() => {
+          if (toggled === item._id) setToggled(null);
+          else setToggled(item._id);
+        }}
+      />
+    ),
+    [tokens, tokensMarket, toggled],
+  );
+
   const renderContent = () => {
     if (userTokens.loading || !tokensMarket?.length) {
       return (
@@ -133,18 +146,7 @@ const Tokens = ({
           contentContainerStyle={styles.flatlist}
           keyExtractor={(item) => item._id.toString()}
           ItemSeparatorComponent={() => <Separator height={10} />}
-          renderItem={({item}) => (
-            <EngineTokenDisplay
-              token={item}
-              tokensList={tokens}
-              market={tokensMarket}
-              toggled={toggled === item._id}
-              setToggle={() => {
-                if (toggled === item._id) setToggled(null);
-                else setToggled(item._id);
-              }}
-            />
-          )}
+          renderItem={renderEngineTokenDisplay}
           ListEmptyComponent={
             <View style={{flex: 1, justifyContent: 'center'}}>
               <Text style={styles.no_tokens}>
@@ -186,17 +188,9 @@ const Tokens = ({
             additionalContainerStyle={styles.searchBar}
           />
           <Icon
-            name={Icons.SETTINGS_2}
+            name={Icons.SETTINGS_WHEEL}
             theme={theme}
-            onPress={() => {
-              navigate('TemplateStack', {
-                titleScreen: translate(
-                  'wallet.operations.token_settings.title',
-                ),
-                component: <TokenSettings />,
-                hideCloseButton: true,
-              } as TemplateStackProps);
-            }}
+            onPress={() => navigate('TokenSettings')}
             additionalContainerStyle={styles.iconButton}
           />
         </View>

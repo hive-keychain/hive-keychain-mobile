@@ -1,18 +1,22 @@
-import hsc, {hiveEngineAPI} from 'api/hiveEngine';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {HiveEngineApi} from 'api/hiveEngine.api';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AppThunk} from 'src/hooks/redux';
+import {DEFAULT_HE_RPC_NODE} from 'src/interfaces/hiveEngineRpc.interface';
 import {
   OperationsHiveEngine,
   Token,
-  TokenBalance,
   TokenMarket,
   TokenTransaction,
 } from 'src/interfaces/tokens.interface';
 import {RootState, store} from 'store';
-import {decodeMemoIfNeeded} from 'utils/hiveEngine';
+import {decodeMemoIfNeeded} from 'utils/hiveEngine.utils';
+import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 import {getAllTokens, getUserBalance} from 'utils/tokens.utils';
-import {ActionPayload} from './interfaces';
+import {ActionPayload, TokenBalance} from './interfaces';
 import {showModal} from './message';
+import {setHiveEngineRpc} from './settings';
 import {
   CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,
@@ -20,6 +24,7 @@ import {
   LOAD_TOKENS_MARKET,
   LOAD_TOKEN_HISTORY,
   LOAD_USER_TOKENS,
+  STOP_USER_TOKENS_LOADING,
 } from './types';
 
 export const loadTokens = (): AppThunk => async (dispatch) => {
@@ -36,7 +41,14 @@ export const loadTokensMarket = (): AppThunk => async (dispatch) => {
   let offset = 0;
   let tokens;
   do {
-    tokens = await hsc.find('market', 'metrics', {}, 1000, offset, []);
+    tokens = await HiveEngineApi.getSSC().find(
+      'market',
+      'metrics',
+      {},
+      1000,
+      offset,
+      [],
+    );
     offset += 1000;
     tokensMarket = [...tokensMarket, ...tokens];
   } while (tokens.length === 1000);
@@ -47,117 +59,120 @@ export const loadTokensMarket = (): AppThunk => async (dispatch) => {
   dispatch(action);
 };
 
-export const loadUserTokens = (account: string): AppThunk => async (
-  dispatch,
-) => {
-  try {
-    dispatch({
-      type: CLEAR_USER_TOKENS,
+export const loadUserTokens =
+  (account: string): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: CLEAR_USER_TOKENS,
+      });
+
+      let tokensBalance: TokenBalance[] = await getUserBalance(account);
+      tokensBalance = tokensBalance.sort(
+        (a, b) => parseFloat(b.balance) - parseFloat(a.balance),
+      );
+      const action: ActionPayload<TokenBalance[]> = {
+        type: LOAD_USER_TOKENS,
+        payload: tokensBalance,
+      };
+      dispatch(action);
+      setTimeout(() => {
+        dispatch({
+          type: STOP_USER_TOKENS_LOADING,
+        });
+      }, 1000);
+    } catch (e) {
+      const switchAuto = await AsyncStorage.getItem(
+        KeychainStorageKeyEnum.SWITCH_HE_RPC_AUTO,
+      );
+      if (
+        switchAuto === 'true' ||
+        (switchAuto === null &&
+          HiveEngineConfigUtils.getApi() === DEFAULT_HE_RPC_NODE)
+      ) {
+        const newApi = await HiveEngineConfigUtils.switchToNextRpc();
+        dispatch(setHiveEngineRpc(newApi));
+        dispatch(loadUserTokens(account));
+      } else
+        dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
+    }
+  };
+
+export const loadTokenHistory =
+  (account: string, currency: string): AppThunk =>
+  async (dispatch) => {
+    const memoKey = (store.getState() as RootState).accounts.find(
+      (a) => a.name === account,
+    )!.keys.memo;
+    let tokenHistory: TokenTransaction[] = [];
+
+    let start = 0;
+    let previousTokenHistoryLength = 0;
+
+    do {
+      previousTokenHistoryLength = tokenHistory.length;
+      let result: TokenTransaction[] = (
+        await HiveEngineApi.getHistoryApi().get('accountHistory', {
+          params: {
+            account,
+            symbol: currency,
+            type: 'user',
+            offset: start,
+          },
+        })
+      ).data;
+      start += 1000;
+      tokenHistory = [...tokenHistory, ...result];
+    } while (previousTokenHistoryLength !== tokenHistory.length);
+
+    tokenHistory = tokenHistory.map((t: any) => {
+      t.amount = `${t.quantity} ${t.symbol}`;
+      switch (t.operation) {
+        case OperationsHiveEngine.COMMENT_CURATION_REWARD:
+        case OperationsHiveEngine.COMMENT_AUTHOR_REWARD:
+          return {
+            ...(t as TokenTransaction),
+            authorPerm: t.authorperm,
+          };
+        case OperationsHiveEngine.MINING_LOTTERY:
+          return {...(t as TokenTransaction), poolId: t.poolId};
+        case OperationsHiveEngine.TOKENS_TRANSFER:
+          return {
+            ...(t as TokenTransaction),
+            from: t.from,
+            to: t.to,
+            memo: decodeMemoIfNeeded(t.memo, memoKey),
+          };
+        case OperationsHiveEngine.TOKEN_STAKE:
+          return {
+            ...(t as TokenTransaction),
+            from: t.from,
+            to: t.to,
+          };
+        case OperationsHiveEngine.TOKENS_DELEGATE:
+          return {
+            ...(t as TokenTransaction),
+            delegator: t.from,
+            delegatee: t.to,
+          };
+        case OperationsHiveEngine.TOKEN_UNDELEGATE_START:
+        case OperationsHiveEngine.TOKEN_UNDELEGATE_DONE:
+          return {
+            ...(t as TokenTransaction),
+            delegator: t.to,
+            delegatee: t.from,
+          };
+        default:
+          return t as TokenTransaction;
+      }
     });
 
-    let tokensBalance: TokenBalance[] = await getUserBalance(account);
-    tokensBalance = tokensBalance.sort(
-      (a, b) => parseFloat(b.balance) - parseFloat(a.balance),
-    );
-    const action: ActionPayload<TokenBalance[]> = {
-      type: LOAD_USER_TOKENS,
-      payload: tokensBalance,
+    const action: ActionPayload<TokenTransaction[]> = {
+      type: LOAD_TOKEN_HISTORY,
+      payload: tokenHistory,
     };
     dispatch(action);
-  } catch (e) {
-    if (e.message && e.message.includes('timeout')) {
-      dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
-    }
-    console.log('loadUserTokens Error: ', e);
-  }
-};
-
-export const loadTokenHistory = (
-  account: string,
-  currency: string,
-): AppThunk => async (dispatch) => {
-  const memoKey = (store.getState() as RootState).accounts.find(
-    (a) => a.name === account,
-  )!.keys.memo;
-  let tokenHistory: TokenTransaction[] = [];
-
-  let start = 0;
-  let previousTokenHistoryLength = 0;
-
-  do {
-    previousTokenHistoryLength = tokenHistory.length;
-    let result: TokenTransaction[] = (
-      await hiveEngineAPI.get('accountHistory', {
-        params: {
-          account,
-          symbol: currency,
-          type: 'user',
-          offset: start,
-        },
-      })
-    ).data;
-    start += 1000;
-    tokenHistory = [...tokenHistory, ...result];
-  } while (previousTokenHistoryLength !== tokenHistory.length);
-
-  //------- this is for debug -----//
-  // let tokenOperationTypes = tokenHistory.map((e: any) => e.operation);
-  // tokenOperationTypes = [...new Set(tokenOperationTypes)];
-  // console.log(tokenOperationTypes);
-
-  // for (const type of tokenOperationTypes) {
-  //   console.log(tokenHistory.find((e: any) => e.operation === type));
-  // }
-  //-------------------------------//
-
-  tokenHistory = tokenHistory.map((t: any) => {
-    t.amount = `${t.quantity} ${t.symbol}`;
-    switch (t.operation) {
-      case OperationsHiveEngine.COMMENT_CURATION_REWARD:
-      case OperationsHiveEngine.COMMENT_AUTHOR_REWARD:
-        return {
-          ...(t as TokenTransaction),
-          authorPerm: t.authorperm,
-        };
-      case OperationsHiveEngine.MINING_LOTTERY:
-        return {...(t as TokenTransaction), poolId: t.poolId};
-      case OperationsHiveEngine.TOKENS_TRANSFER:
-        return {
-          ...(t as TokenTransaction),
-          from: t.from,
-          to: t.to,
-          memo: decodeMemoIfNeeded(t.memo, memoKey),
-        };
-      case OperationsHiveEngine.TOKEN_STAKE:
-        return {
-          ...(t as TokenTransaction),
-          from: t.from,
-          to: t.to,
-        };
-      case OperationsHiveEngine.TOKENS_DELEGATE:
-        return {
-          ...(t as TokenTransaction),
-          delegator: t.from,
-          delegatee: t.to,
-        };
-      case OperationsHiveEngine.TOKEN_UNDELEGATE_START:
-      case OperationsHiveEngine.TOKEN_UNDELEGATE_DONE:
-        return {
-          ...(t as TokenTransaction),
-          delegator: t.to,
-          delegatee: t.from,
-        };
-      default:
-        return t as TokenTransaction;
-    }
-  });
-
-  const action: ActionPayload<TokenTransaction[]> = {
-    type: LOAD_TOKEN_HISTORY,
-    payload: tokenHistory,
   };
-  dispatch(action);
-};
 
 export const clearTokenHistory = (): AppThunk => async (dispatch) => {
   dispatch({

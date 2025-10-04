@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
-import {Width} from 'utils/common.types';
+import {Dimensions} from 'src/interfaces/common.interface';
 
 const Marker = () => {
   const styles = getStyles(useWindowDimensions());
@@ -14,9 +14,12 @@ const Marker = () => {
   );
 };
 
-const getStyles = ({width}: Width) =>
+const getStyles = ({width, height}: Dimensions) =>
   StyleSheet.create({
     marker: {
+      position: 'absolute',
+      top: 0.2 * height,
+      left: 0.1 * width,
       width: 0.8 * width,
       height: 0.8 * width,
     },

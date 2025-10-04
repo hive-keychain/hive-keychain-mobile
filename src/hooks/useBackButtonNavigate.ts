@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React from 'react';
+import {useCallback} from 'react';
 import {BackHandler} from 'react-native';
-import {resetStackAndNavigate} from 'utils/navigation';
+import {resetStackAndNavigate} from 'utils/navigation.utils';
 
 /**
  * @description Use this hook when using the template stack or when need to goBack to an specific route(i.e: reseting nav stack) after a press on android back phone
@@ -12,7 +12,7 @@ export const useBackButtonNavigation = (
   skipNavigation?: boolean,
 ) => {
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       const onBackPress = () => {
         if (!skipNavigation) resetStackAndNavigate(routeScreenName);
         return true;

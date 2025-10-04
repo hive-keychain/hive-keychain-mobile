@@ -4,8 +4,9 @@ import {
   ExtendedAccount,
 } from '@hiveio/dhive';
 import {Account, AccountKeys, ActiveAccount, RC} from 'actions/interfaces';
-import {ClaimsConfig} from './config';
-import {broadcast, getClient, getData} from './hive';
+import {ClaimsConfig} from './config.utils';
+import {broadcast, getClient, getData} from './hiveLibs.utils';
+import {KeyUtils} from './key.utils';
 import {translate} from './localize';
 
 const addAuthorizedAccount = async (
@@ -24,10 +25,15 @@ const addAuthorizedAccount = async (
       .includes(username)
   ) {
     if (simpleToast) {
-      simpleToast.show(translate('toast.account_already'), simpleToast.LONG);
+      simpleToast.show(
+        translate('toast.account_already', {account: username}),
+        {
+          duration: simpleToast.durations.LONG,
+        },
+      );
       return;
     }
-    throw new Error(translate('toast.account_already'));
+    throw new Error(translate('toast.account_already', {account: username}));
   }
   if (
     !existingAccounts
@@ -46,7 +52,9 @@ const addAuthorizedAccount = async (
 
   if (!hiveAccounts || hiveAccounts.length === 0) {
     if (simpleToast) {
-      simpleToast.show(translate('toast.incorrect_user'), simpleToast.LONG);
+      simpleToast.show(translate('toast.incorrect_user'), {
+        duration: simpleToast.durations.LONG,
+      });
       return;
     }
     throw new Error(translate('toast.incorrect_user'));
@@ -172,6 +180,26 @@ const getPowerDown = (
 const generateQRCode = (account: ActiveAccount) => {
   return JSON.stringify({name: account.name, keys: account.keys});
 };
+
+const generateQRCodeFromAccount = (account: Account) => {
+  let acc: Account = {name: account.name, keys: {}};
+  if (KeyUtils.isExportable(account.keys.active, account.keys.activePubkey)) {
+    acc.keys.active = account.keys.active;
+    if (account.keys.activePubkey?.startsWith('@'))
+      acc.keys.activePubkey = account.keys.activePubkey;
+  }
+  if (KeyUtils.isExportable(account.keys.posting, account.keys.postingPubkey)) {
+    acc.keys.posting = account.keys.posting;
+    if (account.keys.postingPubkey?.startsWith('@'))
+      acc.keys.postingPubkey = account.keys.postingPubkey;
+  }
+  if (KeyUtils.isExportable(account.keys.memo, account.keys.memoPubkey)) {
+    acc.keys.memo = account.keys.memo;
+    acc.keys.memoPubkey = account.keys.memoPubkey;
+  }
+  return acc;
+};
+
 const AccountUtils = {
   addAuthorizedAccount,
   doesAccountExist,
@@ -181,6 +209,7 @@ const AccountUtils = {
   claimAccounts,
   getPowerDown,
   generateQRCode,
+  generateQRCodeFromAccount,
 };
 
 export default AccountUtils;

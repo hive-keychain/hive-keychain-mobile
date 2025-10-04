@@ -2,6 +2,7 @@ import {KeyTypes} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import Separator from 'components/ui/Separator';
 import React from 'react';
 import {
   ImageStyle,
@@ -12,7 +13,11 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {
+  EdgeInsets,
+  initialWindowMetrics,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -20,8 +25,8 @@ import {CONTENT_MARGIN_PADDING} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
 
 interface OperationProps {
-  childrenTop?: JSX.Element;
-  childrenMiddle: JSX.Element;
+  childrenTop?: React.ReactNode;
+  childrenMiddle: React.ReactNode;
   additionalContentContainerStyle?: StyleProp<ViewStyle>;
   additionalSVGOpacity?: number;
   additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
@@ -69,6 +74,7 @@ const OperationThemed = ({
   return (
     <Background
       theme={theme}
+      skipTop
       additionalBgSvgImageStyle={[
         styles.backgroundSvgImage,
         additionalBgSvgImageStyle,
@@ -88,6 +94,7 @@ const OperationThemed = ({
                 scrollEnabled={inScrollView}
                 keyboardShouldPersistTaps="handled">
                 {renderContent()}
+                <Separator height={initialWindowMetrics.insets.bottom} />
               </ScrollView>
             </View>
           </View>

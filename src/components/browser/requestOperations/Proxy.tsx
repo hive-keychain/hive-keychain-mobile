@@ -1,10 +1,10 @@
 import {KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
-import {setProxy} from 'utils/hive';
-import {RequestId, RequestProxy} from 'utils/keychain.types';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {RequestId, RequestProxy} from 'src/interfaces/keychain.interface';
+import {setProxy} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
@@ -21,12 +21,14 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {proxy} = data;
-  const {
-    getAccountKey,
-    RequestUsername,
-    getUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
-
+  const {getAccountKey, RequestUsername, getUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
+  const performOperation = async () => {
+    return await setProxy(getAccountKey(), {
+      account: getUsername(),
+      proxy,
+    });
+  };
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -40,17 +42,16 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       selectedUsername={getUsername()}
-      performOperation={async () => {
-        return await setProxy(getAccountKey(), {
-          account: getUsername(),
-          proxy,
-        });
-      }}>
-      <RequestUsername />
-      <RequestItem
-        title={translate('request.item.proxy')}
-        content={proxy.length ? `@${proxy}` : translate('common.none')}
-      />
-    </RequestOperation>
+      RequestUsername={RequestUsername}
+      performOperation={performOperation}
+      confirmationData={[
+        {tag: ConfirmationDataTag.REQUEST_USERNAME, title: '', value: ''},
+        {
+          title: 'request.item.proxy',
+          value: proxy.length ? proxy : translate('common.none'),
+          tag: proxy.length ? ConfirmationDataTag.USERNAME : undefined,
+        },
+      ]}
+    />
   );
 };

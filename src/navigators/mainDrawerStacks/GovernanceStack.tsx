@@ -1,28 +1,36 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import Governance from 'screens/hive/governance/Governance';
+import Governance from 'screens/hive/drawer/governance/Governance';
+import DisableEnableMyWitness from 'screens/hive/drawer/governance/myWitness/DisableEnableMyWitness';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
+type Params = {
+  title: string;
+  mode: 'enable' | 'disable';
+  witnessInfo: any;
+};
 export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="GovernanceScreen"
         component={Governance}
@@ -36,18 +44,46 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('Wallet')}
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              onPress={() => navigation.goBack()}
             />
           ),
         })}
+      />
+      <Stack.Screen
+        name="ToggleWitness"
+        options={({navigation, route}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle
+              title={(route.params as Params).title}
+              skipTranslation
+            />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+        children={({route}) => {
+          const {title, mode, witnessInfo} = route.params as Params;
+          return (
+            <DisableEnableMyWitness
+              mode={mode}
+              theme={theme}
+              witnessInfo={witnessInfo}
+            />
+          );
+        }}
       />
     </Stack.Navigator>
   );
@@ -70,9 +106,9 @@ const getStyles = (
       backgroundColor: getColors(theme).primaryBackground,
     },
     headerRightContainer: {
-      marginRight: HEADER_ICON_MARGIN,
+      paddingRight: HEADER_ICON_MARGIN,
     },
     headerLeftContainer: {
-      marginLeft: HEADER_ICON_MARGIN,
+      paddingLeft: HEADER_ICON_MARGIN,
     },
   });

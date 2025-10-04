@@ -6,7 +6,7 @@ import RcHpSelectorPanel from 'components/hive/RcHpSelectorPanel';
 import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -15,14 +15,15 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {default as Toast} from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
+import {RCDelegationValue} from 'src/interfaces/rcDelegation.interface';
 import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDDARKBLUE,
@@ -42,13 +43,13 @@ import {
   formatBalanceCurrency,
   getCleanAmountValue,
   withCommas,
-} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
+import {navigate} from 'utils/navigation.utils';
+import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 import {ConfirmationPageProps} from './Confirmation';
-import IncomingOutGoingRCDelegations from './IncomingOutGoingRCDelegations';
+import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export interface RCDelegationOperationProps {
@@ -134,16 +135,11 @@ const RCDelegation = ({
 
   const onHandleNavigateToRCDelegations = (type: 'incoming' | 'outgoing') => {
     if (type === 'incoming' || !parseFloat(totalOutgoing.gigaRcValue)) return;
-    navigate('TemplateStack', {
-      titleScreen: capitalize(type),
-      component: (
-        <IncomingOutGoingRCDelegations
-          type={type}
-          total={totalOutgoing}
-          available={available}
-        />
-      ),
-    } as TemplateStackProps);
+    navigate('RcDelegations', {
+      type,
+      total: totalOutgoing,
+      available,
+    });
   };
 
   const onRCDelegateConfirmation = () => {
@@ -166,15 +162,25 @@ const RCDelegation = ({
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
-            value: `@${to}`,
             title: 'wallet.operations.transfer.confirm.to',
+            value: `@${to}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} GRC`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: 'GRC',
           },
+          createBalanceData(
+            'wallet.operations.rc_delegation.confirm.balance',
+            parseFloat(available.gigaRcValue.replace(/,/g, '')),
+            parseFloat(amount),
+            'GRC',
+          ),
         ],
       };
       navigate('ConfirmationPage', confirmationData);

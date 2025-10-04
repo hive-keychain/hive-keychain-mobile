@@ -2,13 +2,10 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 export type MainDrawerStackParam = {
-  WALLET: undefined;
-  BrowserScreen: {icon: string};
+  Wallet: undefined;
+  Browser: {icon: string};
   Accounts: undefined;
-  AccountManagementScreen: undefined;
-  AddAccountStack: undefined;
-  AddAccountByAuth: undefined;
-  CreateAccountScreen: undefined;
+  // Consolidated: related screens live under Accounts stack now
   SettingsScreen: undefined;
   ABOUT: undefined;
   Governance: undefined;
@@ -17,15 +14,19 @@ export type MainDrawerStackParam = {
   Operation: undefined;
   TemplateStack: undefined;
   SwapBuyStack: undefined;
-  SwapHistory: undefined;
   Help: undefined;
+  TokenSettings: undefined;
+  TokenDelegations: undefined;
+  // nested under Operation stack
+  ToggleWitness: undefined;
+  CreateAccountConfirmationScreen: undefined;
 };
 
 export type BrowserNavigation = StackNavigationProp<
   MainDrawerStackParam,
-  'BrowserScreen'
+  'Browser'
 >;
-type BrowserNavigationRoute = RouteProp<MainDrawerStackParam, 'BrowserScreen'>;
+type BrowserNavigationRoute = RouteProp<MainDrawerStackParam, 'Browser'>;
 
 export type BrowserNavigationProps = {
   navigation: BrowserNavigation;
@@ -34,7 +35,7 @@ export type BrowserNavigationProps = {
 
 export type WalletNavigation = StackNavigationProp<
   MainDrawerStackParam,
-  'WALLET'
+  'Wallet'
 >;
 
 export type GovernanceNavigation = StackNavigationProp<
@@ -44,15 +45,6 @@ export type GovernanceNavigation = StackNavigationProp<
 
 export type WalletNavigationProps = {
   navigation: WalletNavigation;
-};
-
-export type MgtNavigation = StackNavigationProp<
-  MainDrawerStackParam,
-  'AccountManagementScreen'
->;
-
-export type MgtNavigationProps = {
-  navigation: MgtNavigation;
 };
 
 export type AboutNavigation = StackNavigationProp<

@@ -1,4 +1,4 @@
-import {useHeaderHeight} from '@react-navigation/stack';
+import {useHeaderHeight} from '@react-navigation/elements';
 import React from 'react';
 import {
   ImageBackground,
@@ -16,15 +16,17 @@ import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import SafeArea from './SafeArea';
 
-const hexagonsLight = require('assets/new_UI/hexagons-bg-light.png');
-const hexagonsDark = require('assets/new_UI/hexagons-bg-dark.png');
+const hexagonsLight = require('assets/images/background/hexagons-bg-light.png');
+const hexagonsDark = require('assets/images/background/hexagons-bg-dark.png');
 
 interface BackgroundProps {
-  children: JSX.Element;
+  children: React.ReactNode;
   theme: Theme;
   style?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
+  skipTop?: boolean;
+  skipBottom?: boolean;
 }
 
 export default (props: BackgroundProps) => {
@@ -32,10 +34,13 @@ export default (props: BackgroundProps) => {
   const height = useHeaderHeight();
   const insets = useSafeAreaInsets();
   return (
-    <SafeArea style={[styles.mainContainer]}>
+    <SafeArea
+      style={[styles.mainContainer]}
+      skipTop={props.skipTop}
+      skipBottom={props.skipBottom}>
       <KeyboardAvoidingView
         style={[styles.container, props.containerStyle]}
-        enabled={Platform.OS === 'ios' ? true : false}
+        enabled={Platform.OS === 'ios'}
         behavior={'padding'}
         keyboardVerticalOffset={height + insets.bottom}>
         <ImageBackground

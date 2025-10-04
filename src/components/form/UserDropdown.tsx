@@ -1,24 +1,26 @@
-import {loadAccount} from 'actions/index';
-import Icon from 'components/hive/Icon';
+import {loadAccount, reorderAccounts} from 'actions/index';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import React, {ComponentProps} from 'react';
+import React, {ComponentProps, useEffect, useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {RootState} from 'store';
 import DropdownModal, {DropdownModalItem} from './DropdownModal';
 
-type Props = Partial<ComponentProps<typeof DropdownModal>> & PropsFromRedux;
+type Props = Partial<ComponentProps<typeof DropdownModal>> &
+  PropsFromRedux & {
+    canBeReordered?: boolean;
+  };
 
 const UserDropdown = ({
   loadAccount,
+  reorderAccounts,
   activeAccount,
   accounts,
+  canBeReordered,
   ...props
 }: Props) => {
-  const {theme} = useThemeContext();
+  const [list, setList] = useState<DropdownModalItem[]>([]);
   const getItemDropDownSelected = (username: string): DropdownModalItem => {
     const selected = accounts.filter((acc) => acc.name === username)[0];
     return {
@@ -37,31 +39,36 @@ const UserDropdown = ({
       } as DropdownModalItem;
     });
 
+  useEffect(() => {
+    setList(getListFromAccount());
+  }, [accounts.length]);
+
   return (
     <DropdownModal
       hideLabel
-      list={getListFromAccount()}
+      list={list}
       selected={getItemDropDownSelected(activeAccount.name!)}
       onSelected={(selectedAccount) => loadAccount(selectedAccount.value, true)}
       additionalDropdowContainerStyle={styles.dropdownContainer}
       additionalOverlayStyle={styles.dropdownOverlay}
       dropdownIconScaledSize={{width: 15, height: 15}}
       dropdownTitle="common.accounts"
-      showSelectedIcon={
-        <Icon
-          name={Icons.CHECK}
-          theme={theme}
-          width={15}
-          height={15}
-          strokeWidth={2}
-          color={PRIMARY_RED_COLOR}
-        />
-      }
+      showSelectedIcon
+      canBeReordered={canBeReordered}
+      onReorder={(data) => {
+        const orderMap = new Map(
+          data.map((item, index) => [item.value, index]),
+        );
+        const reordered = [...accounts].sort(
+          (a, b) => orderMap.get(a.name) - orderMap.get(b.name),
+        );
+        reorderAccounts(reordered);
+      }}
       {...props}
     />
   );
 };
-const styles = {
+const styles = StyleSheet.create({
   avatar: {width: 30, height: 30, borderRadius: 50},
   dropdownContainer: {
     width: '100%',
@@ -71,7 +78,7 @@ const styles = {
   dropdownOverlay: {
     paddingHorizontal: MARGIN_PADDING,
   },
-};
+});
 
 const connector = connect(
   (state: RootState) => {
@@ -80,7 +87,7 @@ const connector = connect(
       accounts: state.accounts,
     };
   },
-  {loadAccount},
+  {loadAccount, reorderAccounts},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

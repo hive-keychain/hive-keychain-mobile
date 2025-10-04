@@ -1,6 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {CreateDataAccountOnBoarding} from 'src/interfaces/create-accounts.interface';
+import {CreateDataAccountOnBoarding} from 'src/interfaces/createAccounts.interface';
 
 export type CreateAccountFromWalletParamList = {
   CreateAccountFromWalletScreenPageOne: {

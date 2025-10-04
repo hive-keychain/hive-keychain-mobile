@@ -2,11 +2,10 @@ import {fetchConversionRequests} from 'actions/index';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
-import PendingConvertions from 'components/hive/PendingConversions';
 import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -15,27 +14,29 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getRotateStyle} from 'src/styles/transform';
 import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {collateralizedConvert, convert} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {sanitizeAmount} from 'utils/hiveUtils';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {sanitizeAmount} from 'utils/hive.utils';
+import {collateralizedConvert, convert} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import Balance from './Balance';
 import {ConfirmationPageProps} from './Confirmation';
+import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export interface ConvertOperationProps {
@@ -52,7 +53,7 @@ const Convert = ({
 }: Props) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [totalPendingConvertions, setTotalPendingConvertions] = useState(0);
+  const [totalPendingConversions, setTotalPendingConversions] = useState(0);
   const [availableBalance, setAvailableBalance] = useState('');
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const Convert = ({
 
   useEffect(() => {
     if (conversions.length > 0) {
-      setTotalPendingConvertions(
+      setTotalPendingConversions(
         conversions
           .filter(
             (conversion) =>
@@ -130,11 +131,20 @@ const Convert = ({
           {
             title: 'common.account',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
           },
+          createBalanceData(
+            'wallet.operations.transfer.confirm.balance',
+            parseFloat(availableBalance.replace(/,/g, '')),
+            parseFloat(amount),
+            currency,
+          ),
         ],
         keyType: KeyType.ACTIVE,
       };
@@ -163,22 +173,15 @@ const Convert = ({
             setAvailableBalance={(available) => setAvailableBalance(available)}
           />
           <Separator />
-          {totalPendingConvertions > 0 && (
+          {totalPendingConversions > 0 && (
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => {
-                navigate('TemplateStack', {
-                  titleScreen: capitalize(
-                    translate(`wallet.operations.convert.pending`),
-                  ),
-                  component: (
-                    <PendingConvertions
-                      currency={currency}
-                      currentPendingConvertionList={conversions}
-                    />
-                  ),
-                } as TemplateStackProps);
-              }}
+              onPress={() =>
+                navigate('PendingConversions', {
+                  currency,
+                  currentPendingConversionList: conversions,
+                })
+              }
               style={[
                 getCardStyle(theme).defaultCardItem,
                 styles.displayAction,
@@ -197,12 +200,12 @@ const Convert = ({
                     getFormFontStyle(height, theme).input,
                     styles.josefineFont,
                   ]}>
-                  {totalPendingConvertions} {currency}
+                  {totalPendingConversions} {currency}
                 </Text>
               </View>
               <Icon
                 theme={theme}
-                name={Icons.EXPAND_THIN}
+                name={Icons.EXPAND}
                 additionalContainerStyle={getRotateStyle('90')}
                 width={13}
                 height={13}
@@ -213,7 +216,7 @@ const Convert = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           <Caption
             text={`wallet.operations.convert.disclaimer_${currency.toLowerCase()}`}
           />

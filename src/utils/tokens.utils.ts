@@ -1,5 +1,5 @@
 import {TokenBalance, TokenTransaction} from 'actions/interfaces';
-import hsc, {hiveEngineAPI, hiveEngineGet} from 'api/hiveEngine';
+import {HiveEngineApi} from 'api/hiveEngine.api';
 import {ReceiveTransferProps} from 'navigators/Root.types';
 import {Token, TokenMarket} from 'src/interfaces/tokens.interface';
 
@@ -34,7 +34,7 @@ const tryConfirmTransaction = (
 const getDelayedTransactionInfo = (trxID: string) => {
   return new Promise(function (fulfill, reject) {
     setTimeout(async function () {
-      fulfill(hsc.getTransactionInfo(trxID));
+      fulfill(HiveEngineApi.getSSC().getTransactionInfo(trxID));
     }, 1000);
   });
 };
@@ -53,7 +53,7 @@ const delayRefresh = async (): Promise<void> => {
 };
 
 export const getUserBalance = (account: string) => {
-  return hiveEngineGet<TokenBalance[]>({
+  return HiveEngineApi.get<TokenBalance[]>({
     contract: 'tokens',
     table: 'balances',
     query: {account: account},
@@ -76,7 +76,7 @@ export const getAllTokens = async (): Promise<Token[]> => {
 
 const getTokens = async (offset: number) => {
   return (
-    await hiveEngineGet<any[]>({
+    await HiveEngineApi.get<any[]>({
       contract: 'tokens',
       table: 'tokens',
       query: {},
@@ -94,7 +94,7 @@ const getTokens = async (offset: number) => {
 
 export const getTokenInfo = async (symbol: string): Promise<Token> => {
   return (
-    await hiveEngineGet<any[]>({
+    await HiveEngineApi.get<any[]>({
       contract: 'tokens',
       table: 'tokens',
       query: {symbol: symbol},
@@ -136,7 +136,7 @@ const searchForTransaction = async (
   date: Date,
 ) => {
   let result: TokenTransaction[] = (
-    await hiveEngineAPI.get('accountHistory', {
+    await HiveEngineApi.getHistoryApi().get('accountHistory', {
       params: {
         account: params[1].to,
         symbol: (params[1].amount as string).split(' ')[1],

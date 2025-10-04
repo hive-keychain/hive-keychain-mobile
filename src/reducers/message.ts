@@ -1,6 +1,6 @@
 import {ActionPayload, MessageModalPayload} from 'actions/interfaces';
 import {RESET_MODAL, SHOW_MODAL} from 'actions/types';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 
 const INITIAL_STATE: MessageModalPayload = {
   key: '',
