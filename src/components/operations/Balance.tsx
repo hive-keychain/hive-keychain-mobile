@@ -9,8 +9,8 @@ import {
   getFontSizeSmallDevices,
   headerH2Primary,
 } from 'src/styles/typography';
-import {toHP, withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {toHP, withCommas} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
   globalProperties?: DynamicGlobalProperties;
   isHiveEngine?: boolean;
   tokenBalance?: string;
-  tokenLogo?: JSX.Element;
+  tokenLogo?: React.ReactNode;
   setAvailableBalance?: (value: string) => void;
   theme?: Theme;
 };

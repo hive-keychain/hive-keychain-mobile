@@ -1,9 +1,9 @@
 import {loadAccount} from 'actions/hive';
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
-import DiscordLogo from 'assets/new_UI/discord_logo.svg';
-import HiveLogo from 'assets/new_UI/hive_logo.svg';
-import MediumLogo from 'assets/new_UI/medium.svg';
-import XLogo from 'assets/new_UI/x_logo.svg';
+import DiscordLogo from 'assets/images/drawer/discord_logo.svg';
+import HiveLogo from 'assets/images/hive/hive_logo.svg';
+import MediumLogo from 'assets/images/drawer/medium.svg';
+import XLogo from 'assets/images/drawer/x_logo.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import React, {useEffect, useState} from 'react';
 import {
@@ -14,7 +14,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
 import {
   BACKGROUNDITEMDARKISH,
@@ -26,9 +26,9 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {store} from 'store';
-import {voteForWitness} from 'utils/hive';
+import {voteForWitness} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 export default ({
   user,
@@ -56,9 +56,7 @@ export default ({
   }, [user]);
 
   const showVoteForWitness = () => {
-    const account = user.account.witness_votes?.includes('stoodkev')
-      ? 'cedricguillas'
-      : 'stoodkev';
+    const account = 'stoodkev';
     return (
       <EllipticButton
         title={translate('drawerFooter.vote', {account})}
@@ -68,11 +66,15 @@ export default ({
         onPress={async () => {
           try {
             if (!user.keys[KeyTypes.active]) {
-              Toast.show(translate('drawerFooter.errorActive'), Toast.LONG);
+              Toast.show(translate('drawerFooter.errorActive'), {
+                duration: Toast.durations.LONG,
+              });
               return;
             }
             if (user.account.witness_votes.length === 30) {
-              Toast.show(translate('drawerFooter.error30'), Toast.LONG);
+              Toast.show(translate('drawerFooter.error30'), {
+                duration: Toast.durations.LONG,
+              });
               return;
             }
             await voteForWitness(user.keys[KeyTypes.active], {
@@ -80,14 +82,15 @@ export default ({
               witness: account,
               approve: true,
             });
+            Toast.show(translate('drawerFooter.thanks'), {
+              duration: Toast.durations.LONG,
+            });
             //@ts-ignore
             store.dispatch(loadAccount(user.name));
-            Toast.show(translate('drawerFooter.thanks'), Toast.LONG);
           } catch (e) {
-            Toast.show(
-              translate('drawerFooter.error') + JSON.stringify(e),
-              Toast.LONG,
-            );
+            Toast.show(translate('drawerFooter.error') + JSON.stringify(e), {
+              duration: Toast.durations.LONG,
+            });
           }
         }}
       />
@@ -105,7 +108,7 @@ export default ({
         <Pressable
           onPress={() => {
             addTab(`https://peakd.com/@keychain`);
-            navigate('BrowserScreen');
+            navigate('Browser');
           }}
           style={({pressed}) => [
             styles.footerIconContainer,
@@ -162,8 +165,6 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       width: '100%',
       alignItems: 'center',
       justifyContent: 'center',
-      bottom: 0,
-      top: undefined,
     },
     footerText: {
       ...button_link_primary_medium,

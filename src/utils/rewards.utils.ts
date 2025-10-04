@@ -1,6 +1,6 @@
 import {Asset, ClaimRewardBalanceOperation} from '@hiveio/dhive';
-import {getValFromString} from './format';
-import {broadcast} from './hive';
+import {getValFromString} from './format.utils';
+import {broadcast} from './hiveLibs.utils';
 
 const claimRewards = async (
   username: string,

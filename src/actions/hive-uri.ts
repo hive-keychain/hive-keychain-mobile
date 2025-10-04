@@ -1,5 +1,5 @@
 import {DecodeResult} from 'hive-uri';
-import {HiveUriOpType} from 'src/utils/hive-uri';
+import {HiveUriOpType} from 'utils/hiveUri.utils';
 import {HiveURIActionTypes} from './types';
 
 export const saveRequestedOperation = (

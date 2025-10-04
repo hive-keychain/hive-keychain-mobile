@@ -1,17 +1,15 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import Operations from 'screens/hive/settings/Operations';
+import Operations from 'screens/hive/drawer/settings/Operations';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +17,11 @@ export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets());
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="SettingsOperationsScreen"
         component={Operations}
@@ -31,11 +33,9 @@ export default () => {
           ),
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              onPress={() => navigation.goBack()}
             />
           ),
         })}

@@ -1,6 +1,6 @@
-import Clipboard from '@react-native-community/clipboard';
-import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import BackgroundIconRed from 'assets/images/background/background-icon-red.svg';
 import Loader from 'components/ui/Loader';
+import * as Clipboard from 'expo-clipboard';
 import {
   IStepHistory,
   ISwap,
@@ -9,14 +9,14 @@ import {
 } from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
 import {button_link_primary_small} from 'src/styles/typography';
-import {withCommas} from 'utils/format';
+import {withCommas} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -34,13 +34,13 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
   const styles = getStyles(theme);
 
   const renderStepItemStatusIndicator = (status: StepHistoryStatus) => {
-    let iconName = Icons.BACK_TIME;
+    let iconName = Icons.HISTORY;
     switch (status) {
       case StepHistoryStatus.SUCCESS:
         iconName = Icons.CHECK;
         break;
       case StepHistoryStatus.PENDING:
-        iconName = Icons.BACK_TIME;
+        iconName = Icons.HISTORY;
         break;
       case StepHistoryStatus.FAILED:
         iconName = Icons.CLOSE_CIRCLE;
@@ -59,14 +59,14 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
   };
 
   const renderSwapItemStatusIndicator = (status: SwapStatus) => {
-    let iconName = Icons.BACK_TIME;
+    let iconName = Icons.HISTORY;
     switch (status) {
       case SwapStatus.COMPLETED:
         iconName = Icons.CHECK;
         break;
       case SwapStatus.STARTED:
       case SwapStatus.PENDING:
-        iconName = Icons.BACK_TIME;
+        iconName = Icons.HISTORY;
         break;
       case SwapStatus.CANCELED_DUE_TO_ERROR:
       case SwapStatus.FUNDS_RETURNED:
@@ -74,7 +74,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
         iconName = Icons.CLOSE_CIRCLE;
         break;
       default:
-        iconName = Icons.BACK_TIME;
+        iconName = Icons.HISTORY;
         break;
     }
     return (
@@ -118,8 +118,10 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
   };
 
   const onHandleCopyID = (id: string) => {
-    Clipboard.setString(id);
-    SimpleToast.show(translate('toast.copied_id'), SimpleToast.LONG);
+    Clipboard.setStringAsync(id);
+    SimpleToast.show(translate('toast.copied_id'), {
+      duration: SimpleToast.durations.LONG,
+    });
   };
 
   return (
@@ -130,7 +132,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
       <View style={[styles.historyItemDetail]}>
         <Icon
           theme={theme}
-          name={Icons.REPEAT}
+          name={Icons.EXCHANGE_ARROW}
           bgImage={<BackgroundIconRed />}
           color={PRIMARY_RED_COLOR}
           additionalContainerStyle={{marginRight: 16}}
@@ -140,7 +142,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
         </Text>
         <Icon
           theme={theme}
-          name={Icons.REPEAT_CIRCLE}
+          name={Icons.EXCHANGE_ARROW_CIRCLED}
           color={PRIMARY_RED_COLOR}
           additionalContainerStyle={styles.swapIcon}
         />
@@ -149,7 +151,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
         </Text>
         <Icon
           theme={theme}
-          name={Icons.EXPAND_THIN}
+          name={Icons.EXPAND}
           additionalContainerStyle={
             isExpanded ? getRotateStyle('0') : getRotateStyle('180')
           }

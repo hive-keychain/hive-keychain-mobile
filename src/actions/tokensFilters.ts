@@ -1,4 +1,4 @@
-import {TokenHistoryFilter} from 'src/types/tokens.history.types';
+import {TokenHistoryFilter} from 'src/interfaces/tokensHistory.interface';
 import {ActionPayload} from './interfaces';
 import {CLEAR_TOKENS_FILTERS, UPDATE_TOKENS_FILTER} from './types';
 

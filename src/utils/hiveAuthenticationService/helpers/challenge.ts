@@ -1,11 +1,11 @@
 import {removeHASSession} from 'actions/hiveAuthenticationService';
 import {encodeMemo, signBuffer} from 'components/bridge';
-import Crypto from 'crypto-js';
+import Crypto from 'crypto-es';
+import {ModalComponent} from 'src/enums/modal.enum';
+import {KeychainKeyTypesLC} from 'src/interfaces/keychain.interface';
 import {RootState, store} from 'store';
-import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {HAS_ChallengeDecryptedData} from '../payloads.types';
@@ -48,9 +48,9 @@ export const prepareRegistrationChallenge = async (
       throw 'No username';
     }
   } catch (e) {
-    const session = (store.getState() as RootState).hive_authentication_service.sessions.find(
-      (e) => e.account === username,
-    );
+    const session = (
+      store.getState() as RootState
+    ).hive_authentication_service.sessions.find((e) => e.account === username);
     if (session) {
       navigate('ModalScreen', {
         name: ModalComponent.HAS_ERROR,

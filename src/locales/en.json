@@ -599,6 +599,16 @@
       "export_transactions": {
         "title": "Export Transactions"
       },
+      "security": {
+        "title": "Security",
+        "disclaimer": "You can use your biometrics for a faster login experience",
+        "biometrics": "Enable biometrics login",
+        "checkbox": "Biometrics login",
+        "error_no_biometrics": "No biometrics enrolled",
+        "biometrics_refused": "Enable Fingerprint or Face ID for Hive Keychain in your iOS settings",
+        "enable_biometrics": "Enable biometrics",
+        "enable_biometrics_description": "Enable biometrics login to access your Hive Keychain wallet faster. You can change this setting in Settings > Security."
+      },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
@@ -636,11 +646,9 @@
       "text4": "If you use a Master Key, it will NOT be saved and will only be used to generate your other Keys. You may add/edit Accounts or Keys at any time."
     },
     "accountCreationPeerToPeer": {
-      "title": "Peer to Peer onboarding, thanks to a good friend!",
-      "text1": "As soon as you choose a valid username and click on Create",
-      "text2": "the app will give you your keys, PLEASE STORE them in a safe place.",
-      "text3": "Then after confirm that the keys are safely stored,",
-      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation.",
+      "title": "Peer to Peer onboarding",
+      "text1": "Once the account is created, make sure to store your keys in a safe place.",
+      "text2": "You will then get a QR code. Show it to your onboarder to proceed with the account creation.",
       "not_enough_rc_exception": "You don't have enough RC to perform this transaction. Please power up or receive an RC delegation."
     },
     "infoQR": {
@@ -767,6 +775,7 @@
     }
   },
   "toast": {
+    "error_camera_permission": "Camera permission is required to scan QR codes",
     "receive_success": "The transfer has been received successfully",
     "error_witness_account_update": "Error while updating witness account @{{account}}",
     "noMatch": "The PIN codes do not match",
@@ -1213,5 +1222,27 @@
   },
   "multichain": {
     "switch_chain": "Switch Chain"
+  },
+  "encryption": {
+    "save": "We are moving to a new encryption method. Use your biometrics for a faster login.",
+    "retrieve": "Use your biometrics to login"
+  },
+  "lockout": {
+    "warning_after_third": "Warning: You will be temporarily locked out after the 5th attempt.",
+    "active": "Too many failed attempts. Try again in {{time}}.",
+    "locked_for": "Too many failed attempts. Locked for {{time}}.",
+    "duration": {
+      "hour": "1 hour",
+      "fifteen_minutes": "15 minutes",
+      "five_minutes": "5 minutes",
+      "minute": "1 minute",
+      "thirty_seconds": "30 seconds"
+    },
+    "time": {
+      "h": "h",
+      "m": "m",
+      "s": "s",
+      "separator": " "
+    }
   }
 }

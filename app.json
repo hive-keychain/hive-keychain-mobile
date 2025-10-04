@@ -1,4 +1,12 @@
 {
   "name": "mobileKeychain",
-  "displayName": "Hive Keychain for Mobile"
+  "expo": {
+    "android": {
+      "versionCode": 199
+    },
+    "ios": {
+      "buildNumber": "200"
+    },
+    "version": "2.9.7"
+  }
 }

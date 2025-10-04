@@ -76,7 +76,7 @@ const UrlAutocomplete = ({
     }
   }, [debouncedInput, history, ecosystem]);
   const renderCandidateItem = useCallback(
-    ({item, index}) => (
+    ({item, index}: {item: Page; index: number}) => (
       <HistoryItem
         theme={theme}
         onSubmit={onSubmit}
@@ -88,7 +88,7 @@ const UrlAutocomplete = ({
     [theme, onSubmit],
   );
   const renderHistoryItem = useCallback(
-    ({item, index}) => (
+    ({item, index}: {item: Page; index: number}) => (
       <HistoryItem
         theme={theme}
         onSubmit={onSubmit}

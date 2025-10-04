@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadUserTokens} from 'actions/index';
-import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
+import HiveEngineLogo from 'assets/images/hive/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Icon from 'components/hive/Icon';
@@ -18,16 +18,16 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 interface Props {
   showEngineTokenSettings: boolean;
@@ -43,18 +43,14 @@ const EngineTokens = ({
   showEngineTokenSettings,
 }: Props & PropsFromRedux) => {
   const [toggled, setToggled] = useState<number>(null);
-  const [
-    orderedUserTokenBalanceList,
-    setOrderedUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
-  const [
-    filteredUserTokenBalanceList,
-    setFilteredUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
+  const [orderedUserTokenBalanceList, setOrderedUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
+  const [filteredUserTokenBalanceList, setFilteredUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<TokenBalance>>(null);
 
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
@@ -88,11 +84,11 @@ const EngineTokens = ({
   }, [searchValue]);
 
   useEffect(() => {
-    if (!userTokens.loading) {
+    if (!userTokens.loading && user?.name) {
       loadHiddenTokens();
       loadUserTokens(user.name);
     }
-  }, [properties, user.name]);
+  }, [user.name]);
 
   const loadHiddenTokens = async () => {
     let customHiddenTokens = null;
@@ -121,7 +117,7 @@ const EngineTokens = ({
   };
 
   const renderEngineTokenDisplay = useCallback(
-    ({item}) => (
+    ({item}: {item: TokenBalance}) => (
       <EngineTokenDisplay
         addBackground
         token={item}
@@ -182,7 +178,7 @@ const EngineTokens = ({
                 height={18}
               />
               <Icon
-                name={Icons.SETTINGS_2}
+                name={Icons.SETTINGS_WHEEL}
                 theme={theme}
                 onPress={handleClickSettings}
               />

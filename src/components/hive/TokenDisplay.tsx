@@ -18,7 +18,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Token, TokenBalance} from 'src/interfaces/tokens.interface';
 import {
   BUTTON_ICON_TEXT_MARGIN,
@@ -33,20 +33,20 @@ import {
   getFontSizeSmallDevices,
   title_secondary_body_3,
 } from 'src/styles/typography';
-import {formatBalance} from 'utils/format';
+import {formatBalance} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import Icon from './Icon';
 
 type Props = {
   name: string;
-  logo: JSX.Element;
+  logo: React.JSX.Element;
   currency: string;
   balance: number;
   totalValue: number;
   color: string;
   price?: HiveEngineCurrency;
-  buttons?: JSX.Element[];
+  buttons?: React.JSX.Element[];
   toggled: boolean;
   setToggle: () => void;
   onHandleGoToTokenHistory: () => void;
@@ -84,7 +84,7 @@ const TokenDisplay = ({
   const tokenTotalValue = totalValue ? formatBalance(totalValue) : 0;
 
   const renderAsSquareButton = (
-    icon: JSX.Element,
+    icon: React.JSX.Element,
     label: string,
     onPress: () => void,
   ) => (
@@ -195,7 +195,7 @@ const TokenDisplay = ({
           {toggled && (
             <Icon
               key={`show-token-history-${currency}`}
-              name={Icons.BACK_TIME}
+              name={Icons.HISTORY}
               onPress={onHandleGoToTokenHistory}
               additionalContainerStyle={[
                 styles.squareButton,

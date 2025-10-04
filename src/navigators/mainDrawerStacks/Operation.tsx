@@ -1,7 +1,6 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import PendingConversions from 'components/hive/PendingConversions';
+import PendingSavingsWithdrawalPageComponent from 'components/hive/PendingSavingsWithdrawalPage.component';
 import ConfirmationPage from 'components/operations/Confirmation';
 import Convert, {ConvertOperationProps} from 'components/operations/Convert';
 import DelegateToken, {
@@ -10,6 +9,8 @@ import DelegateToken, {
 import Delegation, {
   DelegationOperationProps,
 } from 'components/operations/Delegation';
+import DelegationsList from 'components/operations/DelegationsList';
+import IncomingOutGoingRCDelegations from 'components/operations/IncomingOutGoingRCDelegations';
 import PowerDown, {
   PowerDownOperationProps,
 } from 'components/operations/PowerDown';
@@ -28,21 +29,21 @@ import Transfer, {
 import UnstakeToken, {
   UnstakeTokenOperationProps,
 } from 'components/operations/UnstakeToken';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
-import {capitalize} from 'utils/format';
+import {capitalize} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
+import {buildIOSHorizontalStackOptions, goBack} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -118,7 +119,11 @@ export default ({navigation, route}: OperationNavigationProps) => {
   };
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="Operation"
         options={({navigation}) => ({
@@ -132,43 +137,139 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => {
+                goBack();
+              }}
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              onPress={() => navigation.goBack()}
             />
           ),
         })}>
         {() => renderOperation()}
       </Stack.Screen>
       <Stack.Screen
+        name="HPDelegations"
+        options={({navigation, route}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={`common.${(route.params as any)?.type}`} />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+        children={({route}) => (
+          <DelegationsList type={(route.params as any).type} theme={theme} />
+        )}
+      />
+      <Stack.Screen
+        name="RcDelegations"
+        options={({navigation, route}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle
+              title={(route.params as any)?.type}
+              skipTranslation
+            />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+        children={({route}) => (
+          <IncomingOutGoingRCDelegations
+            type={(route.params as any).type}
+            total={(route.params as any).total}
+            available={(route.params as any).available}
+          />
+        )}
+      />
+      <Stack.Screen
+        name="PendingSavings"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'wallet.operations.savings.pending'} />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+        children={({route}) => (
+          <PendingSavingsWithdrawalPageComponent
+            currency={(route.params as any).currency}
+            operation={(route.params as any).operation}
+            currentWithdrawingList={
+              (route.params as any).currentWithdrawingList
+            }
+            onUpdate={(route.params as any).onUpdate}
+          />
+        )}
+      />
+      <Stack.Screen
+        name="PendingConversions"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'wallet.operations.convert.pending'} />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+        children={({route}) => (
+          <PendingConversions
+            currency={(route.params as any).currency}
+            currentPendingConversionList={
+              (route.params as any).currentPendingConversionList
+            }
+          />
+        )}
+      />
+      <Stack.Screen
         name="ReceiveTransfer"
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'common.receive'} />,
-          animationEnabled: false,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
             <CloseButton
               theme={theme}
               onPress={() => {
-                resetStackAndNavigate('WALLET');
+                navigation.getParent()?.goBack();
               }}
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              onPress={() => navigation.goBack()}
             />
           ),
         })}
@@ -180,23 +281,20 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'common.confirm'} />,
-          animationEnabled: false,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
             <CloseButton
               theme={theme}
               onPress={() => {
-                resetStackAndNavigate('WALLET');
+                navigation.getParent()?.goBack();
               }}
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              onPress={() => navigation.goBack()}
             />
           ),
         })}
@@ -223,9 +321,9 @@ const getStyles = (
       backgroundColor: getColors(theme).primaryBackground,
     },
     headerRightContainer: {
-      marginRight: HEADER_ICON_MARGIN,
+      paddingRight: HEADER_ICON_MARGIN,
     },
     headerLeftContainer: {
-      marginLeft: HEADER_ICON_MARGIN,
+      paddingLeft: HEADER_ICON_MARGIN,
     },
   });

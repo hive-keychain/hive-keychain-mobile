@@ -1,5 +1,5 @@
-import Clipboard from '@react-native-community/clipboard';
 import Separator from 'components/ui/Separator';
+import * as Clipboard from 'expo-clipboard';
 import React from 'react';
 import {
   Linking,
@@ -42,7 +42,7 @@ const FallbackComponent = (props: Props) => (
         activeOpacity={1}
         style={styles.button}
         onPress={() => {
-          Clipboard.setString(
+          Clipboard.setStringAsync(
             props?.error?.toString?.() + '\n\n' + props?.error?.stack,
           );
         }}>

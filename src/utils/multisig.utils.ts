@@ -57,12 +57,12 @@ import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {decodeMemo, encodeMemo} from 'components/bridge';
 import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
 import {Key} from 'react';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {MultisigAccountConfig} from 'src/interfaces/multisig.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {getClient} from './hive';
+import {getClient} from './hiveLibs.utils';
 import {KeyUtils} from './key.utils';
-import {getPublicKeyFromPrivateKeyString} from './keyValidation';
+import {getPublicKeyFromPrivateKeyString} from './keyValidation.utils';
 
 const getMultisigAccountConfig = async (account: string) => {
   const multisigConfig = await AsyncStorage.getItem(

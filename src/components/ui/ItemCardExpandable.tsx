@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
@@ -24,7 +24,7 @@ interface Props {
   textLine2?: string;
   textLine3?: string;
   memo?: string;
-  icon?: JSX.Element;
+  icon?: React.ReactNode;
 }
 
 const ItemCardExpandable = ({
@@ -63,7 +63,7 @@ const ItemCardExpandable = ({
               <Text style={styles.textBase}>{date}</Text>
               {memo && memo.length ? (
                 <Icon
-                  name={Icons.EXPAND_THIN}
+                  name={Icons.EXPAND}
                   theme={theme}
                   additionalContainerStyle={[
                     toggle ? getRotateStyle('0') : getRotateStyle('180'),

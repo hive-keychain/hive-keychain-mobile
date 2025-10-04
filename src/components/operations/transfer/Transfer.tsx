@@ -10,12 +10,13 @@ import {ExchangesUtils} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {default as Toast} from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
@@ -24,23 +25,22 @@ import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {FavoriteUserUtils} from 'utils/favorite-user.utils';
+import {FavoriteUserUtils} from 'utils/favoriteUsers.utils';
 import {
   beautifyTransferError,
   capitalize,
   getCleanAmountValue,
   withCommas,
-} from 'utils/format';
-import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
+} from 'utils/format.utils';
 import {
   getAccountKeys,
   sanitizeAmount,
   sanitizeUsername,
-} from 'utils/hiveUtils';
+} from 'utils/hive.utils';
+import {tryConfirmTransaction} from 'utils/hiveEngine.utils';
+import {recurrentTransfer, sendToken, transfer} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {TransferUtils} from 'utils/transfer.utils';
 import Balance from '../Balance';
 import {ConfirmationPageProps} from '../Confirmation';
@@ -51,7 +51,7 @@ export type TransferOperationProps = {
   currency: string;
   engine: boolean;
   tokenBalance: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
 };
 type Props = PropsFromRedux & TransferOperationProps;
 const Transfer = ({
@@ -75,11 +75,10 @@ const Transfer = ({
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
 
-  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
-    AutoCompleteValues
-  >({
-    categories: [],
-  });
+  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] =
+    useState<AutoCompleteValues>({
+      categories: [],
+    });
   const [availableBalance, setAvailableBalance] = useState('');
   const [toggleIndex, setToggleIndex] = useState(0);
   const {theme} = useThemeContext();
@@ -89,11 +88,12 @@ const Transfer = ({
   }, []);
 
   const loadAutocompleteTransferUsernames = async () => {
-    const autoCompleteListByCategories: AutoCompleteValues = await FavoriteUserUtils.getAutocompleteListByCategories(
-      user.name!,
-      localAccounts,
-      {addExchanges: true, token: currency.toUpperCase()},
-    );
+    const autoCompleteListByCategories: AutoCompleteValues =
+      await FavoriteUserUtils.getAutocompleteListByCategories(
+        user.name!,
+        localAccounts,
+        {addExchanges: true, token: currency.toUpperCase()},
+      );
     setAutocompleteFavoriteUsers(autoCompleteListByCategories);
   };
 

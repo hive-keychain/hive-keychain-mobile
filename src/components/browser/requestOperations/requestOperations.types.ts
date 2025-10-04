@@ -1,5 +1,5 @@
 import {Account} from 'actions/interfaces';
-import {RequestError, RequestSuccess} from 'utils/keychain.types';
+import {RequestError, RequestSuccess} from 'src/interfaces/keychain.interface';
 
 export type RequestComponentCommonProps = {
   accounts: Account[];

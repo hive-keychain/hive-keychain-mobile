@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, StyleProp, ViewStyle} from 'react-native';
+import {Platform, StyleProp, View, ViewStyle} from 'react-native';
 import {
   Edge,
   initialWindowMetrics,
@@ -11,7 +11,7 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   skipTop?: boolean;
   skipBottom?: boolean;
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode | React.ReactNode[];
 };
 
 const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
@@ -25,20 +25,8 @@ const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
   }
 
   const isAndroid35 = Platform.OS === 'android' && Platform.Version >= 35;
-  const applyPadding = (child: JSX.Element) => {
-    if (!isAndroid35) {
-      return React.cloneElement(child, {
-        style: [
-          child.props.style,
-          {
-            paddingBottom: !skipBottom ? 0 : initialWindowMetrics.insets.bottom,
-          },
-        ],
-      });
-    } else {
-      return child;
-    }
-  };
+  const bottomSpacerHeight =
+    !isAndroid35 && skipBottom ? initialWindowMetrics.insets.bottom : 0;
 
   return (
     <SafeAreaView
@@ -53,11 +41,10 @@ const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
         style,
       ]}
       edges={edges}>
-      {Array.isArray(children)
-        ? children.map((child, index) =>
-            index === children.length - 1 ? applyPadding(child) : child,
-          )
-        : applyPadding(children)}
+      {children}
+      {bottomSpacerHeight > 0 ? (
+        <View style={{height: bottomSpacerHeight}} />
+      ) : null}
     </SafeAreaView>
   );
 };

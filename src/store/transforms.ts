@@ -1,11 +1,11 @@
 import {Rpc, Settings} from 'actions/interfaces';
+import {DEFAULT_RPC} from 'lists/rpc.list';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import createTransform from 'redux-persist/es/createTransform';
 import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_HE_RPC_NODE,
-} from 'screens/hive/settings/RpcNodes';
-import {DEFAULT_RPC} from 'utils/hiveUtils';
+} from 'src/interfaces/hiveEngineRpc.interface';
 
 const rpcTransformer = createTransform<Settings, Settings>(
   (outboundState) => outboundState,

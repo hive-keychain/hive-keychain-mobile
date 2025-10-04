@@ -15,6 +15,7 @@ import {
   AutoCompleteValues,
   AutoCompleteValuesType,
 } from 'src/interfaces/autocomplete.interface';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -22,7 +23,6 @@ import {
   fields_primary_text_2,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 interface Props {
@@ -48,22 +48,22 @@ const AutoCompleteBox = React.memo(
         //TODO when needed.
       } else if (!!(autoCompleteValues as AutoCompleteValues).categories) {
         const currentAutoComplete = autoCompleteValues;
-        const filteredCategories = (currentAutoComplete as AutoCompleteValues).categories.map(
-          (category) => {
-            return {
-              ...category,
-              values: category.values.filter(
-                (categoryValue) =>
-                  categoryValue.value
-                    .toLowerCase()
-                    .includes(filterValue.trim().toLowerCase()) ||
-                  categoryValue.subLabel
-                    ?.toLowerCase()
-                    .includes(filterValue.trim().toLowerCase()),
-              ),
-            };
-          },
-        );
+        const filteredCategories = (
+          currentAutoComplete as AutoCompleteValues
+        ).categories.map((category) => {
+          return {
+            ...category,
+            values: category.values.filter(
+              (categoryValue) =>
+                categoryValue.value
+                  .toLowerCase()
+                  .includes(filterValue.trim().toLowerCase()) ||
+                categoryValue.subLabel
+                  ?.toLowerCase()
+                  .includes(filterValue.trim().toLowerCase()),
+            ),
+          };
+        });
         setFilteredAutoComplete({
           categories: filteredCategories.filter(
             (category) => category.values.length > 0,

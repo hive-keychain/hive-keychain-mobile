@@ -1,3 +1,4 @@
+import {NavigationProp} from '@react-navigation/native';
 import {showModal} from 'actions/message';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
@@ -12,19 +13,22 @@ import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import QRCode from 'react-qr-code';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
 import {TokenUtils} from 'utils/tokens.utils';
 import TransactionUtils from 'utils/transactions.utils';
 
 const Receive = ({
   route,
   showModal,
-}: {route: ReceiveTransferRoute} & PropsFromRedux) => {
+  navigation,
+}: {
+  route: ReceiveTransferRoute;
+  navigation: NavigationProp<any>;
+} & PropsFromRedux) => {
   const theme = useThemeContext().theme;
   const params = route.params;
   const {width} = useWindowDimensions();
@@ -48,7 +52,7 @@ const Receive = ({
       if (res) {
         clearInterval(interval);
         showModal('toast.receive_success', MessageModalType.SUCCESS);
-        resetStackAndNavigate('WALLET');
+        navigation.getParent()?.goBack();
       }
     }, 3000);
   }, []);

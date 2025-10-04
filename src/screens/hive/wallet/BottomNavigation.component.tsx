@@ -1,3 +1,4 @@
+import MaterialIcon from '@expo/vector-icons/MaterialIcons';
 import {showFloatingBar} from 'actions/floatingBar';
 import {
   addTab,
@@ -21,32 +22,26 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import SimpleToast from 'react-native-root-toast';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import SimpleToast from 'react-native-simple-toast';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {ConnectedProps, connect} from 'react-redux';
 import {useOrientation} from 'src/context/orientation.context';
 import {useTab} from 'src/context/tab.context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {BottomBarLink} from 'src/enums/bottomBarLink.enum';
+import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getIconDimensions} from 'src/styles/icon';
 import {body_primary_body_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {BrowserUtils} from 'utils/browser';
-import {Dimensions} from 'utils/common.types';
-import {BrowserConfig} from 'utils/config';
+import {BrowserUtils} from 'utils/browser.utils';
+import {BrowserConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {PlatformsUtils} from 'utils/platforms.utils';
 
-export enum BottomBarLink {
-  Wallet = 'WalletScreen',
-  Browser = 'BrowserScreen',
-  ScanQr = 'ScanQRFromWalletScreen',
-  SwapBuy = 'SwapBuy',
-}
 interface Props {
   showTags?: boolean;
 }
@@ -77,9 +72,8 @@ const BottomNavigation = ({
   const styles = getStyles(theme, {width, height}, insets, false);
   const anim = useRef(new Animated.Value(0)).current;
   const {webViewRef, tabViewRef} = useTab();
-  const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] = useState(
-    true,
-  );
+  const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] =
+    useState(true);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(
     !isModal && show && rpc && rpc.uri !== 'NULL',
@@ -111,16 +105,19 @@ const BottomNavigation = ({
     let nestedScreenOrParams;
     switch (link) {
       case BottomBarLink.Wallet:
-        screen = 'WALLET';
+        screen = 'Wallet';
         nestedScreenOrParams = {
           screen: 'WalletScreen',
         };
         break;
       case BottomBarLink.Browser:
-        screen = 'BrowserScreen';
+        screen = 'Browser';
+        nestedScreenOrParams = {
+          screen: 'BrowserScreen',
+        };
         break;
       case BottomBarLink.ScanQr:
-        screen = 'WALLET';
+        screen = 'Wallet';
         nestedScreenOrParams = {
           screen: 'ScanQRFromWalletScreen',
           params: {wallet: true},
@@ -307,7 +304,7 @@ const BottomNavigation = ({
         ]}>
         <Icon
           theme={theme}
-          name={Icons.WALLET_ADD}
+          name={Icons.ADD_TAB}
           color={activeScreen === BottomBarLink.Wallet ? 'white' : undefined}
           {...getIconDimensions(width)}
         />
@@ -323,7 +320,9 @@ const BottomNavigation = ({
           else setShowBrowserSecondaryLinks(!showBrowserSecondaryLinks);
         }}
         onLongPress={() => {
-          SimpleToast.show(translate('browser.clear_all'), SimpleToast.LONG);
+          SimpleToast.show(translate('browser.clear_all'), {
+            duration: SimpleToast.durations.LONG,
+          });
           closeAllTabs();
         }}
         style={[

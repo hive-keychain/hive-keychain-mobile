@@ -1,21 +1,23 @@
-import I18n from 'i18n-js';
+import {getLocales} from 'expo-localization';
+import {I18n, Scope, TranslateOptions} from 'i18n-js';
 import en from 'locales/en.json';
 import fr from 'locales/fr.json';
-import * as RNLocalize from 'react-native-localize';
 
-const locales = RNLocalize.getLocales();
+const locales = getLocales();
 
 export const getMainLocale = () => {
-  return locales[0].languageTag;
+  return locales[0].languageCode!;
 };
+
+const i18n = new I18n({en, fr});
+
 if (Array.isArray(locales)) {
-  I18n.locale = locales[0].languageTag;
+  i18n.locale = getMainLocale();
 }
 
-I18n.fallbacks = true;
-I18n.translations = {
-  en,
-  fr,
-};
-export const translate = I18n.t;
+i18n.enableFallback = true;
+i18n.defaultLocale = 'en';
+
+export const translate = (scope: Scope, options?: TranslateOptions) =>
+  i18n.t(scope, options);
 export default I18n;

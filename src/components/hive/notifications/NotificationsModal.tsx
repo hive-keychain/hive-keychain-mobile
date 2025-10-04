@@ -1,12 +1,15 @@
-import {DynamicGlobalProperties} from '@hiveio/dhive';
 import {addTab} from 'actions/index';
 import {ActiveAccount} from 'actions/interfaces';
+import {
+  loadNotifications,
+  markAllNotificationsAsRead,
+} from 'actions/notifications';
 import EllipticButton from 'components/form/EllipticButton';
-import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
+import {BackToTopButton} from 'components/ui/BackToTopButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -15,8 +18,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import SimpleToast from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
-import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Notification} from 'src/interfaces/notifications.interface';
@@ -28,15 +31,12 @@ import {
   FontPoppinsName,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {NotificationsUtils} from 'utils/notifications.utils';
-
+import {goBack, goBackAndNavigate} from 'utils/navigation.utils';
+import {PeakDNotificationsUtils} from 'utils/notifications.utils';
 type Props = {
-  notifs: Notification[];
   user: ActiveAccount;
-  moreData: boolean;
-  properties: DynamicGlobalProperties;
 } & PropsFromRedux;
 
 type NotificationListItemProps = {
@@ -47,19 +47,17 @@ type NotificationListItemProps = {
 };
 
 const NotificationsModal = ({
-  notifs,
+  notifications,
   user,
-  moreData,
-  properties,
+  markAllNotificationsAsRead,
+  loadNotifications,
   addTab,
 }: Props) => {
-  const [settingNotifications, setSettingNotifications] = useState(false);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>(notifs);
-  const [hasMoreData, setHasMoreData] = useState(moreData);
 
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<Notification>>(null);
 
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
@@ -68,25 +66,23 @@ const NotificationsModal = ({
   const handleClick = useCallback(
     (notification: Notification) => {
       addTab(notification.externalUrl || notification.txUrl);
-      navigate('BrowserScreen');
+      goBackAndNavigate('Browser');
     },
     [addTab],
   );
 
+  useEffect(() => {
+    setLoadingNotifications(false);
+  }, [notifications.list.length]);
+
   const markAllAsRead = async () => {
-    setSettingNotifications(true);
-    await NotificationsUtils.markAllAsRead(user);
-    setNotifications(
-      notifications?.map((notif) => {
-        notif.read = true;
-        return notif;
-      }),
-    );
-    setSettingNotifications(false);
-    SimpleToast.show(
-      translate('components.notifications.mark_as_read'),
-      SimpleToast.LONG,
-    );
+    setLoadingNotifications(true);
+    await PeakDNotificationsUtils.markAllAsRead(user);
+    markAllNotificationsAsRead();
+    SimpleToast.show(translate('components.notifications.mark_as_read'), {
+      duration: SimpleToast.durations.LONG,
+    });
+    goBack();
   };
 
   const handleScroll = (event: any) => {
@@ -97,14 +93,8 @@ const NotificationsModal = ({
 
   const handleLoadMore = async () => {
     setIsLoadingMore(true);
-    const {notifs, hasMore} = await NotificationsUtils.getNotifications(
-      user.name!,
-      properties!,
-      notifications,
-    );
-    setNotifications(notifs);
-    setHasMoreData(hasMore);
-    setIsLoadingMore(false);
+    console.log('handleLoadMore');
+    loadNotifications(user.name, notifications.list);
   };
 
   const NotificationListItem = React.memo(
@@ -144,56 +134,47 @@ const NotificationsModal = ({
 
   return (
     <View style={styles.modal}>
-      {!settingNotifications && (
+      <View style={styles.header}>
+        <Text style={getHeaderTitleStyle(theme, width)}>
+          {translate('settings.settings.notifications.title')}
+        </Text>
+        {notifications.list.find((e) => !e.read) ? (
+          <EllipticButton
+            title={translate(
+              'components.notifications.notification_set_all_as_read',
+            )}
+            onPress={markAllAsRead}
+            style={[getButtonStyle(theme, width).outline, styles.actionButton]}
+          />
+        ) : null}
+      </View>
+      <Separator />
+      {!loadingNotifications && (
         <FlatList
           ref={flatListRef}
-          data={notifications}
+          data={notifications.list}
           initialNumToRender={20}
           scrollEnabled
           onScroll={handleScroll}
           onEndReachedThreshold={0.5}
           renderItem={({item}) => renderItem(item)}
           keyExtractor={(notification) => notification.id}
-          ListHeaderComponent={() => {
-            return (
-              <>
-                <View style={styles.header}>
-                  <Text style={getHeaderTitleStyle(theme, width)}>
-                    {translate('settings.settings.notifications.title')}
-                  </Text>
-                  {notifications.find((e) => !e.read) ? (
-                    <EllipticButton
-                      title={translate(
-                        'components.notifications.notification_set_all_as_read',
-                      )}
-                      onPress={markAllAsRead}
-                      style={[
-                        getButtonStyle(theme, width).outline,
-                        styles.actionButton,
-                      ]}
-                    />
-                  ) : null}
-                </View>
-                <Separator />
-              </>
-            );
-          }}
           onEndReached={() => {
-            if (hasMoreData) handleLoadMore();
+            if (notifications.hasMore) handleLoadMore();
           }}
           ListFooterComponent={() => (
             <Separator height={initialWindowMetrics.insets.bottom} />
           )}
         />
       )}
-      {!settingNotifications && displayScrollToTop && (
+      {!loadingNotifications && displayScrollToTop && (
         <BackToTopButton
           theme={theme}
           element={flatListRef}
           isScrollView={false}
         />
       )}
-      {settingNotifications && (
+      {loadingNotifications && (
         <View style={styles.loaderContainer}>
           <Loader animating />
         </View>
@@ -216,6 +197,7 @@ const getStyles = (theme: Theme, width: number) =>
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      paddingHorizontal: 12,
       width: '100%',
     },
     modal: {
@@ -238,7 +220,7 @@ const getStyles = (theme: Theme, width: number) =>
       width: '40%',
     },
     loaderContainer: {
-      flex: 1,
+      height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -261,7 +243,13 @@ const getStyles = (theme: Theme, width: number) =>
     },
   });
 
-const connector = connect(undefined, {addTab});
+const connector = connect(
+  (state: RootState) => ({
+    notifications: state.notifications,
+    properties: state.properties.globals,
+  }),
+  {addTab, markAllNotificationsAsRead, loadNotifications},
+);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(NotificationsModal);

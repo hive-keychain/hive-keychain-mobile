@@ -5,8 +5,8 @@ import {Theme} from 'src/context/theme.context';
 type Props = {
   theme: Theme;
   onPress: () => void;
-  lightThemeIcon: JSX.Element;
-  darkThemeIcon: JSX.Element;
+  lightThemeIcon: React.ReactNode;
+  darkThemeIcon: React.ReactNode;
   additionalContainerStyle?: StyleProp<ViewStyle>;
 };
 

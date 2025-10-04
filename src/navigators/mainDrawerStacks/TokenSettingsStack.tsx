@@ -1,17 +1,16 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import TokenSettings from 'screens/hive/wallet/tokens/TokenSettings';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +19,11 @@ export default () => {
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="TokenSettingsScreen"
         component={TokenSettings}
@@ -32,11 +35,9 @@ export default () => {
           ),
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
           cardStyle: styles.cardStyle,
@@ -63,6 +64,6 @@ const getStyles = (
       backgroundColor: getColors(theme).primaryBackground,
     },
     headerLeftContainer: {
-      marginLeft: HEADER_ICON_MARGIN,
+      paddingLeft: HEADER_ICON_MARGIN,
     },
   });

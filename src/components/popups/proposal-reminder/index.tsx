@@ -3,23 +3,23 @@ import {addTab} from 'actions/browser';
 import {updateShowProposalReminder} from 'actions/floatingBar';
 import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
-import {BrowserNavigation} from 'navigators/MainDrawer.types';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {useEffect} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import SimpleToast from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
-import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {RootState} from 'store';
-import {ProposalConfig} from 'utils/config';
-import {toHP} from 'utils/format';
-import {getClient, updateProposalVote} from 'utils/hive';
-import {goBack, navigate} from 'utils/navigation';
+import {ProposalConfig} from 'utils/config.utils';
+import {toHP} from 'utils/format.utils';
+import {getClient, updateProposalVote} from 'utils/hiveLibs.utils';
+import {goBack, navigate} from 'utils/navigation.utils';
 interface Props {
-  navigation: BrowserNavigation;
+  navigation: BrowserScreenProps['navigation'];
 }
 
 const KEYCHAIN_PROPOSAL = ProposalConfig.KEYCHAIN_PROPOSAL;
@@ -115,10 +115,13 @@ const ProposalReminder = ({
         <Text style={styles.text}>
           Read more{' '}
           <Text
-            style={{color: getColors(theme).secondaryText, fontWeight: 'bold'}}
+            style={{
+              color: getColors(theme).secondaryText,
+              fontWeight: 'bold',
+            }}
             onPress={() => {
               addTab(`https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`);
-              navigation.navigate('BrowserScreen');
+              navigate('Browser');
             }}>
             here
           </Text>

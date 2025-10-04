@@ -2,7 +2,6 @@ import Icon from 'components/hive/Icon';
 import React, {memo} from 'react';
 import {StyleSheet, View, ViewStyle, useWindowDimensions} from 'react-native';
 import {
-  GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
@@ -12,8 +11,9 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 
 type Props = {
@@ -34,30 +34,28 @@ const SwipeableItem = memo(
     const translateX = useSharedValue(0);
     const bgTranslateX = useSharedValue(0);
     const SCREEN_WIDTH = useWindowDimensions().width;
-    const SWIPE_THRESHOLD = -SCREEN_WIDTH / 4;
-    const gestureHandler = useAnimatedGestureHandler<
-      PanGestureHandlerGestureEvent
-    >({
-      onStart: (_, ctx: any) => {
-        ctx.startX = translateX.value;
-      },
-      onActive: (event, ctx: any) => {
-        // Only allow left swipe
-        translateX.value = Math.min(0, ctx.startX + event.translationX);
-      },
-      onEnd: () => {
-        if (translateX.value < SWIPE_THRESHOLD) {
-          translateX.value = withSpring(-SCREEN_WIDTH);
-          bgTranslateX.value = withSpring(-SCREEN_WIDTH, {}, () => {
-            runOnJS(onDismiss)(); // callback to remove from list
-          });
-        } else {
-          // Snap back
-          translateX.value = withSpring(0);
-          bgTranslateX.value = withSpring(0);
-        }
-      },
-    });
+    const SWIPE_THRESHOLD = -SCREEN_WIDTH / 5;
+    const gestureHandler =
+      useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
+        onStart: (_, ctx: any) => {
+          ctx.startX = translateX.value;
+        },
+        onActive: (event, ctx: any) => {
+          // Only allow left swipe
+          translateX.value = Math.min(0, ctx.startX + event.translationX);
+        },
+        onEnd: () => {
+          if (translateX.value < SWIPE_THRESHOLD) {
+            runOnJS(onDismiss)();
+            translateX.value = withTiming(-SCREEN_WIDTH, {duration: 150});
+            bgTranslateX.value = withTiming(-SCREEN_WIDTH, {duration: 150});
+          } else {
+            // Snap back
+            translateX.value = withSpring(0);
+            bgTranslateX.value = withSpring(0);
+          }
+        },
+      });
 
     const bgStyle = useAnimatedStyle(() => {
       return {
@@ -71,50 +69,41 @@ const SwipeableItem = memo(
       } as any;
     });
     return (
-      <GestureHandlerRootView>
-        <View style={[{width: '100%'}]}>
-          {/* Hidden Delete BG */}
+      <View style={[{width: '100%'}]}>
+        {/* Hidden Delete BG */}
+        <Animated.View
+          style={[
+            {
+              ...StyleSheet.absoluteFillObject,
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              marginLeft: 50,
+              backgroundColor: PRIMARY_RED_COLOR,
+              ...containerStyle,
+            },
+            bgStyle,
+          ]}>
+          <View style={styles.deleteIcon}>
+            <Icon color="white" name={Icons.REMOVE} width={25} height={25} />
+          </View>
+        </Animated.View>
+        <PanGestureHandler
+          enabled={enabled}
+          onGestureEvent={gestureHandler}
+          activeOffsetX={[-5, 5]}
+          hitSlop={draggable ? {left: 0, width: SCREEN_WIDTH - 60} : undefined}
+          failOffsetY={[-10, 10]}>
           <Animated.View
             style={[
               {
-                ...StyleSheet.absoluteFillObject,
                 justifyContent: 'center',
-                alignItems: 'flex-end',
-                marginLeft: 50,
-                backgroundColor: PRIMARY_RED_COLOR,
-                ...containerStyle,
               },
-              bgStyle,
+              animatedStyle,
             ]}>
-            <View style={styles.deleteIcon}>
-              <Icon
-                color="white"
-                name={Icons.GIFT_DELETE}
-                width={25}
-                height={25}
-              />
-            </View>
+            {children}
           </Animated.View>
-          <PanGestureHandler
-            enabled={enabled}
-            onGestureEvent={gestureHandler}
-            activeOffsetX={[-10, 10]}
-            hitSlop={
-              draggable ? {left: 0, width: SCREEN_WIDTH * 0.7} : undefined
-            }
-            failOffsetY={[-5, 5]}>
-            <Animated.View
-              style={[
-                {
-                  justifyContent: 'center',
-                },
-                animatedStyle,
-              ]}>
-              {children}
-            </Animated.View>
-          </PanGestureHandler>
-        </View>
-      </GestureHandlerRootView>
+        </PanGestureHandler>
+      </View>
     );
   },
 );

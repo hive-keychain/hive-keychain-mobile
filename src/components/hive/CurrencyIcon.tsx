@@ -1,13 +1,20 @@
-import HiveEngine from 'assets/wallet/hive_engine.png';
+import HiveEngine from 'assets/images/hive/hive_engine.png';
 import FastImageComponent from 'components/ui/FastImage';
+import {Image} from 'expo-image';
+import ImageUtils from 'hive-keychain-commons/lib/utils/images.utils';
 import React, {useState} from 'react';
-import {Image as Img, StyleSheet, View} from 'react-native';
-import Image from 'react-native-fast-image';
+import {
+  Image as Img,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Token} from 'src/interfaces/tokens.interface';
 import {HBDICONBGCOLOR, HIVEICONBGCOLOR} from 'src/styles/colors';
-import {Colors, getTokenBackgroundColor} from 'utils/colors';
+import {Colors, getTokenBackgroundColor} from 'utils/colors.utils';
 import Icon from './Icon';
 import IconHP from './IconHP';
 
@@ -26,13 +33,16 @@ interface PropsHiveEngine {
   symbol: string;
 }
 
-type Props = PropsHive | PropsHiveEngine;
+type Props = (PropsHive | PropsHiveEngine) & {
+  containerStyle?: StyleProp<ViewStyle>;
+};
 const CurrencyIcon = ({
   currencyName,
   tokenInfo,
   addBackground,
   colors,
   symbol,
+  containerStyle,
 }: Props) => {
   const {theme} = useThemeContext();
   const [hasError, setHasError] = useState(0);
@@ -40,27 +50,17 @@ const CurrencyIcon = ({
   const getLogo = () => {
     switch (hasError) {
       case 0:
-        if (!tokenInfo.metadata.icon) setHasError(2);
+        if (!tokenInfo.metadata.icon) setHasError(1);
         return (
           <FastImageComponent
             style={styles.iconBase}
-            source={tokenInfo.metadata.icon}
+            source={ImageUtils.getImmutableImage(tokenInfo.metadata.icon)}
             onError={() => {
               setHasError(1);
             }}
           />
         );
       case 1:
-        return (
-          <FastImageComponent
-            style={styles.iconBase}
-            source={`https://images.hive.blog/0x0/${tokenInfo.metadata.icon}`}
-            onError={() => {
-              setHasError(2);
-            }}
-          />
-        );
-      case 2:
         return (
           <Image
             style={styles.iconBase}
@@ -80,7 +80,7 @@ const CurrencyIcon = ({
       return (
         <Icon
           theme={theme}
-          name={Icons.HIVE_CURRENCY_LOGO}
+          name={Icons.HIVE}
           additionalContainerStyle={styles.hiveIconContainer}
           {...styles.icon}
         />
@@ -90,7 +90,7 @@ const CurrencyIcon = ({
       return (
         <Icon
           theme={theme}
-          name={Icons.HBD_CURRENCY_LOGO}
+          name={Icons.HBD}
           additionalContainerStyle={[
             styles.hiveIconContainer,
             styles.hbdIconBgColor,
@@ -108,6 +108,7 @@ const CurrencyIcon = ({
         <View
           style={[
             styles.iconContainerBase,
+            containerStyle,
             !hasError ? styles.iconContainerBaseWithBg : undefined,
           ]}>
           {getLogo()}

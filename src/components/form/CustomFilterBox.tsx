@@ -13,6 +13,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {TokenHistoryFilter} from 'src/interfaces/tokensHistory.interface';
+import {WalletHistoryFilter} from 'src/interfaces/walletHistory.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
 import {
@@ -22,11 +24,9 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_3,
 } from 'src/styles/typography';
-import {TokenHistoryFilter} from 'src/types/tokens.history.types';
-import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 import CustomSearchBar from './CustomSearchBar';
 import EllipticButton from './EllipticButton';
 
@@ -60,9 +60,8 @@ const FilterBox = ({
 
   const toggleFilterType = (transactionName: string) => {
     const newFilter = {...filter.selectedTransactionTypes};
-    newFilter[transactionName] = !filter.selectedTransactionTypes[
-      transactionName
-    ];
+    newFilter[transactionName] =
+      !filter.selectedTransactionTypes[transactionName];
     updateFilterRedux({...filter, selectedTransactionTypes: newFilter});
   };
 
@@ -239,13 +238,11 @@ const getStyles = (
     },
     container: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderWidth: 1,
       borderRadius: 15.1,
       flex: 1,
       justifyContent: 'space-evenly',
       paddingVertical: 10,
       maxWidth: width * 0.75,
-      marginTop: insets.top,
     },
     headerText: {
       marginVertical: 8,

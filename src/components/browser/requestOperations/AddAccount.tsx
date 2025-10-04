@@ -3,14 +3,14 @@ import {AccountKeys} from 'actions/interfaces';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {getClient} from 'utils/hive';
 import {
   RequestAddAccount,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
-import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
+} from 'src/interfaces/keychain.interface';
+import {getClient} from 'utils/hiveLibs.utils';
+import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation.utils';
 import {translate} from 'utils/localize';
 import RequestOperation, {
   processOperationWithoutConfirmation,

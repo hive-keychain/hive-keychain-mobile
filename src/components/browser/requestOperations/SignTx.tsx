@@ -1,13 +1,13 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {signTx} from 'utils/hive';
 import {
   RequestError,
   RequestId,
   RequestSignTx,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {signTx} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation, {
   processOperationWithoutConfirmation,

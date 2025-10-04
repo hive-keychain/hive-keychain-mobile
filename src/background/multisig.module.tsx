@@ -5,9 +5,10 @@ import {signBuffer} from 'components/bridge';
 import RequestMultisig from 'components/multisig/RequestMultisig';
 import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
 import React from 'react';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {Socket, io} from 'socket.io-client';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {
   ConnectDisconnectMessage,
   MultisigAccountConfig,
@@ -24,20 +25,21 @@ import {
   SocketMessageCommand,
   TransactionOptionsMetadata,
 } from 'src/interfaces/multisig.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState, store} from 'store';
-import {MultisigConfig as MultisigConfiguration} from 'utils/config';
+import {MultisigConfig as MultisigConfiguration} from 'utils/config.utils';
 import {
   broadcastAndConfirmTransactionWithSignature,
+  getClient,
   getTransaction,
+  registerMultisigRequestHandler,
   signTx,
-} from 'utils/hive';
+} from 'utils/hiveLibs.utils';
 import {KeyUtils} from 'utils/key.utils';
-import {sleep} from 'utils/keychain';
-import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
+import {sleep} from 'utils/keychain.utils';
+import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation.utils';
 import {translate} from 'utils/localize';
 import {MultisigUtils} from 'utils/multisig.utils';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 
 let socket: Socket;
 let shouldReconnectSocket: boolean = false;
@@ -106,6 +108,35 @@ export const requestMultisigSignatures = async (
 ) => {
   await createConnectionIfNeeded(data);
   return requestSignatures(data, data.options.fromWallet ?? true);
+};
+
+// Register handler so hiveLibs can delegate multisig requests without importing this module
+registerMultisigRequestHandler(
+  async ({transaction, key, signature, options}) => {
+    const username = MultisigUtils.getUsernameFromTransaction(transaction);
+    const transactionAccount = await getTransactionAccount(
+      username!.toString(),
+    );
+    const acc = (store.getState() as RootState).accounts.find(
+      (account) => account.keys.posting === key || account.keys.active === key,
+    );
+    const initiatorAccount = await getTransactionAccount(acc?.name!);
+    const method = await KeyUtils.isKeyActiveOrPosting(key, initiatorAccount);
+    return requestMultisigSignatures({
+      transaction,
+      key,
+      initiatorAccount,
+      transactionAccount,
+      signature,
+      method,
+      options,
+    });
+  },
+);
+
+const getTransactionAccount = async (username: string) => {
+  const accounts = await getClient().database.getAccounts([username]);
+  return accounts[0];
 };
 
 // When the socket has not been initialized because multisig is not enabled for any account
@@ -244,10 +275,9 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
         signer,
       );
 
-      SimpleToast.show(
-        translate('multisig.transaction_signed_successfully'),
-        SimpleToast.LONG,
-      );
+      SimpleToast.show(translate('multisig.transaction_signed_successfully'), {
+        duration: SimpleToast.durations.LONG,
+      });
       if (signedTransaction) {
         socket.emit(
           SocketMessageCommand.SIGN_TRANSACTION,
@@ -472,9 +502,10 @@ const processSignatureRequest = async (
 
     const accounts = (store.getState() as RootState).accounts;
     const localAccount = accounts.find((la) => la.name === username);
-    const key = localAccount?.keys[
-      signatureRequest.keyType.toLowerCase() as KeychainKeyTypesLC
-    ]?.toString()!;
+    const key =
+      localAccount?.keys[
+        signatureRequest.keyType.toLowerCase() as KeychainKeyTypesLC
+      ]?.toString()!;
     const decodedTransaction = await decryptRequest(signer, key);
     if (decodedTransaction) {
       const signedTransaction = await requestSignTransactionFromUser(

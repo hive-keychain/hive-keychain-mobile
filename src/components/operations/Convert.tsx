@@ -14,26 +14,26 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getRotateStyle} from 'src/styles/transform';
 import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {collateralizedConvert, convert} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {sanitizeAmount} from 'utils/hiveUtils';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {sanitizeAmount} from 'utils/hive.utils';
+import {collateralizedConvert, convert} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import Balance from './Balance';
 import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';
@@ -205,7 +205,7 @@ const Convert = ({
               </View>
               <Icon
                 theme={theme}
-                name={Icons.EXPAND_THIN}
+                name={Icons.EXPAND}
                 additionalContainerStyle={getRotateStyle('90')}
                 width={13}
                 height={13}

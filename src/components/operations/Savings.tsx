@@ -14,15 +14,17 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -34,12 +36,10 @@ import {
   getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {depositToSavings, withdrawFromSavings} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {depositToSavings, withdrawFromSavings} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {SavingsUtils} from 'utils/savings.utils';
 import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';
@@ -67,15 +67,12 @@ const Savings = ({
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
     SavingsWithdrawal[]
   >([]);
-  const [
-    totalPendingSavingsWithdrawals,
-    setTotalPendingSavingsWithdrawals,
-  ] = useState(0);
+  const [totalPendingSavingsWithdrawals, setTotalPendingSavingsWithdrawals] =
+    useState(0);
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState(c);
-  const [operationType, setOperationType] = useState<SavingsOperations>(
-    operation,
-  );
+  const [operationType, setOperationType] =
+    useState<SavingsOperations>(operation);
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const {width, height} = useWindowDimensions();
@@ -103,9 +100,8 @@ const Savings = ({
 
   const init = async () => {
     if (userSavingsWithdrawRequests > 0) {
-      const pendingSavingsWithdrawalsList: SavingsWithdrawal[] = await SavingsUtils.getSavingsWitdrawFrom(
-        user.name!,
-      );
+      const pendingSavingsWithdrawalsList: SavingsWithdrawal[] =
+        await SavingsUtils.getSavingsWitdrawFrom(user.name!);
       setCurrentWithdrawingList(pendingSavingsWithdrawalsList);
       if (pendingSavingsWithdrawalsList.length > 0) {
         updateTotalSavingWithdrawals(pendingSavingsWithdrawalsList);
@@ -289,7 +285,7 @@ const Savings = ({
               </View>
               <Icon
                 theme={theme}
-                name={Icons.EXPAND_THIN}
+                name={Icons.EXPAND}
                 additionalContainerStyle={getRotateStyle('90')}
                 width={15}
                 height={15}
@@ -399,6 +395,7 @@ const Savings = ({
               }
             />
           </View>
+          <Separator />
         </View>
       }
       buttonTitle={`wallet.operations.savings.${operationType}_button`}

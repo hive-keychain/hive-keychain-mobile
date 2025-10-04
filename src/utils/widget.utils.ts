@@ -1,12 +1,9 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {WidgetAccountBalanceToShow} from 'components/popups/widget-configuration/WidgetConfiguration';
 import {NativeModules} from 'react-native';
-import {
-  WidgetAsyncStorageItem,
-  WidgetSharedDataCommand,
-} from 'src/enums/widgets.enum';
+import {WidgetAsyncStorageItem} from 'src/enums/widgets.enum';
 
-const SharedStorage = NativeModules.SharedStorage;
+const WidgetBridge = NativeModules.WidgetBridge;
 
 export type WidgetToUpdate =
   | 'account_balance_list'
@@ -25,11 +22,8 @@ const sendWidgetData = async (toUpdateWidget: WidgetToUpdate) => {
         account_balance_list: accountsToShow,
       });
 
-      SharedStorage.setData(data);
-      SharedStorage.setCommand(
-        WidgetSharedDataCommand.UPDATE_WIDGETS,
-        toUpdateWidget,
-      );
+      await WidgetBridge?.setWidgetData?.(data);
+      await WidgetBridge?.refreshWidgets?.(toUpdateWidget);
     }
 
     // IOS //TODO
@@ -48,9 +42,8 @@ const addAccountBalanceList = async (
     WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
   );
   if (accountsStoredToShow) {
-    const parsedAccounts: WidgetAccountBalanceToShow[] = JSON.parse(
-      accountsStoredToShow,
-    );
+    const parsedAccounts: WidgetAccountBalanceToShow[] =
+      JSON.parse(accountsStoredToShow);
     if (!parsedAccounts.find((acc) => acc.name === username)) {
       parsedAccounts.push({name: username, show: false});
       await AsyncStorage.setItem(
@@ -87,9 +80,8 @@ const removeAccountBalanceList = async (username: string) => {
     WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
   );
   if (accountsStoredToShow) {
-    const parsedAccounts: WidgetAccountBalanceToShow[] = JSON.parse(
-      accountsStoredToShow,
-    );
+    const parsedAccounts: WidgetAccountBalanceToShow[] =
+      JSON.parse(accountsStoredToShow);
     if (parsedAccounts.find((acc) => acc.name === username)) {
       await AsyncStorage.setItem(
         WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,

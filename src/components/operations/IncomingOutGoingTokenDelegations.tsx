@@ -17,6 +17,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -24,13 +25,12 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {capitalize} from 'utils/format.utils';
 import {
   TokenDelegation,
   getIncomingTokenDelegations,
   getOutgoingTokenDelegations,
-} from 'utils/hiveEngine';
-import {getCurrencyProperties} from 'utils/hiveReact';
+} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
 import IncomingOutGoingTokenDelegationItem from './IncomingOutgoingTokenDelegationItem';
 import OperationThemed from './OperationThemed';
@@ -41,7 +41,7 @@ type Props = PropsFromRedux & {
   delegationType: TokenDelegationType;
   total: string;
   token: TokenBalance;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
   tokenInfo: Token;
   gobackAction?: () => void;
 };
@@ -82,7 +82,7 @@ const IncomingOutGoingTokenDelegations = ({
   const styles = getDimensionedStyles(color, theme, width);
 
   const renderListItem = useCallback(
-    ({item}) => (
+    ({item}: {item: TokenDelegation}) => (
       <IncomingOutGoingTokenDelegationItem
         tokenDelegation={item}
         delegationType={delegationType}

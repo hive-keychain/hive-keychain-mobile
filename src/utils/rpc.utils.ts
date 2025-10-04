@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Rpc} from 'actions/interfaces';
 import axios from 'axios';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 
 export const getCustomRpcs = async (): Promise<Rpc[]> => {
   let customRpcs: Rpc[];

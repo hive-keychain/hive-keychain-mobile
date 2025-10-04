@@ -13,15 +13,15 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {
   RCDelegationValue,
   RcDelegation,
-} from 'src/interfaces/rc-delegation.interface';
+} from 'src/interfaces/rcDelegation.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle, getSeparatorLineStyle} from 'src/styles/line';
@@ -32,11 +32,11 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
-import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
+import {goBack, navigate} from 'utils/navigation.utils';
+import {RcDelegationsUtils} from 'utils/rcDelegations.utils';
 
 interface Props {
   theme: Theme;
@@ -131,7 +131,9 @@ const IncomingOutgoingRcDelegationItem = ({
                   'wallet.operations.rc_delegation.success.rc_delegation_successful',
                   {to: item.delegatee},
                 ),
-                SimpleToast.LONG,
+                {
+                  duration: SimpleToast.durations.LONG,
+                },
               );
             } else {
               SimpleToast.show(
@@ -139,7 +141,9 @@ const IncomingOutgoingRcDelegationItem = ({
                   'wallet.operations.rc_delegation.success.cancel_rc_delegation_successful',
                   {to: item.delegatee},
                 ),
-                SimpleToast.LONG,
+                {
+                  duration: SimpleToast.durations.LONG,
+                },
               );
             }
           }
@@ -149,11 +153,15 @@ const IncomingOutgoingRcDelegationItem = ({
               translate(
                 'wallet.operations.rc_delegation.failed.rc_delegation_failed',
               ),
-              SimpleToast.LONG,
+              {
+                duration: SimpleToast.durations.LONG,
+              },
             );
         }
       } catch (error) {
-        SimpleToast.show(`Error : ${(error as any).message}`, SimpleToast.LONG);
+        SimpleToast.show(`Error : ${(error as any).message}`, {
+          duration: SimpleToast.durations.LONG,
+        });
       } finally {
         setIsLoading(false);
       }
@@ -193,7 +201,7 @@ const IncomingOutgoingRcDelegationItem = ({
           </View>
           <Icon
             theme={theme}
-            name={Icons.EXPAND_THIN}
+            name={Icons.EXPAND}
             additionalContainerStyle={[
               styles.logo,
               getRotateStyle(
@@ -233,7 +241,7 @@ const IncomingOutgoingRcDelegationItem = ({
               style={styles.button}
               onPress={() => setShowCancelConfirmationRCDelegation(true)}>
               <Icon
-                name={Icons.GIFT_DELETE}
+                name={Icons.REMOVE}
                 theme={theme}
                 additionalContainerStyle={styles.roundButton}
                 {...styles.icon}

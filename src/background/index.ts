@@ -1,5 +1,5 @@
 import ClaimModule from 'src/background/claim.module';
-import AutoStakeTokensModule from './auto-stake-tokens.module';
+import AutoStakeTokensModule from './autoStakeTokens.module';
 import {MultisigModule} from './multisig.module';
 
 const init = async (list: any[]) => {

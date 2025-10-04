@@ -1,26 +1,27 @@
-import CloseIconDark from 'assets/new_UI/close_circle_dark.svg';
-import CloseIconLight from 'assets/new_UI/close_circle_light.svg';
+import CloseIconDark from 'assets/images/common-ui/close_circle_dark.svg';
+import CloseIconLight from 'assets/images/common-ui/close_circle_light.svg';
 import React from 'react';
-import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native';
+import {Pressable, StyleSheet} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 
 type Props = {
   theme: Theme;
   onPress: () => void;
-  additionalContainerStyle?: StyleProp<ViewStyle>;
 };
 
-export default function CloseButton({
-  theme,
-  onPress,
-  additionalContainerStyle,
-}: Props) {
+export default function CloseButton({theme, onPress}: Props) {
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      style={additionalContainerStyle}
-      onPress={onPress}>
+    <Pressable style={styles.container} onPress={onPress}>
       {theme === Theme.LIGHT ? <CloseIconLight /> : <CloseIconDark />}
-    </TouchableOpacity>
+    </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

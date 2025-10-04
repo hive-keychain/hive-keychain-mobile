@@ -2,11 +2,11 @@ import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
+import {Image} from 'expo-image';
 import {useHasExpiration} from 'hooks/useHasExpiration';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
@@ -16,7 +16,7 @@ import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_AuthPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {translate} from 'utils/localize';
-const LOGO_LIGHT = require('assets/has/logo-light.png');
+const LOGO_LIGHT = require('assets/images/has/logo-light.png');
 
 type Props = PropsFromRedux & {
   data: HAS_AuthPayload & {
@@ -68,7 +68,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
   return (
     <Operation
       logo={
-        <FastImage
+        <Image
           source={
             data.decryptedData?.app.icon
               ? {uri: data.decryptedData.app.icon}
@@ -82,10 +82,6 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
       additionalHeaderTitleStyle={[styles.text, styles.title]}>
       <View style={styles.paddingHorizontal}>
         <Separator height={30} />
-        <Text style={[styles.text, styles.uuid]}>
-          {translate('wallet.has.uuid', data)}
-        </Text>
-        <Separator />
         <Text style={styles.text}>
           {success
             ? translate('wallet.has.auth.success', {

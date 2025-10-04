@@ -15,7 +15,8 @@ import {
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
@@ -24,10 +25,9 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
-import {Dimensions} from 'utils/common.types';
 import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 
 export interface WrongKeysOnUser {
   [key: string]: string[];
@@ -124,7 +124,7 @@ const WrongKeyPopup = ({
     loadAccount(
       accounts.find((account: Account) => account.name === accountFound!).name!,
     );
-    navigate('AccountManagementScreen');
+    navigate('Accounts', {screen: 'AccountManagementScreen'});
   };
 
   const handleClose = () => {

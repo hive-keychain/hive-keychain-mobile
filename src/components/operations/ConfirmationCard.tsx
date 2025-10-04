@@ -9,18 +9,18 @@ import {FormatUtils} from 'hive-keychain-commons';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   ConfirmationData,
   ConfirmationDataTag,
 } from 'src/interfaces/confirmation.interface';
+import {KeychainRequest, RequestId} from 'src/interfaces/keychain.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {FontPoppinsName, getFormFontStyle} from 'src/styles/typography';
-import {Colors} from 'utils/colors';
-import {KeychainRequest, RequestId} from 'utils/keychain.types';
+import {Colors} from 'utils/colors.utils';
 import {translate} from 'utils/localize';
 
 export const createBalanceData = (
@@ -54,7 +54,7 @@ const ConfirmationCard = ({
   colors: Colors;
   request?: KeychainRequest & RequestId;
   accounts?: Account[];
-  RequestUsername?: () => JSX.Element;
+  RequestUsername?: () => React.ReactNode;
 }) => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
@@ -106,7 +106,7 @@ const ConfirmationCard = ({
                   </View>
                   <View style={styles.arrowContainer}>
                     <Icon
-                      name={Icons.ARROW_RIGHT_BROWSER}
+                      name={Icons.ARROW_RIGHT}
                       additionalContainerStyle={styles.arrowIcon}
                       width={16}
                       height={16}

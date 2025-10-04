@@ -1,25 +1,30 @@
+import {NavigationProp, RouteProp, useRoute} from '@react-navigation/native';
 import {addAccount} from 'actions/index';
 import {Account} from 'actions/interfaces';
 import QRCode from 'components/qr_code';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import {AddAccFromWalletNavigationProps} from 'navigators/mainDrawerStacks/AddAccount.types';
+import {BarcodeScanningResult} from 'expo-camera';
 import React, {useState} from 'react';
 import {Text} from 'react-native';
-import {BarCodeReadEvent} from 'react-native-camera';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {KeyUtils} from 'utils/key.utils';
-import {validateFromObject} from 'utils/keyValidation';
-import {handleAddAccountQR, handleUrl} from 'utils/linking';
+import {validateFromObject} from 'utils/keyValidation.utils';
+import {handleAddAccountQR, handleUrl} from 'utils/linking.utils';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
 
-const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
+type AnyWalletQRRoute = RouteProp<
+  Record<string, {wallet?: boolean} | undefined>,
+  string
+>;
+
+const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
+  const route = useRoute<AnyWalletQRRoute>();
   const [processingAccounts, setProcessingAccounts] = useState(false);
   const [qrDataAccounts, setQrDataAccounts] = useState<Account[]>([]);
   const [acctPageTotal, setAcctPageTotal] = useState(0);
-  const onSuccess = async ({data}: BarCodeReadEvent) => {
+  const onSuccess = async ({data}: BarcodeScanningResult) => {
     try {
       if (data.startsWith('keychain://add_accounts=')) {
         if (processingAccounts) {
@@ -71,7 +76,7 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
         }
       } else if (data.startsWith('keychain://add_account=')) {
         const wallet = route.params ? route.params.wallet : false;
-        handleAddAccountQR(data, wallet);
+        handleAddAccountQR(data, wallet, true);
       } else handleUrl(data, true);
     } catch (e) {
       console.log(e, data);
@@ -110,14 +115,18 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
             localAccounts,
           );
         } catch (e) {
-          SimpleToast.show(e.message, SimpleToast.LONG);
+          SimpleToast.show(e.message, {
+            duration: SimpleToast.durations.LONG,
+          });
           continue;
         }
         keys = {...authorizedKeys, ...regularKeys};
         if (!KeyUtils.hasKeys(keys)) {
           SimpleToast.show(
             translate('toast.no_accounts_no_auth', {username: dataAcc.name}),
-            SimpleToast.LONG,
+            {
+              duration: SimpleToast.durations.LONG,
+            },
           );
           continue;
         }
@@ -130,7 +139,8 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
     }
     setQrDataAccounts([]);
     setProcessingAccounts(false);
-    return resetStackAndNavigate('WALLET');
+    console.log('there');
+    return navigation.getParent()?.goBack();
   };
 
   return (

@@ -1,4 +1,4 @@
-import {WalletHistoryFilter} from 'src/types/wallet.history.types';
+import {WalletHistoryFilter} from 'src/interfaces/walletHistory.interface';
 import {ActionPayload} from './interfaces';
 import {CLEAR_WALLET_FILTERS, UPDATE_WALLET_FILTER} from './types';
 

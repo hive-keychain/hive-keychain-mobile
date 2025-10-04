@@ -3,24 +3,16 @@ import {addPreference} from 'actions/preferences';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
 import TwoFaForm from 'components/form/TwoFaForm';
-import {ConfirmationData} from 'components/operations/Confirmation';
 import ConfirmationCard from 'components/operations/ConfirmationCard';
 import MultisigCaption from 'components/ui/MultisigCaption';
 import {useDomainCheck} from 'hooks/domainCheck';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {getButtonHeight, getButtonStyle} from 'src/styles/button';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {getCaptionStyle} from 'src/styles/text';
-import {title_primary_body_2} from 'src/styles/typography';
-import {RootState} from 'store';
-import {urlTransformer} from 'utils/browser';
-import {beautifyErrorMessage} from 'utils/keychain';
+import {ConfirmationData} from 'src/interfaces/confirmation.interface';
 import {
   HiveErrorMessage,
   KeychainRequest,
@@ -28,9 +20,17 @@ import {
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getButtonHeight, getButtonStyle} from 'src/styles/button';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getCaptionStyle} from 'src/styles/text';
+import {title_primary_body_2} from 'src/styles/typography';
+import {RootState} from 'store';
+import {urlTransformer} from 'utils/browser.utils';
+import {beautifyErrorMessage} from 'utils/keychain.utils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack} from 'utils/navigation.utils';
 import RequestMessage from './RequestMessage';
 
 type Props = {
@@ -53,7 +53,7 @@ type Props = {
   additionalData?: object;
   beautifyError?: boolean;
   selectedUsername?: string;
-  RequestUsername?: () => JSX.Element;
+  RequestUsername?: () => React.JSX.Element;
 } & TypesFromRedux;
 
 const RequestOperation = ({
@@ -207,7 +207,9 @@ const RequestOperation = ({
             });
           } finally {
             goBack();
-            SimpleToast.show(msg, SimpleToast.LONG);
+            SimpleToast.show(msg, {
+              duration: SimpleToast.durations.LONG,
+            });
           }
           setLoading(false);
         }}

@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {DARKER_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   fields_primary_text_2,

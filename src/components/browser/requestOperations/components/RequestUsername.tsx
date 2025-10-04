@@ -6,10 +6,10 @@ import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {FontPoppinsName, getFormFontStyle} from 'src/styles/typography';
 import {store} from 'store';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 type Props = {

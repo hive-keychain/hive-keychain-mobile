@@ -11,23 +11,23 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getCurrencyProperties} from 'src/lists/hiveReact.list';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
-import {stakeToken} from 'utils/hive';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hive.utils';
+import {stakeToken} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
 import {ConfirmationPageProps} from './Confirmation';
@@ -36,7 +36,7 @@ import OperationThemed from './OperationThemed';
 
 export interface StakeTokenOperationProps {
   currency: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
   balance: string;
   gobackAction?: () => void;
 }
@@ -73,9 +73,10 @@ const StakeToken = ({
       if (options.multisig) return;
 
       if (tokenOperationResult && tokenOperationResult.tx_id) {
-        let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-          tokenOperationResult.tx_id,
-        );
+        let confirmationResult: any =
+          await BlockchainTransactionUtils.tryConfirmTransaction(
+            tokenOperationResult.tx_id,
+          );
 
         if (confirmationResult && confirmationResult.confirmed) {
           if (confirmationResult.error) {

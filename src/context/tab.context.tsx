@@ -1,10 +1,10 @@
 // WebViewContext.js
-import React, {createContext, useCallback, useContext, useRef} from 'react';
-import {WebView} from 'react-native-webview';
+import React, { createContext, useCallback, useContext, useRef } from "react";
+import { WebView } from "react-native-webview";
 
 const TabContext = createContext(null);
 
-export const TabProvider = ({children}: {children: React.ReactNode}) => {
+export const TabProvider = ({ children }: { children: React.ReactNode }) => {
   const webViewRef = useRef<WebView>(null);
   const tabViewRef = useRef<WebView>(null);
 
@@ -18,7 +18,8 @@ export const TabProvider = ({children}: {children: React.ReactNode}) => {
 
   return (
     <TabContext.Provider
-      value={{setWebViewRef, webViewRef, setTabViewRef, tabViewRef}}>
+      value={{ setWebViewRef, webViewRef, setTabViewRef, tabViewRef }}
+    >
       {children}
     </TabContext.Provider>
   );

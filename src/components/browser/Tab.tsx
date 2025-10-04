@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native';
 import {showFloatingBar, toggleHideFloatingBar} from 'actions/floatingBar';
 import {
   Account,
@@ -8,7 +9,7 @@ import {
   Tab,
 } from 'actions/interfaces';
 import CustomRefreshControl from 'components/ui/CustomRefreshControl';
-import {BrowserNavigation} from 'navigators/MainDrawer.types';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {
   memo,
   MutableRefObject,
@@ -36,11 +37,12 @@ import {
 import {UserPreference} from 'reducers/preferences.types';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
-import {ProviderEvent} from 'src/enums/provider-event.enum';
+import {ProviderEvent} from 'src/enums/providerEvent.enum';
+import {RequestError, RequestSuccess} from 'src/interfaces/keychain.interface';
 import {store} from 'store';
-import {urlTransformer} from 'utils/browser';
-import {BrowserConfig} from 'utils/config';
-import {getAccount} from 'utils/hiveUtils';
+import {urlTransformer} from 'utils/browser.utils';
+import {BrowserConfig} from 'utils/config.utils';
+import {getAccount} from 'utils/hive.utils';
 import {
   getRequestTitle,
   getRequiredWifType,
@@ -48,12 +50,11 @@ import {
   sendResponse,
   validateAuthority,
   validateRequest,
-} from 'utils/keychain';
-import {RequestError, RequestSuccess} from 'utils/keychain.types';
+} from 'utils/keychain.utils';
 import {MultisigUtils} from 'utils/multisig.utils';
-import {navigate, goBack as navigationGoBack} from 'utils/navigation';
-import {hasPreference} from 'utils/preferences';
-import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
+import {navigate, goBack as navigationGoBack} from 'utils/navigation.utils';
+import {hasPreference} from 'utils/preferences.utils';
+import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation.utils';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
@@ -69,7 +70,7 @@ type Props = {
   accounts: Account[];
   updateTab: (id: number, data: Partial<Tab>) => ActionPayload<BrowserPayload>;
   addToHistory: (history: Page) => ActionPayload<BrowserPayload>;
-  navigation: BrowserNavigation;
+  navigation: BrowserScreenProps['navigation'];
   preferences: UserPreference[];
   addTab: (
     isManagingTab: boolean,
@@ -118,7 +119,7 @@ export default memo(
       tabRef.current?.reload(); // reload the WebView
     };
     const styles = getStyles(insets);
-    useEffect(() => {
+    useFocusEffect(() => {
       if (!active) return;
       const backAction = () => {
         goBack();
@@ -131,7 +132,7 @@ export default memo(
       );
 
       return () => backHandler.remove();
-    }, [active]);
+    });
 
     const goBack = () => {
       const {current} = tabRef;
@@ -290,7 +291,7 @@ export default memo(
           if (
             data.url !== 'about:blank' &&
             (icon !== data.icon || name !== data.name) &&
-            !isLoading // Don't update during loading/redirects
+            !isLoading
           ) {
             navigation.setParams({icon: data.icon});
             updateTab(id, {name: data.name, icon: data.icon});
@@ -460,44 +461,46 @@ export default memo(
                   />
                 )
               }>
-              <WebView
-                source={{
-                  uri: url === BrowserConfig.HOMEPAGE_URL ? undefined : url,
-                }}
-                domStorageEnabled={true}
-                allowFileAccess={true}
-                allowUniversalAccessFromFileURLs={true}
-                mixedContentMode={'always'}
-                ref={tabRef}
-                injectedJavaScriptBeforeContentLoaded={hive_keychain}
-                injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
-                mediaPlaybackRequiresUserAction={false}
-                onMessage={onMessage}
-                javaScriptEnabled
-                bounces={false}
-                pullToRefreshEnabled={false}
-                geolocationEnabled
-                allowsInlineMediaPlayback
-                allowsFullscreenVideo
-                onLoadEnd={onLoadEnd}
-                onLoadStart={onLoadStart}
-                onLoadProgress={onLoadProgress}
-                onError={(error) => {
-                  console.log('Error', error);
-                }}
-                onHttpError={(error) => {
-                  console.log('HttpError', error);
-                }}
-                onOpenWindow={(event) => {
-                  addTab(
-                    false,
-                    {url, icon, id},
-                    tabParentRef,
-                    event.nativeEvent.targetUrl,
-                  );
-                }}
-                useWebView2
-              />
+              {url !== BrowserConfig.HOMEPAGE_URL ? (
+                <WebView
+                  source={{
+                    uri: url,
+                  }}
+                  domStorageEnabled={true}
+                  allowFileAccess={true}
+                  allowUniversalAccessFromFileURLs={true}
+                  mixedContentMode={'always'}
+                  ref={tabRef}
+                  injectedJavaScriptBeforeContentLoaded={hive_keychain}
+                  injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
+                  mediaPlaybackRequiresUserAction={false}
+                  onMessage={onMessage}
+                  javaScriptEnabled
+                  bounces={false}
+                  pullToRefreshEnabled={false}
+                  geolocationEnabled
+                  allowsInlineMediaPlayback
+                  allowsFullscreenVideo
+                  onLoadEnd={onLoadEnd}
+                  onLoadStart={onLoadStart}
+                  onLoadProgress={onLoadProgress}
+                  onError={(error) => {
+                    console.log('Error', error);
+                  }}
+                  onHttpError={(error) => {
+                    // console.log('HttpError', error);
+                  }}
+                  onOpenWindow={(event) => {
+                    addTab(
+                      false,
+                      {url, icon, id},
+                      tabParentRef,
+                      event.nativeEvent.targetUrl,
+                    );
+                  }}
+                  useWebView2
+                />
+              ) : null}
             </ScrollView>
           </GestureDetector>
         </View>

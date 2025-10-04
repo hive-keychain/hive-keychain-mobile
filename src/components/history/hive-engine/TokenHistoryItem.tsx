@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   AuthorCurationTransaction,
   CommentCurationTransaction,
@@ -33,7 +33,7 @@ import {
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {formatBalanceCurrency} from 'utils/format';
+import {formatBalanceCurrency} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 interface TokenHistoryItemProps {

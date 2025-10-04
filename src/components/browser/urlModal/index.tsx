@@ -1,6 +1,6 @@
-import Clipboard from '@react-native-community/clipboard';
 import {ActionPayload, BrowserPayload, Page} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
+import * as Clipboard from 'expo-clipboard';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   KeyboardAvoidingView,
@@ -17,7 +17,7 @@ import {
 import Modal from 'react-native-modal';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {FontPoppinsName, title_primary_body_3} from 'src/styles/typography';
@@ -48,7 +48,7 @@ const UrlModal = ({
   clearCache,
   theme,
 }: Props) => {
-  const urlInput: MutableRefObject<TextInput> = useRef();
+  const urlInput: MutableRefObject<TextInput> = useRef(null);
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets, theme);
 
@@ -99,7 +99,7 @@ const UrlModal = ({
       <KeyboardAvoidingView style={{flex: 1}} behavior={'padding'}>
         <View style={styles.urlModalContent}>
           <Icon
-            name={Icons.BACK}
+            name={Icons.ARROW_LEFT}
             theme={theme}
             width={17}
             height={17}
@@ -139,7 +139,7 @@ const UrlModal = ({
               theme={theme}
               width={17}
               height={17}
-              onPress={() => Clipboard.setString(url)}
+              onPress={() => Clipboard.setStringAsync(url)}
               additionalContainerStyle={styles.option}
               color={PRIMARY_RED_COLOR}
             />

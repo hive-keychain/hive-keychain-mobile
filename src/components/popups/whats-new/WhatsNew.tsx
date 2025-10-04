@@ -7,7 +7,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
@@ -15,10 +15,10 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {VersionLogUtils} from 'utils/version-log.utils';
-import {WhatsNewUtils} from 'utils/whats-new.utils';
-import {Feature, WhatsNewContent} from './whats-new.interface';
+import {navigate} from 'utils/navigation.utils';
+import {VersionLogUtils} from 'utils/version.utils';
+import {WhatsNewUtils} from 'utils/whatsNew.utils';
+import {Feature, WhatsNewContent} from './whatsNew.interface';
 interface Props {
   navigation: WalletNavigation;
 }
@@ -102,7 +102,7 @@ const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
       addTab(`${content.url}#${feature.anchor}`);
     }
     await finish();
-    navigation.navigate('BrowserScreen');
+    navigation.navigate('Browser');
   };
 
   const renderItem = useCallback(

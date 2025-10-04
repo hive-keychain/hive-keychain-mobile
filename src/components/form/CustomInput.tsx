@@ -12,10 +12,10 @@ import {
 import {Input, InputProps} from 'react-native-elements';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {AutoCompleteValuesType} from 'src/interfaces/autocomplete.interface';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {getInputHeight} from 'src/styles/input';
 import {fields_primary_text_2} from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import AutoCompleteBox from './AutoCompleteBox';
 
@@ -169,7 +169,7 @@ const getDimensionedStyles = ({
     inputContainer: {
       height: '100%',
       borderBottomWidth: 0,
-      textAlign: textAlign || 'left',
+      textAlign: (textAlign as any) || 'left',
     },
     flexRow: {
       width: '100%',

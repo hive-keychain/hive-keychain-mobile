@@ -1,6 +1,6 @@
 import {AppThunk} from 'src/hooks/redux';
 import {EcosystemUtils} from 'utils/ecosystem.utils';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {ActionPayload, BrowserPayload, Page, Tab} from './interfaces';
 import {
   ADD_BROWSER_TAB,
@@ -66,28 +66,27 @@ export const removeFromFavorites = (url: string) => {
   return action;
 };
 
-export const addTabFromLinking = (url: string): AppThunk => (
-  dispatch,
-  getState,
-) => {
-  const existingTab = getState().browser.tabs.find((t) => t.url === url);
-  if (existingTab) {
-    dispatch(changeTab(existingTab.id));
-  } else {
-    const id = Date.now();
-    dispatch({
-      type: ADD_BROWSER_TAB,
-      payload: {url, id},
-    });
-    dispatch(changeTab(id));
-  }
-  dispatch(showManagementScreen(false));
-  if (getState().auth.mk) {
-    navigate('BrowserScreen');
-  } else {
-    dispatch(setBrowserFocus(true));
-  }
-};
+export const addTabFromLinking =
+  (url: string): AppThunk =>
+  (dispatch, getState) => {
+    const existingTab = getState().browser.tabs.find((t) => t.url === url);
+    if (existingTab) {
+      dispatch(changeTab(existingTab.id));
+    } else {
+      const id = Date.now();
+      dispatch({
+        type: ADD_BROWSER_TAB,
+        payload: {url, id},
+      });
+      dispatch(changeTab(id));
+    }
+    dispatch(showManagementScreen(false));
+    if (getState().auth.mk) {
+      navigate('Browser');
+    } else {
+      dispatch(setBrowserFocus(true));
+    }
+  };
 
 export const setBrowserFocus = (shouldFocus: boolean) => {
   const action: ActionPayload<BrowserPayload> = {
@@ -150,10 +149,12 @@ export const showManagementScreen = (showManagement: boolean) => {
   return action;
 };
 
-export const getEcosystem = (chain: string): AppThunk => async (dispatch) => {
-  const eco = await EcosystemUtils.getDappList(chain);
-  dispatch({
-    type: GET_ECOSYSTEM,
-    payload: eco,
-  });
-};
+export const getEcosystem =
+  (chain: string): AppThunk =>
+  async (dispatch) => {
+    const eco = await EcosystemUtils.getDappList(chain);
+    dispatch({
+      type: GET_ECOSYSTEM,
+      payload: eco,
+    });
+  };

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsDrawerOpen} from '@react-navigation/drawer';
+import {useDrawerStatus} from '@react-navigation/drawer';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   setIsDrawerOpen,
@@ -14,7 +14,7 @@ import {
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket} from 'actions/index';
 import {updateNavigationActiveScreen} from 'actions/navigation';
-import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
+import HiveEngineLogo from 'assets/images/hive/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
@@ -26,8 +26,8 @@ import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
 import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
-import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vesting-routes.interface';
 import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
+import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vestingRoutes.interface';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
 import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
@@ -38,7 +38,6 @@ import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
@@ -58,9 +57,11 @@ import {
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {BottomBarLink} from 'src/enums/bottomBarLink.enum';
+import {Icons} from 'src/enums/icons.enum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDITEMDARKISH,
@@ -76,16 +77,14 @@ import {
   button_link_primary_medium,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {getCurrency} from 'utils/hive';
+import {getVP, getVotingDollarsPerAccount} from 'utils/hive.utils';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
-import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
+import {navigate} from 'utils/navigation.utils';
+import {VestingRoutesUtils} from 'utils/vestingRoutes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
-import {BottomBarLink} from './BottomNavigation.component';
 
 const Main = ({
   loadAccount,
@@ -116,22 +115,18 @@ const Main = ({
 
   const styles = getDimensionedStyles({width, height}, theme, insets);
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
-  const sectionListRef = useRef();
+  const sectionListRef = useRef<FlatList<TokenBalance>>(null);
   const [toggled, setToggled] = useState<number>(null);
-  const [
-    orderedUserTokenBalanceList,
-    setOrderedUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
-  const [
-    filteredUserTokenBalanceList,
-    setFilteredUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
+  const [orderedUserTokenBalanceList, setOrderedUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
+  const [filteredUserTokenBalanceList, setFilteredUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
   const [isHiveEngineLoading, setIsHiveEngineLoading] = useState(true);
-  const mainScrollRef = useRef();
+  const mainScrollRef = useRef<FlatList<TokenBalance>>(null);
 
   const [eventReceived, setEventReceived] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
@@ -148,12 +143,27 @@ const Main = ({
 
   useEffect(() => {
     if (Platform.OS === 'ios') return;
-    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
+    const eventEmitter = new NativeEventEmitter(NativeModules.WidgetBridge);
     let eventListener = eventEmitter.addListener('command_event', (event) => {
       if (event && Object.values(event).length >= 1) {
         setEventReceived(event);
       }
     });
+    // Fallback: read any pending command persisted by the widget
+    const readPending = async () => {
+      try {
+        if (NativeModules.WidgetBridge?.readAndClearPendingCommand) {
+          const pending =
+            await NativeModules.WidgetBridge.readAndClearPendingCommand();
+          if (pending && Object.values(pending).length >= 1) {
+            setEventReceived(pending);
+          }
+        }
+      } catch (e) {
+        console.log('readAndClearPendingCommand error', e);
+      }
+    };
+    readPending();
     if (eventReceived) {
       if (eventReceived.currency) {
         const {currency: command} = eventReceived;
@@ -259,12 +269,12 @@ const Main = ({
     lastAccount,
   ]);
 
-  useBackButtonNavigation('WALLET', true);
+  useBackButtonNavigation('Wallet', true);
   useLockedPortrait(navigation);
 
   const appState = useRef(AppState.currentState);
 
-  const isDrawerOpen: boolean = useIsDrawerOpen();
+  const isDrawerOpen: boolean = useDrawerStatus() == 'open';
 
   useEffect(() => {
     setIsDrawerOpen(isDrawerOpen);
@@ -286,6 +296,21 @@ const Main = ({
           ) {
             restartHASSockets();
           }
+          // Also check for any pending widget command when app becomes active
+          try {
+            if (
+              Platform.OS === 'android' &&
+              NativeModules.WidgetBridge?.readAndClearPendingCommand
+            ) {
+              NativeModules.WidgetBridge.readAndClearPendingCommand().then(
+                (pending: any) => {
+                  if (pending && Object.values(pending).length >= 1) {
+                    setEventReceived(pending);
+                  }
+                },
+              );
+            }
+          } catch (e) {}
         }
 
         appState.current = nextAppState;
@@ -298,9 +323,8 @@ const Main = ({
   );
 
   const initCheckVestingRoutes = async () => {
-    const tempVestingRoutesDifferences = await VestingRoutesUtils.getChangedVestingRoutes(
-      accounts,
-    );
+    const tempVestingRoutesDifferences =
+      await VestingRoutesUtils.getChangedVestingRoutes(accounts);
     setVestingRoutesDifferences(tempVestingRoutesDifferences);
   };
 
@@ -318,7 +342,7 @@ const Main = ({
 
   const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     showFloatingBar(
-      event.nativeEvent.contentOffset.y === 0 ||
+      event.nativeEvent.contentOffset.y <= 0 ||
         event.nativeEvent.contentOffset.y < lastScrollYValue,
     );
     setLastScrollYValue(event.nativeEvent.contentOffset.y);
@@ -343,7 +367,7 @@ const Main = ({
   );
 
   const renderEngineTokenDisplay = useCallback(
-    ({item, index}) => {
+    ({item, index}: {item: TokenBalance; index: number}) => {
       const handleSetToggle = () => {
         if (toggled === item._id) setToggled(null);
         else setToggled(item._id);
@@ -423,16 +447,16 @@ const Main = ({
                 }
                 renderItem={renderEngineTokenDisplay}
                 ListHeaderComponent={
-                  <React.Fragment>
+                  <View>
                     <View style={styles.rowWrapper}>
                       <PercentageDisplay
                         name={translate('wallet.vp')}
                         percent={getVP(user.account) || 100}
                         IconBgcolor={OVERLAYICONBGCOLOR}
                         theme={theme}
-                        iconName={Icons.SEND_SQUARE}
+                        iconName={Icons.VOTING_MANA}
                         bgColor={BACKGROUNDITEMDARKISH}
-                        secondary={`$$${
+                        secondary={`$${
                           getVotingDollarsPerAccount(
                             100,
                             properties,
@@ -442,7 +466,7 @@ const Main = ({
                         }`}
                       />
                       <PercentageDisplay
-                        iconName={Icons.SPEEDOMETER}
+                        iconName={Icons.RC}
                         bgColor={DARKER_RED_COLOR}
                         name={translate('wallet.rc')}
                         percent={user.rc.percentage || 100}
@@ -520,7 +544,7 @@ const Main = ({
                                 height={18}
                               />
                               <Icon
-                                name={Icons.SETTINGS_2}
+                                name={Icons.SETTINGS_WHEEL}
                                 theme={theme}
                                 onPress={handleClickSettings}
                               />
@@ -529,10 +553,10 @@ const Main = ({
                         </View>
                       </View>
                     </View>
-                  </React.Fragment>
+                  </View>
                 }
                 ListEmptyComponent={
-                  <React.Fragment>
+                  <View>
                     {isHiveEngineLoading ? (
                       <View style={styles.extraContainerMiniLoader}>
                         <Loader size={'small'} animating />
@@ -554,7 +578,7 @@ const Main = ({
                         </Text>
                       </View>
                     ) : null}
-                  </React.Fragment>
+                  </View>
                 }
                 ListFooterComponent={
                   <View style={[getCardStyle(theme).filledWrapper]} />

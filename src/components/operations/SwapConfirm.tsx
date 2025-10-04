@@ -7,12 +7,12 @@ import {FormatUtils} from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
-import {withCommas} from 'utils/format';
+import {withCommas} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -22,6 +22,7 @@ type Props = {
   startToken: Token;
   endToken: Token;
   processSwap: (estimateId: string) => Promise<void>;
+  estimate: string;
 };
 
 const SwapConfirm = ({
@@ -31,14 +32,14 @@ const SwapConfirm = ({
   startToken,
   endToken,
   processSwap,
+  estimate,
 }: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   const [loading, setLoading] = useState(false);
-
   return (
     <Background theme={theme}>
-      <View style={{flexGrow: 1, paddingBottom: 16}}>
+      <View style={{flexGrow: 1, paddingBottom: 16, paddingTop: 60}}>
         <Caption
           text="wallet.operations.swap.swap_token_confirm_message"
           hideSeparator
@@ -71,12 +72,14 @@ const SwapConfirm = ({
                 {`${withCommas(amount)} ${startToken.symbol}`}
               </Text>
               <Icon
-                name={Icons.ARROW_RIGHT_BROWSER}
+                name={Icons.ARROW_RIGHT}
                 additionalContainerStyle={{marginHorizontal: 8}}
                 width={20}
                 height={20}
               />
-              <Text style={[styles.textBase]}>{`${endToken.symbol}`}</Text>
+              <Text style={[styles.textBase]}>{`${withCommas(estimate)} ${
+                endToken.symbol
+              }`}</Text>
             </View>
           </View>
           <Separator
@@ -101,7 +104,7 @@ const SwapConfirm = ({
             try {
               await processSwap(estimateId);
             } finally {
-              setLoading(false);
+              // setLoading(false);
             }
           }}
           isLoading={loading}

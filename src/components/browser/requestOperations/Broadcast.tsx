@@ -3,16 +3,16 @@ import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {broadcast} from 'utils/hive';
-import {getAccountKeys} from 'utils/hiveUtils';
 import {
   RequestBroadcast,
   RequestError,
   RequestId,
   RequestSuccess,
   UsingHAS,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getAccountKeys} from 'utils/hive.utils';
+import {broadcast} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation, {
   processOperationWithoutConfirmation,

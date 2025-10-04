@@ -4,15 +4,16 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
+import {Dimensions as Dim} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
-import {Dimensions as Dim} from 'utils/common.types';
 
 type Props = {
   bottomHalf: boolean;
@@ -24,8 +25,9 @@ type Props = {
   additionalMainContainerStyle?: StyleProp<ViewStyle>;
   additionalClickeableAreaStyle?: StyleProp<ViewStyle>;
   modalPosition?: ModalPosition;
-  buttonElement?: JSX.Element;
+  buttonElement?: React.ReactNode;
   theme: Theme;
+  children: React.ReactNode;
 };
 type InnerProps = {height: number; width: number};
 
@@ -70,13 +72,13 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
             styles.mainContainer,
             this.props.additionalMainContainerStyle,
           ]}>
-          <TouchableWithoutFeedback
+          <Pressable
             style={[{height: '100%'}, this.props.additionalClickeableAreaStyle]}
             onPress={() => {
               this.props.outsideClick();
             }}>
             {this.props.buttonElement}
-          </TouchableWithoutFeedback>
+          </Pressable>
           <View
             style={[
               this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper,
@@ -119,7 +121,7 @@ class StyleSheetFactory {
       },
       modalWrapper: {
         position: 'absolute',
-        bottom: 0,
+        bottom: initialWindowMetrics?.insets.bottom,
         left: 0,
         right: 0,
         justifyContent: 'center',

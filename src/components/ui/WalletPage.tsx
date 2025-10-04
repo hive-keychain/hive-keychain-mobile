@@ -5,7 +5,7 @@ import {getColors} from 'src/styles/colors';
 import Background from './Background';
 
 type Props = {
-  children: JSX.Element;
+  children: React.ReactNode;
   additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
 };
 

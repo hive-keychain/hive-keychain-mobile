@@ -1,4 +1,4 @@
-import BuyCoinsComponent from 'components/operations/Buy-coins.component';
+import BuyCoinsComponent from 'components/operations/BuyCoins';
 import Swap from 'components/operations/Swap';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
@@ -6,15 +6,15 @@ import React from 'react';
 import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {MIN_SEPARATION_ELEMENTS} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 interface SwapBuyToScreenToogleProps {
   menuLabels: string[];
-  components: JSX.Element[];
+  components: React.JSX.Element[];
 }
 
 const SwapBuy = () => {

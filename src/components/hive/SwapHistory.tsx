@@ -13,10 +13,10 @@ import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
-import {SwapsConfig} from 'utils/config';
+import {SwapsConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
-import {BackToTopButton} from '../ui/Back-To-Top-Button';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
+import {BackToTopButton} from '../ui/BackToTopButton';
 import SwapHistoryItem from './SwapHistoryItem';
 
 const SwapHistory = ({activeAccount}: PropsFromRedux) => {
@@ -28,7 +28,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<ISwap>>(null);
 
   useEffect(() => {
     initSwapHistory();
@@ -79,7 +79,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const styles = getStyles(theme);
 
   const renderSwapHistoryItem = useCallback(
-    ({item, index}) => (
+    ({item, index}: {item: ISwap; index: number}) => (
       <SwapHistoryItem theme={theme} item={item} currentIndex={index} />
     ),
     [theme],

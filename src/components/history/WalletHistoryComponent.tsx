@@ -11,7 +11,7 @@ import {
 } from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {Transaction} from 'src/interfaces/transaction.interface';
 import {getColors} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
@@ -24,7 +24,7 @@ import TransactionUtils, {
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import Icon from '../hive/Icon';
-import {BackToTopButton} from '../ui/Back-To-Top-Button';
+import {BackToTopButton} from '../ui/BackToTopButton';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 
 export interface WalletHistoryComponentProps {
@@ -60,7 +60,7 @@ const WallettHistory = ({
 
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<Transaction>>(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -163,7 +163,7 @@ const WallettHistory = ({
   const styles = getStyles(theme, useSafeAreaInsets());
 
   const renderWalletHistoryItem = useCallback(
-    ({item}) => (
+    ({item}: {item: Transaction}) => (
       <WalletHistoryItemComponent
         transaction={item}
         user={activeAccount}
@@ -244,7 +244,8 @@ const WallettHistory = ({
                         </Text>
                         <Icon
                           name={Icons.ADD_CIRCLE_OUTLINE}
-                          theme={theme}
+                          fill={getColors(theme).iconBW}
+                          height={15}
                           additionalContainerStyle={{marginLeft: 5}}
                         />
                       </TouchableOpacity>
@@ -381,6 +382,7 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...fields_primary_text_1,
+      paddingTop: 1,
     },
   });
 

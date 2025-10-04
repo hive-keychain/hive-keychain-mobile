@@ -6,8 +6,8 @@ import {
 } from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
 import {PlatformOSType} from 'react-native';
-import {MessageModalType} from 'src/enums/messageModal.enums';
-import {RcDelegationsInfo} from '../interfaces/rc-delegation.interface';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {RcDelegationsInfo} from '../interfaces/rcDelegation.interface';
 
 export interface ActionPayload<T> {
   readonly type: string;
@@ -23,6 +23,7 @@ export type NullableString = string | null;
 
 export interface Auth {
   mk: NullableString;
+  ignoreNextBiometrics?: boolean;
 }
 
 export interface Rpc {

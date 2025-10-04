@@ -3,12 +3,12 @@ import {encodeMemo} from 'components/bridge';
 import {createBalanceData} from 'components/operations/ConfirmationCard';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React, {useEffect, useState} from 'react';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {RequestId, RequestSendToken} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {sendToken} from 'utils/hive';
-import {getAccountKeys} from 'utils/hiveUtils';
-import {RequestId, RequestSendToken} from 'utils/keychain.types';
+import {getAccountKeys} from 'utils/hive.utils';
+import {sendToken} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import {getUserBalance} from 'utils/tokens.utils';
 import RequestOperation from './components/RequestOperation';
@@ -28,12 +28,8 @@ export default ({
   const {request_id, ...data} = request;
   const {username, amount, to, currency, memo} = data;
   const [availableBalance, setAvailableBalance] = useState(0);
-  const {
-    getUsername,
-    getAccountKey,
-    getAccountMemoKey,
-    RequestUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
+  const {getUsername, getAccountKey, getAccountMemoKey, RequestUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
   useEffect(() => {
     const fetchAvailableBalance = async () => {
       const account = await getUserBalance(getUsername());

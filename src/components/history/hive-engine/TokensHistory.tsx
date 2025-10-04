@@ -1,5 +1,5 @@
 import {clearTokenHistory, loadTokenHistory} from 'actions/index';
-import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
+import {BackToTopButton} from 'components/ui/BackToTopButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -23,12 +23,12 @@ import {
   IN_TOKENS_TRANSACTIONS,
   OUT_TOKENS_TRANSACTIONS,
   TokenTransactionUtils,
-} from 'utils/token-transaction.utils';
+} from 'utils/tokenTransaction.utils';
 import {TokenHistoryItemComponent} from './TokenHistoryItem';
 
 export type TokenHistoryProps = {
   tokenBalance: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.JSX.Element;
   currency: string;
   theme: Theme;
 };
@@ -48,7 +48,7 @@ const TokensHistory = ({
   >([]);
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<TokenTransaction>>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -155,7 +155,7 @@ const TokensHistory = ({
   const styles = getStyles(theme);
 
   const renderTokenHistoryItem = useCallback(
-    ({item}) => (
+    ({item}: {item: TokenTransaction}) => (
       <TokenHistoryItemComponent
         theme={theme}
         transaction={item}

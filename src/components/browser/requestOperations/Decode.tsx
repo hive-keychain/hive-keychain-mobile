@@ -2,13 +2,13 @@ import {Account, KeyTypes} from 'actions/interfaces';
 import {decodeMemo} from 'components/bridge';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {urlTransformer} from 'utils/browser';
 import {
   RequestDecode,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {urlTransformer} from 'utils/browser.utils';
 import {translate} from 'utils/localize';
 import RequestOperation, {
   processOperationWithoutConfirmation,

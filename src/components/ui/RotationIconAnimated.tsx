@@ -2,7 +2,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {Animated, Easing, StyleSheet} from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 
 interface Props {
   theme: Theme;

@@ -1,11 +1,11 @@
-import BgSquares from 'assets/new_UI/background_squares.svg';
-import IndicatorActive from 'assets/new_UI/circle_indicator_active.svg';
-import IndicatorInactive from 'assets/new_UI/circle_indicator_inactive.svg';
-import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_light.svg';
-import HandImage from 'assets/new_UI/hand_1.svg';
-import HiveImageSignupDark from 'assets/new_UI/hive_logo_signup_dark.svg';
-import HiveImageSignupLight from 'assets/new_UI/hive_logo_signup_light.svg';
-import PersonImage from 'assets/new_UI/person_1.svg';
+import BgSquares from 'assets/images/background/background_squares.svg';
+import IndicatorActive from 'assets/images/carousel/circle_indicator_active.svg';
+import IndicatorInactive from 'assets/images/carousel/circle_indicator_inactive.svg';
+import IndicatorInactiveLight from 'assets/images/carousel/circle_indicator_inactive_light.svg';
+import HandImage from 'assets/images/intro/hand_1.svg';
+import HiveImageSignupDark from 'assets/images/intro/hive_logo_signup_dark.svg';
+import HiveImageSignupLight from 'assets/images/intro/hive_logo_signup_light.svg';
+import PersonImage from 'assets/images/intro/person_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {
   NEUTRAL_WHITE_COLOR,
@@ -35,13 +36,12 @@ import {
   headlines_primary_headline_2,
   title_primary_title_1,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const INTRO_STEPS = 3;
 
 const Introduction = ({navigation}: IntroductionNavProp) => {
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<ScrollView>(null);
   const {height, width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(
@@ -108,21 +108,22 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
 
   const drawPageIndicators = (currentIndex: number) => {
     const createCircleAddKey = (index: number, active?: boolean) => {
-      const key = `${index}-circle-${Math.random().toFixed(5).toString()}`;
+      const circleKey = `${index}-circle-${Math.random()
+        .toFixed(5)
+        .toString()}`;
       const indicatorProps = {
-        key: key,
         style: {marginRight: 6},
         ...styles.indicatorCircle,
       };
       return active ? (
-        <IndicatorActive {...indicatorProps} />
+        <IndicatorActive key={circleKey} {...indicatorProps} />
       ) : theme === Theme.LIGHT ? (
-        <IndicatorInactiveLight {...indicatorProps} />
+        <IndicatorInactiveLight key={circleKey} {...indicatorProps} />
       ) : (
-        <IndicatorInactive {...indicatorProps} />
+        <IndicatorInactive key={circleKey} {...indicatorProps} />
       );
     };
-    const circleArray: JSX.Element[] = [];
+    const circleArray: React.ReactNode[] = [];
     for (let i = 0; i < INTRO_STEPS; i++) {
       circleArray.push(createCircleAddKey(i, currentIndex === i));
     }
@@ -134,7 +135,10 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     );
   };
 
-  const renderCustomLayout = (pageIndex: number, textElements: JSX.Element) => {
+  const renderCustomLayout = (
+    pageIndex: number,
+    textElements: React.ReactNode,
+  ) => {
     return (
       <View style={[styles.layoutContainer]}>
         <View style={[styles.layoutTopContainer]}>

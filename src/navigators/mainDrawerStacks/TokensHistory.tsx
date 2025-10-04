@@ -1,10 +1,8 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
 import {TokensHistoryComponent} from 'components/history/hive-engine/TokensHistory';
 import Icon from 'components/hive/Icon';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import BackNavigationButton from 'components/ui/BackNavigationButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import {
   RootStackParam,
@@ -14,13 +12,14 @@ import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
+import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -31,13 +30,16 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const styles = getStyles(theme, useSafeAreaInsets(), width);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      id={undefined}
+      screenOptions={buildIOSHorizontalStackOptions(
+        getColors(theme).primaryBackground,
+      )}>
       <Stack.Screen
         name="TokensHistory"
-        component={() => <TokensHistoryComponent {...route.params} />}
+        children={() => <TokensHistoryComponent {...route.params} />}
         options={() => ({
           headerStyle: styles.header,
-          animationEnabled: false,
           headerTitleAlign: 'center',
           headerTitle: () => (
             <NavigatorTitle
@@ -47,7 +49,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
           ),
           headerRight: () => (
             <Icon
-              name={Icons.SETTINGS_4}
+              name={Icons.FILTERS}
               theme={theme}
               onPress={() =>
                 navigation.navigate('ModalScreen', {
@@ -67,11 +69,10 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
                   renderButtonElement: (
                     <View style={styles.overlayButtonElement}>
                       <Icon
-                        name={Icons.SETTINGS_4}
+                        name={Icons.FILTERS}
                         theme={theme}
                         additionalContainerStyle={styles.iconButton}
                       />
-                      <Icon theme={theme} name={Icons.CARRET_UP} />
                     </View>
                   ),
                 })
@@ -83,12 +84,9 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
             backgroundColor: getColors(theme).primaryBackground,
           },
           headerLeft: () => (
-            <CustomIconButton
+            <BackNavigationButton
               theme={theme}
               onPress={() => navigation.goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
-              additionalContainerStyle={styles.marginLeft}
             />
           ),
         })}
@@ -104,7 +102,7 @@ const getStyles = (
 ) =>
   StyleSheet.create({
     wrapperFixed: {
-      top: 55,
+      top: 55 + insets.top,
       bottom: undefined,
       left: undefined,
       right: 10,
@@ -115,6 +113,7 @@ const getStyles = (
       width: 'auto',
       backgroundColor: 'none',
       borderWidth: 0,
+      borderRadius: 53,
     },
     overlayButtonElement: {
       position: 'absolute',

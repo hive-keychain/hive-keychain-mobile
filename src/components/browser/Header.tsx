@@ -9,6 +9,7 @@ import {
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import {Image} from 'expo-image';
 import React from 'react';
 import {
   StyleSheet,
@@ -17,12 +18,12 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getInputContainerHeight} from 'src/styles/input';
@@ -32,13 +33,12 @@ import {
   button_link_primary_small,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {urlTransformer} from 'utils/browser';
-import {Dimensions} from 'utils/common.types';
-import {BrowserConfig} from 'utils/config';
+import {urlTransformer} from 'utils/browser.utils';
+import {BrowserConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 
-const HEART_PNG = require('assets/new_UI/heart.png');
-const HEART_EMPTY_PNG = require('assets/new_UI/heart-empty.png');
+const HEART_PNG = require('assets/images/browser/heart.png');
+const HEART_EMPTY_PNG = require('assets/images/browser/heart-empty.png');
 
 type Props = {
   browser: Browser;
@@ -95,7 +95,7 @@ const BrowserHeader = ({
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
-          <FastImage source={HEART_PNG} style={styles.icons} />
+          <Image source={HEART_PNG} style={styles.icons} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -104,7 +104,7 @@ const BrowserHeader = ({
           onPress={() => {
             addToFavorites(active);
           }}>
-          <FastImage source={HEART_EMPTY_PNG} style={styles.icons} />
+          <Image source={HEART_EMPTY_PNG} style={styles.icons} />
         </TouchableOpacity>
       );
     };

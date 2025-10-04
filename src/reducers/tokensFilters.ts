@@ -1,7 +1,7 @@
 import {ActionPayload} from 'actions/interfaces';
 import {CLEAR_TOKENS_FILTERS, UPDATE_TOKENS_FILTER} from 'actions/types';
 import {persistReducer} from 'redux-persist';
-import {TokenHistoryFilter} from 'src/types/tokens.history.types';
+import {TokenHistoryFilter} from 'src/interfaces/tokensHistory.interface';
 import {persistConfig} from './configs';
 
 export enum HiveEngineFilterTypes {

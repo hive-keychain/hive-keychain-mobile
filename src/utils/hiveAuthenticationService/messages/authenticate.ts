@@ -1,9 +1,9 @@
 import {removeHASSession} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
-import Crypto from 'crypto-js';
+import Crypto from 'crypto-es';
+import {ModalComponent} from 'src/enums/modal.enum';
 import {store} from 'store';
-import {ModalComponent} from 'utils/modal.enum';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import HAS from '..';
 import {answerAuthReq, sendAuth} from '../helpers/auth';
 import {HAS_AuthDecrypted, HAS_AuthPayload} from '../payloads.types';

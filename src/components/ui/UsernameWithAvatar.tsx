@@ -1,3 +1,4 @@
+import {Image, ImageStyle} from 'expo-image';
 import React from 'react';
 import {
   StyleProp,
@@ -7,7 +8,6 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import Image, {ImageStyle} from 'react-native-fast-image';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
@@ -55,8 +55,7 @@ export default ({
                     username.split(' ')[0]
                   }/avatar`,
                 }}
-                resizeMode={Image.resizeMode.contain}
-                fallback
+                contentFit="contain"
               />
               <Text
                 style={[
@@ -86,8 +85,7 @@ export default ({
                     username.split(' ')[0]
                   }/avatar`,
                 }}
-                resizeMode={Image.resizeMode.contain}
-                fallback
+                contentFit="contain"
               />
             </>
           )}

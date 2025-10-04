@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {InputProps} from 'react-native-elements';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {AutoCompleteValuesType} from 'src/interfaces/autocomplete.interface';
 import {getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';

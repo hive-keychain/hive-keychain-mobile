@@ -12,8 +12,8 @@ import {
 interface Props {
   currentValue: any;
   onValueChange?: (value: any) => void;
-  iconLeftSide: JSX.Element;
-  iconRightSide: JSX.Element;
+  iconLeftSide: React.JSX.Element;
+  iconRightSide: React.JSX.Element;
   valueLeft: any;
   valueRight: any;
   additionalContainerStyle?: StyleProp<ViewStyle>;

@@ -7,9 +7,9 @@ import {useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
-import {formatBalance} from 'utils/format';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
-import {navigate} from 'utils/navigation';
+import {formatBalance} from 'utils/format.utils';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
+import {navigate} from 'utils/navigation.utils';
 import CurrencyIcon from './CurrencyIcon';
 import TokenDisplay from './TokenDisplay';
 

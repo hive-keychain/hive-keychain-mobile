@@ -1,10 +1,10 @@
-import Clipboard from '@react-native-community/clipboard';
 import {Account, KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import AddKey from 'components/modals/AddKey';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import CustomToolTip from 'components/ui/CustomToolTip';
 import Separator from 'components/ui/Separator';
+import * as Clipboard from 'expo-clipboard';
 import {FormatUtils} from 'hive-keychain-commons';
 import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
@@ -18,9 +18,9 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {
   BLACK_OVERLAY_TRANSPARENT,
   PRIMARY_RED_COLOR,
@@ -217,7 +217,7 @@ const CopyKey = ({
   isAuthorizedAccount,
 }: {
   wif: string;
-  children: JSX.Element;
+  children: React.ReactNode;
   isAuthorizedAccount?: boolean;
 }) => {
   return isAuthorizedAccount ? (
@@ -226,7 +226,7 @@ const CopyKey = ({
     <TouchableOpacity
       activeOpacity={1}
       onLongPress={() => {
-        Clipboard.setString(wif);
+        Clipboard.setStringAsync(wif);
         Toast.show(translate('toast.keys.copied'));
       }}>
       {children}
@@ -238,7 +238,7 @@ const ViewKey = ({toggle, isPKShown, theme}: ViewKeyProps) => {
   return (
     <TouchableOpacity activeOpacity={1} onPress={toggle}>
       <Icon
-        name={isPKShown ? Icons.NOT_SEE : Icons.SEE}
+        name={isPKShown ? Icons.EYE_CROSSED : Icons.EYE}
         theme={theme}
         color={PRIMARY_RED_COLOR}
       />

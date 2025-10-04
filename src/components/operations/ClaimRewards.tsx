@@ -5,15 +5,15 @@ import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
-import {toHP} from 'utils/format';
-import {claimRewards} from 'utils/hive';
+import {toHP} from 'utils/format.utils';
+import {claimRewards} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 
 interface Props {
@@ -40,10 +40,9 @@ const ClaimRewards = ({
         style={styles.touchable}
         onPress={async () => {
           if (!keys.posting) {
-            SimpleToast.show(
-              translate('wallet.claim.error_posting'),
-              SimpleToast.LONG,
-            );
+            SimpleToast.show(translate('wallet.claim.error_posting'), {
+              duration: SimpleToast.durations.LONG,
+            });
             return;
           }
           try {
@@ -73,15 +72,16 @@ const ClaimRewards = ({
               else str = rewards[0];
               SimpleToast.show(
                 translate('wallet.claim.success', {rewards: str}),
-                SimpleToast.LONG,
+                {
+                  duration: SimpleToast.durations.LONG,
+                },
               );
               loadAccount(name);
             }
           } catch (e) {
-            SimpleToast.show(
-              translate('common.error', {msg: e}),
-              SimpleToast.LONG,
-            );
+            SimpleToast.show(translate('common.error', {msg: e}), {
+              duration: SimpleToast.durations.LONG,
+            });
           }
         }}>
         <Icon

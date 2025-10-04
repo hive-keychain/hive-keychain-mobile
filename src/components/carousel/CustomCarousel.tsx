@@ -1,6 +1,6 @@
-import IndicatorActive from 'assets/new_UI/circle_indicator_active.svg';
-import IndicatorInactive from 'assets/new_UI/circle_indicator_inactive.svg';
-import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_light.svg';
+import IndicatorActive from 'assets/images/carousel/circle_indicator_active.svg';
+import IndicatorInactive from 'assets/images/carousel/circle_indicator_inactive.svg';
+import IndicatorInactiveLight from 'assets/images/carousel/circle_indicator_inactive_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
@@ -87,7 +87,7 @@ const Carousel = ({
         <IndicatorInactive {...indicatorProps} />
       );
     };
-    const circleArray: JSX.Element[] = [];
+    const circleArray: React.JSX.Element[] = [];
     for (let i = 0; i < length; i++) {
       circleArray.push(createCircleAddKey(i, currentIndex === i));
     }

@@ -1,4 +1,4 @@
-import keychain from 'api/keychain';
+import keychain from 'api/keychain.api';
 import {dAppCategory} from 'components/browser/HomeTab/Explore';
 
 const getDappList = async (chain: string): Promise<dAppCategory[]> => {

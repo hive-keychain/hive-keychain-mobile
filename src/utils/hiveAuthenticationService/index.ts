@@ -3,12 +3,12 @@ import {
   showHASInitRequestAsTreated,
   updateInstanceConnectionStatus,
 } from 'actions/hiveAuthenticationService';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
+import {ModalComponent} from 'src/enums/modal.enum';
 import {RootState, store} from 'store';
 import {translate} from 'utils/localize';
-import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {HAS_Session} from './has.types';
 import {answerAuthReq} from './helpers/auth';
 import {prepareRegistrationChallenge} from './helpers/challenge';
@@ -173,7 +173,9 @@ class HAS {
       app: 'Hive Keychain',
       accounts,
     };
-    SimpleToast.show(translate('wallet.has.toast.register'), SimpleToast.SHORT);
+    SimpleToast.show(translate('wallet.has.toast.register'), {
+      duration: SimpleToast.durations.SHORT,
+    });
     this.send(JSON.stringify(request));
   };
 
@@ -189,9 +191,10 @@ class HAS {
   // Keys
 
   getServerKey = () => {
-    return (store.getState() as RootState).hive_authentication_service.instances.find(
-      (e) => e.host === this.host,
-    )?.server_key;
+    return (
+      store.getState() as RootState
+    ).hive_authentication_service.instances.find((e) => e.host === this.host)
+      ?.server_key;
   };
 }
 

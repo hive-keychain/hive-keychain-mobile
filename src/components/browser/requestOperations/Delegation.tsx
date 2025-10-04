@@ -3,12 +3,12 @@ import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {RequestDelegation, RequestId} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RootState} from 'store';
-import {beautifyTransferError, fromHP} from 'utils/format';
-import {delegate} from 'utils/hive';
-import {sanitizeAmount} from 'utils/hiveUtils';
-import {RequestDelegation, RequestId} from 'utils/keychain.types';
+import {beautifyTransferError, fromHP} from 'utils/format.utils';
+import {sanitizeAmount} from 'utils/hive.utils';
+import {delegate} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
@@ -28,11 +28,8 @@ const Delegation = ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {delegatee, unit, amount} = data;
-  const {
-    getUsername,
-    getAccountKey,
-    RequestUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
+  const {getUsername, getAccountKey, RequestUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
   console.log(request);
   const successMessage = translate(
     `request.success.${parseFloat(amount) === 0 ? 'undelegate' : 'delegate'}`,

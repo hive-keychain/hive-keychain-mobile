@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ActiveAccount} from 'actions/interfaces';
 import {DropdownModalItem} from 'components/form/DropdownModal';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Token} from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {ClaimsConfig} from './config';
+import {ClaimsConfig} from './config.utils';
 
 const getClaims = async (username: string) => {
   const values: {[key: string]: any} = {};

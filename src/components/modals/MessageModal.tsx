@@ -13,8 +13,8 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {getButtonHeight} from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
@@ -26,7 +26,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 const DEFAULTHIDETIMEMS = 3000;
 interface Props {
@@ -98,7 +98,7 @@ const Message = ({
               <TouchableOpacity
                 onPress={() => {
                   addTab(`https://hivehub.dev/tx/${messageModal.params.txId}`);
-                  navigate('BrowserScreen');
+                  navigate('Browser');
                   resetModal();
                 }}>
                 <Text

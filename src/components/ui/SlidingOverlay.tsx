@@ -24,6 +24,7 @@ type Props = {
   title: string;
   maxHeightPercent?: number;
   minHeightPercent?: number;
+  onDismiss?: () => void;
 };
 
 const SafeSlidingOverlay = ({
@@ -33,10 +34,12 @@ const SafeSlidingOverlay = ({
   title,
   maxHeightPercent = 0.6,
   minHeightPercent = 0.4,
+  onDismiss,
 }: Props) => {
   const {theme} = useThemeContext();
   const {height, width} = useWindowDimensions();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [shouldRenderContent, setShouldRenderContent] = useState(showOverlay);
 
   useEffect(() => {
     const showSub = Keyboard.addListener('keyboardDidShow', (e) => {
@@ -51,12 +54,24 @@ const SafeSlidingOverlay = ({
     };
   }, []);
 
+  // When opening, render content immediately to avoid layout jank
+  // When closing, wait for exit animation to finish before unmounting children
+  useEffect(() => {
+    if (showOverlay) {
+      setShouldRenderContent(true);
+    } else {
+      const timeout = setTimeout(() => setShouldRenderContent(false), 250);
+      return () => clearTimeout(timeout);
+    }
+  }, [showOverlay]);
+
   return (
     <Modal
-      animationType="fade"
+      animationType="none"
       transparent
       visible={showOverlay}
-      onRequestClose={() => setShowOverlay(false)}>
+      onRequestClose={() => setShowOverlay(false)}
+      onDismiss={onDismiss}>
       <TouchableWithoutFeedback onPress={() => setShowOverlay(false)}>
         <View style={styles.backdrop} />
       </TouchableWithoutFeedback>
@@ -74,10 +89,15 @@ const SafeSlidingOverlay = ({
             borderColor: getColors(theme).quaternaryCardBorderColor,
           },
         ]}>
-        <Text style={[styles.title, inputStyle(theme, width).label]}>
+        <Text
+          style={[
+            styles.title,
+            inputStyle(theme, width).label,
+            {fontSize: 18},
+          ]}>
           {translate(title)}
         </Text>
-        {children}
+        {shouldRenderContent ? children : null}
       </AnimatedView>
     </Modal>
   );

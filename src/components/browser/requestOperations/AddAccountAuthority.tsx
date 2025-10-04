@@ -1,10 +1,13 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
+import {
+  RequestAddAccountAuthority,
+  RequestId,
+} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {addAccountAuth} from 'utils/hive';
-import {beautifyErrorMessage} from 'utils/keychain';
-import {RequestAddAccountAuthority, RequestId} from 'utils/keychain.types';
+import {addAccountAuth} from 'utils/hiveLibs.utils';
+import {beautifyErrorMessage} from 'utils/keychain.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';

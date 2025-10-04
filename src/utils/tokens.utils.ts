@@ -1,5 +1,5 @@
 import {TokenBalance, TokenTransaction} from 'actions/interfaces';
-import {HiveEngineApi} from 'api/hiveEngine';
+import {HiveEngineApi} from 'api/hiveEngine.api';
 import {ReceiveTransferProps} from 'navigators/Root.types';
 import {Token, TokenMarket} from 'src/interfaces/tokens.interface';
 

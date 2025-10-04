@@ -4,8 +4,8 @@ import {
   ExtendedAccount,
 } from '@hiveio/dhive';
 import {Account, AccountKeys, ActiveAccount, RC} from 'actions/interfaces';
-import {ClaimsConfig} from './config';
-import {broadcast, getClient, getData} from './hive';
+import {ClaimsConfig} from './config.utils';
+import {broadcast, getClient, getData} from './hiveLibs.utils';
 import {KeyUtils} from './key.utils';
 import {translate} from './localize';
 
@@ -27,7 +27,9 @@ const addAuthorizedAccount = async (
     if (simpleToast) {
       simpleToast.show(
         translate('toast.account_already', {account: username}),
-        simpleToast.LONG,
+        {
+          duration: simpleToast.durations.LONG,
+        },
       );
       return;
     }
@@ -50,7 +52,9 @@ const addAuthorizedAccount = async (
 
   if (!hiveAccounts || hiveAccounts.length === 0) {
     if (simpleToast) {
-      simpleToast.show(translate('toast.incorrect_user'), simpleToast.LONG);
+      simpleToast.show(translate('toast.incorrect_user'), {
+        duration: simpleToast.durations.LONG,
+      });
       return;
     }
     throw new Error(translate('toast.incorrect_user'));

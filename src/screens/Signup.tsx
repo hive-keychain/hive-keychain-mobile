@@ -18,6 +18,7 @@ const Signup = ({signUp, navigation}: Props) => {
   const onSubmitSignup = (pwd: string) => {
     signUp(pwd);
   };
+
   return (
     <Background
       theme={theme}

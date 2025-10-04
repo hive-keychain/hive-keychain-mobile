@@ -2,21 +2,22 @@ import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
+import {Image} from 'expo-image';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
+
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {KeychainKeyTypesLC} from 'src/interfaces/keychain.interface';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {body_primary_body_3, FontPoppinsName} from 'src/styles/typography';
 import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_Session} from 'utils/hiveAuthenticationService/has.types';
 import {HAS_ChallengePayload} from 'utils/hiveAuthenticationService/payloads.types';
-import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-const LOGO_LIGHT = require('assets/has/logo-light.png');
+const LOGO_LIGHT = require('assets/images/has/logo-light.png');
 
 type Props = PropsFromRedux & {
   data: HAS_ChallengePayload & {
@@ -72,7 +73,7 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
   return (
     <Operation
       additionalContentStyle={{flexGrow: 1}}
-      logo={<FastImage source={LOGO_LIGHT} style={{width: 30, height: 30}} />}
+      logo={<Image source={LOGO_LIGHT} style={{width: 30, height: 30}} />}
       title={translate('request.title.decode')}
       additionalHeaderTitleStyle={[styles.text, styles.title]}
       additionalHeaderContainerStyle={{padding: 12}}
@@ -80,10 +81,6 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
       <SafeArea style={styles.container} skipTop skipBottom>
         <View style={{flexGrow: 1}}>
           <Separator height={30} />
-          <Text style={[styles.text, styles.uuid]}>
-            {translate('wallet.has.uuid', data)}
-          </Text>
-          <Separator />
           <Text style={styles.text}>{showText()}</Text>
           {accounts.find((e) => e.name === data.account) ? null : (
             <>

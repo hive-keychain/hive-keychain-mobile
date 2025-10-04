@@ -2,14 +2,14 @@ import {Account, KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {broadcastJson} from 'utils/hive';
 import {
   RequestCustomJSON,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'src/interfaces/keychain.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {broadcastJson} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation, {
   processOperationWithoutConfirmation,
@@ -28,11 +28,8 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {display_msg, id, json, method} = data;
-  const {
-    getUsername,
-    getAccountKey,
-    RequestUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
+  const {getUsername, getAccountKey, RequestUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
 
   return (
     <RequestOperation

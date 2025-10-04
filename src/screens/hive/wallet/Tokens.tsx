@@ -21,9 +21,9 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
@@ -32,11 +32,11 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {logScreenView} from 'utils/analytics';
-import {hiveEngineWebsiteURL} from 'utils/config';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
+import {logScreenView} from 'utils/analytics.utils';
+import {hiveEngineWebsiteURL} from 'utils/config.utils';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 
 interface TokensProps {}
 /**Note: Currently component not being called or used. */
@@ -50,10 +50,8 @@ const Tokens = ({
   prices,
   tokensMarket,
 }: PropsFromRedux & TokensProps) => {
-  const [
-    filteredUserTokenBalanceList,
-    setFilteredUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
+  const [filteredUserTokenBalanceList, setFilteredUserTokenBalanceList] =
+    useState<TokenBalance[]>([]);
   const [search, setSearch] = useState<string>('');
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
 
@@ -119,7 +117,7 @@ const Tokens = ({
   const styles = getStyles(theme, useWindowDimensions());
 
   const renderEngineTokenDisplay = useCallback(
-    ({item}) => (
+    ({item}: {item: TokenBalance}) => (
       <EngineTokenDisplay
         token={item}
         tokensList={tokens}
@@ -190,7 +188,7 @@ const Tokens = ({
             additionalContainerStyle={styles.searchBar}
           />
           <Icon
-            name={Icons.SETTINGS_2}
+            name={Icons.SETTINGS_WHEEL}
             theme={theme}
             onPress={() => navigate('TokenSettings')}
             additionalContainerStyle={styles.iconButton}

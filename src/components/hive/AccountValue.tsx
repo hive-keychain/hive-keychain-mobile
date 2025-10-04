@@ -6,6 +6,7 @@ import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
@@ -13,9 +14,8 @@ import {
   headerH2Primary,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {withCommas} from 'utils/format';
-import {getAccountValue} from 'utils/price';
+import {withCommas} from 'utils/format.utils';
+import {getAccountValue} from 'utils/price.utils';
 
 type Props = {
   prices: CurrencyPrices;

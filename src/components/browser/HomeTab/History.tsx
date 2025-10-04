@@ -37,7 +37,7 @@ export default ({
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme, insets);
   const renderHistoryItem = useCallback(
-    ({item, index}) => (
+    ({item, index}: {item: Page; index: number}) => (
       <HistoryItem
         data={item}
         key={item.url}

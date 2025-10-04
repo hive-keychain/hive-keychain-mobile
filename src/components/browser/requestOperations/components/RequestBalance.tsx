@@ -4,17 +4,17 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Icon from 'src/components/hive/Icon';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {formatBalance} from 'utils/format';
-import {getCurrency} from 'utils/hive';
-import {getAccount} from 'utils/hiveUtils';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
+import {formatBalance} from 'utils/format.utils';
+import {getAccount} from 'utils/hive.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
 
 type Props = {
   username: string;
@@ -106,7 +106,7 @@ export default ({username, startToken, amount, accounts}: Props) => {
                 {`${balance} ${startToken}`}
               </Text>
               <Icon
-                name={Icons.ARROW_RIGHT_BROWSER}
+                name={Icons.ARROW_RIGHT}
                 additionalContainerStyle={styles.arrowIcon}
                 width={20}
                 height={20}

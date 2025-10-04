@@ -1,4 +1,4 @@
-import Hive from 'assets/wallet/icon_hive.svg';
+import Hive from 'assets/images/hive/icon_hive.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import {ModalNavigation} from 'navigators/Root.types';

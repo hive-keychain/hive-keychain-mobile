@@ -15,7 +15,7 @@ import {getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {title_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Colors} from 'utils/colors';
+import {Colors} from 'utils/colors.utils';
 import {translate} from 'utils/localize';
 
 type Props = {

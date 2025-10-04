@@ -2,13 +2,13 @@ import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Height} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
   button_link_primary_small,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {Height} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 export default () => {

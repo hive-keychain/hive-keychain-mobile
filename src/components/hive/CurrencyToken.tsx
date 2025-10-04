@@ -10,10 +10,11 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
-import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
-import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
+import {Icons} from 'src/enums/icons.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
+import {getHBDButtonList} from 'src/lists/hbdOperationButton.list';
+import {getHiveButtonList} from 'src/lists/hiveOperationButton.list';
+import {getHPButtonList} from 'src/lists/hpOperationButton.list';
 import {getCardStyle} from 'src/styles/card';
 import {GREEN_SUCCESS, PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
@@ -23,10 +24,9 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {formatBalance, toHP} from 'utils/format';
+import {formatBalance, toHP} from 'utils/format.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation.utils';
 import {WalletHistoryComponentProps} from '../history/WalletHistoryComponent';
 import CurrencyIcon from './CurrencyIcon';
 import Icon from './Icon';
@@ -69,7 +69,7 @@ const CurrencyToken = ({
         return getHPButtonList(theme, user.name!);
     }
   };
-  const [buttons, setButtons] = useState<JSX.Element[]>(
+  const [buttons, setButtons] = useState<React.JSX.Element[]>(
     getButtons(currencyName),
   );
 
@@ -177,7 +177,7 @@ const CurrencyToken = ({
                 transform: !isPositive ? [{rotate: '180deg'}] : undefined,
               }}>
               <Icon
-                name={Icons.CARRET_UP}
+                name={Icons.CARET_UP}
                 color={isPositive ? GREEN_SUCCESS : PRIMARY_RED_COLOR}
                 height={10}
               />
@@ -225,7 +225,7 @@ const CurrencyToken = ({
             {isExpanded && (
               <Icon
                 key={`show-token-history-${currencyName}`}
-                name={Icons.BACK_TIME}
+                name={Icons.HISTORY}
                 onPress={onHandleGoToWalletHistory}
                 additionalContainerStyle={styles.squareButton}
                 theme={theme}

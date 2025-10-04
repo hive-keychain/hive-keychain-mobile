@@ -4,9 +4,10 @@ import EllipticButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -15,14 +16,13 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
+import {VestingRoutesUtils} from 'utils/vestingRoutes.utils';
 import {
   AccountVestingRoutesDifferences,
   VestingRoute,
   VestingRouteDifference,
-} from './vesting-routes.interface';
+} from './vestingRoutes.interface';
 
 interface Props {
   accountVestingRouteDifference: AccountVestingRoutesDifferences;
@@ -98,7 +98,9 @@ const VestingRoutesItem = ({
     if (!isLast) return nextCarouselSlide();
     SimpleToast.show(
       translate('popup.vesting_routes.toast.handled_successfully'),
-      SimpleToast.LONG,
+      {
+        duration: SimpleToast.durations.LONG,
+      },
     );
     clearDisplayWrongVestingRoutes();
   };

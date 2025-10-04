@@ -9,8 +9,8 @@ import React, {memo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -20,17 +20,17 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {withCommas} from 'utils/format';
-import {cancelDelegateToken} from 'utils/hive';
-import {TokenDelegation} from 'utils/hiveEngine';
+import {withCommas} from 'utils/format.utils';
+import {TokenDelegation} from 'utils/hiveEngine.utils';
+import {cancelDelegateToken} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation.utils';
 import {TokenDelegationType} from './IncomingOutGoingTokenDelegations';
 
 type Props = {
   tokenDelegation: TokenDelegation;
   delegationType: TokenDelegationType;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
   token: TokenBalance;
   tokenInfo: Token;
   theme: Theme;
@@ -123,7 +123,7 @@ const IncomingOutGoingTokenDelegationItem = ({
                 {withCommas(tokenDelegation.quantity)} {tokenDelegation.symbol}
               </Text>
               <Icon
-                name={Icons.EXPAND_THIN}
+                name={Icons.EXPAND}
                 theme={theme}
                 additionalContainerStyle={[
                   styles.marginLeft,
@@ -149,7 +149,7 @@ const IncomingOutGoingTokenDelegationItem = ({
                       setShowCancelConfirmationDelegation(true);
                     }}>
                     <Icon
-                      name={Icons.GIFT_DELETE}
+                      name={Icons.REMOVE}
                       theme={theme}
                       {...styles.icon}
                       color={PRIMARY_RED_COLOR}

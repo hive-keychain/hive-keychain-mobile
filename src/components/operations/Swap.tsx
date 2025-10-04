@@ -1,7 +1,7 @@
 import {loadTokensMarket} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
-import ErrorSvg from 'assets/new_UI/error-mark.svg';
+import ErrorSvg from 'assets/images/common-ui/error.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import CurrencyIcon from 'components/hive/CurrencyIcon';
@@ -15,6 +15,7 @@ import {IStep} from 'hive-keychain-commons';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import {ThrottleSettings, throttle} from 'lodash';
 // import {TemplateStackProps} from 'navigators/Root.types';
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
@@ -23,13 +24,15 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Icons} from 'src/enums/icons.enum';
+import {MessageModalType} from 'src/enums/messageModal.enum';
+import {ModalComponent} from 'src/enums/modal.enum';
+import {Dimensions} from 'src/interfaces/common.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {SwapConfig} from 'src/interfaces/swap-token.interface';
+import {SwapConfig} from 'src/interfaces/swapTokens.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {
   BACKGROUNDDARKBLUE,
@@ -48,14 +51,12 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {SwapsConfig} from 'utils/config';
-import {capitalize, withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
+import {SwapsConfig} from 'utils/config.utils';
+import {capitalize, withCommas} from 'utils/format.utils';
+import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
-import {ModalComponent} from 'utils/modal.enum';
-import {goBackAndNavigate, navigate} from 'utils/navigation';
-import {SwapTokenUtils} from 'utils/swap-token.utils';
+import {goBackAndNavigate, navigate} from 'utils/navigation.utils';
+import {SwapTokenUtils} from 'utils/swapToken.utils';
 import {
   getAllTokens,
   getHiveEngineTokenPrice,
@@ -86,6 +87,7 @@ const Swap = ({
   tokens,
 }: PropsFromRedux & Props) => {
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation<any>();
   const [loadingSwap, setLoadingSwap] = useState(false);
   const [loadingConfirmationSwap, setLoadingConfirmationSwap] = useState(false);
   const [layerTwoDelayed, setLayerTwoDelayed] = useState(false);
@@ -138,7 +140,9 @@ const Swap = ({
         setLayerTwoDelayed(true);
         SimpleToast.show(
           translate('wallet.operations.swap.swap_layer_two_delayed'),
-          SimpleToast.LONG,
+          {
+            duration: SimpleToast.durations.LONG,
+          },
         );
       }
       setSlippage(config.slippage.default);
@@ -164,13 +168,13 @@ const Swap = ({
         img =
           tokenInfo.metadata.icon && tokenInfo.metadata.icon.length > 0
             ? tokenInfo.metadata.icon
-            : 'src/assets/new_UI/hive-currency-logo.svg';
-        imgBackup = 'src/assets/new_UI/hive-engine.svg';
+            : 'src/assets/images/hive/hive.svg';
+        imgBackup = 'src/assets/images/hive/hive-engine.svg';
       } else {
         img =
           token.symbol === getCurrency('HIVE')
-            ? 'src/assets/new_UI/hive-currency-logo.svg'
-            : 'src/assets/new_UI/hbd-currency-logo.svg';
+            ? 'src/assets/images/hive/hive.svg'
+            : 'src/assets/images/hive/hbd.svg';
       }
       return {
         value: token,
@@ -236,7 +240,9 @@ const Swap = ({
         translate(
           'wallet.operations.swap.swap_start_end_token_should_be_different',
         ),
-        SimpleToast.LONG,
+        {
+          duration: SimpleToast.durations.LONG,
+        },
       );
       return;
     }
@@ -274,7 +280,9 @@ const Swap = ({
         translate(`wallet.operations.swap.${err.reason.template}`, {
           currently: Number(err.reason.params[0]).toFixed(3),
         }),
-        SimpleToast.LONG,
+        {
+          duration: SimpleToast.durations.LONG,
+        },
       );
     } finally {
       setLoadingEstimate(false);
@@ -365,7 +373,9 @@ const Swap = ({
         translate('wallet.operations.swap.swap_cannot_switch_tokens', {
           symbol: endToken.value.symbol,
         }),
-        SimpleToast.LONG,
+        {
+          duration: SimpleToast.durations.LONG,
+        },
       );
     }
   };
@@ -397,12 +407,16 @@ const Swap = ({
               translate('common.swap_error_sending_token', {
                 to: swapConfig.account,
               }),
-              SimpleToast.LONG,
+              {
+                duration: SimpleToast.durations.LONG,
+              },
             );
         }
       } catch (err) {
         console.log('Swap error', {err});
-        SimpleToast.show(err.message, SimpleToast.LONG);
+        SimpleToast.show(err.message, {
+          duration: SimpleToast.durations.LONG,
+        });
       } finally {
         setLoadingSwap(false);
       }
@@ -426,7 +440,9 @@ const Swap = ({
     if (!estimate) {
       SimpleToast.show(
         translate('wallet.operations.swap.swap_no_estimate_error'),
-        SimpleToast.LONG,
+        {
+          duration: SimpleToast.durations.LONG,
+        },
       );
       return;
     }
@@ -435,7 +451,9 @@ const Swap = ({
         translate('wallet.operations.swap.swap_min_slippage_error', {
           min: swapConfig.slippage.min.toString(),
         }),
-        SimpleToast.LONG,
+        {
+          duration: SimpleToast.durations.LONG,
+        },
       );
       return;
     }
@@ -444,15 +462,16 @@ const Swap = ({
         translate(
           'wallet.operations.swap.swap_start_end_token_should_be_different',
         ),
-        SimpleToast.LONG,
+        {
+          duration: SimpleToast.durations.LONG,
+        },
       );
       return;
     }
     if (!amount || amount.length === 0) {
-      SimpleToast.show(
-        translate('common.need_positive_amount'),
-        SimpleToast.LONG,
-      );
+      SimpleToast.show(translate('common.need_positive_amount'), {
+        duration: SimpleToast.durations.LONG,
+      });
       return;
     }
 
@@ -461,7 +480,9 @@ const Swap = ({
         translate('common.overdraw_balance_error', {
           currency: startToken?.label!,
         }),
-        SimpleToast.LONG,
+        {
+          duration: SimpleToast.durations.LONG,
+        },
       );
       return;
     }
@@ -481,7 +502,9 @@ const Swap = ({
     } catch (err) {
       SimpleToast.show(
         translate(`wallet.operations.swap.${err.reason.template}`),
-        SimpleToast.LONG,
+        {
+          duration: SimpleToast.durations.LONG,
+        },
       );
       return;
     } finally {
@@ -495,14 +518,16 @@ const Swap = ({
     const onHandleBackButton = async () =>
       await SwapTokenUtils.cancelSwap(estimateId);
 
-    navigate('SwapConfirm', {
+    navigation.navigate('SwapConfirm', {
       estimateId,
       slippage,
       amount,
       startToken: startToken.value,
       endToken: endToken.value,
+      estimateValue,
       processSwap,
     });
+    setDisableProcessButton(false);
   };
 
   const {width, height} = useWindowDimensions();
@@ -527,7 +552,7 @@ const Swap = ({
                 </Text>
                 <Icon
                   theme={theme}
-                  name={Icons.BACK_TIME}
+                  name={Icons.HISTORY}
                   additionalContainerStyle={[styles.squareButton]}
                   onPress={() => navigate('SwapHistory')}
                   color={PRIMARY_RED_COLOR}
@@ -636,7 +661,7 @@ const Swap = ({
               <Separator />
               <Icon
                 theme={theme}
-                name={Icons.REPEAT}
+                name={Icons.EXCHANGE_ARROW}
                 onPress={swapStartAndEnd}
                 additionalContainerStyle={styles.autoWidthCentered}
                 color={PRIMARY_RED_COLOR}
@@ -746,7 +771,7 @@ const Swap = ({
                 </Text>
                 <Icon
                   theme={theme}
-                  name={Icons.EXPAND_THIN}
+                  name={Icons.EXPAND}
                   {...styles.dropdownIcon}
                   additionalContainerStyle={
                     isAdvanceSettingOpen

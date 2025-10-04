@@ -1,14 +1,15 @@
-import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
+import CustomToolTip from 'components/ui/CustomToolTip';
+import * as Clipboard from 'expo-clipboard';
 import {ISwap, SwapStatus} from 'hive-keychain-commons';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Tooltip} from 'react-native-elements';
-import SimpleToast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {Icons} from 'src/enums/icons.enum';
 import {RootState} from 'store';
-import {withCommas} from 'utils/format';
+import {withCommas} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 interface Props {
@@ -19,11 +20,10 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const copyIdToCliplboard = (id: string) => {
-    Clipboard.setString(id.toString());
-    SimpleToast.show(
-      translate('swapTokens.swap_copied_to_clipboard'),
-      SimpleToast.LONG,
-    );
+    Clipboard.setStringAsync(id.toString());
+    SimpleToast.show(translate('swapTokens.swap_copied_to_clipboard'), {
+      duration: SimpleToast.durations.LONG,
+    });
   };
 
   const getStatusMessage = (
@@ -100,8 +100,8 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
           paddingVertical: 12,
         }}>
         <Icon
-          name={!isOpen ? 'expand_more' : 'expand_less'}
-          onClick={() => setIsOpen(!isOpen)}
+          name={!isOpen ? Icons.EXPAND_MORE : Icons.EXPAND_LESS}
+          onPress={() => setIsOpen(!isOpen)}
         />
         <View>
           <View
@@ -112,7 +112,7 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
             <Text>
               {swap.amount} {swap.startToken}
             </Text>
-            <Icon name={'power_up_down'} subType={'withdraw_vesting'} />
+            <Icon name={Icons.POWER_UP_DOWN} subType={'withdraw_vesting'} />
             <Text>
               {swap.status === SwapStatus.COMPLETED ? '' : <Text>~</Text>}
               {swap.received ??
@@ -124,16 +124,14 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
             </Text>
           </View>
         </View>
-        <Tooltip
-          containerStyle={{
-            minHeight: 100,
-          }}
+        <CustomToolTip
+          containerStyle={{minHeight: 100}}
           height={100}
-          popover={
-            <Text style={{textAlign: 'center'}}>{getTooltipMessage(swap)}</Text>
-          }>
-          <Icon name={getStatusIcon(swap.status)} />
-        </Tooltip>
+          width={260}
+          message={getTooltipMessage(swap)}
+          textStyle={{textAlign: 'center'}}>
+          <Icon name={getStatusIcon(swap.status) as Icons} />
+        </CustomToolTip>
       </View>
 
       {isOpen && (
@@ -169,7 +167,7 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
                       {step.endToken}
                     </Text>
                   </View>
-                  <Icon name={getStepIcon(step.status)} />
+                  <Icon name={getStepIcon(step.status) as Icons} />
                 </View>
               ))}
             {!!swap.fee && (
@@ -213,8 +211,8 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
                 }}>
                 <Text>{getShortenedId(swap.id)}</Text>
                 <Icon
-                  name={'content_copy'}
-                  onClick={() => copyIdToCliplboard(swap.id)}
+                  name={'content_copy' as Icons}
+                  onPress={() => copyIdToCliplboard(swap.id)}
                 />
               </View>
             </View>

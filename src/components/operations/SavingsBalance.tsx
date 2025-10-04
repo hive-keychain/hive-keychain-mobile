@@ -1,5 +1,5 @@
 import {ExtendedAccount} from '@hiveio/dhive';
-import Savings from 'assets/wallet/icon_savings.svg';
+import Savings from 'assets/images/wallet/icon_savings.svg';
 import React from 'react';
 import {
   StyleSheet,
@@ -8,8 +8,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {Width} from 'utils/common.types';
-import {formatBalance} from 'utils/format';
+import {Width} from 'src/interfaces/common.interface';
+import {formatBalance} from 'utils/format.utils';
 import {translate} from 'utils/localize';
 
 type Props = {
