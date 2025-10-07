@@ -1,0 +1,1236 @@
+{
+  "unlock": {
+    "enterPIN": "PIN eingeben",
+    "authenticate": "Authentifizieren"
+  },
+  "signup": {
+    "confirm": "PIN bestätigen",
+    "choose": "Wählen Sie Ihren PIN",
+    "first_account": "Los geht's! Erstellen Sie Ihr erstes Hive Konto oder importieren Sie ein bestehendes."
+  },
+  "intro": {
+    "intro_text_1": "Die ultimative HIVE Wallet!",
+    "intro_text_2": "Hive Assets verwalten und\nmit Hive Apps\nverbinden",
+    "text": "Hive unterstützt ein wachsendes Ökosystem von Web 3.0 Websites und Anwendungen.",
+    "manage": "Starten Sie jetzt mit Ihrem Hive Konto!",
+    "existingAccount": "Existierendes Konto",
+    "createAccount": "Neues Konto"
+  },
+  "createAccount": {
+    "caption": "Wählen Sie Ihre bevorzugte Methode zur Kontoerstellung.",
+    "on_boarding_title": "Auf hive.io erstellen",
+    "peer_to_peer_on_boarding_title": "Mit einem Freund erstellen"
+  },
+  "addAccountByKey": {
+    "text": "Fügen Sie Ihr vorhandenes HIVE Konto zu Keychain hinzu"
+  },
+  "addAccountByAuth": {
+    "text": "Fügen Sie das neue Konto hinzu, indem Sie ein Konto angeben, das über Autorität verfügt und das bereits in Hive Keychain gespeichert ist."
+  },
+  "addAccountByQR": {
+    "wrongQR": "Bitte scannen Sie einen Hive Keychain Account QR-Code"
+  },
+  "keys": {
+    "master_password": "Master Passwort",
+    "owner_key": "Owner Key",
+    "active_key": "Active Key",
+    "posting_key": "Posting Key",
+    "memo_key": "Memo Key",
+    "private": "Privat",
+    "owner": "Owner",
+    "public": "Öffentlich",
+    "posting": "Posting",
+    "active": "Active",
+    "memo": "Memo",
+    "key_type": "{{type}} Schlüssel",
+    "using_authorized_account": "Signiere mit {{authorizedAccount}}'s Konto",
+    "warning_private_key_in_memo": "Bitte senden Sie keine sentitiven Informationen über Ihre Schlüssel in einer Memo."
+  },
+  "common": {
+    "accounts": "Konten",
+    "started_a": "Startete ein",
+    "initiated_a": "Initiiert ein",
+    "dapp_title": "dApp",
+    "import": "Importieren",
+    "export": "Exportieren",
+    "value": "Wert",
+    "username": "Benutzername",
+    "authorized_username": "Auth. Konto",
+    "confirm_key_remove": "Bitte bestätigen Sie, dass Sie diesen Schlüssel aus Keychain entfernen möchten",
+    "confirm_account_remove": "Bitte bestätigen Sie, dass Sie dieses Konto aus Keychain entfernen möchten.",
+    "confirm": "Bestätigen",
+    "added_account": "Konto wurde erfolgreich hinzugefügt!",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "privateKey": "Privater Schlüssel",
+    "private": "Privat",
+    "public": "Öffentlich",
+    "pending": "Ausstehend",
+    "amount": "Betrag",
+    "enter_amount": "Betrag eingeben",
+    "memo": "Memo",
+    "transfer": "Überweisung",
+    "send": "Senden",
+    "receive": "Erhalten",
+    "save": "Speichern",
+    "balance": "Balance",
+    "available": "Verfügbar",
+    "back": "Zurück",
+    "encrypted": "Verschlüsselt",
+    "vote": "Vote",
+    "unvote": "Unvote",
+    "none": "Keine",
+    "error": "Fehler: Etwas ist schiefgelaufen: {{msg}}",
+    "error_title": "Fehler",
+    "savings": "Sparkonto",
+    "ok": "OK",
+    "popup_read_more": "Mehr lesen",
+    "history": "Verlauf",
+    "search_box_placeholder": "Suchen",
+    "stake": "Stake",
+    "unstake": "Unstake",
+    "delegate": "Delegieren",
+    "got_it": "Alles klar!",
+    "deleg": "Deleg.",
+    "missing_key": "Bitte fügen Sie Ihren {{key}} Schlüssel hinzu, um diese Operation durchzuführen!",
+    "need_positive_amount": "Betrag muss größer als 0 sein",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "account": "Konto",
+    "unknown_data": {
+      "description": "Wird verwendet, wenn eine Operation kein Feld registriert hat!",
+      "value": "Unbekannt"
+    },
+    "currency": "Währung",
+    "max": "Max",
+    "recurrent_transfer": "Wiederkehrende Überweisung",
+    "token": "Token",
+    "total": "Gesamt",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "from": "Von",
+    "to": "An",
+    "use_authorized_account_instead": "Autorisiertes Konto stattdessen benutzen",
+    "forget_account": "Konto vergessen",
+    "ordinal_st_label": "st",
+    "ordinal_nd_label": "nd",
+    "ordinal_rd_label": "rd",
+    "ordinal_th_label": "th",
+    "url": "URL",
+    "estimated_account_value": "Geschätzter Kontowert",
+    "current": "Aktuell",
+    "operation_type": "Operationstyp",
+    "incoming": "Eingehend",
+    "outgoing": "Ausgehend",
+    "received": "Erhalten",
+    "sent": "Gesendet",
+    "invalid_url": "Bitte eine gültige URL verwenden",
+    "clear_all": "Alle Verbindungen löschen",
+    "select": "Auswählen",
+    "overdraw_balance_error": "Ihr {{currency}} Guthaben reicht nicht aus",
+    "swap_sending_token_successful": "Ihr Swap ist auf dem Weg! Vielen Dank für die Nutzung unseres Services!",
+    "swap_error_sending_token": "Es gab einen Fehler beim Senden von Token an @{{to}}.",
+    "confirm_token_swap": "Token Swap bestätigen",
+    "id": "ID",
+    "account_name": "Kontoname",
+    "key": "Schlüssel",
+    "password": "Passwort",
+    "title_master_key": "Master",
+    "title_active_key": "Active",
+    "title_posting_key": "Posting",
+    "title_memo_key": "Memo",
+    "title_owner_key": "Owner",
+    "switch": "Wechseln",
+    "menu": "Menü",
+    "users": "Benutzer",
+    "local_accounts": "Lokale Konten",
+    "exchanges": "Börsen",
+    "exchange": "exchange",
+    "yes": "Ja",
+    "no": "Nein",
+    "skip": "Überspringen",
+    "show": "Anzeigen",
+    "experimental": "Experimentell",
+    "generate_qr": "Generiere QR-Code",
+    "lets_go": "Los geht's!",
+    "discord_server": "Discord Server"
+  },
+  "wallet": {
+    "proposal": {
+      "request": "Bitte unterstützen Sie unser Proposal",
+      "vote": "Vote",
+      "read": "Lesen",
+      "vote_success": "Vote erfolgreich! Vielen Dank für die Unterstützung der Keychain Entwicklung durch unser DHF Proposal",
+      "vote_fail": "Beim Voten für ein Proposal ist ein Fehler aufgetreten!"
+    },
+    "menu": {
+      "hive": "Hive",
+      "history": "Verlauf",
+      "tokens": "Tokens"
+    },
+    "rc": "Ressourcen Credits",
+    "vp": "Voting Mana",
+    "balance": "balance",
+    "no_tokens": "Kein Hive Engine Token gefunden.",
+    "no_tokens_filter": "Nichts anzuzeigen. Bitte löschen Sie den Filter.",
+    "no_transaction": "Keine kürzlichen Transaktionen.",
+    "add_memo": "Bitte fügen Sie Ihren Memo Key hinzu, um Nachrichten zu entschlüsseln.",
+    "add_active": "Bitte fügen Sie Ihren aktiven Schlüssel hinzu, um diesen Vorgang durchzuführen.",
+    "add_posting": "Bitte fügen Sie Ihren Posting-Schlüssel hinzu, um diesen Vorgang durchzuführen.",
+    "claim": {
+      "success": "{{rewards}} erfolgreich abgeholt!",
+      "error_posting": "Bitte Posting Schlüssel hinzufügen, um Belohnungen abzuholen!",
+      "info_claim_account": "{{account}} Konto beansprucht",
+      "info_create_claimed_account": "Beanspruchtes Konto",
+      "info_claim_rewards": "{{currency}} beansprucht",
+      "info_account_create": "Bezahlte {{fee}} um @{{new_account_name}} zu erstellen",
+      "enable_autoclaim_rewards": "Belohnungen einfordern",
+      "enable_autoclaim_accounts": "Konten (Ticket) beanspruchen",
+      "enable_autoclaim_savings": "Sparzinsen einfordern",
+      "enable_autoclaim_rewards_info": "Regelmäßiges abholen Ihre Belohnungen können Ihre Einnahmen erhöhen.",
+      "enable_autoclaim_accounts_info": "Beanspruchen Sie ein kostenloses Konto Ticket, wenn Ihre RC über {{MIN_RC_PCT}}% ist. Abhängig von ihrer Hive Power kann dies einen großen Teil ihrer RC verbrauchen.",
+      "enable_autoclaim_savings_info": "Um Ihre Zinsen aus dem Sparkonto zu erhalten, wird Keychain alle 30 Tage 0.001 HBD auf Ihr Sparkonto einzahlen oder abbuchen"
+    },
+    "operations": {
+      "phishing_domain": "{{domain}} wurde von @keys-defender als bösartig markiert! Überprüfen Sie die Schreibweise und stellen Sie sicher, dass dies die dApp ist, die Sie verwenden möchten.",
+      "history": {
+        "no_transaction_or_clear": "Keine Transaktionen gefunden. Versuchen Sie den Filter zu löschen.",
+        "load_more": "Klicken, um mehr zu laden",
+        "list_is_empty_try_clear_filter": "Nichts gefunden, versuchen Sie Ihren Filter zu löschen.",
+        "reset_filters": "Dauert zu Lang? Klicke, um die Filter zurückzusetzen!"
+      },
+      "savings": {
+        "deposit": "Geld einzahlen",
+        "withdraw": "Geld abheben",
+        "withdraw_disclaimer": "Hinweis: Die Auszahlung vom Sparkonto dauert 3,5 Tage.",
+        "deposit_disclaimer": "Die Einzahlung von HBD auf's Sparkonto bringt derzeit eine von den Witness festgelegte APR in Höhe von {{apr}}%.",
+        "withdraw_button": "Auszahlung",
+        "deposit_button": "Einzahlung",
+        "prompt": "Währung auswählen",
+        "fill_withdraw_savings": "{{amount}} erfolgreich vom Sparkonto abgehoben",
+        "start_withdraw_savings": "Startete eine {{amount}} Auszahlung vom Sparkonto",
+        "info_deposit_savings": "{{amount}} auf's Sparkonto eingezahlt",
+        "info_received_interests": "{{amount}} Zinsen vom Sparkonto erhalten",
+        "pending_withdraw": {
+          "pending": "Abheben",
+          "pending_disclaimer": "Eine Auszahlung aus dem Sparkonto benötigt 3 Tage. Die Operation abbrechen, wenn {{currency}} auf dem Sparkonto verbleiben soll.",
+          "no_pending_withdrawals": "Es gibt keine ausstehenden {{currency}} Auszahlungen",
+          "title_page": "AUSSTEHENDE AUSZAHLUNGEN",
+          "cancel_confirm_disclaimer": "Bitte bestätigen Sie, dass Sie diese Auszahlung vom Sparkonto stornieren möchten",
+          "cancel_withdraw_title": "AUSZAHLUNG ABBRECHEN",
+          "canceled": {
+            "success": "Sparkonto Auszahlung erfolgreich abgebrochen"
+          }
+        },
+        "confirm": {
+          "info": "Bitte bestätigen Sie diese Sparkonto Operation.",
+          "balance": "Balance"
+        },
+        "pending": "Abheben",
+        "currency_savings_title": "{{currency}} Einsparungen"
+      },
+      "transfer": {
+        "title": "Guthaben überweisen",
+        "memo": "MEMO (optional)",
+        "executions": "Anzahl der Durchführungen",
+        "recurrence": "Wiederholungszeitraum",
+        "frequency": "Häufigkeit",
+        "frequency_minimum": "Mindestens 24 Stunden",
+        "iterations": "Wiederholungen",
+        "iterations_minimum": "Mindestens 2",
+        "sent": "Gesendet",
+        "received": "Erhalten",
+        "confirm": {
+          "info": "Bitte bestätigen Sie diese Überweisung.\nDies kann nicht rückgängig gemacht werden",
+          "from": "Von",
+          "to": "An",
+          "amount": "Betrag",
+          "memo": "Memo",
+          "recurrence": "Wiederkehrend",
+          "recurrenceData": "{{exec}} Mal, alle {{recurrence}} Stunden",
+          "balance": "Balance"
+        },
+        "warning": {
+          "phishing": "Dieses Konto wurde als mögliches Phishing-Konto aufgelistet, überprüfen Sie die Schreibweise und stellen Sie sicher, dass es das Konto ist, auf das Sie übertragen möchten.",
+          "exchange_currency": "Dieser Exchange akzeptiert keine {{currency}} Einzahlungen.",
+          "exchange_memo": "Stellen Sie sicher, dass Sie eine Memo bei der Überweisung auf ein Exchange-Konto hinzufügen.",
+          "missing_info": "Bitte Benutzernamen und Betrag eingeben, um fortzufahren",
+          "missing_amount": "Bitte den angeforderten Betrag ausfüllen um fortzufahren",
+          "insufficient": "Bitte Benutzernamen und Betrag eingeben, um fortzufahren",
+          "private_key_in_memo": "Das Versenden eines privaten Schlüssels als Memo ist ein enormes Sicherheitsrisiko.",
+          "exchange_vsc": "Die meisten Exchanges akzeptieren keine VSC Überweisungen. Wenn Sie fortfahren, kann Ihr Geld verloren gehen.",
+          "exchange_recurrent": "Die meisten Exchanges akzeptieren keine wiederkehrenden Überweisungen. Wenn Sie fortfahren, kann Ihr Geld verloren gehen."
+        },
+        "started_recurrent_transfer": "Wiederkehrende Überweisung von {{amount}} gestartet",
+        "fill_recurrent_transfer_out": "An @{{other}}: ({{remainingExecutions}} verbleibend)",
+        "fill_recurrent_transfer_in": "Von @{{other}}: ({{remainingExecutions}} verbleibend)",
+        "start_recurrent_transfer_out": "An @{{other} (alle {{recurrence}} Stunden - {{executions}} Male)",
+        "info_recurrent_transfer_in": "@{{other}} hat mit der Überweisung von {{amount}} begonnen (alle {{recurrence}} Stunden - {{executions}} Male)"
+      },
+      "powerup": {
+        "title": "Power Up",
+        "info_power_up": "{{amount}} Powered up",
+        "info_text": "Power Up: Verwandle HIVE in Hive Power",
+        "confirm": {
+          "info": "Bitte bestätigen Sie diesen Power Up.",
+          "balance": "Balance"
+        }
+      },
+      "powerdown": {
+        "confirm": {
+          "info": "Bitte bestätigen Sie diesen Power Down.",
+          "info_stop": "Bitte bestätigen Sie, dass Sie Ihren Power Down abbrechen möchten."
+        },
+        "title": "Power Down",
+        "info_power_down": "{{amount}} Power Down gestartet",
+        "canceled_power_down": "Power Down abgebrochen",
+        "powering_down": "Power Down",
+        "next_power_down": "Nächster Power Down",
+        "powerdown_text": "Mit einem Power Down wandeln Sie Ihre Hive Power in liquide HIVE um. Der Vorgang dauert insgesamt 13 Wochen.",
+        "confirm_cancel": "Bitte bestätigen Sie, dass Sie Ihren Power Down abbrechen möchten."
+      },
+      "delegation": {
+        "title": "Hive Power delegieren",
+        "incoming": "Eingehende Delegationen",
+        "outgoing": "Ausgehende Delegationen",
+        "info_delegation_out": "Delegiert an @{{delegatee}}",
+        "canceled_delegation": "Delegation an @{{delegatee}} abgebrochen",
+        "info_delegation_in": "@{{delegator}} delegiert",
+        "title_button": "HP Deleg.",
+        "title_delegation": "Delegation",
+        "title_delegated": "Delegiert",
+        "total_incoming": "Gesamt Eingehend",
+        "total_outgoing": "Gesamt ausgehend",
+        "delegation_disclaimer": "Sie können Ihre Hive Power (HP) an einen anderen Benutzer delegieren. Klicken Sie auf den ausgehenden Betrag, um ihn zu überprüfen oder Änderungen vorzunehmen",
+        "outgoing_disclaimer": "Nach der Stornierung - Delegationen benötigen 5 Tage um als Hive Power verfügbar zu sein",
+        "pending_undelegations": "Ausstehende Un-Delegationen",
+        "confirm_cancel_delegation": "Bitte bestätigen Sie, dass Sie diese Delegation abbrechen möchten?",
+        "confirm": {
+          "info": "Bitte bestätigen Sie die HP Delegation.",
+          "balance": "Balance"
+        }
+      },
+      "rc_delegation": {
+        "confirm": {
+          "info": "Bitte bestätigen Sie die RC Delegation.",
+          "balance": "Balance"
+        },
+        "title_button": "HP Deleg.",
+        "title": "RC Delegation",
+        "total_incoming": "Gesamt Eingehend",
+        "total_outgoing": "Gesamt ausgehend",
+        "giga_rc": "G RC",
+        "disclaimer": "Sie können Ihre Ressourcen-Credits (RC) an einen anderen Benutzer delegieren. Klicken Sie auf den ausgehenden Betrag zum Überprüfen oder Ändern",
+        "delegate_to_user": "An Benutzer delegieren",
+        "warning": {
+          "no_username_or_amount": "Bitte gib einen gültigen Benutzernamen und Betrag ein, um fortzufahren"
+        },
+        "success": {
+          "rc_delegation_successful": "Sie haben RC erfolgreich an @{{to}} delegiert",
+          "cancel_rc_delegation_successful": "Sie haben Ihre Delegation an @{{to}} erfolgreich abgebrochen"
+        },
+        "failed": {
+          "rc_delegation_failed": "RC Delegation fehlgeschlagen"
+        },
+        "confirmation": "Bitte bestätigen Sie diese RC Delegation.",
+        "confirmation_cancel": "Bitte bestätigen Sie die Stornierung dieser RC Delegation.",
+        "confirm_cancel_rc_delegation": "Bitte bestätigen Sie, dass Sie diese RC Delegation abbrechen möchten."
+      },
+      "convert": {
+        "title": "In {{to}} umwandeln",
+        "button": "Konvertieren",
+        "disclaimer_hive": "Sie hinterlegen Sicherheiten (HIVE) und erhalten sofort HBD im Gegenwert von etwa der Hälfte der Sicherheiten (abzüglich einer Gebühr von 5 %). Die finale Abrechnung erfolgt nach 3,5 Tagen. Zu diesem Zeitpunkt wird der verbleibende HIVE Betrag zurückerstattet.",
+        "disclaimer_hbd": "Die Umwandlung Ihrer HBD in HIVE Token dauert 3,5 Tage. Der Zielwert entspricht dabei ungefähr 1 USD, basierend auf dem Medianpreis der letzten 3,5 Tage.",
+        "fill_convert_request": "Gefüllte Konversion:",
+        "start_convert": "{{amount}} Konvertierung gestartet",
+        "start_collateralized": "{{amount}} Collateralized Konvertierung gestartet",
+        "pending": "Ausstehend",
+        "no_pending": "Keine anstehende {{currency}} Konvertierung zum Anzeigen.",
+        "warning": {
+          "missing_info": "Bitte den Betrag ausfüllen um fortzufahren"
+        },
+        "confirm": {
+          "info": "Bitte bestätigen Sie die Konversion."
+        }
+      },
+      "more_token_info": "{{currency}} Informationen",
+      "tokens_transfer": {
+        "title": "Token transferieren"
+      },
+      "token_stake": {
+        "confirm": {
+          "info": "Bitte bestätigen Sie, dass Sie Ihre Token staken möchten.",
+          "balance": "Balance"
+        },
+        "title": "Stake",
+        "titled": "Staked",
+        "staking": "Staking",
+        "staking_token": "{{currency}} Staking",
+        "info": "Das Senden Ihrer Token kann bis zu 30 Sekunden in Anspruch nehmen, bitte haben Sie Geduld."
+      },
+      "token_unstake": {
+        "confirm": {
+          "info": "Bitte bestätigen Sie, dass Sie Ihre Token unstaken möchten.",
+          "balance": "Balance"
+        },
+        "title": "Unstake",
+        "unstaking_token": "{{currency}} Unstaking",
+        "unstaking": "Unstaking",
+        "cooldown_disclaimer_multiple_days": "Das Unstaking dieses Token wird {{unstakingCooldown}} Tage dauern",
+        "cooldown_disclaimer_single_day": "Das Unstaking dieses Token wird {{unstakingCooldown}} Tag dauern",
+        "token_pending_unstake": "Ausstehendes Unstaking",
+        "info": "Das Senden Ihrer Token kann bis zu 30 Sekunden in Anspruch nehmen, bitte haben Sie Geduld."
+      },
+      "token_delegation": {
+        "confirm": {
+          "info": "Bitte bestätigen Sie die Token Delegation."
+        },
+        "title": "Delegieren",
+        "delegating": "Delegierung",
+        "delegating_token": "Delegiere {{currency}}",
+        "cancel_delegation": "{{currency}} Delegation stornieren ",
+        "cancelling_delegation": "Delegation abbrechen",
+        "title_confirm_cancel_delegation": "Bitte bestätigen Sie, dass Sie eine {{amount}} {{currency}} Token Delegation abbrechen möchten",
+        "in": "Delegation in",
+        "out": "Delegation raus",
+        "info_requirements": "Einige Token benötigen Staking zum delegieren",
+        "incoming": "Eingehende Delegationen",
+        "outgoing": "Ausgehende Delegationen",
+        "undelegation_cooldown_disclaimer": "Wenn Sie eine {{symbol}} Delegation entfernen, werden die Staked Token nach einer Zeit von {{undelegationCooldown}} Tagen verfügbar sein.",
+        "token_pending_undelegation": "Ausstehende Un-Delegation",
+        "disclaimer_hbd": "Die Umwandlung von HBD in HIVE dauert 3,5 Tage (basierend auf dem Medianpreis der letzten 3,5 Tage).",
+        "fill_convert_request": "Gefüllte Konversion:",
+        "start_convert": "konvertierung",
+        "start_collateralized_convert": "Besicherte Umwandlung",
+        "info": "Das Senden Ihrer Token kann bis zu 30 Sekunden in Anspruch nehmen, bitte haben Sie Geduld."
+      },
+      "tokens": {
+        "info_author_reward": "{{amount}} als Autor-Belohnung erhalten",
+        "info_comment_curation_reward": "{{amount}} als Kuratierungsbelohnung für Kommentare erhalten",
+        "info_mining_lottery": "{{amount}} bei der Mining Lotterie erhalten ({{poolId}})",
+        "info_transfer_out": "{{amount}} an @{{to}} gesendet",
+        "info_transfer_in": "{{amount}} von @{{from}} erhalten",
+        "info_delegation_out": "{{amount}} an @{{delegatee}} delegiert",
+        "info_delegation_in": "@{{delegator}} delegierte {{amount}}",
+        "info_start_cancel_delegation_out": "Eine {{amount}} Delegation an @{{delegatee}} abgebrochen",
+        "info_start_cancel_delegation_in": "@{{delegator}} hat eine {{amount}} Delegation abgebrochen",
+        "info_cancel_delegation_out": "Abbruch einer Delegation von {{amount}} an @{{delegatee}} beendet",
+        "info_cancel_delegation_in": "@{{delegator}} beendet eine {{amount}} Delegation",
+        "info_stake_other_user": "@{{from}} staked {{amount}} für @{{to}}",
+        "info_stake": "Staked {{amount}}",
+        "info_start_unstake": "{{amount}} Unstaking gestartet",
+        "info_unstake_done": "{{amount}} unstaked",
+        "info_issue": "{{amount}} erhalten",
+        "info_pegged_buy": "{{amount}} gekauft",
+        "info": "Token-Informationen anzeigen und auswählen, welche Tokens angezeigt werden sollen. Mehr über benutzerdefinierte Tokens auf der HIVE Blockchain erfahren unter",
+        "total_value": "Gesamtwert",
+        "liquid_balance": "Verfügbares Guthaben",
+        "incoming": "Eingehende Delegation",
+        "outgoing": "Ausgehende Delegation",
+        "total_staked": "Gesamt Staked",
+        "pending_unstake": "Ausstehender Unstake",
+        "issuer": "Aussteller"
+      },
+      "tokens_filter": {
+        "rewards": "Belohnung",
+        "transfer": "Überweisungen",
+        "stake": "Staking",
+        "unstake": "Unstaking",
+        "delegations": "Delegationen",
+        "miningLottery": "Lotterie"
+      },
+      "token_settings": {
+        "title": "Token Einstellungen",
+        "tokens_settings_text": "Auf jedes Kontrollkästchen klicken, um die anzuzeigenden Token auszuwählen. Mehr erfahren über benutzerdefinierte Token in der Hive Blockchain unter",
+        "issued_by": "von",
+        "empty_results": "Keine Ergebnisse. Versuchen Sie den Filter zu löschen.",
+        "reset_tokens_text": "Zurücksetzen. Alle Token anzeigen",
+        "supply": "Vorrat"
+      },
+      "buy_coins": {
+        "title_hive": "HIVE",
+        "title_hbd": "HBD",
+        "title_buy": "Kaufen",
+        "html_popup_transak_description": "Mit Transak können Sie HIVE mit Fiat kaufen. Es unterstützt Kreditkarten, Banküberweisungen, Apple Pay und MobiKwik in mehr als 100 Ländern (die Optionen variieren je nach Land). Sie erhalten Ihr HIVE direkt in Ihrer Hive Keychain Wallet.",
+        "html_popup_blocktrades_description": "Mit Blocktrades können Sie schnell zwischen anderen wichtigen Kryptowährungen und HIVE/HBD wechseln.",
+        "title_exchanges": "Börsen"
+      },
+      "swap": {
+        "title": "Swap",
+        "disclaimer": "Keychain vergleicht alle verschiedenen Anbieter, um sicherzustellen, dass Sie Ihre Tokens zum bestmöglichen Preis erhalten",
+        "swap_fee_title": "Gebühr",
+        "swap_under_maintenance": "Keychain Swap ist im Wartungsmodus - bitte versuchen Sie es später noch einmal",
+        "service_unavailable_message": "Dieser Service ist vorübergehend nicht verfügbar. Wir arbeiten daran, das Problem zu beheben, entschuldigen uns für die Unannehmlichkeiten.",
+        "swap_layer_two_delayed": "Hive-Engine befindet sich derzeit hinter den Blöcken. Der Swap kann länger dauern als üblich und hat eine größere Chance auf Abbruch aufgrund der Slippage.",
+        "advanced_settings_title": "Erweiterte Einstellungen",
+        "slippage": "Slippage",
+        "swaps_slippage_definition": "Bei jedem Schritt des Swaps wird geprüft, ob das Resultat besser ist als die Schätzung abzüglich der Abweichung. Ist dies nicht der Fall, wird der Swap abgebrochen und die Gelder werden zurückgegeben. Beachten Sie, dass einige Swaps mehrere Operationen erfordern und Ihr Geld in einem anderen Token zurückgegeben werden kann.",
+        "select_title_from": "Auswahl von",
+        "select_title_to": "Ausgewählt zu",
+        "no_tokens_found": "Keine Token gefunden. Versuchen Sie, den Filter zu löschen.",
+        "swap_start_end_token_should_be_different": "Bitte wählen Sie zwei verschiedene Token",
+        "swap_cannot_switch_tokens": "Token können nicht geändert werden, da Sie keine {{symbol}} haben",
+        "swap_no_estimate_error": "Sie benötigen einen Schätzwert, um fortzufahren",
+        "swap_min_slippage_error": "Die Slippage sollte mindestens {{min}}% sein",
+        "swap_token_confirm_message": "Sie sind im Begriff, einen Token Swap mit Keychain zu starten. Sie können seinen Status vom Swap-Verlauf aus verfolgen.",
+        "swap_id_title": "Swap ID",
+        "swap_estimation": "Swap Schätzung",
+        "estimation": "Schätzung",
+        "swap_min_hive_value_error": "Der Mindestwert sollte 1 HIVE entsprechen (derzeit {{currently}} HIVE)",
+        "swap_refresh_countdown": "Aktualisiere in {{count}}s",
+        "swap_slippage_step": "{{slippage}}% (für jeden Schritt)",
+        "swap_no_history": "Ihr Swap-Verlauf ist leer"
+      },
+      "create_account": {
+        "peer_to_peer": {
+          "info": "Bitte überprüfen Sie die Informationen unten, um einen neuen Hive User zu registrieren.\nDiese Aktion kann nicht rückgängig gemacht werden!",
+          "creation_method": "Erstellungs-Methode",
+          "delegating_title": "Delegierung",
+          "delegating_amount": "{{amount}} {{currency}}",
+          "account_creator": "Ersteller",
+          "account_sucessfully_created": "Alles bereit! Willkommen, @{{accountName}}!"
+        }
+      }
+    },
+    "has": {
+      "connect": {
+        "title": "Verbinden mit Hive Auth",
+        "text": "Eine Verbindung wurde über Hive-Auth für das Konto @{{account}} angefordert.",
+        "confirm": "Verbinden",
+        "no_username": "Bitte fügen Sie das Konto @{{account}} zu Ihrer Wallet hinzu, um es auf Ihren Lieblings-dApps verwenden zu können!"
+      },
+      "auth": {
+        "title": "Authentifizieren",
+        "button": "Genehmigen",
+        "text": "Authentifizieren mit Konto @{{account}} auf {{name}}?",
+        "success": "Erfolgreich authentifiziert @{{account}} auf {{name}}! Sie können nun zu Ihrer dApp zurückkehren."
+      },
+      "challenge": {
+        "ask": "{{name}} möchte verifizieren, dass Sie die {{key}} Authority bei @{{account}} haben",
+        "success": "Erfolgreich authentifiziert @{{account}} {{key}} auf {{name}}! Sie können nun zu Ihrer dApp zurückkehren.",
+        "no_key": "Sie haben keinen {{key}} Schlüssel für das Konto @{{account}}",
+        "button": "Schlüssel verifizieren"
+      },
+      "uuid": "UUID: {{uuid}}",
+      "info": {
+        "h1": "Was ist Hive-Auth?",
+        "t1": "Hive Auth bietet eine Möglichkeit für Anwendungen (entweder Web-, Desktop- oder Handy), Benutzer einfach zu authentifizieren. Signieren und senden Sie zusätzlich Transaktionen an die Hive Blockchain, ohne von ihnen ein Passwort oder einen privaten Schlüssel zu verlangen.",
+        "h2": "Los geht's",
+        "t2": "Um sich mit einer Desktop-dApp zu verbinden, verwenden Sie den QR Code Scanner. Auf dem Handy wählen Sie einfach 'Mit Hive anmelden' auf Ihrer Lieblings-dApp.",
+        "h3": "Hive Auth Indikator",
+        "indicator": {
+          "grey": {
+            "title": "Keine Verbindung",
+            "press": "Info-Panel öffnen"
+          },
+          "red": {
+            "title": "Verbindung getrennt",
+            "press": "Info-Panel öffnen",
+            "longPress": "Erneut verbinden"
+          },
+          "green": {
+            "title": "Verbunden",
+            "press": "Info-Panel öffnen",
+            "longPress": "Alle Sitzungen löschen und die Verbindung trennen"
+          },
+          "press": "Drücken",
+          "longPress": "Langes drücken"
+        }
+      },
+      "session": {
+        "time": "Wie lange wollen Sie diese Sitzung gültig halten?",
+        "prompt": "Sitzungsgültigkeit"
+      },
+      "toast": {
+        "register": "Konten werden bei Hive Auth registriert...",
+        "broadcast": "Hive Auth Transaktion wird übertragen..."
+      }
+    },
+    "filter": {
+      "transfer": "Überweisung",
+      "claim_reward_balance": "Belohnungen einfordern",
+      "delegate_vesting_shares": "Delegationen",
+      "savings": "Sparkonto",
+      "power_up_down": "Power Up/Down",
+      "convert": "Konvertierung",
+      "account_create": "Konto-Erstellung",
+      "filter_in": "In",
+      "filter_out": "Aus",
+      "filters_title": "Filter",
+      "clear_filters": "Löschen",
+      "claim_account": "Konto beanspruchen",
+      "filter_title": "Filter"
+    }
+  },
+  "settings": {
+    "keys": {
+      "add": "Schlüssel hinzufügen",
+      "add_keyType": "{{type}} Key hinzufügen",
+      "remove": "Einen Schlüssel entfernen",
+      "remove_info": "Sie sind dabei, den {{type}} Schlüssel für das Konto @{{username}} zu entfernen.",
+      "show_qr_code": "QR-Code anzeigen",
+      "qr": {
+        "title": "Schlüssel exportieren!",
+        "caption": "Dieser QR-Code enthält alle Ihre privaten Schlüssel für dieses Konto und sollte nur verwendet werden, um Ihre Schlüssel in die Hive Keychain mobile App zu importieren. Mit niemandem teilen!",
+        "check1": "Ich teile weder meinen Bildschirm noch plane ich, einen Screenshot dieses QR-Codes mit jemandem zu teilen",
+        "check2": "Ich verstehe, dass das Teilen dieses QR-Codes mit jemandem zu einem Verlust von sämtlichen Krypto Assets führen kann"
+      },
+      "disclaimer": [
+        {
+          "text": "Um Geld zu erhalten, teilen Sie einfach Ihren Kontonamen (oben angezeigt) mit dem Absender.",
+          "style_do_not_translate": "Disclaimer"
+        },
+        {
+          "text": "Viele Anwendungen erfordern jedoch einen PRIVATE KEY, um den Besitz nachzuweisen oder Transaktionen in Ihrem Namen durchzuführen.",
+          "style_do_not_translate": "Disclaimer"
+        },
+        {
+          "text": "GEBEN SIE PRIVATE KEYS NUR AN VERTRAUENSWÜRDIGE PARTEIEN WEITER!",
+          "style_do_not_translate": "wichtig"
+        },
+        {
+          "text": "In Zukunft wird Hive Keychain für Mobilgeräte App-zu-App-Transaktionen ermöglichen und damit die Notwendigkeit beseitigen, Private Keys direkt in Drittanbieter-Apps zu verwenden.",
+          "style_do_not_translate": "Disclaimer"
+        }
+      ]
+    },
+    "settings": {
+      "rpc": "RPC Nodes",
+      "automated_tasks": {
+        "title": "Automatisierte Aufgaben",
+        "disclaimer": "Automatische Aufgaben einrichten, die jede Stunde ausgeführt werden",
+        "he_auto": {
+          "title": "Auto Staking",
+          "list_title": "Tokens für automatisches Staking festgelegt",
+          "subtitle": "Automatisches Staking Ihrer Tokens kann Ihre Gewinne erhöhen"
+        }
+      },
+      "multisig": {
+        "title": "Multisig",
+        "multisig_intro": "Aktivieren Sie Hive Multisig um Multisig Anfragen für dieses Konto zu überwachen. Dies ist eine erweiterte Funktion, nur nutzen, wenn Sie wissen, was Sie tun.",
+        "more_info_blog": "Finden Sie mehr Informationen über Multisig in diesem Blog.",
+        "more_info_multisig": "Um Ihr Konto zu einem Multisig Account zu verändern, verwenden Sie die Hive Multisig dApp.",
+        "enable_multisig": "Multisig aktivieren",
+        "enable_active_key_multisig": "Aktiviere Active-Key Multisig",
+        "enable_posting_key_multisig": "Aktiviere Posting-Key Multisig"
+      },
+      "export_transactions": {
+        "title": "Transaktionen exportieren"
+      },
+      "rpc_disclaimer": "Sie können auswählen, welche RPC Node verwendet wird, um Informationen zu lesen und Transaktionen von/zur Hive Blockchain zu übertragen.",
+      "global": "Allgemeine Einstellungen",
+      "whitelisted": "Whitelist Operationen",
+      "no_pref": "Keine Whitelist Operation",
+      "user": "Benutzereinstellungen",
+      "operations": "Operationen",
+      "operations_info": "Für eine bessere Nutzungserfahrung können Sie nicht-aktive Berechtigungsoperationen auf die Whitelist setzen, wenn dApps diese anfordern. Sie erhalten dann keine Bestätigungsaufforderung mehr für diese Vorgänge",
+      "switch_auto": "Automatisch umschalten",
+      "switch_auto_info": "Wählt immer die beste Hive RPC Node für Sie aus",
+      "switch_auto_info_he": "Wählt immer die beste Hive Engine RPC Node für Sie aus",
+      "hive_rpc": "Hive RPC",
+      "add_rpc_title": "Fügen Sie Ihre RPC Node hier hinzu",
+      "rpc_node": "RPC Node",
+      "testnet": "Testnet",
+      "set_as_active": "Neue RPC-Node als aktiv setzen",
+      "new_HE_rpc": "Neue HE RPC",
+      "new_account_history_rpc": "Neue Account History RPC",
+      "hive_engine_rpc": "Hive Engine RPC",
+      "hive_engine_account_history_api": "Hive Engine Account History API",
+      "rpc_node_already_exists": "Diese RPC Node existiert bereits! Bitte wählen Sie eine andere",
+      "rpc_not_responding_error": "{{currentRPC}} Node reagiert nicht. Möchten Sie zu {{uri}} wechseln?",
+      "notifications": {
+        "title": "Benachrichtigungen",
+        "disclaimer": "Konfigurieren Sie Ihre Peak Open Projects Benachrichtigungen. Seien Sie sich bewusst, dass Änderungen einige Zeit in Anspruch nehmen könnten und dass dies eine experimentelle Funktion ist.\nWenn Sie erweiterte Benachrichtigungseinstellungen verwenden möchten, stellen Sie diese bitte innerhalb der Browser-Erweiterung ein.",
+        "activated": "Aktiviert"
+      }
+    }
+  },
+  "components": {
+    "moreInformation": {
+      "title": "SCHLÜSSEL (HIVE PASSWORDS)",
+      "text1": "Verschiedene Aktionen erfordern den Einsatz unterschiedlicher KEYS, die bei der Erstellung eines neuen HIVE Kontos entstehen.",
+      "text2": "Sie können Ihren Posting, Active oder Ihren Master Schlüssel verwenden, um Ihr Konto zu importieren.",
+      "text3": "(Verwenden Sie Ihren Masterschlüssel, um alle App-Funktionen zu entsperren).",
+      "text4": "Wenn Sie einen Master Schlüssel verwenden, wird er NICHT gespeichert und wird nur verwendet, um Ihre anderen Schlüssel zu generieren. Sie können Konten oder Schlüssel jederzeit hinzufügen/bearbeiten."
+    },
+    "accountCreationPeerToPeer": {
+      "title": "Peer to Peer onboarding, dank eines guten Freundes!",
+      "text1": "Sobald Sie einen gültigen Benutzernamen auswählen und auf Erstellen klicken",
+      "text2": "Die App wird Ihnen Ihre Schlüssel geben, BITTE SPEICHERN Sie diese an einem sicheren Ort.",
+      "text3": "Nach der Bestätigung, dass die Schlüssel sicher gespeichert sind,",
+      "text4": "Sie erhalten einen QR-Code, zeigen Sie ihn Ihrem Freund an, um mit der Kontoerstellung fortzufahren.",
+      "not_enough_rc_exception": "Sie haben nicht genug RC, um diese Transaktion durchzuführen. Bitte HIVE aufpowern oder eine RC Delegation erhalten."
+    },
+    "infoQR": {
+      "title": "Über QR-Code importieren",
+      "text1": "Sie können ein Konto sofort importieren, indem Sie den entsprechenden QR-Code scannen.",
+      "text2": "Um von der Hive Keychain Browser-Erweiterung zu importieren, navigieren Sie zu",
+      "text3": "Einstellungen",
+      "text4": " dann klicken Sie auf",
+      "text5": "Konten verwalten",
+      "text6": "und",
+      "text7": "QR-Code anzeigen"
+    },
+    "infoWalletQR": {
+      "title": "QR Code Scanner",
+      "text1": "Verwenden Sie diesen Scanner um Hive bezogene QR-Codes zu lesen.",
+      "text2": "Ab sofort unterstützen wir nur das Starten von Hive Authentifizierungs Sitzungen und das Öffnen von URLs im In-App-Browser, aber weitere Funktionen werden im Laufe der Zeit hinzugefügt.",
+      "text3": "Wenn Sie einen QR-Code scannen möchten, um ein Konto zu importieren, tun Sie dies bitte in",
+      "text4": "Einstellungen > Konto hinzufügen"
+    },
+    "forgotPIN": {
+      "title": "Wallet zurücksetzen?",
+      "text": "Wenn Sie Ihre PIN vergessen haben, können Sie Keychain \n zurücksetzen und Ihre Daten löschen, müssen aber alle Ihre Konten erneut importieren.",
+      "button": "Wallet zurücksetzen"
+    },
+    "pinCode": {
+      "unsupportedBiometrics": {
+        "title": "Nicht unterstützte biometrische Daten",
+        "text1": "Ihre bevorzugten biometrischen Daten werden auf diesem Gerät als unsicher betrachtet.",
+        "text2": "Bitte ändern Sie es zu Fingerabdrücken.",
+        "button": "Zu den Einstellungen"
+      }
+    },
+    "picker": {
+      "prompt_user": "Wählen Sie ein Konto aus",
+      "prompt_rpc": "Wählen Sie eine RPC-Node",
+      "add_account": "+ NEUES KONTO HINZUFÜGEN"
+    },
+    "create_account": {
+      "new_account_username": "Neuer Account Benutzername",
+      "safely_copied_keys": "Ich habe alle meine Schlüssel sicher kopiert und sie außerhalb von Keychain gespeichert",
+      "storage_understanding": "Ich verstehe, dass Keychain nicht als primärer Speicherort für meine Schlüssel betrachtet werden sollte",
+      "buy_method_message": "Ich stimme zu, {{price}} HIVE mit dem Konto @{{account}} zu bezahlen, um dieses Konto zu erstellen",
+      "claim_account_method_message": "Ich stimme zu, ein Konto erstellen Ticket von @{{account}} zu verwenden, um dieses Konto zu erstellen",
+      "copy": "Kopieren",
+      "create_account": "Konto erstellen",
+      "cost": "Erstellen Sie ein neues Konto für {{price}} mit @{{account}}",
+      "need_accept_terms_condition": "Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, bevor Sie das Konto erstellen",
+      "create_account_successful": "Ihr Konto wurde erfolgreich erstellt und zu Keychain hinzugefügt",
+      "create_account_failed": "Die Erstellung des Kontos ist fehlgeschlagen. Bitte versuchen Sie es später erneut",
+      "create_account_ticket": "{{tickets}} Kontoerstellungs-Ticket",
+      "ticket": "Ticket",
+      "buying": "Kaufen",
+      "create_account_onboarding_message": "Sie erstellen gerade das Konto @{{name}}. Bitte wählen Sie unten, ob Sie diesem HP oder RC delegieren möchten.",
+      "create_account_on_boarding_successful": "Das Konto @{{accountName}} wurde erfolgreich erstellt!",
+      "create_account_on_boarding_with_delegations_successful": "Das Konto @{{accountName}} wurde erfolgreich erstellt und die Delegationen gesendet!",
+      "peer_to_peer_waiting_text": "Bitten Sie Ihren Freund diesen QR-Code zu scannen, um Ihr Konto zu erstellen. Lassen Sie diese Seite geöffnet bis das Konto erstellt ist."
+    },
+    "copy_keys": {
+      "title": "Einen Schlüssel kopieren",
+      "text1": "Wenn Sie einen öffentlichen oder privaten Schlüssel kopieren möchten, drücken Sie die Taste lang."
+    },
+    "export_qr_accounts": {
+      "qr_exported_set_disclaimer1": "Dieser QR-Code enthält alle Ihre privaten Schlüssel für dieses Set von Konten und sollte nur verwendet werden, um Ihre Schlüssel in die Hive Keychain mobile App zu importieren.",
+      "qr_disclaimer2": "NICHT mit anderen teilen!",
+      "scanning": "Bitte scanne Seite {{page}}/{{total}}",
+      "check1": "Ich teile weder meinen Bildschirm noch plane ich, einen Screenshot dieses QR-Codes mit jemandem zu teilen",
+      "check2": "Ich verstehe, dass das Teilen dieses QR-Codes mit jemandem zu einem Verlust von sämtlichen Krypto Assets führen kann"
+    },
+    "notifications": {
+      "mark_as_read": "Die Benachrichtigungen wurden als gelesen markiert!",
+      "notification_set_all_as_read": "Als gelesen markieren",
+      "notification_follow": "@{{0}} folgt nun @{{1}}",
+      "notification_unfollow": "@{{0}} folgt nicht mehr @{{1}}",
+      "notification_reblog": "@{{0}} reblogged @{{1}}'s Beitrag",
+      "wallet_info_transfer_in": "Erhielt {{0}} von @{{1}}",
+      "wallet_info_transfer_out": "Sendet {{0}} zu @{{1}}",
+      "wallet_info_fill_recurrent_transfer_in": "Erhielt {{0}} von @{{1}} ({{2}} verbleibend)",
+      "wallet_info_fill_recurrent_transfer_out": "Sendet {{0}} nach @{{1}} ({{2}} verbleibend)",
+      "wallet_info_recurrent_transfer_out": "Wiederkehrende Überweisung von {{0}} auf @{{1}} gestartet (alle {{2}} Stunden - {{3}} Male)",
+      "notification_account_update": "@{{0}}'s Benachrichtigungseinstellungen wurden geändert",
+      "notification_account_witness_proxy": "@{{0}} hat @{{1}} als Proxy gesetzt",
+      "notification_account_witness_vote": "@{{0}} hat für @{{1}} als Witness gestimmt",
+      "notification_account_witness_unvote": "@{{0}} hat die Stimme für @{{1}} als Witness entfernt",
+      "notification_change_recovery_account": "@{{0}} hat das Wiederherstellungskonto auf @{{1}} geändert. Diese Änderung wird in 30 Tagen wirksam sein",
+      "wallet_info_claim_account": "Beanspruchtes Konto",
+      "notification_answer": "@{{0}} hat auf {{2}} geantwortet",
+      "notification_mention": "@{{0}} erwähnt @{{1}} in {{3}}",
+      "notification_delegation": "@{{0}} hat {{1}} an @{{2}} delegiert",
+      "notification_cancel_delegation": "@{{0}} hat eine Delegation von @{{1}} aufgehoben",
+      "notification_requested_account_recovery": "@{{0}} hat eine Wiederherstellung angefordert auf @{{1}}",
+      "notification_recovered_account": "@{{0}} wurde wiederhergestellt",
+      "notification_set_power_down_route": "Power Down Route wurde von @{{0}} auf @{{1}} geändert",
+      "wallet_info_withdraw_savings": "Startete eine {{0}} Auszahlung vom Sparkonto",
+      "wallet_info_deposit_savings": "Einzahlung von {{0}} aufs Sparkonto",
+      "wallet_info_power_up": "{{0}} HIVE aufgepowert",
+      "wallet_info_power_up_other_account": "@{{0}} powered up {{1}} für @{{2}}",
+      "notification_vote": "@{{0}} hat für {{2}} gestimmt",
+      "bgd_ops_pd": "Startete ein {{0}} Power down auf @{{1}}.",
+      "notification_cancelled_powerdown": "@{{1}} hat einen Power Down abgebrochen.",
+      "notification_recurrent_transfer": "@{{0}} hat eine {{1}} wiederkehrende Überweisung an @{{2}} gestartet ({{3}} Ausführungen alle {{4}} Stunden)",
+      "notification_fill_convert": "@{{0}} hat eine Umwandlung abgeschlossen: {{1}} nach {{2}}",
+      "notification_author_reward": "@{{0}} hat {{1}}, {{2}}, {{3}} als Autor-Belohnung für {{4}} erhalten",
+      "notification_curation_reward": "@{{0}} hat {{1}} als Kuratierungsbelohnung für {{3}} erhalten",
+      "notification_comment_reward": "@{{0}} hat {{1}} als Kommentarbelohnung für {{2}} erhalten",
+      "notification_hbd_interest": "@{{0}} hat {{1}} als Zinsen erhalten",
+      "notification_fill_power_down": "@{{0}} erhielt {{1}} als Teil eines Power Down",
+      "notification_fill_power_down_other_account": "@{{0}} erhielt {{1}} als Teil eines Power Down von @{{2}}",
+      "notification_fill_order": "@{{0}} hat eine Order von @{{1}} auf dem Markt gefüllt. Erwirbt {{2}} für {{3}}",
+      "notification_fill_transfer_from_savings": "@{{0}} hat {{1}} vom Sparkonto ausgezahlt",
+      "notification_fill_transfer_from_savings_from_other_account": "@{{0}} hat eine Abhebung vom Sparkonto von {{1}} auf @{{2}} abgeschlossen",
+      "notification_returned_vesting_delegation": "@{{0}} hat eine Undelegation abgeschlossen. {{1}} sind erneut verfügbar",
+      "notification_comment_benefactor_reward": "@{{0}} erhielt {{1}}, {{2}}, {{3}} als Kommentar Beneficiary Belohnung für {{5}}",
+      "notification_producer_reward": "@{{0}} hat {{1}} als Producer-Belohnung erhalten",
+      "notification_changed_recovery_account": "@{{0}}'s Wiederherstellungskonto wurde von @{{1}} auf @{{2}} geändert",
+      "notification_fill_collateralized_convert_request": "@{{0}} hat eine Umwandlung abgeschlossen: {{1}} nach {{2}}",
+      "notification_failed_recurrent_transfer": "{{0}} wiederkehrende Überweisung von @{{1}} auf @{{2}} ist fehlgeschlagen"
+    },
+    "createAccountPeerToPeer": {
+      "text1": "Vielen Dank für die Nutzung von Keychain Onboarding!",
+      "text2": "Beginnen Sie mit der Auswahl eines Hive Konto Namen.",
+      "text3": "Die App wird dann Ihre privaten Schlüssel generieren.",
+      "text4": "Bitte speichern Sie diese Schlüssel an einem sicheren Offline-Ort!",
+      "text5": "Danach wird ein QR-Code erstellt. Zeigen Sie ihn Ihrem Freund, um mit der Kontoerstellung fortzufahren."
+    }
+  },
+  "toast": {
+    "receive_success": "Die Überweisung wurde erfolgreich empfangen",
+    "error_witness_account_update": "Fehler beim Aktualisieren des Witness Konto @{{account}}",
+    "noMatch": "Die PIN Codes stimmen nicht überein",
+    "authFailed": "Authentifizierung fehlgeschlagen",
+    "account_already": "Sie haben bereits @{{account}} registriert",
+    "added_account": "Konto @{{account}} hinzugefügt!",
+    "transfer_success": "Ihre Überweisung war erfolgreich!",
+    "recurrent_transfer_success": "Ihre wiederkehrende Überweisung wurde erfolgreich gestartet!",
+    "transfer_token_confirmed": "Überweisung erfolgreich gesendet. Kontostand aktualisiert sich in Kürze.",
+    "transfer_token_unconfirmed": "Ihre Überweisung wurde erfolgreich an Hive übermittelt. Allerdings konnte nicht bestätigt werden, dass sie von Hive Engine verarbeitet wurde. Bitte überprüfen Sie Ihren Kontostand in Kürze, bevor Sie es erneut versuchen.",
+    "powerup_success": "Der Power Up war erfolgreich!",
+    "powerdown_success": "Der Power Down war erfolgreich!",
+    "stop_powerdown_success": "Der Power Down wurde erfolgreich gestoppt!",
+    "delegation_success": "Ihre Delegation war erfolgreich!",
+    "stop_delegation_success": "Ihre Delegation wurde erfolgreich gestoppt!",
+    "convert_success": "Ihre {{currency}} Konvertierung wurde erfolgreich gestartet!",
+    "keys": {
+      "not_wanted_key": "Dies ist nicht Ihr {{type}} Schlüssel!",
+      "not_a_key": "Dies ist nicht einer Ihrer privaten Schlüssel!",
+      "copied": "Der Schlüssel wurde in die Zwischenablage kopiert!",
+      "key_added": "Ihr {{type}} Schlüssel wurde erfolgreich hinzugefügt",
+      "key_removed": "Ihr {{type}} Schlüssel wurde entfernt!"
+    },
+    "error_add_account": "Etwas ist schiefgelaufen! Bitte überprüfen Sie Ihre Schlüssel und Ihre Verbindung.",
+    "savings_deposit_success": "Sie haben {{amount}} erfolgreich auf Ihr Sparkonto hinterlegt.",
+    "savings_withdraw_success": "Sie haben erfolgreich eine {{amount}} Auszahlung von Ihrem Sparkonto gestartet. Sie wird Ihrem Konto in 3,5 Tagen gutgeschrieben.",
+    "incorrect_user": "Bitte überprüfen Sie den Benutzernamen und versuchen Sie es erneut.",
+    "accounts_no_auth": "{{authorizedAccount}} hat keine Autorität über {{username}}.",
+    "no_auth_account": "Bitte speichern Sie {{authorizedAccount}} in Hive-Keychain, um es als autorisiertes Konto zu verwenden.",
+    "no_accounts_no_auth": "Bitte fügen Sie mindestens ein Konto mit Autorität über {{username}} hinzu",
+    "token_stake_success": "Sie haben erfolgreich einige {{currency}} gestaked!",
+    "token_unstake_success": "Sie haben erfolgreich einige {{currency}} unstaked!",
+    "token_delegate_sucess": "Sie haben erfolgreich {{currency}} delegiert!",
+    "token_cancel_delegation_sucess": "Ihre Delegation von {{currency}} wurde abgebrochen!",
+    "token_undelegate_sucess": "Ihre Delegation von {{currency}} wurde entfernt!",
+    "hive_engine_error": "Hive Engine Fehler: {{error}}",
+    "token_timeout": "Wir konnten diese Transaktion auf Hive Engine nicht verifizieren. Dies könnte bedeuten, dass Hive Engine nicht die aktuellsten Blöcke hat. Warten Sie, bis der Vorgang in Ihrem Verlauf erscheint oder kontaktieren Sie das Hive Engine Team auf Discord.",
+    "tokens_operation_failed": "Fehler beim {{tokenOperation}} eines Token",
+    "no_such_account": "Wir konnten dieses Konto nicht auf der Blockchain finden.",
+    "username_too_short": "Benutzername ist zu kurz. Benötigt mindestens 4 Zeichen",
+    "account_name_not_valid": "Kontoname ist nicht gültig",
+    "account_username_already_used": "Benutzername wird bereits verwendet. Bitte wählen Sie einen anderen",
+    "account_creation_not_enough_found": "Sie haben nicht genug HIVE um ein Konto zu kaufen",
+    "copied_text": "Schlüssel in die Zwischenablage kopiert!",
+    "copied_id": "ID wurde in Zwischenablage kopiert!",
+    "copied_username": "Benutzername wurde in die Zwischenablage kopiert!",
+    "claims": {
+      "need_active_key_for_claim_savings": "Sie müssen Ihren aktiven Schlüssel zu Keychain hinzufügen, um Ihre Spar Guthaben zu beanspruchen",
+      "need_active_key_for_claim_accounts": "Sie müssen Ihren aktiven Schlüssel zu Keychain hinzufügen, um Tickets für die Kontoerstellung zu erhalten",
+      "need_posting_key_to_claim_rewards": "Sie müssen Ihren Posting-Schlüssel zu Keychain hinzufügen, um Ihre Belohnungen zu erhalten",
+      "not_enough_rc_to_claim_account": "Sie haben nicht genug RC, um Tickets für das Erstellen eines Kontos zu beanspruchen"
+    },
+    "rpc_node_added_success": "RPC erfolgreich hinzugefügt",
+    "rpc_node_removed_success": "RPC erfolgreich entfernt",
+    "error_missing_fields": "Fehlende Felder!",
+    "missing_memo_key": "Dem Konto @{{account}} fehlt der Memo-Schlüssel um die Nachricht zu verschlüsseln!",
+    "tokens_timeout": "Diese Node antwortet nicht. Bitte in den Token-Einstellungen den Hive Engine RPC-Node ändern",
+    "account_not_in_hive": "Der Account @{{account}} existiert nicht, bitte überprüfen Sie den Benutzernamen.",
+    "account_removed": "Das Konto @{{account}} wurde aus Keychain entfernt.",
+    "export_qr_accounts": {
+      "scan_next": "Seite: {{index}} von {{total}}, scanne nächste Seite!",
+      "scan_page_first": "Scanne Seite {{page}} zuerst!",
+      "scan_completed": "Scan abgeschlossen, Konten werden geladen!",
+      "already_scanned": "Seite bereits gescannt, bitte wechseln Sie zur Seite {{page}}!"
+    }
+  },
+  "navigation": {
+    "log_out": "Logout",
+    "accounts": "Konten",
+    "add_account": "Konto hinzufügen",
+    "import_all": "Alle Konten importieren",
+    "export_accounts_qr": "Konten exportieren",
+    "add_account_by_auth": "Auth. Konto",
+    "manage": "Schlüssel verwalten",
+    "settings": "Einstellungen",
+    "about": "Über",
+    "help": "Hilfe",
+    "wallet": "WALLET",
+    "browser": "BROWSER",
+    "tabs": "Geöffnete Tabs",
+    "governance": "Governance",
+    "create_account": "Konto erstellen",
+    "create_an_account": "Ein Konto erstellen",
+    "create_account_peer_to_peer": "Freund Onboarding",
+    "choose_first_account": "Wählen Sie Ihr erstes Konto!",
+    "choose_an_existing_account": "Ein Konto hinzufügen",
+    "tokens": "Tokens",
+    "theme_setting": "Theme",
+    "wallet_history": "Wallet-Verlauf",
+    "floating_bar": {
+      "ecosystem": "Ökosystem",
+      "browser": "Browser",
+      "buy": "Kaufen",
+      "swap": "Swap"
+    },
+    "swap_buy": "Tauschen & kaufen",
+    "swap_history": "Swap-Verlauf",
+    "support": "Support kontaktieren",
+    "tutorial": "Tutorial",
+    "export_transactions": "Transaktionen exportieren"
+  },
+  "request": {
+    "title": {
+      "custom": "Benutzerdefinierte Transaktion",
+      "decode": "Schlüssel überprüfen",
+      "encode": "Nachricht verschlüsseln",
+      "signBuffer": "Nachricht signieren",
+      "addAccountAuthority": "Authority hinzufügen",
+      "removeAccountAuthority": "Authority entfernen",
+      "broadcast": "Übertragung",
+      "signTx": "Transaktion signieren",
+      "signedCall": "Signierter Anruf",
+      "post": "Post",
+      "vote": "Vote",
+      "transfer": "Überweisung",
+      "delegation": "Delegation",
+      "witnessVote": "Witness Stimme",
+      "proxy": "Proxy auswählen",
+      "sendToken": "Token senden",
+      "powerUp": "Power Up",
+      "powerDown": "Power Down",
+      "createClaimedAccount": "Erstelle beanspruchtes Konto",
+      "createProposal": "Neuen Arbeitsvorschlag erstellen",
+      "removeProposal": "Arbeitsvorschlag zurückziehen",
+      "updateProposalVote": "Für Arbeitsvorschlag stimmen",
+      "addKeyAuthority": "Schlüssel hinzufügen",
+      "removeKeyAuthority": "Schlüssel entfernen",
+      "addAccount": "Konto hinzufügen",
+      "convert": "Konvertieren",
+      "recurrentTransfer": "Wiederkehrende Überweisungen",
+      "multisig": "Multisig",
+      "swap": "Keychain Swap"
+    },
+    "message": {
+      "decode": "Die Website {{domain}} möchte überprüfen, dass Sie Zugriff auf den privaten {{method}} Schlüssel für das Konto haben: @{{username}}",
+      "signBuffer": "Die Website {{domain}} möchte eine Nachricht mit dem {{method}} Schlüssel für das Konto unterzeichnen: @{{username}}",
+      "signBufferNoUsername": "Die Website {{domain}} möchte mit dem Schlüssel {{method}} eine Nachricht unterschreiben.",
+      "multisig": "Sie haben eine Multisig Signaturanfrage erhalten"
+    },
+    "item": {
+      "username": "Benutzername",
+      "method": "Methode",
+      "message": "Nachricht",
+      "author": "Autor",
+      "permlink": "Permalink",
+      "weight": "Verhältnis",
+      "data": "Daten",
+      "hidden_data": "Klicken zum Anzeigen",
+      "to": "An",
+      "amount": "Betrag",
+      "memo": "Memo",
+      "title": "Titel",
+      "body": "Inhalt",
+      "json_metadata": "JSON Metadaten",
+      "parent_perm": "Übergeordneter Permlink",
+      "parent_username": "Übergeordneter Benutzername",
+      "comment_options": "Kommentar Einstellungen",
+      "witness": "Witness",
+      "action": "Aktion",
+      "proxy": "Proxy",
+      "delegatee": "Empfänger",
+      "transaction": "Transaktion",
+      "ids": "Arbeitsvorschlags-IDs",
+      "keys": "Schlüssel",
+      "role": "Rolle",
+      "authorized_username": "Autorisiert",
+      "authorized_key": "Autorisierter Schlüssel",
+      "recurrence": "Wiederkehrend",
+      "creator": "Ersteller",
+      "new_account": "Neues Konto",
+      "owner": "Owner Autorität",
+      "active": "Aktive Au­to­ri­sie­rung",
+      "posting": "Posting Au­to­ri­sie­rung",
+      "memo_key": "Memo Key",
+      "receiver": "Empfänger",
+      "duration": "Dauer",
+      "daily_pay": "Tägliche Bezahlung",
+      "initiator": "Initiator",
+      "key": "Schlüssel",
+      "swap": "Swap",
+      "slippage": "Slippage"
+    },
+    "error": {
+      "no_account": "Die aktuelle Website versucht eine Anfrage an Hive Keychain für das Konto @{{account}} zu senden, welches nicht zur Wallet hinzugefügt wurde.",
+      "no_auth": "Die aktuelle Website versucht eine Anfrage an Hive Keychain für das Konto @{{account}} mit dem {{auth}} Schlüssel zu senden, welches nicht zur Wallet hinzugefügt wurde.",
+      "no_required_auth": "Die aktuelle Website versucht eine Anfrage an Hive Keychain für das Konto @{{account}} mit {{required_auth}} Authority zu senden, aber @{{account}} wurde bislang NICHT mit {{required_auth}} Schlüssel hinzugefügt.",
+      "no_required_auth_anonymous": "Die aktuelle Website versucht, eine anonyme Anfrage an Hive Keychain mit der Berechtigung {{required_auth}} zu senden, aber es sind keine Konten mit {{required_auth}} Schlüssel hinzugefügt.",
+      "decode": "Schlüssel konnte nicht verifiziert werden.",
+      "encode": "Nachricht konnte nicht verschlüsselt werden.",
+      "signBuffer": "Konnte nicht signieren.",
+      "signTx": "Die Transaktion konnte nicht erfolgreich signiert werden.",
+      "ops": "Beim Übertragen der Transaktion ist ein Fehler aufgetreten",
+      "unknown": "Ein Fehler ist aufgetreten! Bitte versuchen Sie es erneut!",
+      "broadcasting": "Beim Übertragen der Transaktion ist ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+      "addAccount": "Beim Hinzufügen dieses Kontos ist ein Fehler aufgetreten. Bitte überprüfen Sie den Benutzernamen und die Schlüssel.",
+      "timeout": "Zeitüberschreitung der Anfrage",
+      "transfer": {
+        "adjust_balance": "Unzureichender {{currency}} Kontostand auf Konto @{{username}}.",
+        "get_account": "Konto @{{to}} nicht gefunden",
+        "encrypt": "Bitte fügen Sie Ihren Memo Schlüssel hinzu, um Memos zu verschlüsseln."
+      },
+      "swap": {
+        "fetching_balance": "Fehler beim Abrufen der Kontodaten.",
+        "insufficient_balance": "Unzureichendes Guthaben."
+      }
+    },
+    "success": {
+      "decode": "Memo erfolgreich dekodiert.",
+      "encode": "Nachricht erfolgreich verschlüsselt.",
+      "addAccount": "Konto @{{username}} erfolgreich zu Keychain hinzugefügt.",
+      "signBuffer": "Nachricht erfolgreich signiert.",
+      "signTx": "Die Transaktion wurde erfolgreich signiert.",
+      "vote": "Erfolgreich für @{{author}}'s Post {{permlink}} mit {{weight}} % gestimmt.",
+      "broadcast": "Die Transaktion wurde erfolgreich übertragen.",
+      "transfer": "{{amount}} {{currency}} erfolgreich von @{{username}} an @{{to}} übertragen.",
+      "post": "Der Beitrag wurde erfolgreich eingereicht.",
+      "witness_vote": "Erfolgreich für @{{witness}} als Witness gestimmt.",
+      "witness_unvote": "Stimme für @{{witness}} als Witness erfolgreich entfernt.",
+      "proxy": "Erfolgreich @{{proxy}} für Proxy ausgewählt.",
+      "remove_proxy": "Proxy erfolgreich entfernt.",
+      "power_up": "{{hive}} HIVE bei @{{to}} aufgepowert.",
+      "power_down": "Startete einen {{hp}} HP Power Down auf @{{username}}.",
+      "approveProposal": "Erfolgreich für Proposal(s) {{ids}} abgestimmt.",
+      "unApproveProposal": "Abstimmung für Proposal(s) {{ids}} erfolgreich zurückgezogen.",
+      "stop_power_down": "Stoppt Power Down auf @{{username}}.",
+      "delegate": "{{amount}} {{unit}} von @{{username}} an @{{delegatee}} delegiert.",
+      "undelegate": "Delegation von @{{delegatee}} von Konto @{{username}} erfolgreich gestoppt.",
+      "sendToken": "Die Transaktion wurde erfolgreich übertragen. Bitte überprüfen sie Ihr Saldo um zu bestätigen dass die Transaktion erfolgreich bearbeitet wurde.",
+      "addAccountAuthority": "{{role}} Berechtigung erfolgreich an @{{authorizedUsername}} mit einem Gewicht von {{weight}} vergeben.",
+      "removeAccountAuthority": "{{role}} Autorität erfolgreich von @{{authorizedUsername}} entfernt.",
+      "addKeyAuthority": "{{role}} Schlüssel erfolgreich mit einem Gewicht von {{weight}} hinzugefügt.",
+      "removeKeyAuthority": "{{role}} Schlüssel erfolgreich entfernt.",
+      "convert": "Umwandlung von {{amount}} {{from}} zu {{to}} erfolgreich gestartet.",
+      "recurrentTransfer": "Erfolgreich eine wiederkehrende Überweisung gestartet. {{amount}} {{currency}} wird an {{to}} {{executions}} Mal, alle {{recurrence}} Stunden, gesendet.",
+      "createClaimedAccount": "Konto @{{new_account}} erfolgreich beansprucht",
+      "createProposal": "Erfolgreich ein neues Proposal erstellt!",
+      "removeProposal": "Proposal(s) erfolgreich entfernt {{ids}}.",
+      "swap": "Swap von {{amount}} {{from}} erfolgreich zu {{to}} gestartet."
+    },
+    "confirm": "Bestätigen",
+    "keep": "Nicht erneut auffordern, {{type}}-Transaktionen vom Konto @{{username}} auf {{domain}} zu senden.",
+    "keep_has": "Bis zum Ablauf der Sitzung nicht erneut nach {{type}}-Transaktionen von @{{username}} auf {{domain}} fragen."
+  },
+  "browser": {
+    "search": "URL suchen oder eingeben",
+    "clear_all": "Alle Ihre Browser-Tabs wurden geschlossen",
+    "history": {
+      "clear": "Verlauf löschen",
+      "clear_cache": "Cache leeren"
+    },
+    "home": {
+      "title": "Home",
+      "menu": {
+        "ecosystem": "Ökosystem",
+        "recent": "Kürzlich",
+        "favorite": "Favoriten"
+      },
+      "categories": {
+        "finance": "Finanzen",
+        "social": "Soziales",
+        "nft": "NFT",
+        "gaming": "Spiele",
+        "video": "Video",
+        "tool": "Tool"
+      },
+      "nothing": "Nichts anzuzeigen.",
+      "cant_see_dapps": {
+        "part_1": "Du kannst deine gewünschte Hive dApp hier nicht sehen?",
+        "part_2": "Kontaktiere uns auf "
+      }
+    },
+    "switch_tabs_tip": "Wechseln Sie zwischen den Tabs durch Wischen nach links oder rechts in der URL-Leiste."
+  },
+  "drawerFooter": {
+    "madeBy_part_1": "Erstellt mit",
+    "madeBy_part_2": "von Keychain",
+    "madeBy_part_3": "Team",
+    "vote": "Vote für @{{account}} als Witness",
+    "thanks": "Danke für Ihre Unterstützung ❤",
+    "error30": "Sie stimmen bereits für 30 Witness und Sie müssen einen entfernen, um für einen neuen zu stimmen.",
+    "errorActive": "Sie benötigen einen Aktiven Schlüssel um für Witnesse zu stimmen",
+    "error": "Fehler: Etwas ist schiefgelaufen:"
+  },
+  "governance": {
+    "menu": {
+      "witnesses": "Witnesses",
+      "proxy": "Proxy",
+      "proposals": "Proposals",
+      "witness": "Witness",
+      "my_witness": "Meine Witness"
+    },
+    "witness": {
+      "error": {
+        "retrieving_witness_ranking": "Beim Abrufen der Witness Rankings ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        "unvote_wit": "Fehler beim entfernen @{{name}} als Witness.",
+        "wit": "Fehler beim Voten für @{{name}} als Witness.",
+        "active": "Um für einen Witness zu stimmen, müssen Sie zuerst Ihren aktiven Account Key hinzufügen",
+        "retrieving_witness_info": "Beim Abrufen der Witness Informationen ist ein Fehler aufgetreten. Bitte versuche es später erneut."
+      },
+      "success": {
+        "unvote_wit": "Stimme für @{{name}} als Witness entfernt.",
+        "wit": "Erfolgreich für @{{name}} als Witness gestimmt."
+      },
+      "remaining_votes": "Verbleibende Stimmen: {{remainingVotes}}",
+      "has_proxy": "Sie benutzen derzeit @{{proxy}} als Proxy. Ihre Stimmen werden angezeigt.",
+      "link_to_arcange": "Für weitere Informationen klicken Sie hier, um die Witness Datenbank aufzurufen",
+      "using_proxy": "Proxy löschen um für einen Witness zu stimmen",
+      "search_placeholder": "Suchen",
+      "show_voted": "Nur abgestimmt für",
+      "hide_inactive": "Verberge inaktive"
+    },
+    "my_witness": {
+      "info": "Info",
+      "param": "Parameter",
+      "rank": "Rang",
+      "information_amount_votes": "Anzahl der Votes",
+      "information_votes": "Votes",
+      "information_blocks_missed": "Blöcke verpasst",
+      "information_last_block": "Letzter Block",
+      "information_price_feed": "Preisfeed",
+      "information_version": "Version",
+      "information_updated": "Aktualisiert {{updatedAt}}",
+      "information_reward": "Belohnung",
+      "information_reward_panel_last_week": "7 Tage",
+      "information_reward_panel_last_month": "30 Tage",
+      "information_signing_key": "Signing Schlüssel",
+      "information_maximum_block_size": "Blockgröße",
+      "information_account_creation_fee": "Account Erstellungsgebühr",
+      "information_hbd_interest_rate": "Zinssatz",
+      "disable_witness": "Witness deaktivieren",
+      "enable_witness": "Witness aktivieren",
+      "enable_disable_witness_confirmation_info": "Sie sind dabei {{mode}} @{{owner}} Witness Konto. Bitte bestätigen Sie, um fortzufahren",
+      "success_witness_account_update": "Witness Account erfolgreich aktualisiert."
+    },
+    "proxy": {
+      "has_proxy": "Der Proxy-Account trifft Governance Entscheidungen in Ihrem Namen. Wenn Sie selbst über Witnesses und Proposals abstimmen möchten, müssen Sie den Proxy zunächst entfernen.",
+      "proxy_def": "Einen Account als Proxy hinzuzufügen bedeutet, dass dieser Proxy-Account Ihr Stimmgewicht (HP) in Governance-Fragen nutzen kann (z. B. bei Abstimmungen über Witnesses und Proposals). Dies hat keinen Einfluss auf Ihre HP im Hinblick auf die Kuratierung und Sie können den Proxy jederzeit wieder entfernen.",
+      "using_proxy": "Sie verwenden derzeit @{{name}} als Proxy. Dessen Governance-Stimmen werden angezeigt.",
+      "placeholder": "Proxy",
+      "buttons": {
+        "set": "Als Proxy festlegen",
+        "clear": "Proxy entfernen"
+      },
+      "error": {
+        "active": "Um Ihren Proxy zu ändern, müssen Sie zuerst Ihren Active-Schlüssel hinzufügen",
+        "set_proxy": "Fehler beim Setzen des User als Proxy",
+        "clear_proxy": "Fehler beim Löschen des Proxys"
+      },
+      "success": {
+        "set_proxy": "Erfolgreich @{{name}} für Proxy ausgewählt.",
+        "clear_proxy": "Proxy erfolgreich entfernt"
+      }
+    },
+    "proposal": {
+      "by": "Von @{{name}}",
+      "remaining": "{{days}} Tag(e) verbleibend",
+      "day": "Tag",
+      "totally_funded": "Finanziert",
+      "partially_funded": "Teilweise finanziert",
+      "not_funded": "Nicht finanziert",
+      "error": {
+        "using_proxy": "Lösche den Proxy um für ein Proposal zu stimmen",
+        "active": "Um für ein Proposal zu stimmen, müssen Sie zuerst Ihren aktiven Account Key hinzufügen",
+        "vote": "Beim Voten für ein Proposal ist ein Fehler aufgetreten!",
+        "unvote": "Beim entfernen eines Votes für ein Proposal ist ein Fehler aufgetreten!"
+      },
+      "success": {
+        "vote": "Sie haben erfolgreich für ein Proposal gestimmt!",
+        "unvote": "Sie haben Ihren Vote erfolgreich entfernt!"
+      }
+    }
+  },
+  "popup": {
+    "browser_tutorial": {
+      "title": "Keychain Browser",
+      "description": "Willkommen in Ihrem Keychain Browser! Hier sind ein paar Navigationselemente, die Sie wissen sollten:",
+      "swipe_right": "Nach rechts wischen um zurück zu gehen",
+      "double_tap": "Tippe mit zwei Fingern um die schwebende Leiste zu verstecken/anzeigen",
+      "swipe_left": "Nach links wischen um vorwärts zu gehen",
+      "swipe_down": "Zum Aktualisieren nach unten wischen",
+      "browser_button": "Drücken, um zwischen Haupt- und Browserleiste zu wechseln. Lange drücken, um alle Tabs zu schließen."
+    },
+    "whats_new": {
+      "intro": "Was ist neu in {{content_version}}"
+    },
+    "widget_configuration": {
+      "title": "Portfolio Widget",
+      "sub_title": "Widget Kontostand Konfiguration",
+      "intro": "Wählen Sie aus, welche Konten im Portfolio-Widget angezeigt werden."
+    },
+    "tutorial": {
+      "title": "Willkommen bei Keychain!",
+      "description": "Wenn Sie neu bei Keychain, oder Hive im Allgemeinen, sind, schauen Sie bitte in unser Onboarding-Tutorial.\nSie können ihn später immer unter Einstellungen > Hilfe > Tutorial aufrufen."
+    },
+    "vesting_routes": {
+      "title": "Ihre Vesting-Routen wurden geändert",
+      "warning_message": "Wenn Sie diese Änderungen nicht selbst vorgenommen haben, wenden Sie sich bitte an den Hive ",
+      "account_item_label": "Konto",
+      "account_item_old_route_title": "Alte Route",
+      "account_item_new_route_title": "Neue Route",
+      "account_item_button_skip_label": "Diese Änderungen sind beabsichtigt",
+      "account_item_button_revert_label": "Alles zurücksetzen",
+      "item_details_non_existent_label": "Keine",
+      "item_details_autovest_title": "Auto vest: ",
+      "item_details_percent_title": "Prozent: ",
+      "item_details_to_title": "An: ",
+      "item_details_from_title": "Von: ",
+      "toast": {
+        "handled_successfully": "Ihre Vesting-Routen wurden gesichert!"
+      }
+    },
+    "wrong_key": {
+      "title": "Ungültiger Schlüssel{{plural}} gefunden",
+      "intro": "Ihr Account @{{account}} hat einen falschen {{keyNames}} Schlüssel.\n\nMöchten Sie diesen Schlüssel jetzt aktualisieren?",
+      "intro_plural": "Ihr Konto @{{account}} hat falsche {{keyNames}} und {{lastKeyName}} Schlüssel.\n\nMöchten Sie diese Schlüssel sofort aktualisieren?",
+      "button_action": {
+        "do_nothing": "Nichts machen",
+        "replace": "Ersetzen"
+      },
+      "key_info_tooltip": "Dieser Schlüssel scheint nicht zu Ihrem Account zu passen. Sie können damit keine Transaktionen durchführen. Sollten Sie die Schlüssel geändert haben, ersetzen Sie diese mit dem neuen."
+    }
+  },
+  "multisig": {
+    "disclaimer_message": "Multisig erkannt: Diese Transaktion wird an den Hive-Multisig-Server gesendet",
+    "bot_two_fa_code": "@{{account}} Einmaliges Passwort:",
+    "enter_otp": "OTP eintragen",
+    "error_otp_not_verified": "Ihr Einmalpasswort ist falsch. Bitte versuchen Sie es erneut",
+    "error_otp_already_used": "Ihr Einmalpasswort wurde bereits verwendet. Bitte verwenden Sie das nächste.",
+    "transaction_broadcasted": "Die Multisig Transaktion wurde erfolgreich übertragen",
+    "transaction_signed_successfully": "Die Multisig Transaktion wurde erfolgreich signiert",
+    "pending": "Die Anfrage wartet derzeit auf die Freigabe durch andere Signierer. Sie werden von Keychain benachrichtigt, wenn/wann sie erfolgreich übertragen wird."
+  },
+  "export_transactions": {
+    "start_date": "Anfangsdatum",
+    "end_date": "Enddatum",
+    "date_picker": {
+      "choose_start_date": "Wählen Sie das Startdatum",
+      "choose_ending_date": "Wählen Sie das Enddatum"
+    },
+    "confirmation": {
+      "success": "Ihre Transaktionen wurden unter '{{filePath}} ' gespeichert",
+      "error": "Export der Transaktionen fehlgeschlagen.\n{{error}}"
+    },
+    "open_file": "Datei öffnen"
+  },
+  "multichain": {
+    "switch_chain": "Blockchain wechseln"
+  }
+}

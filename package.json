@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "2.9.8",
+  "version": "2.9.9",
   "main": "index.js",
   "scripts": {
     "start": "expo start",

@@ -1,0 +1,1236 @@
+{
+  "unlock": {
+    "enterPIN": "Masukkan PIN",
+    "authenticate": "Autentikasi"
+  },
+  "signup": {
+    "confirm": "Konfirmasi PIN",
+    "choose": "Pilih PIN Anda",
+    "first_account": "Mari mulai! Buat akun Hive pertama Anda atau impor akun yang sudah ada."
+  },
+  "intro": {
+    "intro_text_1": "Solusi Dompet Hive Terbaik!",
+    "intro_text_2": "Kelola aset HIVE dan terhubung dengan berbagai aplikasi HIVE",
+    "text": "Hive mendukung pertumbuhan ekosistem situs web dan aplikasi Web 3.0.",
+    "manage": "Mari mulai membuat akun Hive Anda!",
+    "existingAccount": "Akun terdaftar",
+    "createAccount": "Akun Baru"
+  },
+  "createAccount": {
+    "caption": "Pilih cara membuat akun yang paling Anda sukai",
+    "on_boarding_title": "Buat melalui Hive.io",
+    "peer_to_peer_on_boarding_title": "Buat akun bersama teman"
+  },
+  "addAccountByKey": {
+    "text": "Tambahkan akun Hive Anda ke Keychain"
+  },
+  "addAccountByAuth": {
+    "text": "Tambahkan akun baru melalui akun berotoritas yang telah tersimpan di Hive Keychain."
+  },
+  "addAccountByQR": {
+    "wrongQR": "Silakan pindai Kode QR akun Hive Keychain"
+  },
+  "keys": {
+    "master_password": "Master Password ",
+    "owner_key": "Owner Key",
+    "active_key": "Active Key",
+    "posting_key": "Posting Key",
+    "memo_key": "Memo Key",
+    "private": "Private",
+    "owner": "Owner ",
+    "public": "Public ",
+    "posting": "Posting ",
+    "active": "Active ",
+    "memo": "memo",
+    "key_type": "{{type}} key",
+    "using_authorized_account": "Masuk menggunakan {{authorizedAccount}}'s akun",
+    "warning_private_key_in_memo": "Hindari mengirim kunci atau informasi sensitif melalui memo."
+  },
+  "common": {
+    "accounts": "Akun",
+    "started_a": "Memulai sebuah",
+    "initiated_a": "menginisiasi sebuah",
+    "dapp_title": "dApp",
+    "import": "Impor",
+    "export": "Ekspor",
+    "value": "Nilai",
+    "username": "nama pengguna ",
+    "authorized_username": "Auth. Account",
+    "confirm_key_remove": "Yakin ingin menghapus kunci ini dari Keychain?",
+    "confirm_account_remove": "Yakin ingin menghapus akun ini dari Keychain? ",
+    "confirm": "Konfirmasi",
+    "added_account": "Akun telah berhasil ditambahkan!",
+    "cancel": "Batalkan",
+    "close": "Tutup",
+    "privateKey": "Private key",
+    "private": "Public",
+    "public": "Public",
+    "pending": "Tertunda",
+    "amount": "jumlah",
+    "enter_amount": "Masukkan nilai",
+    "memo": "memo",
+    "transfer": "Transfer",
+    "send": "Transfer",
+    "receive": "Menerima",
+    "save": "Simpan",
+    "balance": "Saldo",
+    "available": "Tersedia",
+    "back": "Kembali",
+    "encrypted": "terenskripsi",
+    "vote": "Vote",
+    "unvote": "Unvote",
+    "none": "Kosong",
+    "error": "Kesalahan: Terjadi kesalahan: {{msg}}",
+    "error_title": "Kesalahan",
+    "savings": "Savings",
+    "ok": "OK",
+    "popup_read_more": "Baca lebih lanjut",
+    "history": "Riwayat",
+    "search_box_placeholder": "Mencari",
+    "stake": "Stake",
+    "unstake": "Unstake",
+    "delegate": "Delegasi",
+    "got_it": "Saya mengerti!",
+    "deleg": "Deleg. ",
+    "missing_key": "Silakan tambahkan {{key}}Anda untuk melakukan operasi ini!",
+    "need_positive_amount": "Jumlahnya harus lebih besar dari 0",
+    "next": "Selanjutnya ",
+    "previous": "Sebelumnnya ",
+    "account": "Akun",
+    "unknown_data": {
+      "description": "Digunakan jika ada isian yang tidak terdaftar.",
+      "value": "Tidak diketahui"
+    },
+    "currency": "Mata uang",
+    "max": "Maksimal",
+    "recurrent_transfer": "Transfer berkala",
+    "token": "Token",
+    "total": "Total",
+    "edit": "Ubah",
+    "delete": "Hapus",
+    "from": "Dari",
+    "to": "Untuk",
+    "use_authorized_account_instead": "Gunakan akun terotorisasi sebagai gantinya",
+    "forget_account": "Lupa akun",
+    "ordinal_st_label": "st",
+    "ordinal_nd_label": "nd",
+    "ordinal_rd_label": "rd",
+    "ordinal_th_label": "th",
+    "url": "URL",
+    "estimated_account_value": "Perkiraan nilai akun ",
+    "current": "Saat Ini",
+    "operation_type": "Jenis operasi",
+    "incoming": "Masuk",
+    "outgoing": "Delegasi Keluar",
+    "received": "Diterima",
+    "sent": "Terkirim",
+    "invalid_url": "Mohon gunakan URL yang valid ",
+    "clear_all": "Hapus semua koneks",
+    "select": "Pilih",
+    "overdraw_balance_error": "Saldo {{currency}} Anda tidak mencukupi",
+    "swap_sending_token_successful": "Swap dalam proses! Terima kasih telah menggunakan Keychain!",
+    "swap_error_sending_token": "Gagal mengirim token ke @{{to}}",
+    "confirm_token_swap": "Konfirmasi swap token",
+    "id": "ID",
+    "account_name": "Nama akun",
+    "key": "Key",
+    "password": "Kata sandi",
+    "title_master_key": "Master",
+    "title_active_key": "Active",
+    "title_posting_key": "Posting",
+    "title_memo_key": "memo",
+    "title_owner_key": "Owner",
+    "switch": "Beralih",
+    "menu": "Menu",
+    "users": "Pengguna",
+    "local_accounts": "local accounts",
+    "exchanges": "Bursa Kripto",
+    "exchange": "Bursa Kripto",
+    "yes": "Konfirmasi",
+    "no": "Batalkan",
+    "skip": "Lewati",
+    "show": "Tampilkan",
+    "experimental": "Uji Coba",
+    "generate_qr": "Buat Kode QR",
+    "lets_go": "Beri Masukan",
+    "discord_server": "Server Discord"
+  },
+  "wallet": {
+    "proposal": {
+      "request": "Ayo beri dukungan untuk proposal kami. ",
+      "vote": "Vote",
+      "read": "Baca",
+      "vote_success": "Voting berhasil! Terima kasih telah mendukung pengembangan Keychain melalui proposal DHF kami.",
+      "vote_fail": "Terjadi kesalahan saat memberikan voting untuk proposal!"
+    },
+    "menu": {
+      "hive": "Hive",
+      "history": "Riwayat",
+      "tokens": "Tokens"
+    },
+    "rc": "Resource Credits",
+    "vp": "Voting Mana",
+    "balance": "saldo",
+    "no_tokens": ".",
+    "no_tokens_filter": "Tidak ada yang ditampilkan. Harap hapus filter.",
+    "no_transaction": "Tidak ada transaksi baru.",
+    "add_memo": "Tambahkan memo keys Anda untuk mengenkripsi pesan.",
+    "add_active": "Silakan tambahkan active key Anda untuk melakukan operasi ini.",
+    "add_posting": "Silakan tambahkan posting key Anda untuk melakukan operasi ini.",
+    "claim": {
+      "success": "Berhasil mengklaim {{rewards}!",
+      "error_posting": "Tambahkan posting key untuk mengklaim rewards!",
+      "info_claim_account": "Akun yang diklaim {{account}}",
+      "info_create_claimed_account": "Akun yang diklaim",
+      "info_claim_rewards": "{{currency}} diklaim",
+      "info_account_create": "Membayar {{fee}} untuk membuat @{{new_account_name}}",
+      "enable_autoclaim_rewards": "Klaim Rewards",
+      "enable_autoclaim_accounts": "Klaim Akun",
+      "enable_autoclaim_savings": "Klaim bunga savings",
+      "enable_autoclaim_rewards_info": "Mengklaim hadiah Anda secara teratur dapat meningkatkan keuntungan Anda",
+      "enable_autoclaim_accounts_info": "Klaim tiket akun gratis jika RC Anda lebih dari {{MIN_RC_PCT}}%. Konsumsi RC bergantung pada Hive Power dan bisa memakan hampir seluruh RC Anda.",
+      "enable_autoclaim_savings_info": "Untuk mengklaim bunga savings, Keychain akan menyetor atau menarik 0,001 HBD ke/dari tabungan Anda setiap 30 hari."
+    },
+    "operations": {
+      "phishing_domain": "{{domain}}  terdeteksi sebagai domain berbahaya. Periksa kembali dan pastikan Anda mengakses dApp yang tepat.",
+      "history": {
+        "no_transaction_or_clear": "Transaksi tidak ditemukan. Silakan hapus filter.",
+        "load_more": "Tampilkan lebih banyak",
+        "list_is_empty_try_clear_filter": "Tidak ada data ditemukan.Silakan hapus filter.",
+        "reset_filters": "Proses lama? Klik untuk reset filter."
+      },
+      "savings": {
+        "deposit": "Setor dana",
+        "withdraw": "Tarik dana",
+        "withdraw_disclaimer": "Penarikan saldo dari savings akan memakan waktu 3,5 hari.",
+        "deposit_disclaimer": "Menyimpan HBD di tabungan saat ini dapat  memberikan imbal hasil {{apr}}% APR, sesuai keputusan witness. ",
+        "withdraw_button": "Penarikan",
+        "deposit_button": "Setor ",
+        "prompt": "Pilih Mata Uang",
+        "fill_withdraw_savings": "Berhasil menarik {{amount}} dari savings",
+        "start_withdraw_savings": "Memulai penarikan {{amount}}dari savings",
+        "info_deposit_savings": "Setor {{amount}} ke savings",
+        "info_received_interests": "Menerima bunga sebesar {{amount}} dari savings",
+        "pending_withdraw": {
+          "pending": "Penarikan",
+          "pending_disclaimer": "Penarikan dana dari savings membutuhkan waktu 3 hari. Batalkan proses ini jika Anda ingin menyimpan {{currency}}Anda di savings",
+          "no_pending_withdrawals": "Tidak ada penarikan {{currency}} yang tertunda",
+          "title_page": "Penarikan tertunda",
+          "cancel_confirm_disclaimer": "Mohon konfirmasi bahwa Anda ingin membatalkan penarikan dari savings",
+          "cancel_withdraw_title": "Batalkan penarikan",
+          "canceled": {
+            "success": "Penarikan savings berhasil dibatalkan"
+          }
+        },
+        "confirm": {
+          "info": "Harap konfirmasi operasi savings ini",
+          "balance": "Saldo"
+        },
+        "pending": "Penarikan",
+        "currency_savings_title": "{{currency}} Savings"
+      },
+      "transfer": {
+        "title": "Transfer dana",
+        "memo": "MEMO(optional)",
+        "executions": "Jumlah eksekusi",
+        "recurrence": "Periode Pengulangan",
+        "frequency": "Frekuensi",
+        "frequency_minimum": "Minimal 24 jam",
+        "iterations": "Iterasi",
+        "iterations_minimum": "Minimal 2 ",
+        "sent": "Terkirim",
+        "received": "Diterima",
+        "confirm": {
+          "info": "Harap konfirmasi transfer Anda. Transaksi tidak dapat dibatalkan.",
+          "from": "Dari",
+          "to": "Untuk",
+          "amount": "Jumlah",
+          "memo": "memo",
+          "recurrence": "Frekuensi Transfer",
+          "recurrenceData": "{{exec}} kali, setiap {{recurrence}} jam",
+          "balance": "Saldo"
+        },
+        "warning": {
+          "phishing": "Akun ini terindikasi sebagai akun phishing. Periksa dan pastikan ejaan dan tujuan transfer sudah sesuai.",
+          "exchange_currency": "Exchange ini tidak mendukung setoran {{currency}}",
+          "exchange_memo": "Pastikan Anda menambahkan memo saat mentransfer ke akun exchange Anda.",
+          "missing_info": "Silakan isi nama pengguna dan jumlah untuk melanjutkan",
+          "missing_amount": "Silakan isi jumlah yang diminta untuk melanjutkan",
+          "insufficient": "Silakan isi nama pengguna dan jumlah untuk melanjutkan",
+          "private_key_in_memo": "Jangan gunakan memo untuk mengirim private keys",
+          "exchange_vsc": "VSC tidak didukung di sebagian besar bursa. Melanjutkan akan menimbulkan risiko kehilangan dana.",
+          "exchange_recurrent": "Bursa kripto umumnya tidak mendukung transfer otomatis. Dana bisa hilang jika dilanjutkan."
+        },
+        "started_recurrent_transfer": "Memulai transfer berulang sebesar {{amount}} ",
+        "fill_recurrent_transfer_out": "Ke @{{other}}: ({{remainingExecutions}} tersisa)",
+        "fill_recurrent_transfer_in": "Dari @{{other}}: ({{remainingExecutions}} tersisa)",
+        "start_recurrent_transfer_out": "Ke  @{{other} (setiap {{recurrence}} jam - {{executions}}kali)",
+        "info_recurrent_transfer_in": "@{{other}} memulai transfer sebesar {{amount}} (setiap {{recurrence}} jam - {{executions}} kali)"
+      },
+      "powerup": {
+        "title": "Power up",
+        "info_power_up": "Powered up {{amount}}",
+        "info_text": "Power up HIVE untuk mengubah menjadi HP",
+        "confirm": {
+          "info": "Harap konfirmasi power up ini",
+          "balance": "Saldo"
+        }
+      },
+      "powerdown": {
+        "confirm": {
+          "info": "Harap konfirmasi power down ini",
+          "info_stop": "Harap konfirmasi bahwa Anda ingin membatalkan power down."
+        },
+        "title": "Power down",
+        "info_power_down": "Memulai {{amount}} power down",
+        "canceled_power_down": "Membatalkan power down",
+        "powering_down": "Powering down",
+        "next_power_down": "Power down berikutnya ",
+        "powerdown_text": "Lakukan Power Down Hive Power Anda untuk menerima HIVE. Seluruh proses pencairan akan memakan waktu 13 minggu dan dilakukan secara bertahap.",
+        "confirm_cancel": "Harap konfirmasi bahwa Anda ingin membatalkan power down."
+      },
+      "delegation": {
+        "title": "Delegasikan Hive Power",
+        "incoming": "Delegasi yang masuk",
+        "outgoing": "Delegasi yang keluar",
+        "info_delegation_out": "didelegasikan ke @{{delegatee}}",
+        "canceled_delegation": "Membatalkan delegasi ke @{{delegatee}}",
+        "info_delegation_in": "@{{delegator}} didelegasikan",
+        "title_button": "HP Deleg.",
+        "title_delegation": "Delegasi",
+        "title_delegated": "Didelegasikan",
+        "total_incoming": "Total Masuk",
+        "total_outgoing": "Jumlah delegasi keluar ",
+        "delegation_disclaimer": "Anda dapat mendelegasikan Hive Power (HP) Anda kepada pengguna lain. Klik jumlah Keluar untuk meninjau atau membuat perubahan.\n",
+        "outgoing_disclaimer": "Delegasi akan kembali ke saldo Hive Power Anda dalam 5 hari setelah dibatalkan.",
+        "pending_undelegations": "Delegasi yang tertunda",
+        "confirm_cancel_delegation": "Apakah Anda yakin ingin membatalkan delegasi ini?",
+        "confirm": {
+          "info": "Harap konfirmasi delegasi HP.",
+          "balance": "Saldo"
+        }
+      },
+      "rc_delegation": {
+        "confirm": {
+          "info": "Harap konfirmasi delegasi RC.",
+          "balance": "Saldo"
+        },
+        "title_button": "Rc Deleg.",
+        "title": "Delegasi RC",
+        "total_incoming": "Total Masuk",
+        "total_outgoing": "Total delegasi keluar",
+        "giga_rc": "G RC",
+        "disclaimer": "Delegasikan Kredit Sumber Daya (RC) Anda ke pengguna lain. Klik “Keluar” untuk melihat atau mengedit",
+        "delegate_to_user": "Delegasikan ke pengguna",
+        "warning": {
+          "no_username_or_amount": "Silakan isi nama pengguna dan jumlah yang valid untuk melanjutkan"
+        },
+        "success": {
+          "rc_delegation_successful": "Anda berhasil mendelegasikan RC ke @{{to}}",
+          "cancel_rc_delegation_successful": "Anda berhasil membatalkan delegasi ke @{{to}}"
+        },
+        "failed": {
+          "rc_delegation_failed": "Delegasi RC gagal"
+        },
+        "confirmation": "Konfirmasi delegasi RC Anda.",
+        "confirmation_cancel": "Konfirmasi delegasi RC Anda.",
+        "confirm_cancel_rc_delegation": "Harap konfirmasi bahwa Anda ingin membatalkan delegasi ini"
+      },
+      "convert": {
+        "title": "Konversi ke {{to}}",
+        "button": "Konversi",
+        "disclaimer_hive": "Dengan menyetorkan HIVE sebagai agunan, Anda langsung menerima HBD senilai setengahnya (dipotong biaya 5%). Sisa HIVE akan dikembalikan setelah 3,5 hari.",
+        "disclaimer_hbd": "HBD Anda akan dikonversi menjadi HIVE waktu 3,5 hari, mengikuti harga median selama periode tersebut.",
+        "fill_convert_request": "Konversi yang terpenuhi:",
+        "start_convert": "Memulai konversi {{amount}}",
+        "start_collateralized": "Memulai konversi collateralized sebesar {{amount}}",
+        "pending": "Tertunda",
+        "no_pending": "Tidak ada konversi {{currency}} yang tertunda untuk ditampilkan.",
+        "warning": {
+          "missing_info": "Silakan isi jumlah untuk melanjutkan"
+        },
+        "confirm": {
+          "info": "Harap konfirmasi konversi."
+        }
+      },
+      "more_token_info": "{{currency}} informasi",
+      "tokens_transfer": {
+        "title": "Transfer Token"
+      },
+      "token_stake": {
+        "confirm": {
+          "info": "Harap konfirmasi bahwa Anda ingin stake token",
+          "balance": "Saldo"
+        },
+        "title": "Stake",
+        "titled": "Staked",
+        "staking": "Staking",
+        "staking_token": "Staking {{currency}}",
+        "info": "Operasi pada token mungkin memerlukan waktu hingga 30 detik untuk konfirmasi, harap bersabar."
+      },
+      "token_unstake": {
+        "confirm": {
+          "info": "Harap konfirmasi bahwa Anda ingin membatalkan unstake tokens. ",
+          "balance": "Saldo"
+        },
+        "title": "Unstake",
+        "unstaking_token": "Unstaking {{currency}}",
+        "unstaking": "Unstaking",
+        "cooldown_disclaimer_multiple_days": "Unstaking token ini akan memakan waktu {{unstakingCooldown}} hari",
+        "cooldown_disclaimer_single_day": "Unstaking token ini akan memakan {{unstakingCooldown}} day",
+        "token_pending_unstake": "Unstaking tertunda",
+        "info": "Operasi pada token mungkin memerlukan waktu hingga 30 detik untuk konfirmasi, harap bersabar."
+      },
+      "token_delegation": {
+        "confirm": {
+          "info": "Harap konfirmasikan delegasi token ini."
+        },
+        "title": "Delegasi",
+        "delegating": "Mendelegasi",
+        "delegating_token": "Mendelegasikan {{currency}}",
+        "cancel_delegation": "Membatalkan delegasi {{currency}}",
+        "cancelling_delegation": "Membatalkan Delegasi",
+        "title_confirm_cancel_delegation": "Harap konfirmasi bahwa Anda ingin membatalkan Delegasi Token sebesar {{amount}} {{currency}}",
+        "in": "Delegasi masuk",
+        "out": "Delegasi keluar",
+        "info_requirements": "Beberapa token memerlukan stake untuk didelegasikan",
+        "incoming": "Delegasi yang masuk",
+        "outgoing": "Delegasi yang keluar",
+        "undelegation_cooldown_disclaimer": "Saat menghapus delegasi {{symbol}}, staked token akan tersedia setelah masa pendinginan {{undelegationCooldown}} hari.",
+        "token_pending_undelegation": "Pendelegasian yang tertunda",
+        "disclaimer_hbd": "HBD Anda akan dikonversi menjadi HIVE senilai ~1 USD dalam waktu 3,5 hari, mengikuti harga median selama periode tersebut.",
+        "fill_convert_request": "Konversi yang terpenuhi:",
+        "start_convert": "konversi",
+        "start_collateralized_convert": "konversi collateral",
+        "info": "Operasi pada token mungkin memerlukan waktu hingga 30 detik untuk konfirmasi, harap bersabar."
+      },
+      "tokens": {
+        "info_author_reward": "Menerima {{amount}} sebagai reward penulis",
+        "info_comment_curation_reward": "Menerima {{amount}} as reward komen kurasi",
+        "info_mining_lottery": "Menerima {{amount}} dari mining lottery ({{poolId}}",
+        "info_transfer_out": "Terkirim {{amount}} ke @{{to}}",
+        "info_transfer_in": "Menerima {{amount}} dari @{{from}}",
+        "info_delegation_out": "Delegasi {{amount}} ke @{{delegatee}",
+        "info_delegation_in": "@{{delegator}} mendelegasikan {{amount}}",
+        "info_start_cancel_delegation_out": "Membatalkan {{amount}}delegasi ke @{{delegatee}}",
+        "info_start_cancel_delegation_in": "@{{delegator}} membatalkan {{amount}} delegasi",
+        "info_cancel_delegation_out": "Selesai membatalkan delegasi sebesar{{amount}} ke @{{delegatee}}",
+        "info_cancel_delegation_in": "@{{delegator}} selesai membatalkan delegasi sebesar {{amount}}",
+        "info_stake_other_user": "@{{from}} staked {{amount}} untuk @{{to}}",
+        "info_stake": "Staked{{amount}}",
+        "info_start_unstake": "Memuali untuk unstake {{amount}}",
+        "info_unstake_done": "{{amount}} unstaked",
+        "info_issue": "Menerima {{amount}}",
+        "info_pegged_buy": "Membeli {{amount}}",
+        "info": "Lihat informasi token dan pilih token yang ingin Anda tampilkan. Pelajari lebih lanjut tentang token khusus di blockchain Hive melalui",
+        "total_value": "Nilai total",
+        "liquid_balance": "saldo likuid",
+        "incoming": "Delegasi yang masuk",
+        "outgoing": "Delegasi yang keluar",
+        "total_staked": "Total yang di Staking",
+        "pending_unstake": "Unstaking tertunda",
+        "issuer": "Penerbit"
+      },
+      "tokens_filter": {
+        "rewards": "Rewards",
+        "transfer": "Transfer",
+        "stake": "Staking",
+        "unstake": "Unstaking",
+        "delegations": "Semua delegasi",
+        "miningLottery": "Lottery"
+      },
+      "token_settings": {
+        "title": "Pengaturan token",
+        "tokens_settings_text": "Lihat informasi token dan pilih token yang ingin Anda tampilkan. Pelajari lebih lanjut tentang token khusus di blockchain Hive melalui",
+        "issued_by": "oleh",
+        "empty_results": "Tidak ada hasil. Coba hapus filter.",
+        "reset_tokens_text": "Setel ulang. Tampilkan semua token",
+        "supply": "Suplai"
+      },
+      "buy_coins": {
+        "title_hive": "HIVE",
+        "title_hbd": "HBD",
+        "title_buy": "Beli",
+        "html_popup_transak_description": "Beli HIVE dengan fiat melalui Transak.Layanan ini mendukung kartu kredit, transfer bank, Apple Pay, dan MobiKwik di lebih dari 100 negara (opsi pembayaran dapat berbeda tergantung negara).\nHIVE akan langsung dikirim ke dompet Hive Keychain Anda.",
+        "html_popup_blocktrades_description": "Tukar HIVE atau HBD secara instan dengan kripto lain melalui Blocktrades.",
+        "title_exchanges": "Bursa Kripto"
+      },
+      "swap": {
+        "title": "Tukar",
+        "disclaimer": "Keychain membandingkan berbagai penyedia untuk memberi Anda harga terbaik",
+        "swap_fee_title": "Biaya",
+        "swap_under_maintenance": "Fitur Swap Keychain dalam pemeliharaan, coba lagi nanti",
+        "service_unavailable_message": "Saat ini layanan sedang mengalami gangguan. Kami mohon maaf atas ketidaknyamanannya dan sedang berusaha memperbaikinya.",
+        "swap_layer_two_delayed": "Hive Engine saat ini mengalami keterlambatan sinkronisasi blok. Proses pertukaran mungkin membutuhkan waktu lebih lama dari biasanya dan berisiko lebih tinggi dibatalkan karena slippage.",
+        "advanced_settings_title": "Pengaturan lanjutan",
+        "slippage": "Slippage",
+        "swaps_slippage_definition": "Kami pastikan swap menghasilkan lebih dari estimasi minus slippage. Jika dibatalkan, dana  akan dikembalikan dan bisa dalam token berbeda.Catatan: beberapa swaps memerlukan beberapa operasi dan dana bisa dikembalikan dalam token yang berbeda.",
+        "select_title_from": "Memilih dari",
+        "select_title_to": "Memilih untuk",
+        "no_tokens_found": "Token tidak ditemukan. Silakan hapus filter.",
+        "swap_start_end_token_should_be_different": "Pilih dua token yang berbeda",
+        "swap_cannot_switch_tokens": "Tidak dapat mengganti token karena Anda tidak memiliki {{symbol}}",
+        "swap_no_estimate_error": "Perkiraan swap tidak tersedia.",
+        "swap_min_slippage_error": "Toleransi slippage minimal {{min}}%",
+        "swap_token_confirm_message": "Penukaran token dimulai. Status penukaran tersedia di menu riwayat. ",
+        "swap_id_title": "Swap ID",
+        "swap_estimation": "Estimasi penukaran",
+        "estimation": "Estimasi",
+        "swap_min_hive_value_error": "Nilai minimum harus setara dengan 1 HIVE ({{currently}} HIVE)",
+        "swap_refresh_countdown": "Menyegarkan dalam {{count}}dtk",
+        "swap_slippage_step": "{{slippage}}% (untuk setiap langkah)",
+        "swap_no_history": "Belum ada riwayat swap"
+      },
+      "create_account": {
+        "peer_to_peer": {
+          "info": "Harap verifikasi informasi di bawah ini untuk mendaftarkan pengguna Hive baru.Tindakan ini tidak dapat dibatalkan!",
+          "creation_method": "Metode pembuatan",
+          "delegating_title": "Mendelegasi",
+          "delegating_amount": "{{amount}}{{currency}}",
+          "account_creator": "Creator",
+          "account_sucessfully_created": "Sudah siap! Selamat datang @{{accountName}}"
+        }
+      }
+    },
+    "has": {
+      "connect": {
+        "title": "Hubungkan ke Hive Auth",
+        "text": "Hive Auth meminta koneksi untuk akun @{{account}}.",
+        "confirm": "Hubungkan",
+        "no_username": "Harap tambahkan akun @{{account}} ke dompet Anda agar dapat digunakan di dApp favorit Anda!"
+      },
+      "auth": {
+        "title": "Autentikasi",
+        "button": "Menyetujui",
+        "text": "Otentikasi menggunakan akun @{{account}} di {{name}}?",
+        "success": "Berhasil masuk sebagai @{{akun}} di {{nama}}. Silakan kembali ke dApp Anda."
+      },
+      "challenge": {
+        "ask": "{name}} ingin memverifikasi bahwa Anda memiliki otoritas {{key}} untuk akun @{{account}}",
+        "success": "Berhasil memverifikasi otoritas @{{account}} {{key}} pada {{name}}! Anda sekarang dapat kembali ke dApp Anda.",
+        "no_key": "Anda tidak memiliki keys  {{key}} untuk akun @{{account}}",
+        "button": "Verifikasi key"
+      },
+      "uuid": "UUID: {{uuid}}",
+      "info": {
+        "h1": "Apa itu HIve Auth? ",
+        "t1": "Hive Auth memberikan cara yang aman dan praktis bagi aplikasi (web, desktop, atau seluler) untuk mengautentikasi pengguna serta mengelola transaksi di blockchain Hive tanpa memperlukan kata sandi atau private key. ",
+        "h2": "Mulai!",
+        "t2": "Untuk terhubung ke dApp desktop, gunakan pemindai Kode QR. Di ponsel, pilih ‘Masuk dengan Hive’ di dApp favorit Anda.",
+        "h3": "Indikator Hive Auth",
+        "indicator": {
+          "grey": {
+            "title": "Tidak ada koneksi",
+            "press": "Buka info panel"
+          },
+          "red": {
+            "title": "Terputus",
+            "press": "Buka info panel",
+            "longPress": "Coba sambungkan kembali"
+          },
+          "green": {
+            "title": "Tersambung",
+            "press": "Buka info panel",
+            "longPress": "Hapus semua sesi dan putuskan sambungan"
+          },
+          "press": "Tekan",
+          "longPress": "Tekan agak lama"
+        }
+      },
+      "session": {
+        "time": "Berapa lama Anda ingin sesi ini berjalan?",
+        "prompt": "Validitas Sesi"
+      },
+      "toast": {
+        "register": "Mendaftarkan akun ke Hive Auth...",
+        "broadcast": "Menyiarkan transaksi"
+      }
+    },
+    "filter": {
+      "transfer": "Transfer",
+      "claim_reward_balance": "Klaim rewards",
+      "delegate_vesting_shares": "Semua delegasi",
+      "savings": "Savings",
+      "power_up_down": "Power up/down",
+      "convert": "Konversi",
+      "account_create": "Pembuatan akun",
+      "filter_in": " Masuk",
+      "filter_out": "Keluar",
+      "filters_title": "Filter",
+      "clear_filters": "Bersikan",
+      "claim_account": "Klaim Akun",
+      "filter_title": "Filter"
+    }
+  },
+  "settings": {
+    "keys": {
+      "add": "Tambahkan Kunci",
+      "add_keyType": "Tambahkan{{type}} key",
+      "remove": "Hapus Keys",
+      "remove_info": "Anda akan menghapus kunci {{type}} untuk akun @{{username}}.",
+      "show_qr_code": "Tampilkan Kode QR",
+      "qr": {
+        "title": "Ekspor kunci Anda! ",
+        "caption": "Peringatan: Kode QR ini berisi seluruh private key akun Anda. Hanya gunakan untuk aplikasi Hive Keychain Mobile, dan jangan bagikan kepada siapa pun.",
+        "check1": "Saya menyatakan bahwa saya tidak membagikan layar ini dan tidak akan membagikan tangkapan layar Kode QR kepada siapa pun.",
+        "check2": "Saya mengerti dan menyetujui bahwa membagikan Kode QR ini kepada pihak mana pun dapat menyebabkan kehilangan dana, dan saya bertanggung jawab penuh atas risikonya."
+      },
+      "disclaimer": [
+        {
+          "text": "Untuk menerima dana, cukup bagikan nama akun Anda (tertera di atas) kepada pengirim.",
+          "style_do_not_translate": "Pernyataan"
+        },
+        {
+          "text": "Beberapa aplikasi tetap memerlukan Private Key untuk verifikasi kepemilikan atau transaksi.",
+          "style_do_not_translate": "Pernyataan"
+        },
+        {
+          "text": "HANYA BAGIKAN PRIVATE KEYS DENGAN PIHAK YANG ANDA PERCAYA!",
+          "style_do_not_translate": "Important"
+        },
+        {
+          "text": "Hive Keychain seluler akan segera menghadirkan transaksi antar-aplikasi, menghapus kebutuhan penggunaan private keys di aplikasi pihak ketiga.",
+          "style_do_not_translate": "Disclaimer "
+        }
+      ]
+    },
+    "settings": {
+      "rpc": "RPC Nodes",
+      "automated_tasks": {
+        "title": "Atur Otomatisasi",
+        "disclaimer": "Jadwalkan tugas otomatis untuk berjalan setiap jam.\"",
+        "he_auto": {
+          "title": "Staking Otomatis",
+          "list_title": "Token ditetapkan untuk staking otomatis",
+          "subtitle": "Staking  token Anda secara otomatis dapat meningkatkan keuntungan Anda"
+        }
+      },
+      "multisig": {
+        "title": "Multisig",
+        "multisig_intro": "Aktifkan Hive Multisig untuk mendengarkan permintaan multisig untuk akun ini. Ini adalah fitur lanjutan, gunakan hanya jika Anda tahu apa yang Anda lakukan.",
+        "more_info_blog": "Temukan informasi lebih lanjut tentang multisig di blog ini.",
+        "more_info_multisig": "Untuk mengubah akun Anda menjadi akun multisig, gunakan Hive Multisig dApp.",
+        "enable_multisig": "Aktifkan multisig",
+        "enable_active_key_multisig": "Aktifkan active key multisig",
+        "enable_posting_key_multisig": "Aktifkan posting key multisig"
+      },
+      "export_transactions": {
+        "title": "Ekspor Transaksi"
+      },
+      "rpc_disclaimer": "Pilih node RPC yang akan digunakan untuk mengakses data dan menyiarkan transaksi dari dan ke Hive Blockchain.",
+      "global": "Pengaturan umum",
+      "whitelisted": "Operasi yang diizinkan",
+      "no_pref": "Tidak ada informasi yang diizinkan",
+      "user": "Pengaturan pengguna",
+      "operations": "Operasi ",
+      "operations_info": "Agar pengalaman lebih lancar, izinkan dApp memasukkan operasi otorisasi non-aktif ke Whitelist. Operasi ini tidak akan meminta konfirmasi.",
+      "switch_auto": "Beralih secara otomatis",
+      "switch_auto_info": "Kami secara otomatis akan memilih node Hive  RPC terbaik untuk Anda. ",
+      "switch_auto_info_he": "Kami secara otomatis akan memilih node Hive-Engine RPC terbaik untuk Anda. ",
+      "hive_rpc": "Hive RPC",
+      "add_rpc_title": "Tambahkan node RPC Anda di sini",
+      "rpc_node": "RPC Node",
+      "testnet": "Testnet",
+      "set_as_active": "Tetapkan node RPC baru sebagai aktif",
+      "new_HE_rpc": "HE RPC baru",
+      "new_account_history_rpc": "RPC riwayat akun baru",
+      "hive_engine_rpc": "Hive-Engine RPC",
+      "hive_engine_account_history_api": "Riwayat API Hive-Engine ",
+      "rpc_node_already_exists": "Node RPC ini sudah ada! Silakan pilih yang lain.",
+      "rpc_not_responding_error": "Node {{currentRPC}} tidak merespons. Apakah Anda ingin beralih ke {{uri}}?",
+      "notifications": {
+        "title": "Notifikasi",
+        "disclaimer": "Atur preferensi notifikasi Peak Open Projects Anda. Harap dicatat, perubahan mungkin tidak langsung aktif karena fitur ini masih eksperimental. Buka ekstensi browser untuk pengaturan notifikasi lanjutan.",
+        "activated": "Diaktifkan"
+      }
+    }
+  },
+  "components": {
+    "moreInformation": {
+      "title": "KEYS (HIVE PASSWORDS)",
+      "text1": "Setiap aktivitas di Hive menggunakan KEYS berbeda. Semua KEYS dibuat ketika akun baru dibuat.",
+      "text2": "Anda dapat menggunakan Posting, Acting, atau Master Key untuk mengimpor akun Anda.",
+      "text3": "(Gunakan Master Key Anda untuk membuka semua fitur aplikasi).",
+      "text4": "Jika Anda menggunakan Master Key,  kunci tersebut TIDAK akan disimpan dan hanya akan digunakan untuk membuat keys Anda yang lain. Anda dapat menambahkan/mengedit Akun atau keys kapan saja."
+    },
+    "accountCreationPeerToPeer": {
+      "title": "Pendaftaran Peer to Peer\nTerima kasih, temanmu yang keren sudah mengenalkan kamu ke kami!",
+      "text1": "Setelah Anda memilih nama pengguna yang valid,  klik Buat untuk melanjutkan!",
+      "text2": "Aplikasi akan menampilkan kunci Anda.Pastikan untuk menyimpannya di tempat yang aman",
+      "text3": "Setelah Anda mengonfirmasi bahwa kunci telah disimpan dengan aman",
+      "text4": "Anda akan menerima kode QR. Tunjukkan kepada teman Anda untuk melanjutkan pembuatan akun.",
+      "not_enough_rc_exception": "RC tidak mencukupi untuk melakukan transaksi ini. Harap power up atau menerima delegasi RC."
+    },
+    "infoQR": {
+      "title": "Impor melalui Kode QR",
+      "text1": "Anda dapat mengimpor akun secara instan dengan memindai Kode QR yang sesuai.",
+      "text2": "Untuk mengimpor dari ekstensi browser Hive Keychain, navigasikan ke",
+      "text3": "Pengaturan",
+      "text4": "lalu klik",
+      "text5": "Kelola Akun",
+      "text6": "dan",
+      "text7": "Tampilkan Kode QR"
+    },
+    "infoWalletQR": {
+      "title": "Pemindai Kode QR",
+      "text1": "Gunakan pemindai ini untuk membaca Kode QR terkait Hive",
+      "text2": "Saat ini, hanya sesi Layanan Autentikasi Hive dan pembukaan URL dalam aplikasi yang didukung. Fitur lainnya akan segera menyusul.",
+      "text3": "Jika Anda ingin memindai Kode QR untuk mengimpor akun, silakan lakukan di",
+      "text4": "Pengaturan > Tambah Akun"
+    },
+    "forgotPIN": {
+      "title": "Atur ulang dompet?",
+      "text": "Lupa PIN? Atur ulang Keychain akan menghapus data, lalu impor akun kembali.",
+      "button": "Setel ulang dompet"
+    },
+    "pinCode": {
+      "unsupportedBiometrics": {
+        "title": "Biometrik tidak didukung",
+        "text1": "Fitur biometrik pilihan Anda tidak aman di perangkat ini.",
+        "text2": "Silakan ubah ke Sidik Jari.",
+        "button": "Pergi ke Pengaturan"
+      }
+    },
+    "picker": {
+      "prompt_user": "Pilih Akun",
+      "prompt_rpc": "Pilih RPC Node ",
+      "add_account": "+ Tambahkan akun baru"
+    },
+    "create_account": {
+      "new_account_username": "Nama pengguna akun baru",
+      "safely_copied_keys": "Saya telah menyalin semua kunci saya dengan aman dan menyimpannya di luar Keychain",
+      "storage_understanding": "Saya memahami bahwa Keychain bukan tempat penyimpanan utama untuk semua kunci saya. ",
+      "buy_method_message": "Saya bersedia untuk membayar {{price}}HIVE dengan akun {{account}} untuk membuat akun ini",
+      "claim_account_method_message": "Saya bersedia untuk menggunakan satu tiket pembuatan akun dari @{{account}} untuk membuat akun ini",
+      "copy": "Salin",
+      "create_account": "Buat akun",
+      "cost": "Buat akun baru seharga {{price}} menggunakan @{{account}}",
+      "need_accept_terms_condition": "Anda harus menerima syarat dan ketentuan sebelum membuat akun",
+      "create_account_successful": "Akun Anda telah berhasil dibuat dan ditambahkan ke Keychain",
+      "create_account_failed": "Pembuatan akun gagal. Silakan coba lagi nanti.",
+      "create_account_ticket": " {{tickets}} Tiket pembuatan akun",
+      "ticket": "Tiket",
+      "buying": "Membeli",
+      "create_account_onboarding_message": "Anda sedang onboarding @{{name}}, pilih di bawah untuk mendelegasikan HP atau RC.",
+      "create_account_on_boarding_successful": "Akun @{{accountName}} telah berhasil dibuat!",
+      "create_account_on_boarding_with_delegations_successful": "@{{accountName}} sukses dibuat, delegasi telah dikirimkan.",
+      "peer_to_peer_waiting_text": "Teman Anda perlu memindai QR ini untuk membuat akun. Jangan tutup halaman ini dulu."
+    },
+    "copy_keys": {
+      "title": "Salin key",
+      "text1": "Salin public/private key dengan menekan lama pada key. "
+    },
+    "export_qr_accounts": {
+      "qr_exported_set_disclaimer1": "Kode QR ini berisi seluruh private keys untuk rangkaian akun Anda, dan hanya boleh digunakan untuk mengimpor keys ke aplikasi seluler Hive Keychain.",
+      "qr_disclaimer2": "JANGAN bagikan kepada siapa pun!",
+      "scanning": "Silakan pindai halaman {{page}}/{{total}}",
+      "check1": "Saya menyatakan bahwa saya tidak membagikan layar ini dan tidak akan membagikan tangkapan layar Kode QR kepada siapa pun.",
+      "check2": "Saya mengerti dan menyetujui bahwa membagikan Kode QR ini kepada pihak mana pun dapat menyebabkan kehilangan dana, dan saya bertanggung jawab penuh atas risikonya."
+    },
+    "notifications": {
+      "mark_as_read": "Semua pemberitahuan telah ditandai sebagai telah dibaca.",
+      "notification_set_all_as_read": "Tandai semua sebagai telah dibaca",
+      "notification_follow": "@{{0}} mulai mengikuti @{{1}}",
+      "notification_unfollow": "@{{0}} berhenti mengikuti @{{1}}",
+      "notification_reblog": "@{{0}} Me-reblog@{{1}} postingan",
+      "wallet_info_transfer_in": "Menerima {{0}} dari @{{1}}",
+      "wallet_info_transfer_out": "Mengirim {{0}} dari @{{1}}",
+      "wallet_info_fill_recurrent_transfer_in": "Menerima {{0}} dari{{1}}({{2}}tersisa)",
+      "wallet_info_fill_recurrent_transfer_out": "Mengirim {{0}} dari{{1}}({{2}}tersisa)",
+      "wallet_info_recurrent_transfer_out": "Memulai transfer berkala {{0}} ke @{{1}} (setiap {{2}} jam - {{3}} kali)",
+      "notification_account_update": "Pengaturan notifikasi @{{0}} telah diperbarui",
+      "notification_account_witness_proxy": "@{{0}} telah menetapkan @{{1}}sebagai proxy",
+      "notification_account_witness_vote": "@{{0}} telah memilih @{{1}} sebagai witness",
+      "notification_account_witness_unvote": "@ {{0}} telah membatalkan pemungutan suara @{{1}} sebagai witness",
+      "notification_change_recovery_account": "@{{0}} telah mengubah akun pemulihan menjadi @{{1}}. Perubahan ini akan berlaku efektif dalam 30 hari.",
+      "wallet_info_claim_account": "Akun yang diklaim",
+      "notification_answer": "@{{0}} membalas {{2}}",
+      "notification_mention": "@{{0}} menyebutkan @{{1}} di {{3}}",
+      "notification_delegation": "@{{0}} mendelegasikan {{1}} ke @{{2}}",
+      "notification_cancel_delegation": "@{{0}} telah membatalkan delegasi ke @{{1}}",
+      "notification_requested_account_recovery": "@{{0}} telah meminta pemulihan ke @{{1}}",
+      "notification_recovered_account": "@{{0}}telah dipulihkan",
+      "notification_set_power_down_route": "Rute power down telah diubah dari @{{0}} menjadi @{{1}}",
+      "wallet_info_withdraw_savings": "Memulai penarikan {{0}}dari savings",
+      "wallet_info_deposit_savings": "Setor {{0}} ke savings",
+      "wallet_info_power_up": "Powered up {{0}} HIVE",
+      "wallet_info_power_up_other_account": "@{{0}} powered up {{1}} for @{{2}}",
+      "notification_vote": "@{{0}} telah memilih {{2}}",
+      "bgd_ops_pd": "Memulai {{0}}power down pada {{1}}",
+      "notification_cancelled_powerdown": "@{{1}} membatalkan power down.",
+      "notification_recurrent_transfer": "@{{0}} memulai transfer berkala  ke{{1}} @{{2}}({{3}}eksekusi setiap {{4}} jam)",
+      "notification_fill_convert": "@{{0}}telah menyelesaikan konversi: {{1}} menjadi {{2}}",
+      "notification_author_reward": "@{{0}} telah menerima {{1}}, {{2}}, {{3}} sebagai reward penulis untuk {{4}}",
+      "notification_curation_reward": "@{{0}} telah menerima {{1}} sebagai reward kurasi untuk {{3}}",
+      "notification_comment_reward": "@{{0}} telah menerima {{1}} sebagai reward komentar untuk{{2}}",
+      "notification_hbd_interest": "@{{0}} menerima {{1}} bunga ",
+      "notification_fill_power_down": "@{{0}}menerima {{1}} sebagai bagian dari power down",
+      "notification_fill_power_down_other_account": "@{{0}} menerima {{1}} sebagai bagian dari power down {{2}}",
+      "notification_fill_order": "@{{0}} telah memenuhi pesanan dari @{{1}} di pasar Membeli {{2}} seharga {{3}}",
+      "notification_fill_transfer_from_savings": "@{{0}} menyelesaikan penarikan savings sebesar ${{1}}",
+      "notification_fill_transfer_from_savings_from_other_account": "@{{0}} menyelesaikan penarikan savings sebesar ${{1}} dari{{2}}",
+      "notification_returned_vesting_delegation": "Pembatalan delegasi @{{0}} selesai. {{1}} kembali tersedia.",
+      "notification_comment_benefactor_reward": "@{{0}} telah menerima {{1}}, {{2}}, {{3}} sebagai reward benefaktor komentar untuk @{{5}}",
+      "notification_producer_reward": "@{{0}} menerima ${{1}} sebagai reward produsen",
+      "notification_changed_recovery_account": "Akun pemulihan @{{0}} telah diubah dari @{{1}}menjadi @{{2}}",
+      "notification_fill_collateralized_convert_request": "@{{0}} telah menyelesaikan konversi: {{1}} menjadi {{2}}",
+      "notification_failed_recurrent_transfer": "Transfer berkala {{0}} dari @{{1}} ke @{{2}} gagal!"
+    },
+    "createAccountPeerToPeer": {
+      "text1": "Terima kasih telah menggunakan Keychain Onboarding!",
+      "text2": "Mulailah dengan memilih nama akun Hive.",
+      "text3": "Aplikasi akan membuatkan private keys Anda. ",
+      "text4": "Simpan kunci ini secara aman, sebaiknya di luar jaringan (offline).",
+      "text5": "Setelah itu, Kode QR akan dibuat. Tunjukkan kepada teman Anda untuk melanjutkan pembuatan akun."
+    }
+  },
+  "toast": {
+    "receive_success": "Transaksi berhasil diterima",
+    "error_witness_account_update": "Aktifkan Hive Multisig untuk menerima permintaan multisig pada akun ini. Fitur ini bersifat lanjutan, gunakan hanya jika Anda benar-benar memahaminya.",
+    "noMatch": "Kode pin tidak cocok ",
+    "authFailed": "Otentikasi gagal",
+    "account_already": "Anda sudah mendaftar @{{account}}",
+    "added_account": "Akun @{{account}} berhasil ditambahkan!",
+    "transfer_success": "Transfer Anda berhasil!",
+    "recurrent_transfer_success": "Transfer berulang Anda berhasil dimulai!",
+    "transfer_token_confirmed": "Transfer Anda berhasil disiarkan ke Hive. Saldo Anda mungkin memerlukan waktu untuk diperbarui.",
+    "transfer_token_unconfirmed": "Transfer Anda berhasil disiarkan ke Hive. Namun, kami tidak dapat memastikan transfer ini diproses oleh Hive Engine.Periksa saldo sebelum mencoba kembali.",
+    "powerup_success": "Power up Anda berhasil!",
+    "powerdown_success": "Power down Anda berhasil!",
+    "stop_powerdown_success": "Power Down Anda berhasil dihentikan! ",
+    "delegation_success": "Delegasi Anda berhasil!",
+    "stop_delegation_success": "Delegasi Anda berhasil dihentikan!",
+    "convert_success": "Konversi {{currency}} Anda berhasil dimulai!",
+    "keys": {
+      "not_wanted_key": "Ini bukan kunci {{type}} Anda!",
+      "not_a_key": "Keys yang dimasukkan bukan milik Anda!",
+      "copied": "keys  telah disalin ke papan klip!",
+      "key_added": "keys {{type}} Anda berhasil ditambahkan",
+      "key_removed": "keys {{type}} Anda berhasil dihapuskan! "
+    },
+    "error_add_account": "Terjadi kesalahan! Harap verifikasi kunci dan koneksi Anda.",
+    "savings_deposit_success": "Anda berhasil menyetorkan {{amount}} ke savings.",
+    "savings_withdraw_success": "Anda berhasil melakukan penarikan sebesar {{amount}} dari savings Anda. Penarikan akan dikreditkan ke akun Anda dalam 3,5 hari.",
+    "incorrect_user": "Silakan periksa kembali nama pengguna Anda dan coba lagi.",
+    "accounts_no_auth": "{{authorizedAccount}} tidak memiliki otorisasi dari {{username}}.",
+    "no_auth_account": "Harap simpan {{authorizedAccount}} di Hive Keychain untuk menggunakannya sebagai akun terotorisasi.",
+    "no_accounts_no_auth": "Harap tambahkan setidaknya satu akun dengan otoritas atas {{username}}",
+    "token_stake_success": "Anda berhasil stake {{currency}}!",
+    "token_unstake_success": "Anda berhasil memulai unstaking  {{currency}}!",
+    "token_delegate_sucess": "Anda berhasil mendelegasikan {{currency}}!",
+    "token_cancel_delegation_sucess": "Delegasi Anda sebesar {{currency}} telah dibatalkan!",
+    "token_undelegate_sucess": "Delegasi Anda sebesar {{currency}} telah dihapus!",
+    "hive_engine_error": "Hive Engine error: {{error}}",
+    "token_timeout": "Transaksi belum dapat diverifikasi di Hive Engine. Kemungkinan tertunda karena proses blok yang belum selesai. Coba cek kembali di riwayat Anda, atau Silakan hubungi tim Hive Engine melalui Discord.",
+    "tokens_operation_failed": "Gagal {{tokenOperation}} token",
+    "no_such_account": "Akun tidak terdaftar di blockchain.",
+    "username_too_short": "Username harus minimal 4 karakter",
+    "account_name_not_valid": "Nama akun tidak valid",
+    "account_username_already_used": "Nama pengguna ini sudah terpakai. Silakan pilih yang baru",
+    "account_creation_not_enough_found": "Anda tidak memiliki cukup HIVE untuk membeli akun",
+    "copied_text": "Kunci disalin ke papan klip!",
+    "copied_id": "ID telah disalin ke Clipboard!",
+    "copied_username": "Nama pengguna telah disalin ke Papan Klip!",
+    "claims": {
+      "need_active_key_for_claim_savings": "Tambahkan active key untuk mengklaim bunga dari savings ",
+      "need_active_key_for_claim_accounts": "Tambahkan active key untuk mengklaim tiket untuk membuat akun",
+      "need_posting_key_to_claim_rewards": "Tambahkan posting key untuk mengklaim rewards",
+      "not_enough_rc_to_claim_account": "RC tidak mencukupi untuk membuat akun."
+    },
+    "rpc_node_added_success": "RPC berhasil ditambahkan ",
+    "rpc_node_removed_success": "RPC berhasil dihapus ",
+    "error_missing_fields": "Data belum lengkap!",
+    "missing_memo_key": "Akun @{{account}} tidak memiliki memo key untuk mengenkripsi pesan!",
+    "tokens_timeout": "Node tidak merespons. Silakan buka pengaturan token dan ubah node RPC Hive Engine.",
+    "account_not_in_hive": "Akun @{{account}} tidak ada, silakan periksa nama pengguna.",
+    "account_removed": "Akun @{{account}} telah dihapus dari Keychain.",
+    "export_qr_accounts": {
+      "scan_next": "Halaman: {{index}} dari {{total}}, pindai halaman berikutnya!",
+      "scan_page_first": "Pindai halaman {{page}} terlebih dahulu!",
+      "scan_completed": "Pemindaian selesai, memuat akun!",
+      "already_scanned": "Halaman sudah dipindai, silakan pindah ke halaman {{page}}!"
+    }
+  },
+  "navigation": {
+    "log_out": "Keluar",
+    "accounts": "Akun",
+    "add_account": "Tambahkan Akun",
+    "import_all": "Impor semua akun",
+    "export_accounts_qr": "Ekspor akun\n",
+    "add_account_by_auth": "Auth. Account",
+    "manage": "Kelola kunci",
+    "settings": "Pengaturan",
+    "about": "Tentang",
+    "help": "Bantuan",
+    "wallet": "WALLET",
+    "browser": "BROWSER",
+    "tabs": "Tab Terbuka",
+    "governance": "Tata Kelola",
+    "create_account": "Membuat akun",
+    "create_an_account": "Buat akun",
+    "create_account_peer_to_peer": "Onboarding Teman",
+    "choose_first_account": "Pilih akun pertama Anda!",
+    "choose_an_existing_account": "Tambah akun",
+    "tokens": "Tokens",
+    "theme_setting": "Tema",
+    "wallet_history": "Riwayat transaksi ",
+    "floating_bar": {
+      "ecosystem": "Ekosistem",
+      "browser": "Browser",
+      "buy": "Beli",
+      "swap": "Tukar"
+    },
+    "swap_buy": "Swap & Buy",
+    "swap_history": "Riwayat Penukaran",
+    "support": "Layanan Dukungan",
+    "tutorial": "Tutorial",
+    "export_transactions": "Ekspor Transaksi"
+  },
+  "request": {
+    "title": {
+      "custom": "Transaksi Khusus",
+      "decode": "verifikasi key",
+      "encode": "Enkode Pesan",
+      "signBuffer": "Menyutujui Pesan",
+      "addAccountAuthority": "Tambahkan Otoritas",
+      "removeAccountAuthority": "Hapus akses? Tindakan ini tidak dapat dibatalkan.",
+      "broadcast": "Menyiarkan transaksi",
+      "signTx": "Tandatangani Transaksi",
+      "signedCall": "Permintaan yang ditandatangani",
+      "post": "Post",
+      "vote": "Vote",
+      "transfer": "Transfer",
+      "delegation": "Delegasi",
+      "witnessVote": "Voting Witness",
+      "proxy": "Memilih Proxy",
+      "sendToken": "Kirim Token",
+      "powerUp": "Power Up",
+      "powerDown": "Power Down",
+      "createClaimedAccount": "Akun Klaim Berhasil Dibuat",
+      "createProposal": "Buat  Worker Proposal",
+      "removeProposal": "Hapus Worker Proposal ",
+      "updateProposalVote": "Voting untuk Proposal",
+      "addKeyAuthority": "Tambahkan Kunci",
+      "removeKeyAuthority": "Hapus Kunci",
+      "addAccount": "Tambahkan Akun",
+      "convert": "Konversi",
+      "recurrentTransfer": "Transfer berkala",
+      "multisig": "Multisig",
+      "swap": "Keychain Swap"
+    },
+    "message": {
+      "decode": "Situs web {{domain}}meminta verifikasi bahwa Anda memiliki akses ke private {{method}}key  milik akun @{{username}}",
+      "signBuffer": "Situs web {{domain}}meminta verifikasi mengunnakan {{method}}key untuk akun: @{{username}}",
+      "signBufferNoUsername": "Situs web {{domain}} ingin menandatangani pesan menggunakan kunci {{method}}.",
+      "multisig": "Anda menerima permintaan tanda tangan multisig"
+    },
+    "item": {
+      "username": "nama pengguna ",
+      "method": "Metode",
+      "message": "Pesan",
+      "author": "Author",
+      "permlink": "permlink",
+      "weight": "Bobot",
+      "data": "Data",
+      "hidden_data": "Klik untuk menampilkan",
+      "to": "Untuk",
+      "amount": "Jumlah",
+      "memo": "memo",
+      "title": "Judul",
+      "body": " Isi utama halaman",
+      "json_metadata": "Metadata JSON",
+      "parent_perm": "Permlink induk",
+      "parent_username": "Parent Username",
+      "comment_options": "Pilihan komentar",
+      "witness": "Witness",
+      "action": "Action",
+      "proxy": "Proksi",
+      "delegatee": "Penerima Delegasi ",
+      "transaction": "Transaksi",
+      "ids": "Id proposal",
+      "keys": "Keys",
+      "role": "Posisi",
+      "authorized_username": "Otorisasi",
+      "authorized_key": "Otorisasi Key",
+      "recurrence": "Frekuensi Transfer",
+      "creator": "Creator",
+      "new_account": "Akun Baru",
+      "owner": "Owner Authority",
+      "active": "Active Authority",
+      "posting": "Posting Authority",
+      "memo_key": "Memo Key",
+      "receiver": "Penerima",
+      "duration": "Durasi",
+      "daily_pay": "Bayaran Harian",
+      "initiator": "Inisiator",
+      "key": "Key",
+      "swap": "Tukar",
+      "slippage": "Slippage"
+    },
+    "error": {
+      "no_account": "Situs web saat ini mencoba mengirim permintaan ke  Hive Keychain untuk akun @{{account}}yang belum ditambahkan ke dompet.",
+      "no_auth": "Situs web saat ini mencoba mengirim permintaan ke Hive Keychain untuk akun @{{account}} menggunakan {{auth}} key yang belum ditambahkan ke dompet.",
+      "no_required_auth": "Situs web saat ini mencoba mengirim permintaan ke Hive Keychain untuk akun @{{account}} menggunakan otoritas {{required_auth}}, tetapi @{{account}} BELUM ditambahkan {{required_auth}} key",
+      "no_required_auth_anonymous": "Situs web saat ini mencoba mengirim permintaan anonim ke otoritas {{required_auth}} Hive Keychain, tetapi tidak ada akun yang ditambahkan dengan kunci {{required_auth}}.",
+      "decode": "Tidak dapat memverifikasi kunci",
+      "encode": "Terjadi kesalahan saat mengodekan pesan.",
+      "signBuffer": "Tidak dapat menandatangani.",
+      "signTx": "Transaksi belum berhasil ditandatangani",
+      "ops": "Terjadi kesalahan saat menyiarkan transaksi ini",
+      "unknown": "Terjadi Kesalahan. Harap coba lagi!",
+      "broadcasting": "Terjadi kesalahan saat menyiarkan transaksi ini, silakan coba lagi.",
+      "addAccount": "Akun gagal ditambahkan. Verifikasi username dan key Anda.",
+      "timeout": "Waktu permintaan habis",
+      "transfer": {
+        "adjust_balance": "Saldo {{currency}} tidak mencukupi di akun @{{username}}",
+        "get_account": "Tidak dapat menemukan akun @{{to}}",
+        "encrypt": "Tambahkan memo keys Anda untuk mengenkripsi pesan."
+      },
+      "swap": {
+        "fetching_balance": "Terjadi kesalahan saat mengambil data akun.",
+        "insufficient_balance": "Saldo tidak mencukupi"
+      }
+    },
+    "success": {
+      "decode": "Memo berhasil dibuka",
+      "encode": "Enkode pesan berhasil ",
+      "addAccount": "Berhasil menambahkan akun @{{username}} ke Keychain.",
+      "signBuffer": "Pesan berhasil ditandatangani.",
+      "signTx": "Transaksi berhasil ditandatangani",
+      "vote": "Berhasil memberikan voting untuk postingan @{{author}} {{permlink}} dengan {{weight}}%.",
+      "broadcast": "Transaksi berhasil dikirim ke jaringan",
+      "transfer": "Berhasil mentransfer {{amount}} {{currency}} dari @{{username}} ke @{{to}}",
+      "post": "Postingan berhasil dipublikasikan",
+      "witness_vote": "Berhasil memilih @{{witness}} sebagai witness",
+      "witness_unvote": "Berhasil membatalkan pemungutan suara @{{witness}} sebagai witness ",
+      "proxy": "Berhasil memilih @{{proxy}}untuk proxy",
+      "remove_proxy": "Berhasil menghapus proxy.",
+      "power_up": "Powered up {{hive}} HIVE pada @{{to}}.",
+      "power_down": " ",
+      "approveProposal": "berhasil memberikan suara untuk proposal {{ids}}",
+      "unApproveProposal": "Berhasil membatalkan pemungutan suara proposal {{ids}}",
+      "stop_power_down": "Menghentikan powder down pada @{{username}}.",
+      "delegate": "Berhasil mendelegasi {{amount}} {{unit}} dari @{{username}} ke @{{delegatee}}",
+      "undelegate": "Berhasil menghentikan delegasi ke  @{{delegatee}} dari @{{username}}",
+      "sendToken": "Transaksi berhasil.Periksa saldo Anda untuk memastikan bahwa transaksi telah diproses dengan benar.",
+      "addAccountAuthority": "Berhasil memberikan wewenang {{role}} kepada @{{authorizedUsername}} dengan bobot {{weight}}.",
+      "removeAccountAuthority": "Berhasil menghapus otoritas {{role}} dari @{{authorizedUsername}}.",
+      "addKeyAuthority": "Berhasil menambahkan kunci {{role}} dengan bobot {{weight}}",
+      "removeKeyAuthority": "Berhasil menghapus {{role}} kunci",
+      "convert": "Berhasil memulai konversi{{amount}}{{from}} ke {{to}}",
+      "recurrentTransfer": "Berhasil memulai transfer berulang. {{amount}} {{currency}} akan dikirim ke {{to}} {{executions}} kali, setiap {{recurrence}} jam.",
+      "createClaimedAccount": "Berhasil mengklaim akun @{{new_account}}",
+      "createProposal": "Berhasil membuat proposal baru!",
+      "removeProposal": "Berhasil menghapus proposal {{ids}}",
+      "swap": "Berhasil memulai swap {{amount}}{{from}} ke {{to}}"
+    },
+    "confirm": "Konfirmasi",
+    "keep": "Jangan tampilkan konfirmasi lagi untuk transaksi {{type}} dari akun @{{username}} di {{domain}}",
+    "keep_has": "Jangan minta konfirmasi lagi untuk transaksi {{type}} dari akun @{{username}} di {{domain}} hingga sesi ini berakhir."
+  },
+  "browser": {
+    "search": "Cari atau masukkan url",
+    "clear_all": "Semua tab browser Anda telah ditutup",
+    "history": {
+      "clear": "Hapus Riwayat",
+      "clear_cache": "Bersihkan Cache"
+    },
+    "home": {
+      "title": "Beranda",
+      "menu": {
+        "ecosystem": "Ekosistem",
+        "recent": "Baru digunakan",
+        "favorite": "Favorit"
+      },
+      "categories": {
+        "finance": "keuangan",
+        "social": "Sosial",
+        "nft": "NFT",
+        "gaming": "Game",
+        "video": "Video",
+        "tool": "Peralatan"
+      },
+      "nothing": "Tidak ada yang di tampilkan.",
+      "cant_see_dapps": {
+        "part_1": "Tidak dapat melihat Hive dApp favorit Anda di sini?",
+        "part_2": "Hubungi kami di"
+      }
+    },
+    "switch_tabs_tip": "Beralih antar tab dengan menggeser ke kiri atau kanan pada bilah url."
+  },
+  "drawerFooter": {
+    "madeBy_part_1": "Dibuat dengan",
+    "madeBy_part_2": "oleh Keychain",
+    "madeBy_part_3": "team",
+    "vote": "Vote @{{account}} sebagai witness",
+    "thanks": "Terima kasih atas dukunganmu ❤",
+    "error30": "Anda sudah memilih 30 witness. Anda perlu membatalkan satu suara untuk memilih witness baru.",
+    "errorActive": "Silakan masukkan active keys Anda untuk memilih witnesses",
+    "error": "Kesalahan: Terjadi kesalahan:"
+  },
+  "governance": {
+    "menu": {
+      "witnesses": "Witnesses",
+      "proxy": "Proksi",
+      "proposals": "Semua proposal",
+      "witness": "Witness",
+      "my_witness": "Witness Saya"
+    },
+    "witness": {
+      "error": {
+        "retrieving_witness_ranking": "Terjadi kesalahan saat mengambil peringkat witness. Silakan coba lagi nanti.",
+        "unvote_wit": "Terjadi kesalahan saat membatalkan voting @{{name}} sebagai witness",
+        "wit": "Terjadi kesalahan saat memilih @{{name}} sebagai witness.",
+        "active": "Tambahkan active key akun Anda untuk dapat memilih witness.",
+        "retrieving_witness_info": "Terjadi kesalahan saat mengambil informasi akun witness. Silakan coba lagi nanti."
+      },
+      "success": {
+        "unvote_wit": "Berhasil membatalkan pemungutan suara @{{name}} sebagai saksi.",
+        "wit": "Berhasil memilih @{{name}} sebagai witness. "
+      },
+      "remaining_votes": "Jumlah vote tersisa: {{remainingVotes}}",
+      "has_proxy": "Anda saat ini menggunakan @{{proxy}}sebagai proxy. Voting mereka akan ditampilkan.",
+      "link_to_arcange": "Untuk informasi lebih lanjut, klik disini untuk mengakses kumpulan database witness",
+      "using_proxy": "Hapus proxy untuk memilih witness",
+      "search_placeholder": "Mencari",
+      "show_voted": "Hanya vote untuk",
+      "hide_inactive": "Sembunyikan yang tidak aktif"
+    },
+    "my_witness": {
+      "info": "info",
+      "param": "parameter",
+      "rank": "Peringkat",
+      "information_amount_votes": "Suara Diterima",
+      "information_votes": "Jumlah suara ",
+      "information_blocks_missed": "Blok yang terlewat",
+      "information_last_block": "Blok terakhir",
+      "information_price_feed": "Harga Referensi",
+      "information_version": "Versi",
+      "information_updated": "Diperbarui {{updatedAt}}",
+      "information_reward": "Rewards",
+      "information_reward_panel_last_week": "7 Hari",
+      "information_reward_panel_last_month": "30 Hari",
+      "information_signing_key": "Signing Keys",
+      "information_maximum_block_size": "Block size",
+      "information_account_creation_fee": "Biaya pembuatan akun",
+      "information_hbd_interest_rate": "Suku bunga",
+      "disable_witness": "Nonaktifkan witness",
+      "enable_witness": "Aktifkan witness",
+      "enable_disable_witness_confirmation_info": "Anda akan {{mode}} akun witness {{owner}}. Harap konfirmasi untuk melanjutkan",
+      "success_witness_account_update": "Berhasil memperbarui akun witness."
+    },
+    "proxy": {
+      "has_proxy": "Akun proksi akan membuat keputusan tata kelola atas nama Anda. Jika Anda ingin memilih witness dan proposal sendiri, silakan hapus akun proksi terlebih dahulu.",
+      "proxy_def": "Menambahkan akun sebagai proksi berarti akun tersebut dapat menggunakan HP Anda untuk keperluan tata kelola, seperti voting witness dan proposal. Ini tidak memengaruhi hak kurasi Anda, dan Anda bisa menghapus proksi kapan saja.",
+      "using_proxy": "Anda saat ini menggunakan {{name}} sebagai proxy. Voting mereka akan ditampilkan.",
+      "placeholder": "Proksi",
+      "buttons": {
+        "set": "Tetapkan sebagai proksi",
+        "clear": "Bersihkan proksi"
+      },
+      "error": {
+        "active": "Untuk mengubah proksi, Anda perlu menambahkan active key akun terlebih dahulu.",
+        "set_proxy": "Terjadi kesalahan saat menetapkan pengguna sebagai proxy",
+        "clear_proxy": "Terjadi kesalahan saat menghapus proksi"
+      },
+      "success": {
+        "set_proxy": "Berhasil memilih @{{name}}untuk proxy",
+        "clear_proxy": "Berhasil menghapus proxy"
+      }
+    },
+    "proposal": {
+      "by": "oleh @{{name}}",
+      "remaining": "{{days}}hari tersisa",
+      "day": "hari",
+      "totally_funded": "Pendanaan Selesai",
+      "partially_funded": "Didanai sebagian",
+      "not_funded": "Tidak didanai",
+      "error": {
+        "using_proxy": "Hapus proxy untuk memilih proposal",
+        "active": "Tambahkan active key akun Anda untuk dapat memilih proposal.",
+        "vote": "Terjadi kesalahan saat memberikan voting untuk proposal!",
+        "unvote": "Terjadi kesalahan saat menghapus voting proposal!"
+      },
+      "success": {
+        "vote": "berhasil memberikan suara untuk proposal!",
+        "unvote": "Voting Anda berhasil dibatalkan!"
+      }
+    }
+  },
+  "popup": {
+    "browser_tutorial": {
+      "title": "Keychain Browser",
+      "description": "Selamat datang di Peramban Keychain! Kenali beberapa elemen navigasi berikut:",
+      "swipe_right": "Geser ke kanan untuk kembali",
+      "double_tap": "Ketuk layar dengan dua jari untuk menampilkan atau menyembunyikan floating bar",
+      "swipe_left": "Geser ke kiri untuk maju",
+      "swipe_down": "Geser ke bawah untuk refresh",
+      "browser_button": "Tekan untuk beralih antara bilah utama dan bilah bawah browser. Tekan lama untuk menutup semua tab."
+    },
+    "whats_new": {
+      "intro": "Apa yang baru di {{content_version}}"
+    },
+    "widget_configuration": {
+      "title": "Widget Portofolio",
+      "sub_title": "Pengaturan Widget Saldo Akun",
+      "intro": "Pilih akun mana yang akan ditampilkan di widget portofolio."
+    },
+    "tutorial": {
+      "title": "Selamat datang di Hive Keychain!\n",
+      "description": "Baru di Keychain atau Hive? Cek tutorial onboarding kami.  Bisa diakses kapan saja melalui Pengaturan > Bantuan> Tutorial."
+    },
+    "vesting_routes": {
+      "title": "Rute vesting Anda telah berubah",
+      "warning_message": "Peringatan: Jika bukan Anda yang melakukan perubahan ini, segera cari bantuan di Hive Server",
+      "account_item_label": "Akun",
+      "account_item_old_route_title": "Rute lama",
+      "account_item_new_route_title": "Rute baru",
+      "account_item_button_skip_label": "Perubahan ini dilakukan dengan sengaja",
+      "account_item_button_revert_label": "Kembalikan ke awalan",
+      "item_details_non_existent_label": "Kosong",
+      "item_details_autovest_title": "Vest Otomatis: ",
+      "item_details_percent_title": "Persentasi: ",
+      "item_details_to_title": "Ke: ",
+      "item_details_from_title": "Dari: ",
+      "toast": {
+        "handled_successfully": "Rute vesting berhasil diamankan!"
+      }
+    },
+    "wrong_key": {
+      "title": "Key yang salah{{plural}} ditemukan",
+      "intro": "Akun Anda @{{account}} memiliki {{keyNames}} key yang salah dan  Apakah Anda ingin memperbarui key  ini sekarang?",
+      "intro_plural": "Akun Anda @{{account}} memiliki {{keyNames}} dan {{lastKeyName}} yang tidak valid. Ingin memperbarui kunci tersebut sekarang?",
+      "button_action": {
+        "do_nothing": "Jangan lakukan apa-apa",
+        "replace": "Gantikan"
+      },
+      "key_info_tooltip": "Kunci ini tidak sesuai dengan akun Anda, sehingga transaksi tidak dapat dilakukan. Jika Anda telah memperbarui kunci, harap hapus yang lama dan masukkan kunci yang baru"
+    }
+  },
+  "multisig": {
+    "disclaimer_message": "Multisig terdeteksi: Transaksi ini akan dikirim ke layanan Hive Multisig",
+    "bot_two_fa_code": "@{{account}}  OTP",
+    "enter_otp": "Masukkan OTP",
+    "error_otp_not_verified": "OTP salah, silakan mencoba lagi",
+    "error_otp_already_used": "OTP Anda sudah pernah digunakan. Silakan gunakan OTP terbaru yang dikirim.",
+    "transaction_broadcasted": "Transaksi multisig berhasil disiarkan",
+    "transaction_signed_successfully": "Transaksi multisig berhasil ditandatangani",
+    "pending": "Permintaan sedang menunggu persetujuan multisig dari penanda tangan lain. Keychain akan memberi tahu Anda jika atau saat permintaan berhasil disiarkan."
+  },
+  "export_transactions": {
+    "start_date": "Tanggal mulai",
+    "end_date": "Tanggal berakhir",
+    "date_picker": {
+      "choose_start_date": "Pilih tanggal mulai",
+      "choose_ending_date": "Pilih tanggal berakhirnya"
+    },
+    "confirmation": {
+      "success": "Transaksi Anda telah disimpan ke '{{filePath}}'",
+      "error": "Gagal mengekspor transaksi.\n{{error}}"
+    },
+    "open_file": "Buka File"
+  },
+  "multichain": {
+    "switch_chain": "Pindah chain"
+  }
+}
