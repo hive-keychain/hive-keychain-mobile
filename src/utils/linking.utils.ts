@@ -138,7 +138,7 @@ export const handleAddAccountQR = async (
   } else {
     keys = await validateFromObject(obj);
   }
-  if (wallet && KeyUtils.hasKeys(keys)) {
+  if (KeyUtils.hasKeys(keys)) {
     store.dispatch<any>(
       addAccount(obj.name, keys, wallet, true, false, mainStack),
     );
