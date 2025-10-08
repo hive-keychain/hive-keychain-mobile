@@ -154,7 +154,7 @@ const BrowserHeader = ({
                     : translate('browser.search')
                 }
                 onChangeText={(text) => {}}
-                onFocus={() => {
+                onPress={() => {
                   startSearch(true);
                 }}
                 disableFocus
