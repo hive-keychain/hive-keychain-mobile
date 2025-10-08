@@ -67,7 +67,10 @@ const EnableIosBiometrics = ({mk, data}: PropsFromRedux & Props) => {
           title={translate('settings.settings.security.enable_biometrics')}
           onPress={async () => {
             try {
-              const res = await StorageUtils.requireBiometricsLoginIOS(title);
+              const res = await StorageUtils.requireBiometricsLoginIOS(
+                title,
+                true,
+              );
               if (res === BiometricsLoginStatus.ENABLED) {
                 await StorageUtils.saveOnStore(mk, title);
               }

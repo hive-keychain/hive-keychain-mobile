@@ -13,6 +13,7 @@
     "bump:minor": "expo-version-bump --minor && expo prebuild --clean",
     "build:android": "eas build -p android",
     "build:ios": "eas build -p ios",
+    "devBuild:ios": "eas build -p ios --profile development",
     "copy:aab": "echo builds/keychain.aab | pbcopy && echo '👉 builds/keychain.aab copied to clipboard'",
     "localBuild:android": "eas build --platform android --local --output ./builds/keychain.aab",
     "localSubmit:android": "npm run copy:aab && eas submit --platform android  --profile production",
@@ -98,7 +99,9 @@
     "stream": "0.0.3",
     "valid-url": "1.0.9",
     "validator": "13.15.15",
-    "expo-screen-orientation": "~8.1.7"
+    "expo-screen-orientation": "~8.1.7",
+    "expo-dev-client": "~5.2.4",
+    "expo-device": "~7.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

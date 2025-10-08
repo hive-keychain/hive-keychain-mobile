@@ -16,7 +16,6 @@ export const getMainLocale = () => {
 const i18n = new I18n({en, fr, es, pt, de, id});
 
 if (Array.isArray(locales)) {
-  console.log('getMainLocale', getMainLocale());
   i18n.locale = getMainLocale();
 }
 

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Device from 'expo-device';
 import * as LocalAuthentication from 'expo-local-authentication';
 import {Platform} from 'react-native';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
@@ -9,7 +10,6 @@ import {navigate} from 'utils/navigation.utils';
 import {EncryptedStorageUtils} from './encryptedStorage.utils';
 import {clearKeychain, getFromKeychain} from './keychainStorage.utils';
 import SecureStoreUtils from './secureStore.utils';
-
 const getAccounts = async (mk: string) => {
   const version = +(await AsyncStorage.getItem(
     KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
@@ -65,14 +65,20 @@ export enum BiometricsLoginStatus {
   REFUSED = 'REFUSED',
 }
 
-const requireBiometricsLoginIOS = async (title: string) => {
+const requireBiometricsLoginIOS = async (
+  title: string,
+  checkAuth: boolean = false,
+) => {
   if (Platform.OS !== 'ios') return BiometricsLoginStatus.ENABLED;
   const isBiometricsAvailable = await LocalAuthentication.isEnrolledAsync();
   if (isBiometricsAvailable) {
-    const result = await LocalAuthentication.authenticateAsync({
-      promptMessage: translate(title),
-      disableDeviceFallback: true,
-    });
+    let result = {success: true};
+    if (checkAuth || !Device.isDevice) {
+      result = await LocalAuthentication.authenticateAsync({
+        promptMessage: translate(title),
+        disableDeviceFallback: true,
+      });
+    }
     if (!result.success) {
       await AsyncStorage.setItem(
         KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_REFUSED,

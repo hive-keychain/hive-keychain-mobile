@@ -50,6 +50,7 @@ const Security = ({mk}: PropsFromRedux) => {
                 const isBiometricsAvailable =
                   await StorageUtils.requireBiometricsLoginIOS(
                     'settings.settings.security.biometrics',
+                    true,
                   );
                 if (isBiometricsAvailable !== BiometricsLoginStatus.ENABLED)
                   throw new Error(isBiometricsAvailable);
