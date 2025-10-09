@@ -6,6 +6,7 @@ export default ({config}) => ({
   expo: {
     name: 'Hive Keychain',
     slug: 'hive-keychain',
+
     version: base.expo.version,
     orientation: 'portrait',
     icon: './src/assets/images/icons/ios_launcher.png',
@@ -28,7 +29,8 @@ export default ({config}) => ({
       ...base.expo.ios,
       bundleIdentifier: 'com.stoodkev.mobileKeychain',
       supportsTablet: false,
-
+      teamId: process.env.APPLE_TEAM_ID,
+      id: process.env.APPLE_ID,
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
           'We need your location to load maps.',
