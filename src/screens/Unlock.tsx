@@ -37,7 +37,14 @@ const Unlock = ({
       ) {
         const isBiometricsLoginEnabled =
           await StorageUtils.requireBiometricsLoginIOS('encryption.retrieve');
-        if (isBiometricsLoginEnabled !== BiometricsLoginStatus.ENABLED) return;
+        if (isBiometricsLoginEnabled !== BiometricsLoginStatus.ENABLED) {
+          console.log('isBiometricsLoginEnabled', isBiometricsLoginEnabled);
+          AsyncStorage.setItem(
+            KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+            'false',
+          );
+          return;
+        }
         const pin = await SecureStoreUtils.getFromSecureStore(
           KeychainStorageKeyEnum.SECURE_MK,
         );

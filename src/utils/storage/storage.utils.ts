@@ -73,7 +73,7 @@ const requireBiometricsLoginIOS = async (
   const isBiometricsAvailable = await LocalAuthentication.isEnrolledAsync();
   if (isBiometricsAvailable) {
     let result = {success: true};
-    if (checkAuth || !Device.isDevice) {
+    if (!Device.isDevice) {
       result = await LocalAuthentication.authenticateAsync({
         promptMessage: translate(title),
         disableDeviceFallback: true,
