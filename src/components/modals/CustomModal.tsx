@@ -127,7 +127,7 @@ class StyleSheetFactory {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: modalHeight,
-        maxHeight: 0.85 * height,
+        maxHeight: 0.95 * height,
         height: initialHeight > 0 ? initialHeight : 'auto',
       },
       modalWrapperFixed: {

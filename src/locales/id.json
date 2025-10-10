@@ -76,6 +76,7 @@
     "balance": "Saldo",
     "available": "Tersedia",
     "back": "Kembali",
+    "price": "Harga",
     "encrypted": "terenskripsi",
     "vote": "Vote",
     "unvote": "Unvote",
@@ -617,6 +618,16 @@
       "export_transactions": {
         "title": "Ekspor Transaksi"
       },
+      "security": {
+        "title": "Keamanan",
+        "disclaimer": "Gunakan biometrik untuk login lebih cepat.",
+        "biometrics": "Aktifkan login dengan biometrik",
+        "checkbox": "Login dengan biometrik",
+        "error_no_biometrics": "Belum ada data biometrik terdaftar.",
+        "biometrics_refused": "Aktifkan Sidik Jari atau Face ID untuk Hive Keychain di pengaturan iOS Anda.",
+        "enable_biometrics": "Aktifkan biometrik",
+        "enable_biometrics_description": "Aktifkan login biometrik untuk mengakses dompet Hive Keychain Anda lebih cepat. Anda dapat mengubah pengaturan ini di Pengaturan > Keamanan."
+      },
       "rpc_disclaimer": "Pilih node RPC yang akan digunakan untuk mengakses data dan menyiarkan transaksi dari dan ke Hive Blockchain.",
       "global": "Pengaturan umum",
       "whitelisted": "Operasi yang diizinkan",
@@ -654,11 +665,9 @@
       "text4": "Jika Anda menggunakan Master Key,  kunci tersebut TIDAK akan disimpan dan hanya akan digunakan untuk membuat keys Anda yang lain. Anda dapat menambahkan/mengedit Akun atau keys kapan saja."
     },
     "accountCreationPeerToPeer": {
-      "title": "Pendaftaran Peer to Peer\nTerima kasih, temanmu yang keren sudah mengenalkan kamu ke kami!",
-      "text1": "Setelah Anda memilih nama pengguna yang valid,  klik Buat untuk melanjutkan!",
-      "text2": "Aplikasi akan menampilkan kunci Anda.Pastikan untuk menyimpannya di tempat yang aman",
-      "text3": "Setelah Anda mengonfirmasi bahwa kunci telah disimpan dengan aman",
-      "text4": "Anda akan menerima kode QR. Tunjukkan kepada teman Anda untuk melanjutkan pembuatan akun.",
+      "title": "Pendaftaran Peer to Peer",
+      "text1": "Setelah akun dibuat, pastikan untuk menyimpan kunci Anda di tempat yang aman.",
+      "text2": "Anda akan menerima kode QR. Tunjukkan kepada teman Anda untuk melanjutkan pembuatan akun.",
       "not_enough_rc_exception": "RC tidak mencukupi untuk melakukan transaksi ini. Harap power up atau menerima delegasi RC."
     },
     "infoQR": {
@@ -785,6 +794,7 @@
     }
   },
   "toast": {
+    "error_camera_permission": "Izinkan aplikasi menggunakan kamera untuk memindai QR",
     "receive_success": "Transaksi berhasil diterima",
     "error_witness_account_update": "Aktifkan Hive Multisig untuk menerima permintaan multisig pada akun ini. Fitur ini bersifat lanjutan, gunakan hanya jika Anda benar-benar memahaminya.",
     "noMatch": "Kode pin tidak cocok ",
@@ -1232,5 +1242,27 @@
   },
   "multichain": {
     "switch_chain": "Pindah chain"
+  },
+  "encryption": {
+    "save": "Sistem enkripsi diperbarui. Gunakan biometrik untuk pengalaman login lebih cepat.",
+    "retrieve": "Gunakan biometrik Anda untuk masuk"
+  },
+  "lockout": {
+    "warning_after_third": "Peringatan: Akun akan dikunci sementara setelah 5 kali percobaan.",
+    "active": "Terlalu banyak percobaan gagal. Coba lagi dalam {{time}}.",
+    "locked_for": "Terlalu banyak percobaan. Terkunci selama {{time}}.",
+    "duration": {
+      "hour": "1 jam",
+      "fifteen_minutes": "15 menit",
+      "five_minutes": "5 menit",
+      "minute": "1 menit",
+      "thirty_seconds": "30 detik"
+    },
+    "time": {
+      "h": "h",
+      "m": "m",
+      "s": "s",
+      "separator": " "
+    }
   }
 }

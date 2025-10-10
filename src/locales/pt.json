@@ -76,6 +76,7 @@
     "balance": "Saldo",
     "available": "Disponível",
     "back": "Voltar",
+    "price": "Preço",
     "encrypted": "criptografado",
     "vote": "Votar",
     "unvote": "Desfazer voto",
@@ -617,6 +618,16 @@
       "export_transactions": {
         "title": "Exportar Transações"
       },
+      "security": {
+        "title": "Segurança",
+        "disclaimer": "Você pode usar seus dados biométricos para uma experiência de login mais rápida",
+        "biometrics": "Habilitar login com biometria",
+        "checkbox": "Login biométrico",
+        "error_no_biometrics": "Nenhuma biometria registrada",
+        "biometrics_refused": "Habilitar impressão digital ou Face ID para o Hive Keychain nas configurações do iOS",
+        "enable_biometrics": "Ativar a biometria",
+        "enable_biometrics_description": "Habilite o login com dados biométricos para acessar o Hive Keychain mais rapidamente. Você pode alterar esta configuração em Configurações > Segurança."
+      },
       "rpc_disclaimer": "Você pode escolher qual node RPC é usado para ler informações e transmitir transações de/para o Hive Blockchain.",
       "global": "Configurações Globais",
       "whitelisted": "Operações permitidas",
@@ -654,11 +665,9 @@
       "text4": "Se você usar a Chave Master, ela NÃO será salva e será usada apenas para gerar suas outras chaves. Você pode adicionar/editar contas ou chaves a qualquer momento."
     },
     "accountCreationPeerToPeer": {
-      "title": "Peer to Peer Onboarding, graças a um bom amigo!",
-      "text1": "Assim que você escolher um nome de usuário válido e clicar em Criar",
-      "text2": "o aplicativo lhe dará suas chaves, POR FAVOR GUARDE elas em um lugar seguro.",
-      "text3": "Então, depois de confirmar que as chaves estão guardadas com segurança,",
-      "text4": "Você receberá um código QR, mostre-o para seu amigo para prosseguir com a Criação da Conta.",
+      "title": "Onboarding de pessoa para pessoa",
+      "text1": "Uma vez criada a conta, certifique-se de armazenar suas chaves em um lugar seguro.",
+      "text2": "Você receberá um código QR, mostre-o para seu amigo para prosseguir com a criação da conta.",
       "not_enough_rc_exception": "Você não tem RC suficiente para executar essa transação. Por favor, faça um power up ou receba uma delegação RC."
     },
     "infoQR": {
@@ -785,6 +794,7 @@
     }
   },
   "toast": {
+    "error_camera_permission": "É necessária permissão de acesso \nà câmera para ler códigos QR.",
     "receive_success": "A transferência foi recebida com sucesso",
     "error_witness_account_update": "Erro ao atualizar a conta de testemunha @{{account}}",
     "noMatch": "Os códigos PIN não conferem",
@@ -1232,5 +1242,27 @@
   },
   "multichain": {
     "switch_chain": "Trocar Rede"
+  },
+  "encryption": {
+    "save": "Estamos mudando para um novo método de criptografia. Use sua biometria para acessar mais rapidamente.",
+    "retrieve": "Use sua biometria para acessar"
+  },
+  "lockout": {
+    "warning_after_third": "Aviso: Você será bloqueado temporariamente após a quinta tentativa.",
+    "active": "Muitas tentativas de falha. Tente novamente em {{time}}.",
+    "locked_for": "Muitas tentativas de falha. Bloqueado por {{time}}.",
+    "duration": {
+      "hour": "1 hora",
+      "fifteen_minutes": "15 minutos",
+      "five_minutes": "5 minutos",
+      "minute": "1 minuto",
+      "thirty_seconds": "30 segundos"
+    },
+    "time": {
+      "h": "h",
+      "m": "m",
+      "s": "s",
+      "separator": " "
+    }
   }
 }

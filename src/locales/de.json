@@ -76,6 +76,7 @@
     "balance": "Balance",
     "available": "Verfügbar",
     "back": "Zurück",
+    "price": "Preis",
     "encrypted": "Verschlüsselt",
     "vote": "Vote",
     "unvote": "Unvote",
@@ -617,6 +618,16 @@
       "export_transactions": {
         "title": "Transaktionen exportieren"
       },
+      "security": {
+        "title": "Sicherheit",
+        "disclaimer": "Sie können Ihre biometrischen Daten für ein schnelleres Anmeldevergnügen verwenden",
+        "biometrics": "Biometrischen Login aktivieren",
+        "checkbox": "Biometrie Login",
+        "error_no_biometrics": "Keine biometrischen Daten eingetragen",
+        "biometrics_refused": "Aktivieren Sie Fingerabdruck oder Face ID für Hive Keychain in Ihren iOS-Einstellungen",
+        "enable_biometrics": "Biometrie aktivieren",
+        "enable_biometrics_description": "Aktivieren Sie die biometrische Anmeldung um schneller auf Ihre Hive Keychain Wallet zuzugreifen. Sie können diese Einstellung unter Einstellungen > Sicherheit ändern."
+      },
       "rpc_disclaimer": "Sie können auswählen, welche RPC Node verwendet wird, um Informationen zu lesen und Transaktionen von/zur Hive Blockchain zu übertragen.",
       "global": "Allgemeine Einstellungen",
       "whitelisted": "Whitelist Operationen",
@@ -654,11 +665,9 @@
       "text4": "Wenn Sie einen Master Schlüssel verwenden, wird er NICHT gespeichert und wird nur verwendet, um Ihre anderen Schlüssel zu generieren. Sie können Konten oder Schlüssel jederzeit hinzufügen/bearbeiten."
     },
     "accountCreationPeerToPeer": {
-      "title": "Peer to Peer onboarding, dank eines guten Freundes!",
-      "text1": "Sobald Sie einen gültigen Benutzernamen auswählen und auf Erstellen klicken",
-      "text2": "Die App wird Ihnen Ihre Schlüssel geben, BITTE SPEICHERN Sie diese an einem sicheren Ort.",
-      "text3": "Nach der Bestätigung, dass die Schlüssel sicher gespeichert sind,",
-      "text4": "Sie erhalten einen QR-Code, zeigen Sie ihn Ihrem Freund an, um mit der Kontoerstellung fortzufahren.",
+      "title": "Peer to Peer Onboarding",
+      "text1": "Sobald das Konto erstellt wurde, stellen Sie sicher, dass Ihre Schlüssel an einem sicheren Ort gespeichert werden.",
+      "text2": "Sie erhalten dann einen QR-Code. Zeigen Sie ihn Ihrem Freund um mit der Kontoerstellung fortzufahren.",
       "not_enough_rc_exception": "Sie haben nicht genug RC, um diese Transaktion durchzuführen. Bitte HIVE aufpowern oder eine RC Delegation erhalten."
     },
     "infoQR": {
@@ -785,6 +794,7 @@
     }
   },
   "toast": {
+    "error_camera_permission": "Kamera-Berechtigung wird benötigt, um die QR-Codes zu scannen",
     "receive_success": "Die Überweisung wurde erfolgreich empfangen",
     "error_witness_account_update": "Fehler beim Aktualisieren des Witness Konto @{{account}}",
     "noMatch": "Die PIN Codes stimmen nicht überein",
@@ -939,9 +949,9 @@
       "title": "Titel",
       "body": "Inhalt",
       "json_metadata": "JSON Metadaten",
-      "parent_perm": "Übergeordneter Permlink",
+      "parent_perm": "Parent Permlink",
       "parent_username": "Übergeordneter Benutzername",
-      "comment_options": "Kommentar Einstellungen",
+      "comment_options": "Kommentar Optionen",
       "witness": "Witness",
       "action": "Aktion",
       "proxy": "Proxy",
@@ -1025,7 +1035,7 @@
       "swap": "Swap von {{amount}} {{from}} erfolgreich zu {{to}} gestartet."
     },
     "confirm": "Bestätigen",
-    "keep": "Nicht erneut auffordern, {{type}}-Transaktionen vom Konto @{{username}} auf {{domain}} zu senden.",
+    "keep": "Nicht mehr fragen für, {{type}}-Aktionen von @{{username}} auf {{domain}}.",
     "keep_has": "Bis zum Ablauf der Sitzung nicht erneut nach {{type}}-Transaktionen von @{{username}} auf {{domain}} fragen."
   },
   "browser": {
@@ -1232,5 +1242,27 @@
   },
   "multichain": {
     "switch_chain": "Blockchain wechseln"
+  },
+  "encryption": {
+    "save": "Wir wechseln auf eine neue Verschlüsselungsmethode. Verwenden Sie Ihre biometrischen Daten für eine schnellere Anmeldung.",
+    "retrieve": "Verwenden Sie Ihre biometrischen Daten zum Login"
+  },
+  "lockout": {
+    "warning_after_third": "Warnung: Sie werden nach dem 5. Versuch vorübergehend gesperrt.",
+    "active": "Zu viele fehlgeschlagene Versuche. Versuchen Sie es erneut in {{time}}.",
+    "locked_for": "Zu viele fehlgeschlagene Versuche. Für {{time}} gesperrt.",
+    "duration": {
+      "hour": "1 Stunde",
+      "fifteen_minutes": "15 Minuten",
+      "five_minutes": "5 Minuten",
+      "minute": "1 Minute",
+      "thirty_seconds": "30 Sekunden"
+    },
+    "time": {
+      "h": "std",
+      "m": "m",
+      "s": "s",
+      "separator": " "
+    }
   }
 }
