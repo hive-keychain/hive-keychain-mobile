@@ -11,7 +11,7 @@ export enum KeychainStorageKeyEnum {
   AUTOLOCK = 'autolock',
   NO_CONFIRM = 'no_confirm',
   WALLET_HISTORY_FILTERS = 'walletHistoryFilters',
-  HIDDEN_TOKENS = 'hidden_tokens',
+  HIDDEN_TOKENS = 'hiddenTokens',
   LOCAL_STORAGE_VERSION = 'LOCAL_STORAGE_VERSION',
   __MK = '__MK',
   __REQUEST_HANDLER = '__REQUEST_HANDLER',

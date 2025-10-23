@@ -1,6 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import {HiveEngineApi} from 'api/hiveEngine.api';
 import {decodeMemo} from 'components/bridge';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {HiddenTokens} from 'src/interfaces/tokens.interface';
 import {translate} from './localize';
 
 type sscjsResult = {logs: string};
@@ -159,4 +162,11 @@ export const getHiveEngineTokenPrice = (
     ? 1
     : 0;
   return price;
+};
+
+export const getHiddenTokens = async (): Promise<HiddenTokens> => {
+  const hiddenTokens = await AsyncStorage.getItem(
+    KeychainStorageKeyEnum.HIDDEN_TOKENS,
+  );
+  return hiddenTokens ? JSON.parse(hiddenTokens) : {};
 };

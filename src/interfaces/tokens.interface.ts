@@ -120,3 +120,7 @@ export interface UserTokens {
   loading: boolean;
   list: TokenBalance[];
 }
+
+export interface HiddenTokens {
+  [username: string]: string[];
+}

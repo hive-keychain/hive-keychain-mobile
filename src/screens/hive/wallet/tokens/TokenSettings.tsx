@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadTokens} from 'actions/index';
+import CustomSearchBar from 'components/form/CustomSearchBar';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -15,19 +16,25 @@ import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect, useSelector} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
-import {Token} from 'src/interfaces/tokens.interface';
+import {HiddenTokens, Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {hiveEngineWebsiteURL} from 'utils/config.utils';
+import {getHiddenTokens} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
 import TokenSettingsItem from './TokenSettingsItem';
 
-const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
+const TokenSettings = ({
+  loadTokens,
+  tokens,
+  userTokens,
+  username,
+}: PropsFromRedux) => {
   const [searchValue, setSearchValue] = useState('');
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
-  const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
+  const [hiddenTokens, setHiddenTokens] = useState<HiddenTokens>({});
   const [loadingTokens, setLoadingTokens] = useState(false);
   const [isExpandedReset, setIsExpandedReset] = useState(false);
 
@@ -51,10 +58,8 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
   const loadHiddenTokens = async () => {
     let customHiddenTokens = null;
     try {
-      customHiddenTokens = JSON.parse(
-        await AsyncStorage.getItem(KeychainStorageKeyEnum.HIDDEN_TOKENS),
-      );
-      setHiddenTokens(customHiddenTokens ?? []);
+      customHiddenTokens = await getHiddenTokens();
+      setHiddenTokens(customHiddenTokens);
     } catch (error) {
       console.log('Error reading hiddenTokens');
     }
@@ -63,20 +68,29 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
   useEffect(() => {
     if (tokens.length) {
       setLoadingTokens(false);
-      setFilteredTokens(tokens);
+      setFilteredTokens(
+        tokens.filter((token) =>
+          userTokens.list.some(
+            (userToken) => userToken.symbol === token.symbol,
+          ),
+        ),
+      );
     }
-  }, [tokens]);
+  }, [tokens, userTokens.list]);
 
-  const toogleHiddenToken = async (symbol: string) => {
+  const toggleHiddenToken = async (symbol: string) => {
     let newHiddenTokens = hiddenTokens;
-    if (hiddenTokens.includes(symbol)) {
-      newHiddenTokens = newHiddenTokens.filter(
+    if (hiddenTokens[username]?.includes(symbol)) {
+      newHiddenTokens[username] = newHiddenTokens[username].filter(
         (tokenName) => tokenName !== symbol,
       );
     } else {
-      newHiddenTokens = [...newHiddenTokens, symbol];
+      newHiddenTokens[username] = [
+        ...(newHiddenTokens[username] || []),
+        symbol,
+      ];
     }
-    setHiddenTokens(newHiddenTokens);
+    setHiddenTokens({...newHiddenTokens});
     await AsyncStorage.setItem(
       KeychainStorageKeyEnum.HIDDEN_TOKENS,
       JSON.stringify(newHiddenTokens),
@@ -84,7 +98,7 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
   };
 
   const handleResetHiddenTokens = async () => {
-    setHiddenTokens([]);
+    setHiddenTokens({});
     await AsyncStorage.removeItem(KeychainStorageKeyEnum.HIDDEN_TOKENS);
     setIsExpandedReset(false);
   };
@@ -101,14 +115,13 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
         theme={theme}
         heightDevice={height}
         widthDevice={width}
-        checkedValue={!hiddenTokens.find((symbol) => symbol === item.symbol)}
-        setChecked={() => toogleHiddenToken(item.symbol)}
+        checkedValue={!hiddenTokens[username]?.includes(item.symbol)}
+        setChecked={() => toggleHiddenToken(item.symbol)}
         colors={colors}
       />
     ),
-    [theme, height, width, hiddenTokens, toogleHiddenToken, colors],
+    [theme, height, width, hiddenTokens, toggleHiddenToken, colors],
   );
-
   return (
     <View style={styles.container}>
       <FocusAwareStatusBar />
@@ -122,36 +135,13 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
         </Text>
       </Text>
       <Separator height={10} />
-      {/* {!loadingTokens && hiddenTokens.length > 0 && (
-        <View style={styles.flexEnd}>
-          <View>
-            <Icon
-              name={Icons.EXPAND_THIN}
-              theme={theme}
-              width={10}
-              height={10}
-              additionalContainerStyle={getRotateStyle(
-                isExpandedReset ? '0' : '180',
-              )}
-              onClick={() => setIsExpandedReset(!isExpandedReset)}
-            />
-            {isExpandedReset && (
-              <>
-                <Icon
-                  name={Icons.SEE}
-                  theme={theme}
-                  onClick={handleResetHiddenTokens}
-                />
-                <Text style={[styles.textBase, styles.smallText]}>
-                  {translate(
-                    'wallet.operations.token_settings.reset_tokens_text',
-                  )}
-                </Text>
-              </>
-            )}
-          </View>
-        </View>
-      )} */}
+      <CustomSearchBar
+        theme={theme}
+        value={searchValue}
+        onChangeText={(text) => setSearchValue(text)}
+        additionalContainerStyle={styles.searchBar}
+      />
+
       <Separator height={8} />
       {loadingTokens ? (
         <View style={styles.flexCentered}>
@@ -231,6 +221,8 @@ const getStyles = (theme: Theme, height: number) =>
 const mapStateToProps = (state: RootState) => {
   return {
     tokens: state.tokens,
+    userTokens: state.userTokens,
+    username: state.activeAccount?.name,
   };
 };
 const connector = connect(mapStateToProps, {
