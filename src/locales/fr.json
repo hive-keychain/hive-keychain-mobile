@@ -1,6 +1,6 @@
 {
   "unlock": {
-    "enterPIN": "Entrez votre PIN",
+    "enterPIN": "Entrez votre PINcompte",
     "authenticate": "S'authentifier"
   },
   "signup": {
@@ -22,7 +22,7 @@
     "peer_to_peer_on_boarding_title": "Créer avec un ami"
   },
   "addAccountByKey": {
-    "text": "Ajouter votre compte HIVE existant à Keychain"
+    "text": "Ajouter un compte HIVE existant à Keychain"
   },
   "addAccountByAuth": {
     "text": "Ajoutez le nouveau compte en spécifiant un compte qui a autorité sur lui, et qui est déjà enregistré sur Hive Keychain."
@@ -76,6 +76,7 @@
     "balance": "Solde",
     "available": "Disponible",
     "back": "Retour",
+    "price": "Prix",
     "encrypted": "chiffré",
     "vote": "Votes",
     "unvote": "Retirer le vote",
@@ -168,8 +169,8 @@
       "history": "Historique",
       "tokens": "Tokens"
     },
-    "rc": "Crédits de ressource",
-    "vp": "Mana de vote",
+    "rc": "Resource Credits",
+    "vp": "Voting Mana",
     "balance": "solde",
     "no_tokens": "Aucun token Hive Engine trouvé.",
     "no_tokens_filter": "Rien à afficher. Veuillez effacer les filtres.",
@@ -445,7 +446,7 @@
         "issued_by": "par",
         "empty_results": "Aucun résultat, essayez d'effacer vos filtres.",
         "reset_tokens_text": "Réinitialiser. Afficher tous les tokens",
-        "supply": "Provisions"
+        "supply": "Offre"
       },
       "buy_coins": {
         "title_hive": "HIVE",
@@ -617,13 +618,23 @@
       "export_transactions": {
         "title": "Exporter les transactions"
       },
-      "rpc_disclaimer": "Sélectionnez le node RPC à utiliser pour lire les informations et diffuser des transactions depuis/vers la blockchain Hive.",
+      "security": {
+        "title": "Sécurité",
+        "disclaimer": "Utilisez vos données biométriques pour une connexion plus rapide",
+        "biometrics": "Activer la connexion biométrique",
+        "checkbox": "Connexion biométrique",
+        "error_no_biometrics": "Aucune donnée biométrique enregistrée",
+        "biometrics_refused": "Activer l'empreinte digitale ou Face ID pour Hive Keychain dans vos paramètres iOS",
+        "enable_biometrics": "Activer connexion biométrique",
+        "enable_biometrics_description": "Activez la connexion biométrique pour accéder plus rapidement à Hive Keychain. Vous pouvez modifier ce paramètre dans Paramètres > Sécurité."
+      },
+      "rpc_disclaimer": "Sélectionnez le node RPC à utiliser pour interagir avec la blockchain Hive.",
       "global": "Paramètres Généraux",
       "whitelisted": "Opérations sur liste blanche",
       "no_pref": "Aucune opération dans la whitelist",
       "user": "Paramètres utilisateur",
       "operations": "Opérations",
-      "operations_info": "Pour une meilleure expérience, vous pouvez whitelist les opérations non-actives quand les dApps les requièrent. Aucune demande de confirmation ne s’affichera",
+      "operations_info": "Pour une expérience plus fluide, vous pouvez autoriser certaines opérations de dApps. Vous ne recevrez alors plus de demande de confirmation",
       "switch_auto": "Basculer automatiquement",
       "switch_auto_info": "Sélectionne automatiquement le meilleur node RPC",
       "switch_auto_info_he": "Sélectionne automatiquement le meilleur node RPC Hive Engine",
@@ -634,8 +645,8 @@
       "set_as_active": "Définir ce nouveau RPC comme actif",
       "new_HE_rpc": "Nouveau RPC HE",
       "new_account_history_rpc": "Nouvelle RPC d'historique de compte",
-      "hive_engine_rpc": "RPC de Hive-Engine",
-      "hive_engine_account_history_api": "API d'historique de compte Hive-Engine",
+      "hive_engine_rpc": "RPC Hive-Engine",
+      "hive_engine_account_history_api": "API d'historique Hive-Engine",
       "rpc_node_already_exists": "Ce node RPC existe déjà ! Veuillez en choisir un autre",
       "rpc_not_responding_error": "Le node {{currentRPC}} ne répond pas. Voulez-vous essayer avec {{uri}}?",
       "notifications": {
@@ -654,11 +665,9 @@
       "text4": "Si vous utilisez une clé maîtresse, elle ne sera PAS enregistrée et servira uniquement à générer vos autres clés. Vous pouvez ajouter/modifier des comptes ou des clés à tout moment."
     },
     "accountCreationPeerToPeer": {
-      "title": "Onboarding de pair à pair, avec l’aide d’un ami !",
-      "text1": "Dès que vous aurez choisi un nom d’utilisateur valide et cliqué sur Créer",
-      "text2": "l’application vous fournira vos clés, MERCI DE LES CONSERVER dans un endroit sûr.",
-      "text3": "Ensuite, confirmez que vos clés sont bien sauvegardées,",
-      "text4": "Vous recevrez un QR code, montrez-le à votre ami pour poursuivre la Création du Compte.",
+      "title": "Onboarding entre pairs",
+      "text1": "Une fois le compte créé, assurez-vous de stocker vos clés dans un endroit sûr.",
+      "text2": "Vous recevrez alors un QR Code. Montrez-le à votre onboarder pour poursuivre la création du compte.",
       "not_enough_rc_exception": "Vous n’avez pas assez de RC pour effectuer cette transaction. Veuillez effectuer un power up ou recevoir une délégation de RC."
     },
     "infoQR": {
@@ -672,7 +681,7 @@
       "text7": "Afficher le QR Code"
     },
     "infoWalletQR": {
-      "title": "Scanner de QR Code",
+      "title": "Scanner un QR Code",
       "text1": "Utilisez ce scanner pour lire les QR codes en lien avec Hive.",
       "text2": "Pour l’instant, seules les sessions Hive Authentication Service et l’ouverture d’URL dans le navigateur intégré sont supportées. D’autres fonctions arriveront bientôt.",
       "text3": "Si vous souhaitez importer un compte via un QR Code, veuillez le faire dans",
@@ -785,6 +794,7 @@
     }
   },
   "toast": {
+    "error_camera_permission": "L'accès à la caméra est nécessaire pour scanner les QR codes",
     "receive_success": "Le transfert a été reçu avec succès",
     "error_witness_account_update": "Erreur lors de la mise à jour du compte witness @{{account}}",
     "noMatch": "Le code PIN ne correspond pas",
@@ -941,7 +951,7 @@
       "json_metadata": "Métadonnées JSON",
       "parent_perm": "Permlink du parent",
       "parent_username": "Nom d'utilisateur parent",
-      "comment_options": "Options de commentaire",
+      "comment_options": "Options com'",
       "witness": "Témoin",
       "action": "Action",
       "proxy": "Proxy",
@@ -1093,7 +1103,7 @@
       "link_to_arcange": "Pour plus d'informations, cliquez ici pour accéder à la base de données des witness",
       "using_proxy": "Supprimer le proxy pour voter pour un witness",
       "search_placeholder": "Filtrer",
-      "show_voted": "A voté uniquement pour",
+      "show_voted": "Déjà voté",
       "hide_inactive": "Masquer les inactifs"
     },
     "my_witness": {
@@ -1121,7 +1131,7 @@
     },
     "proxy": {
       "has_proxy": "Le compte proxy prend des décisions de gouvernance en votre nom. Si vous souhaitez voter pour les witness et les proposals par vous-même, vous devez d'abord supprimer le proxy.",
-      "proxy_def": "L'ajout d'un compte en tant que proxy signifie que le compte proxy peut utiliser le poids de votre HP en matière de gouvernance (voter pour les witness et les proposals). Cela n'affectera pas vos HP en ce qui concerne la curation, et vous pouvez retirer le proxy à tout moment.",
+      "proxy_def": "Ajouter un compte comme proxy signifie que ce compte pourra utiliser le poids de votre HP pour les décisions de gouvernance (votes pour les witnesses et propositions). Cela n’affectera pas votre HP pour la curation, et vous pouvez retirer le proxy à tout moment.",
       "using_proxy": "Vous utilisez actuellement @{{name}} comme proxy. Ses votes de gouvernance sont visibles.",
       "placeholder": "Proxy",
       "buttons": {
@@ -1232,5 +1242,27 @@
   },
   "multichain": {
     "switch_chain": "Changer de chaîne"
+  },
+  "encryption": {
+    "save": "On passe à une nouvelle méthode de chiffrement. Utilise la biométrie pour te connecter plus rapidement.",
+    "retrieve": "Connectez-vous via vos données biométriques"
+  },
+  "lockout": {
+    "warning_after_third": "Avertissement : Vous serez temporairement bloqué après la 5e tentative.",
+    "active": "Trop de tentatives échouées. Réessayez dans {{time}}.",
+    "locked_for": "Trop de tentatives échouées. Bloqué pour {{time}}.",
+    "duration": {
+      "hour": "1 heure",
+      "fifteen_minutes": "15 minutes",
+      "five_minutes": "5 minutes",
+      "minute": "1 minute",
+      "thirty_seconds": "30 secondes"
+    },
+    "time": {
+      "h": "h",
+      "m": "m",
+      "s": "s",
+      "separator": " "
+    }
   }
 }

@@ -597,6 +597,9 @@
         "enable_active_key_multisig": "Enable active key multisig",
         "enable_posting_key_multisig": "Enable posting key multisig"
       },
+      "language": {
+        "title": "Language"
+      },
       "export_transactions": {
         "title": "Export Transactions"
       },

@@ -316,7 +316,7 @@
           "info": "Bitte bestätigen Sie die RC Delegation.",
           "balance": "Balance"
         },
-        "title_button": "HP Deleg.",
+        "title_button": "RC Deleg.",
         "title": "RC Delegation",
         "total_incoming": "Gesamt Eingehend",
         "total_outgoing": "Gesamt ausgehend",

@@ -33,8 +33,8 @@
   "keys": {
     "master_password": "Contraseña maestra",
     "owner_key": "Llave Propietaria",
-    "active_key": "Clave activa",
-    "posting_key": "Clave de publicación",
+    "active_key": "Llave Active",
+    "posting_key": "Llave Posting",
     "memo_key": "Memo key",
     "private": "Privada",
     "owner": "Owner",
@@ -44,7 +44,7 @@
     "memo": "Memo",
     "key_type": "Llave {{type}}",
     "using_authorized_account": "Firmando usando la cuenta {{authorizedAccount}}",
-    "warning_private_key_in_memo": "Por favor, no envíe ninguna información sensible sobre sus claves en un memo."
+    "warning_private_key_in_memo": "Por favor, no envíe ninguna información sensible sobre sus llaves en un memo."
   },
   "common": {
     "accounts": "Cuentas",
@@ -62,20 +62,21 @@
     "added_account": "¡La cuenta se ha añadido correctamente!",
     "cancel": "Cancelar",
     "close": "Cerrar",
-    "privateKey": "Clave privada",
+    "privateKey": "Llave privada",
     "private": "Privada",
     "public": "Pública",
     "pending": "Pendiente",
     "amount": "monto",
     "enter_amount": "introducir monto",
     "memo": "memo",
-    "transfer": "Transferencia",
+    "transfer": "Transferir",
     "send": "Enviar",
     "receive": "Recibir",
     "save": "Guardar",
     "balance": "Saldo",
     "available": "Disponible",
     "back": "Atrás",
+    "price": "Precio",
     "encrypted": "encriptado",
     "vote": "Voto",
     "unvote": "Revocar Voto",
@@ -85,7 +86,7 @@
     "savings": "Ahorros",
     "ok": "Ok",
     "popup_read_more": "Leer Más",
-    "history": "Historia",
+    "history": "Historial",
     "search_box_placeholder": "Buscar",
     "stake": "Stake",
     "unstake": "Unstake",
@@ -133,7 +134,7 @@
     "confirm_token_swap": "Confirmar el intercambio de tokens",
     "id": "ID",
     "account_name": "Nombre de cuenta",
-    "key": "Clave",
+    "key": "Llave",
     "password": "Contraseña",
     "title_master_key": "Master",
     "title_active_key": "Active",
@@ -165,7 +166,7 @@
     },
     "menu": {
       "hive": "Hive",
-      "history": "Historia",
+      "history": "Historial",
       "tokens": "Tokens"
     },
     "rc": "Recursos",
@@ -514,7 +515,7 @@
       "uuid": "UUID: {{uuid}}",
       "info": {
         "h1": "¿Qué es Hive Auth?",
-        "t1": "Hive Auth proporciona una forma para cualquier aplicación, (web, escritorio o móvil) de autenticar fácilmente a los usuarios, y además firmar y transmitir transacciones a la blockchain Hive, sin pedirles que proporcionen ninguna contraseña o clave privada.",
+        "t1": "Hive Auth proporciona una forma para cualquier aplicación, (web, escritorio o móvil) de autenticar fácilmente a los usuarios, y además firmar y transmitir transacciones a la blockchain Hive, sin pedirles que proporcionen ninguna contraseña o llave privada.",
         "h2": "Comenzar",
         "t2": "Para conectarse a un dApp, utilice el escáner de código QR. En el móvil, simplemente elija 'Iniciar sesión con Hive' en su dApp favorita.",
         "h3": "Indicador de Hive Auth",
@@ -617,6 +618,16 @@
       "export_transactions": {
         "title": "Exportar transacciones"
       },
+      "security": {
+        "title": "Seguridad",
+        "disclaimer": "Puedes usar el Biométrico para un de inicio de sesión rápido",
+        "biometrics": "Activar el Biométrico",
+        "checkbox": "Acceso Biométrico",
+        "error_no_biometrics": "No hay datos biométricos",
+        "biometrics_refused": "Habilitar huella dactilar o Face ID para Hive Keychain en la configuración de iOS",
+        "enable_biometrics": "Activar el Biométrico",
+        "enable_biometrics_description": "Habilitar inicio de sesión biométrico, para acceder a Hive Keychain más rápido. Puede cambiar esta configuración en Ajustes > Seguridad."
+      },
       "rpc_disclaimer": "Puede elegir qué nodo RPC se utiliza para leer información y transmitir transacciones desde/hacia la blockchain Hive.",
       "global": "Ajustes globales",
       "whitelisted": "Operaciones en lista blanca",
@@ -654,11 +665,9 @@
       "text4": "Si utiliza una llave Master, esta NO se guardará y sólo se utilizará para generar sus otras llaves. Puedes añadir/editar cuentas o llaves en cualquier momento."
     },
     "accountCreationPeerToPeer": {
-      "title": "¡Entrada Persona a Persona, gracias a un amigo!",
-      "text1": "Tan pronto como elija un usuario válido y haga clic en Crear",
-      "text2": "la aplicación te dará sus llaves, POR FAVOR GUÁRDELAS en un lugar seguro.",
-      "text3": "Entonces, tras confirmar que las llaves están guardadas de forma segura,",
-      "text4": "Recibirás un QR, muéstralo a tu amigo para proceder con la creación de cuentas.",
+      "title": "Creación de cuenta Persona a Persona",
+      "text1": "Una vez creada la cuenta, asegúrese de guardar sus llaves en un lugar seguro.",
+      "text2": "Luego obtendrás un código QR. Muéstralo a tu amigo para proceder con la creación de la cuenta.",
       "not_enough_rc_exception": "No tienes suficientes RCs para realizar esta transacción. Por favor, haz power up o pide una delegación de RCs."
     },
     "infoQR": {
@@ -785,6 +794,7 @@
     }
   },
   "toast": {
+    "error_camera_permission": "Se requiere permiso de la cámara para escanear códigos QR",
     "receive_success": "La transferencia se ha recibido con éxito",
     "error_witness_account_update": "Error al actualizar la cuenta de testigo @{{account}}",
     "noMatch": "Los códigos PIN no coinciden",
@@ -833,7 +843,7 @@
     "copied_username": "¡El nombre de usuario se ha copiado!",
     "claims": {
       "need_active_key_for_claim_savings": "Necesitas añadir tu llave active a Keychain para reclamar los ahorros",
-      "need_active_key_for_claim_accounts": "Necesita agregar su llave activae a Keychain para reclamar tickets de creación de cuenta",
+      "need_active_key_for_claim_accounts": "Necesita agregar su llave active a Keychain para reclamar tickets de creación de cuenta",
       "need_posting_key_to_claim_rewards": "Debes añadir tu llave Posting a Keychain para reclamar las recompensas",
       "not_enough_rc_to_claim_account": "No tienes suficiente RCs para reclamar tickets de creación de cuenta"
     },
@@ -889,7 +899,7 @@
   "request": {
     "title": {
       "custom": "Transacción Personalizada",
-      "decode": "Verificar Clave",
+      "decode": "Verificar Llave",
       "encode": "Codificar el mensaje",
       "signBuffer": "Firmar el mensaje",
       "addAccountAuthority": "Añadir Autoridad",
@@ -963,7 +973,7 @@
       "duration": "Duración",
       "daily_pay": "Pago Diario",
       "initiator": "Iniciador",
-      "key": "Clave",
+      "key": "Llave",
       "swap": "Intercambio",
       "slippage": "Deslizamiento"
     },
@@ -972,7 +982,7 @@
       "no_auth": "El sitio web actual está intentando enviar una solicitud a Hive Keychain para la cuenta @{{account}} usando la llave {{auth}}, que no se ha añadido a la billetera.",
       "no_required_auth": "El sitio web actual está intentando enviar una solicitud a Hive Keychain para la cuenta @{{account}} usando la autoridad {{required_auth}}, pero @{{account}} NO se ha añadido con la llave {{required_auth}}.",
       "no_required_auth_anonymous": "El sitio web actual está intentando enviar una solicitud anónima a la autoridad de Hive Keychain {{required_auth}}, pero no hay cuentas añadidas con la llave {{required_auth}}.",
-      "decode": "No se pudo verificar la clave.",
+      "decode": "No se pudo verificar la llave.",
       "encode": "No se pudo codificar el mensaje.",
       "signBuffer": "No se pudo firmar.",
       "signTx": "La transacción no pudo ser firmada correctamente.",
@@ -1039,7 +1049,7 @@
       "title": "Inicio",
       "menu": {
         "ecosystem": "Ecosistema",
-        "recent": "Reciente",
+        "recent": "Recientes",
         "favorite": "Favoritos"
       },
       "categories": {
@@ -1129,7 +1139,7 @@
         "clear": "Borrar proxy"
       },
       "error": {
-        "active": "Para cambiar tu proxy, primero debes añadir la clave activa de tu cuenta",
+        "active": "Para cambiar tu proxy, primero debes añadir la llave active de tu cuenta",
         "set_proxy": "Error mientras se establecía @$1 como proxy",
         "clear_proxy": "Error al eliminar el proxy"
       },
@@ -1198,7 +1208,7 @@
     },
     "wrong_key": {
       "title": "Llave{{plural}} incorrecta encontrada",
-      "intro": "Tu cuenta @{{account}} tiene una llave {{keyNames}} incorrecta.\n\n¿Quieres actualizar esta clave ahora mismo?",
+      "intro": "Tu cuenta @{{account}} tiene una llave {{keyNames}} incorrecta.\n\n¿Quieres actualizar esta llave ahora mismo?",
       "intro_plural": "Tu cuenta @{{account}} tiene las llaves {{keyNames}} y {{lastKeyName}} incorrectas.\n\n¿Quieres actualizar estas llaves ahora mismo?",
       "button_action": {
         "do_nothing": "No hacer nada",
@@ -1232,5 +1242,27 @@
   },
   "multichain": {
     "switch_chain": "Cambiar blockchain"
+  },
+  "encryption": {
+    "save": "Nos estamos moviendo a un nuevo método de cifrado. Utilice su biometría para un acceso más rápido.",
+    "retrieve": "Usa el biométrico para iniciar sesión"
+  },
+  "lockout": {
+    "warning_after_third": "Advertencia: Serás bloqueado temporalmente después del quinto intento.",
+    "active": "Demasiados intentos fallidos. Inténtalo de nuevo en {{time}}.",
+    "locked_for": "Demasiados intentos fallidos. Inténtalo de nuevo en {{time}}.",
+    "duration": {
+      "hour": "1 hora",
+      "fifteen_minutes": "15 minutos",
+      "five_minutes": "5 minutos",
+      "minute": "1 minuto",
+      "thirty_seconds": "30 segundos"
+    },
+    "time": {
+      "h": "h",
+      "m": "m",
+      "s": "s",
+      "separator": " "
+    }
   }
 }
