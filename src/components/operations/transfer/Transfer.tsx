@@ -362,6 +362,8 @@ const Transfer = ({
           labelInput={capitalize(translate('common.memo'))}
           placeholder={translate('wallet.operations.transfer.memo')}
           value={memo}
+          autoCapitalize="none"
+          autoCorrect={true}
           trim={false}
           onChangeText={setMemo}
           rightIcon={
@@ -458,6 +460,8 @@ const Transfer = ({
       <Separator />
       <View style={{zIndex: -1}}>
         <OperationInput
+          autoCapitalize="none"
+          autoCorrect={true}
           labelInput={capitalize(translate('common.memo'))}
           placeholder={translate('wallet.operations.transfer.memo')}
           value={memoReceive}
