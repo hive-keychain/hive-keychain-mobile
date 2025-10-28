@@ -97,7 +97,7 @@
     "sscjs": "0.0.9",
     "stream": "0.0.3",
     "valid-url": "1.0.9",
-    "validator": "13.15.15",
+    "validator": "13.15.20",
     "expo-screen-orientation": "~8.1.7"
   },
   "devDependencies": {
