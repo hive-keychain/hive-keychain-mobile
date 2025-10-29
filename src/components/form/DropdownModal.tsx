@@ -498,7 +498,11 @@ const DropdownModal = ({
         </Text>
       ) : (
         <View style={[styles.flexRow, {flex: 1}]}>
-          <View>{selected.icon}</View>
+          {iconAsText ? (
+            <Text style={{fontSize: 16}}>{selected.icon}</Text>
+          ) : (
+            <View>{selected.icon}</View>
+          )}
           <Text
             numberOfLines={1}
             style={[
