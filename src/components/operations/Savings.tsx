@@ -218,9 +218,8 @@ const Savings = ({
             operationType === SavingsOperations.deposit
               ? parseFloat((availableBalance as string).replace(/,/g, ''))
               : parseFloat((currentBalance as string).replace(/,/g, '')),
-            operationType === SavingsOperations.deposit
-              ? parseFloat(amount)
-              : -parseFloat(amount),
+
+            parseFloat(amount),
             currency,
           ),
         ],
