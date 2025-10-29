@@ -147,7 +147,9 @@
     "experimental": "Experimental",
     "generate_qr": "Generate QR Code",
     "lets_go": "Let's go!",
-    "discord_server": "Discord Server"
+    "discord_server": "Discord Server",
+    "hive_dao": "Hive DAO",
+    "or": "or"
   },
   "wallet": {
     "proposal": {
@@ -783,6 +785,7 @@
   },
   "toast": {
     "error_camera_permission": "Camera permission is required to scan QR codes",
+    "debug_state_copied": "Debug Mode: The application state has been copied to the clipboard. Contact our team to help you debug.",
     "receive_success": "The transfer has been received successfully",
     "error_witness_account_update": "Error while updating witness account @{{account}}",
     "noMatch": "The PIN codes do not match",
@@ -1256,5 +1259,13 @@
       "s": "s",
       "separator": " "
     }
+  },
+  "about": {
+    "title": "Keychain Mobile v{{version}}",
+    "developed_by_prefix": "Hive Keychain for mobile is developed by the Keychain team and founded through the ",
+    "process_transactions": "Process transactions and enjoy your favorite dApps on your ",
+    "mobile_device_highlight": "Mobile Device!",
+    "contact_prefix": "Should you encounter any issue, contact us on our",
+    "on_our_github": "on our Github"
   }
 }
