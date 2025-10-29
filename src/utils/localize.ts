@@ -26,19 +26,35 @@ export const getLocalesList = () => {
   ];
 };
 
+const listeners = new Set<() => void>();
+export const onLocaleChange = (listener: () => void) => {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+};
+const notifyLocaleChange = () => {
+  listeners.forEach((l) => l());
+};
+
 const i18n = new I18n({en, fr, es, pt, de, id});
 
 export const setLocale = () => {
   if (Array.isArray(locales)) {
+    const previousLocale = i18n.locale;
     AsyncStorage.getItem(KeychainStorageKeyEnum.LANGUAGE).then((value) => {
       if (!value || value === 'DEFAULT') {
         i18n.locale = getMainLocale();
       } else {
         i18n.locale = value;
       }
+      if (previousLocale !== i18n.locale) {
+        notifyLocaleChange();
+      }
     });
   }
 };
+
 setLocale();
 
 i18n.enableFallback = true;
@@ -46,4 +62,4 @@ i18n.defaultLocale = 'en';
 
 export const translate = (scope: Scope, options?: TranslateOptions) =>
   i18n.t(scope, options);
-export default I18n;
+export default i18n;
