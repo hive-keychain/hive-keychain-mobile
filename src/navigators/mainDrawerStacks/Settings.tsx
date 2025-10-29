@@ -7,6 +7,7 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import AutomatedTasks from 'screens/hive/drawer/settings/AutomatedTasks';
 import ExportTransaction from 'screens/hive/drawer/settings/ExportTransactions';
+import Languages from 'screens/hive/drawer/settings/Languages';
 import Multisig from 'screens/hive/drawer/settings/Multisig';
 import Notifications from 'screens/hive/drawer/settings/Notifications';
 import Operations from 'screens/hive/drawer/settings/Operations';
@@ -225,6 +226,32 @@ export default () => {
           headerTitleAlign: 'center',
           headerTitle: () => (
             <NavigatorTitle title={'settings.settings.security.title'} />
+          ),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('Wallet')}
+            />
+          ),
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="LanguagesScreen"
+        component={Languages}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.language.title'} />
           ),
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,

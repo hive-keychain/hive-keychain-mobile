@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLocales} from 'expo-localization';
 import {I18n, Scope, TranslateOptions} from 'i18n-js';
 import de from 'locales/de.json';
@@ -6,6 +7,7 @@ import es from 'locales/es.json';
 import fr from 'locales/fr.json';
 import id from 'locales/id.json';
 import pt from 'locales/pt.json';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 
 const locales = getLocales();
 
@@ -13,11 +15,31 @@ export const getMainLocale = () => {
   return locales[0].languageCode!;
 };
 
+export const getLocalesList = () => {
+  return [
+    {label: 'English', value: 'en', icon: '🇺🇸'},
+    {label: 'Français', value: 'fr', icon: '🇫🇷'},
+    {label: 'Español', value: 'es', icon: '🇪🇸'},
+    {label: 'Português', value: 'pt', icon: '🇵🇹'},
+    {label: 'Deutsch', value: 'de', icon: '🇩🇪'},
+    {label: 'Indonesia', value: 'id', icon: '🇮🇩'},
+  ];
+};
+
 const i18n = new I18n({en, fr, es, pt, de, id});
 
-if (Array.isArray(locales)) {
-  i18n.locale = getMainLocale();
-}
+export const setLocale = () => {
+  if (Array.isArray(locales)) {
+    AsyncStorage.getItem(KeychainStorageKeyEnum.LANGUAGE).then((value) => {
+      if (!value || value === 'DEFAULT') {
+        i18n.locale = getMainLocale();
+      } else {
+        i18n.locale = value;
+      }
+    });
+  }
+};
+setLocale();
 
 i18n.enableFallback = true;
 i18n.defaultLocale = 'en';

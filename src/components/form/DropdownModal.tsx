@@ -72,9 +72,11 @@ interface Props {
   hideLabel?: boolean;
   canBeReordered?: boolean;
   onReorder?: (reorderedList: DropdownModalItem[]) => void;
+  iconAsText?: boolean;
 }
 
 const DropdownModal = ({
+  iconAsText,
   selected,
   list,
   additionalTextStyle,
@@ -316,7 +318,11 @@ const DropdownModal = ({
           hitSlop={{top: 10, bottom: 10, left: 8, right: 8}}
           style={[styles.dropdownItem, bgStyle]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
-            {item.icon}
+            {iconAsText ? (
+              <Text style={{fontSize: 16}}>{item.icon}</Text>
+            ) : (
+              item.icon
+            )}
             <Text
               style={[
                 inputStyle(theme, width).input,

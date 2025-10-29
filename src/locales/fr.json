@@ -1,6 +1,6 @@
 {
   "unlock": {
-    "enterPIN": "Entrez votre PINcompte",
+    "enterPIN": "Entrez votre code PIN",
     "authenticate": "S'authentifier"
   },
   "signup": {
@@ -738,7 +738,7 @@
     },
     "notifications": {
       "mark_as_read": "Les notifications ont été marquées comme lues !",
-      "notification_set_all_as_read": "Marquer comme lu",
+      "notification_set_all_as_read": "Marquer lu",
       "notification_follow": "@{{0}} a commencé à suivre @{{1}}",
       "notification_unfollow": "@{{0}} a cessé de suivre @{{1}}",
       "notification_reblog": "@{{0}} a reblogué le post de @{{1}}",

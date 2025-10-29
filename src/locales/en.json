@@ -598,7 +598,10 @@
         "enable_posting_key_multisig": "Enable posting key multisig"
       },
       "language": {
-        "title": "Language"
+        "title": "Languages",
+        "description": "Choose your preferred language for the Hive Keychain wallet.",
+        "checkbox_default_language": "Use device language if available or default to English",
+        "dropdown_title": "Select your language"
       },
       "export_transactions": {
         "title": "Export Transactions"
