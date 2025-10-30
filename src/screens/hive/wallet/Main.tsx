@@ -37,7 +37,7 @@ import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -111,7 +111,10 @@ const Main = ({
   const {width, height} = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
-  const styles = getDimensionedStyles({width, height}, theme, insets);
+  const styles = useMemo(
+    () => getDimensionedStyles({width, height}, theme, insets),
+    [width, height, theme, insets],
+  );
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
   const sectionListRef = useRef<FlatList<TokenBalance>>(null);
   const [toggled, setToggled] = useState<number>(null);
@@ -401,8 +404,8 @@ const Main = ({
                   <UserDropdown
                     dropdownIconScaledSize={styles.smallIcon}
                     additionalDropdowContainerStyle={styles.userdropdown}
-                    additionalMainContainerDropdown={[styles.dropdownContainer]}
-                    additionalOverlayStyle={[styles.dropdownOverlay]}
+                    additionalMainContainerDropdown={styles.dropdownContainer}
+                    additionalOverlayStyle={styles.dropdownOverlay}
                     canBeReordered
                     additionalListExpandedContainerStyle={
                       styles.dropdownExpandedContainer

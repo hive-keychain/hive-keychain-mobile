@@ -106,9 +106,6 @@ const DropdownModal = ({
   const [filteredDropdownList, setFilteredDropdownList] =
     useState<DropdownModalItem[]>(list);
   const [isDragging, setIsDragging] = useState(false);
-  const [pendingSelect, setPendingSelect] = useState<DropdownModalItem | null>(
-    null,
-  );
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
 
@@ -134,21 +131,15 @@ const DropdownModal = ({
 
   const onHandleSelectedItem = useCallback(
     (item: DropdownModalItem) => {
-      setPendingSelect(item);
+      // Fire selection immediately to avoid delays during animations or heavy renders
+      onSelected(item);
       setIsListExpanded(false);
       onReorder?.([...filteredDropdownList]);
     },
     [onSelected, onReorder, filteredDropdownList],
   );
 
-  // After overlay closes, apply pending selection
-  useEffect(() => {
-    if (!isListExpanded && pendingSelect) {
-      const toSelect = pendingSelect;
-      setPendingSelect(null);
-      setTimeout(() => onSelected(toSelect), 0);
-    }
-  }, [isListExpanded, pendingSelect, onSelected]);
+  // No deferral needed; selection is applied immediately in onHandleSelectedItem
 
   const onHandleCopyValue = (username: string) => {
     console.log('here', username);
@@ -314,7 +305,7 @@ const DropdownModal = ({
     return (
       <View style={[{paddingVertical: 4}]}>
         <Pressable
-          onPress={onHandleSelectedItem.bind(null, item)}
+          onPressIn={onHandleSelectedItem.bind(null, item)}
           hitSlop={{top: 10, bottom: 10, left: 8, right: 8}}
           style={[styles.dropdownItem, bgStyle]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
@@ -382,6 +373,7 @@ const DropdownModal = ({
           <GestureHandlerRootView style={{flexShrink: 1}}>
             <DraggableFlatList
               {...props}
+              activationDistance={16}
               onDragEnd={onDragEnd}
               data={filteredDropdownList}
               renderItem={renderDraggableItem}
