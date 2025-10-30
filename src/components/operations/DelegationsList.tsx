@@ -96,7 +96,6 @@ const DelegationsList = ({
         loadDelegators(user.name);
       } else {
         loadDelegatees(user.name);
-        loadPendingOutgoingUndelegations();
       }
     }
   }, [loadDelegatees, loadDelegators, user.name, type, totalDelegationsAmount]);
@@ -140,6 +139,9 @@ const DelegationsList = ({
               0,
             ),
       );
+    }
+    if (type === 'outgoing') {
+      loadPendingOutgoingUndelegations();
     }
   }, [delegations]);
 
