@@ -154,7 +154,9 @@
     "experimental": "Experimental",
     "generate_qr": "Gerar código QR",
     "lets_go": "Vamos lá!",
-    "discord_server": "Servidor do Discord"
+    "discord_server": "Servidor do Discord",
+    "hive_dao": "Hive DAO",
+    "or": "or"
   },
   "wallet": {
     "proposal": {
@@ -615,6 +617,12 @@
         "enable_active_key_multisig": "Habilitar chave active multisig",
         "enable_posting_key_multisig": "Habilitar chave posting multisig"
       },
+      "language": {
+        "title": "Languages",
+        "description": "Choose your preferred language for the Hive Keychain wallet.",
+        "checkbox_default_language": "Use device language if available or default to English",
+        "dropdown_title": "Select your language"
+      },
       "export_transactions": {
         "title": "Exportar Transações"
       },
@@ -795,6 +803,7 @@
   },
   "toast": {
     "error_camera_permission": "É necessária permissão de acesso \nà câmera para ler códigos QR.",
+    "debug_state_copied": "Debug Mode: The application state has been copied to the clipboard. Contact our team to help you debug.",
     "receive_success": "A transferência foi recebida com sucesso",
     "error_witness_account_update": "Erro ao atualizar a conta de testemunha @{{account}}",
     "noMatch": "Os códigos PIN não conferem",
@@ -835,6 +844,11 @@
     "tokens_operation_failed": "Falha ao {{tokenOperation}} token",
     "no_such_account": "Não foi possível encontrar essa conta no blockchain.",
     "username_too_short": "Nome de usuário muito curto. Precisa no mínimo 4 caracteres",
+    "username_too_long": "This username is too long. Use at most 16 characters",
+    "username_invalid_last_character": "Each segment must end with a lowercase letter or digit",
+    "username_invalid_first_character": "Each segment must start with a lowercase letter",
+    "username_invalid_middle_characters": "Only lowercase letters, digits, or hyphens (-) are allowed inside segments. Segments are separated by a dot (.) ",
+    "username_invalid_segment_length": "Each segment must be at least 3 characters long",
     "account_name_not_valid": "Nome da conta não é válido",
     "account_username_already_used": "Nome de usuário já existente. Escolha um novo nome",
     "account_creation_not_enough_found": "Você não tem HIVE suficiente para comprar uma conta",
@@ -1264,5 +1278,13 @@
       "s": "s",
       "separator": " "
     }
+  },
+  "about": {
+    "title": "Keychain Mobile v{{version}}",
+    "developed_by_prefix": "Hive Keychain for mobile is developed by the Keychain team and founded through the ",
+    "process_transactions": "Process transactions and enjoy your favorite dApps on your ",
+    "mobile_device_highlight": "Mobile Device!",
+    "contact_prefix": "Should you encounter any issue, contact us on our",
+    "on_our_github": "on our Github"
   }
 }

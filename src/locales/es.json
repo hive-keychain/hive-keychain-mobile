@@ -113,10 +113,10 @@
     "to": "A",
     "use_authorized_account_instead": "Usar cuenta autorizada",
     "forget_account": "Olvidar cuenta",
-    "ordinal_st_label": "",
-    "ordinal_nd_label": "",
-    "ordinal_rd_label": "",
-    "ordinal_th_label": "",
+    "ordinal_st_label": "st",
+    "ordinal_nd_label": "nd",
+    "ordinal_rd_label": "rd",
+    "ordinal_th_label": "th",
     "url": "URL",
     "estimated_account_value": "Valor aproximado de la cuenta",
     "current": "Actual",
@@ -154,7 +154,9 @@
     "experimental": "Experimental",
     "generate_qr": "Generar código QR",
     "lets_go": "¡Vamos allá!",
-    "discord_server": "Servidor de Discord"
+    "discord_server": "Servidor de Discord",
+    "hive_dao": "Hive DAO",
+    "or": "or"
   },
   "wallet": {
     "proposal": {
@@ -615,6 +617,12 @@
         "enable_active_key_multisig": "Activar multifirma de la llave active",
         "enable_posting_key_multisig": "Activar multifirma de la llave posting"
       },
+      "language": {
+        "title": "Languages",
+        "description": "Choose your preferred language for the Hive Keychain wallet.",
+        "checkbox_default_language": "Use device language if available or default to English",
+        "dropdown_title": "Select your language"
+      },
       "export_transactions": {
         "title": "Exportar transacciones"
       },
@@ -795,6 +803,7 @@
   },
   "toast": {
     "error_camera_permission": "Se requiere permiso de la cámara para escanear códigos QR",
+    "debug_state_copied": "Debug Mode: The application state has been copied to the clipboard. Contact our team to help you debug.",
     "receive_success": "La transferencia se ha recibido con éxito",
     "error_witness_account_update": "Error al actualizar la cuenta de testigo @{{account}}",
     "noMatch": "Los códigos PIN no coinciden",
@@ -835,6 +844,11 @@
     "tokens_operation_failed": "Error al {{tokenOperation}} el token",
     "no_such_account": "No pudimos encontrar esta cuenta en la blockchain.",
     "username_too_short": "El nombre de usuario es muy corto. Necesita un mínimo de 4 caracteres",
+    "username_too_long": "This username is too long. Use at most 16 characters",
+    "username_invalid_last_character": "Each segment must end with a lowercase letter or digit",
+    "username_invalid_first_character": "Each segment must start with a lowercase letter",
+    "username_invalid_middle_characters": "Only lowercase letters, digits, or hyphens (-) are allowed inside segments. Segments are separated by a dot (.) ",
+    "username_invalid_segment_length": "Each segment must be at least 3 characters long",
     "account_name_not_valid": "El nombre de la cuenta no es válido",
     "account_username_already_used": "El nombre de usuario ya está en uso. Por favor, elige uno nuevo",
     "account_creation_not_enough_found": "No tienes HIVE suficiente para comprar una cuenta",
@@ -1264,5 +1278,13 @@
       "s": "s",
       "separator": " "
     }
+  },
+  "about": {
+    "title": "Keychain Mobile v{{version}}",
+    "developed_by_prefix": "Hive Keychain for mobile is developed by the Keychain team and founded through the ",
+    "process_transactions": "Process transactions and enjoy your favorite dApps on your ",
+    "mobile_device_highlight": "Mobile Device!",
+    "contact_prefix": "Should you encounter any issue, contact us on our",
+    "on_our_github": "on our Github"
   }
 }

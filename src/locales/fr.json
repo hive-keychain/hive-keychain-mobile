@@ -154,7 +154,9 @@
     "experimental": "Expérimental",
     "generate_qr": "Générer un QR Code",
     "lets_go": "C'est parti !",
-    "discord_server": "Serveur Discord"
+    "discord_server": "Serveur Discord",
+    "hive_dao": "Hive DAO",
+    "or": "or"
   },
   "wallet": {
     "proposal": {
@@ -615,6 +617,12 @@
         "enable_active_key_multisig": "Activer le multisig de la clé active",
         "enable_posting_key_multisig": "Activer le multisig de la clé de publication"
       },
+      "language": {
+        "title": "Languages",
+        "description": "Choose your preferred language for the Hive Keychain wallet.",
+        "checkbox_default_language": "Use device language if available or default to English",
+        "dropdown_title": "Select your language"
+      },
       "export_transactions": {
         "title": "Exporter les transactions"
       },
@@ -795,6 +803,7 @@
   },
   "toast": {
     "error_camera_permission": "L'accès à la caméra est nécessaire pour scanner les QR codes",
+    "debug_state_copied": "Debug Mode: The application state has been copied to the clipboard. Contact our team to help you debug.",
     "receive_success": "Le transfert a été reçu avec succès",
     "error_witness_account_update": "Erreur lors de la mise à jour du compte witness @{{account}}",
     "noMatch": "Le code PIN ne correspond pas",
@@ -835,6 +844,11 @@
     "tokens_operation_failed": "Échec de {{tokenOperation}} un token",
     "no_such_account": "Nous n'avons pas pu trouver ce compte sur la blockchain.",
     "username_too_short": "Nom d’utilisateur trop court (min 4 caractères)",
+    "username_too_long": "This username is too long. Use at most 16 characters",
+    "username_invalid_last_character": "Each segment must end with a lowercase letter or digit",
+    "username_invalid_first_character": "Each segment must start with a lowercase letter",
+    "username_invalid_middle_characters": "Only lowercase letters, digits, or hyphens (-) are allowed inside segments. Segments are separated by a dot (.) ",
+    "username_invalid_segment_length": "Each segment must be at least 3 characters long",
     "account_name_not_valid": "Nom de compte non valide",
     "account_username_already_used": "Ce nom d'utilisateur est déjà utilisé. Essayez un autre",
     "account_creation_not_enough_found": "Vous n'avez pas assez de HIVE pour acheter un compte",
@@ -941,7 +955,7 @@
       "author": "Auteur",
       "permlink": "Permlink",
       "weight": "Poids",
-      "data": "Donnée",
+      "data": "Données",
       "hidden_data": "Cliquez pour voir",
       "to": "Vers",
       "amount": "Montant",
@@ -951,7 +965,7 @@
       "json_metadata": "Métadonnées JSON",
       "parent_perm": "Permlink du parent",
       "parent_username": "Nom d'utilisateur parent",
-      "comment_options": "Options com'",
+      "comment_options": "Options",
       "witness": "Témoin",
       "action": "Action",
       "proxy": "Proxy",
@@ -1035,8 +1049,8 @@
       "swap": "Le swap de {{amount}} {{from}} en {{to}} a été lancé avec succès."
     },
     "confirm": "Confirmer",
-    "keep": "Ne plus demander pour envoyer des transactions {{type}} de @{{username}} sur {{domain}}.",
-    "keep_has": "Ne plus demander pour envoyer des transactions {{type}} de @{{username}} sur {{domain}} pendant la durée de cette session."
+    "keep": "Ne plus demander pour envoyer des transactions de type {{type}} de @{{username}} sur {{domain}}.",
+    "keep_has": "Ne plus demander pour envoyer des transactions de type {{type}} de @{{username}} sur {{domain}} pendant la durée de cette session."
   },
   "browser": {
     "search": "Rechercher ou entrer l'url",
@@ -1264,5 +1278,13 @@
       "s": "s",
       "separator": " "
     }
+  },
+  "about": {
+    "title": "Keychain Mobile v{{version}}",
+    "developed_by_prefix": "Hive Keychain for mobile is developed by the Keychain team and founded through the ",
+    "process_transactions": "Process transactions and enjoy your favorite dApps on your ",
+    "mobile_device_highlight": "Mobile Device!",
+    "contact_prefix": "Should you encounter any issue, contact us on our",
+    "on_our_github": "on our Github"
   }
 }

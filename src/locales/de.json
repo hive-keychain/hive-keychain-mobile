@@ -154,7 +154,9 @@
     "experimental": "Experimentell",
     "generate_qr": "Generiere QR-Code",
     "lets_go": "Los geht's!",
-    "discord_server": "Discord Server"
+    "discord_server": "Discord Server",
+    "hive_dao": "Hive DAO",
+    "or": "oder"
   },
   "wallet": {
     "proposal": {
@@ -615,6 +617,12 @@
         "enable_active_key_multisig": "Aktiviere Active-Key Multisig",
         "enable_posting_key_multisig": "Aktiviere Posting-Key Multisig"
       },
+      "language": {
+        "title": "Sprachen",
+        "description": "Wählen Sie Ihre bevorzugte Sprache für die Hive Keychain Wallet.",
+        "checkbox_default_language": "Gerätesprache verwenden, falls verfügbar oder standardmäßig auf Englisch",
+        "dropdown_title": "Sprache auswählen"
+      },
       "export_transactions": {
         "title": "Transaktionen exportieren"
       },
@@ -795,6 +803,7 @@
   },
   "toast": {
     "error_camera_permission": "Kamera-Berechtigung wird benötigt, um die QR-Codes zu scannen",
+    "debug_state_copied": "Debug Modus: Der Anwendungsstatus wurde in die Zwischenablage kopiert. Kontaktieren Sie unser Team, um Ihnen beim Debuggen zu helfen.",
     "receive_success": "Die Überweisung wurde erfolgreich empfangen",
     "error_witness_account_update": "Fehler beim Aktualisieren des Witness Konto @{{account}}",
     "noMatch": "Die PIN Codes stimmen nicht überein",
@@ -835,6 +844,11 @@
     "tokens_operation_failed": "Fehler beim {{tokenOperation}} eines Token",
     "no_such_account": "Wir konnten dieses Konto nicht auf der Blockchain finden.",
     "username_too_short": "Benutzername ist zu kurz. Benötigt mindestens 4 Zeichen",
+    "username_too_long": "Dieser Benutzername ist zu lang. Verwenden Sie höchstens 16 Zeichen",
+    "username_invalid_last_character": "Jedes Segment muss mit einem Kleinbuchstaben oder einer Zahl enden",
+    "username_invalid_first_character": "Jedes Segment muss mit einem Kleinbuchstaben beginnen",
+    "username_invalid_middle_characters": "Nur Kleinbuchstaben, Ziffern oder Bindestriche (-) sind in Segmenten erlaubt. Segmente werden durch einen Punkt getrennt (.) ",
+    "username_invalid_segment_length": "Jedes Segment muss mindestens 3 Zeichen lang sein",
     "account_name_not_valid": "Kontoname ist nicht gültig",
     "account_username_already_used": "Benutzername wird bereits verwendet. Bitte wählen Sie einen anderen",
     "account_creation_not_enough_found": "Sie haben nicht genug HIVE um ein Konto zu kaufen",
@@ -1264,5 +1278,13 @@
       "s": "s",
       "separator": " "
     }
+  },
+  "about": {
+    "title": "Keychain Mobile v{{version}}",
+    "developed_by_prefix": "Hive Keychain für mobile wird vom Keychain Team entwickelt und gefördert durch den ",
+    "process_transactions": "Transaktionen verarbeiten und Ihre Lieblings-dApps auf Ihrem ",
+    "mobile_device_highlight": "Mobilen Gerät!",
+    "contact_prefix": "Sollten Sie irgendwelche Probleme haben, kontaktieren Sie uns auf unserer",
+    "on_our_github": "auf unserem Github"
   }
 }
