@@ -156,7 +156,7 @@
     "lets_go": "C'est parti !",
     "discord_server": "Serveur Discord",
     "hive_dao": "Hive DAO",
-    "or": "or"
+    "or": "ou"
   },
   "wallet": {
     "proposal": {
@@ -618,10 +618,10 @@
         "enable_posting_key_multisig": "Activer le multisig de la clé de publication"
       },
       "language": {
-        "title": "Languages",
-        "description": "Choose your preferred language for the Hive Keychain wallet.",
-        "checkbox_default_language": "Use device language if available or default to English",
-        "dropdown_title": "Select your language"
+        "title": "Langages",
+        "description": "Choisissez votre langue de préférence pour Hive Keychain.",
+        "checkbox_default_language": "Utiliser la langue de l'appareil ou l'anglais par défaut",
+        "dropdown_title": "Choisissez votre langue"
       },
       "export_transactions": {
         "title": "Exporter les transactions"
@@ -803,7 +803,7 @@
   },
   "toast": {
     "error_camera_permission": "L'accès à la caméra est nécessaire pour scanner les QR codes",
-    "debug_state_copied": "Debug Mode: The application state has been copied to the clipboard. Contact our team to help you debug.",
+    "debug_state_copied": "Mode debug : L'état de l'application a été copié dans le presse-papiers. Contactez notre équipe pour obtenir de l'aide.",
     "receive_success": "Le transfert a été reçu avec succès",
     "error_witness_account_update": "Erreur lors de la mise à jour du compte witness @{{account}}",
     "noMatch": "Le code PIN ne correspond pas",
@@ -844,11 +844,11 @@
     "tokens_operation_failed": "Échec de {{tokenOperation}} un token",
     "no_such_account": "Nous n'avons pas pu trouver ce compte sur la blockchain.",
     "username_too_short": "Nom d’utilisateur trop court (min 4 caractères)",
-    "username_too_long": "This username is too long. Use at most 16 characters",
-    "username_invalid_last_character": "Each segment must end with a lowercase letter or digit",
-    "username_invalid_first_character": "Each segment must start with a lowercase letter",
-    "username_invalid_middle_characters": "Only lowercase letters, digits, or hyphens (-) are allowed inside segments. Segments are separated by a dot (.) ",
-    "username_invalid_segment_length": "Each segment must be at least 3 characters long",
+    "username_too_long": "Nom d’utilisateur trop long (max 16 caractères)",
+    "username_invalid_last_character": "Chaque segment doit se terminer par une lettre minuscule ou un chiffre",
+    "username_invalid_first_character": "Chaque segment doit commencer par une minuscule",
+    "username_invalid_middle_characters": "Seuls les minuscules, chiffres ou tirets (-) sont autorisés dans les segments. Les segments sont séparés par un point (.) ",
+    "username_invalid_segment_length": "Chaque segment doit comporter au moins 3 caractères",
     "account_name_not_valid": "Nom de compte non valide",
     "account_username_already_used": "Ce nom d'utilisateur est déjà utilisé. Essayez un autre",
     "account_creation_not_enough_found": "Vous n'avez pas assez de HIVE pour acheter un compte",
@@ -1005,6 +1005,7 @@
       "broadcasting": "Une erreur s'est produite lors de la transmission de cette transaction, veuillez réessayer.",
       "addAccount": "Erreur lors de l'ajout du compte. Vérifiez le nom d'utilisateur et les clés.",
       "timeout": "La requête a expiré",
+      "insufficient_balance": "Solde insuffisant",
       "transfer": {
         "adjust_balance": "Solde {{currency}} insuffisant sur le compte @{{username}}.",
         "get_account": "Compte @{{to}} introuvable",
@@ -1281,10 +1282,10 @@
   },
   "about": {
     "title": "Keychain Mobile v{{version}}",
-    "developed_by_prefix": "Hive Keychain for mobile is developed by the Keychain team and founded through the ",
-    "process_transactions": "Process transactions and enjoy your favorite dApps on your ",
-    "mobile_device_highlight": "Mobile Device!",
-    "contact_prefix": "Should you encounter any issue, contact us on our",
-    "on_our_github": "on our Github"
+    "developed_by_prefix": "Hive Keychain pour mobile est développé par l'équipe Keychain et fondé par le biais du",
+    "process_transactions": "Traitez les transactions et profitez de vos dApps préférés sur votre ",
+    "mobile_device_highlight": "Appareil mobile !",
+    "contact_prefix": "En cas de problème, contactez-nous sur notre",
+    "on_our_github": "sur notre Github"
   }
 }

@@ -156,7 +156,7 @@
     "lets_go": "Beri Masukan",
     "discord_server": "Server Discord",
     "hive_dao": "Hive DAO",
-    "or": "or"
+    "or": "atau"
   },
   "wallet": {
     "proposal": {
@@ -618,10 +618,10 @@
         "enable_posting_key_multisig": "Aktifkan posting key multisig"
       },
       "language": {
-        "title": "Languages",
-        "description": "Choose your preferred language for the Hive Keychain wallet.",
-        "checkbox_default_language": "Use device language if available or default to English",
-        "dropdown_title": "Select your language"
+        "title": "Bahasa",
+        "description": "Pilih bahasa yang Anda inginkan untuk Hive Keychain",
+        "checkbox_default_language": "Gunakan bahasa perangkat jika tersedia atau default ke bahasa Inggris",
+        "dropdown_title": "Pilih Bahasa"
       },
       "export_transactions": {
         "title": "Ekspor Transaksi"
@@ -803,7 +803,7 @@
   },
   "toast": {
     "error_camera_permission": "Izinkan aplikasi menggunakan kamera untuk memindai QR",
-    "debug_state_copied": "Debug Mode: The application state has been copied to the clipboard. Contact our team to help you debug.",
+    "debug_state_copied": "Mode Debug: Status aplikasi telah disalin ke papan klip. Hubungi tim kami untuk membantu Anda melakukan debug.",
     "receive_success": "Transaksi berhasil diterima",
     "error_witness_account_update": "Aktifkan Hive Multisig untuk menerima permintaan multisig pada akun ini. Fitur ini bersifat lanjutan, gunakan hanya jika Anda benar-benar memahaminya.",
     "noMatch": "Kode pin tidak cocok ",
@@ -844,11 +844,11 @@
     "tokens_operation_failed": "Gagal {{tokenOperation}} token",
     "no_such_account": "Akun tidak terdaftar di blockchain.",
     "username_too_short": "Username harus minimal 4 karakter",
-    "username_too_long": "This username is too long. Use at most 16 characters",
-    "username_invalid_last_character": "Each segment must end with a lowercase letter or digit",
-    "username_invalid_first_character": "Each segment must start with a lowercase letter",
-    "username_invalid_middle_characters": "Only lowercase letters, digits, or hyphens (-) are allowed inside segments. Segments are separated by a dot (.) ",
-    "username_invalid_segment_length": "Each segment must be at least 3 characters long",
+    "username_too_long": "Nama pengguna ini. Gunakan maksimal 16 karakter.",
+    "username_invalid_last_character": "Setiap karakter harus diakhiri dengan huruf kecil atau angka",
+    "username_invalid_first_character": "Setiap karakter harus dimulai dengan huruf kecil",
+    "username_invalid_middle_characters": "Hanya huruf kecil, angka, atau tanda hubung (-) yang diperbolehkan di dalam username. karakter dipisahkan dengan titik (.)",
+    "username_invalid_segment_length": "Setiap username harus memiliki panjang minimal 3 karakter",
     "account_name_not_valid": "Nama akun tidak valid",
     "account_username_already_used": "Nama pengguna ini sudah terpakai. Silakan pilih yang baru",
     "account_creation_not_enough_found": "Anda tidak memiliki cukup HIVE untuk membeli akun",
@@ -1005,6 +1005,7 @@
       "broadcasting": "Terjadi kesalahan saat menyiarkan transaksi ini, silakan coba lagi.",
       "addAccount": "Akun gagal ditambahkan. Verifikasi username dan key Anda.",
       "timeout": "Waktu permintaan habis",
+      "insufficient_balance": "Saldo tidak mencukupi",
       "transfer": {
         "adjust_balance": "Saldo {{currency}} tidak mencukupi di akun @{{username}}",
         "get_account": "Tidak dapat menemukan akun @{{to}}",
@@ -1280,11 +1281,11 @@
     }
   },
   "about": {
-    "title": "Keychain Mobile v{{version}}",
-    "developed_by_prefix": "Hive Keychain for mobile is developed by the Keychain team and founded through the ",
-    "process_transactions": "Process transactions and enjoy your favorite dApps on your ",
-    "mobile_device_highlight": "Mobile Device!",
-    "contact_prefix": "Should you encounter any issue, contact us on our",
-    "on_our_github": "on our Github"
+    "title": "Keychain Mobile V{{version}}",
+    "developed_by_prefix": "Hive Keychain untuk seluler dikembangkan oleh tim Keychain dan didirikan melalui",
+    "process_transactions": "Proses transaksi dan nikmati dApps favorit Anda di",
+    "mobile_device_highlight": "Perangkat Mobile!",
+    "contact_prefix": "Jika Anda mengalami masalah, hubungi kami di",
+    "on_our_github": "di Github kami"
   }
 }

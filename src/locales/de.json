@@ -1005,6 +1005,7 @@
       "broadcasting": "Beim Übertragen der Transaktion ist ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
       "addAccount": "Beim Hinzufügen dieses Kontos ist ein Fehler aufgetreten. Bitte überprüfen Sie den Benutzernamen und die Schlüssel.",
       "timeout": "Zeitüberschreitung der Anfrage",
+      "insufficient_balance": "Unzureichendes Guthaben",
       "transfer": {
         "adjust_balance": "Unzureichender {{currency}} Kontostand auf Konto @{{username}}.",
         "get_account": "Konto @{{to}} nicht gefunden",
