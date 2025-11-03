@@ -38,7 +38,6 @@ const hasVotedForProposal = async (
   return listProposalVotes[0].voter === username;
 };
 const getNotifiedVoters = async (): Promise<string[]> => {
-  // await AsyncStorage.removeItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED);
   const voters = JSON.parse(
     (await AsyncStorage.getItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED)) ||
       '[]',
