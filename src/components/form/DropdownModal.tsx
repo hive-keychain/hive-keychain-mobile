@@ -305,7 +305,7 @@ const DropdownModal = ({
     return (
       <View style={[{paddingVertical: 4}]}>
         <Pressable
-          onPressIn={onHandleSelectedItem.bind(null, item)}
+          onPress={onHandleSelectedItem.bind(null, item)}
           hitSlop={{top: 10, bottom: 10, left: 8, right: 8}}
           style={[styles.dropdownItem, bgStyle]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
