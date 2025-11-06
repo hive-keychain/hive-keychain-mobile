@@ -1,7 +1,10 @@
-import {TokenBalance, TokenTransaction} from 'actions/interfaces';
 import {HiveEngineApi} from 'api/hiveEngine.api';
 import {ReceiveTransferProps} from 'navigators/Root.types';
-import {Token, TokenMarket} from 'src/interfaces/tokens.interface';
+import {
+  Token,
+  TokenBalance,
+  TokenTransaction,
+} from 'src/interfaces/tokens.interface';
 
 export interface TransactionConfirmationResult {
   confirmed: boolean;
@@ -116,19 +119,6 @@ export const getTokenPrecision = async (symbol: string) => {
   }
   const token = await getTokenInfo(symbol);
   return token.precision;
-};
-
-export const getHiveEngineTokenPrice = (
-  {symbol}: Partial<TokenBalance>,
-  market: TokenMarket[],
-) => {
-  const tokenMarket = market.find((t) => t.symbol === symbol);
-  const price = tokenMarket
-    ? parseFloat(tokenMarket.lastPrice)
-    : symbol === 'SWAP.HIVE'
-    ? 1
-    : 0;
-  return price;
 };
 
 const searchForTransaction = async (

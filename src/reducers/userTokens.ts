@@ -1,9 +1,10 @@
-import {ActionPayload, TokenBalance, UserTokens} from 'actions/interfaces';
+import {ActionPayload} from 'actions/interfaces';
 import {
   CLEAR_USER_TOKENS,
   LOAD_USER_TOKENS,
   STOP_USER_TOKENS_LOADING,
 } from 'actions/types';
+import {TokenBalance, UserTokens} from 'src/interfaces/tokens.interface';
 
 export default (
   state: UserTokens = {loading: false, list: []},

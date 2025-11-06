@@ -7,6 +7,7 @@ import {DEFAULT_HE_RPC_NODE} from 'src/interfaces/hiveEngineRpc.interface';
 import {
   OperationsHiveEngine,
   Token,
+  TokenBalance,
   TokenMarket,
   TokenTransaction,
 } from 'src/interfaces/tokens.interface';
@@ -14,7 +15,7 @@ import {RootState, store} from 'store';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine.utils';
 import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 import {getAllTokens, getUserBalance} from 'utils/tokens.utils';
-import {ActionPayload, TokenBalance} from './interfaces';
+import {ActionPayload} from './interfaces';
 import {showModal} from './message';
 import {setHiveEngineRpc} from './settings';
 import {

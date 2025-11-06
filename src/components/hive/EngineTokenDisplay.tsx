@@ -1,14 +1,19 @@
-import {TokenBalance, TokenMarket} from 'actions/interfaces';
 import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
 import React, {memo, useCallback} from 'react';
 import {useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
-import {Token} from 'src/interfaces/tokens.interface';
+import {
+  Token,
+  TokenBalance,
+  TokenMarket,
+} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
-import {formatBalance} from 'utils/format.utils';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
+import {
+  getHiveEngineTokenPriceInfo,
+  getHiveEngineTokenValue,
+} from 'utils/hiveEngine.utils';
 import {navigate} from 'utils/navigation.utils';
 import CurrencyIcon from './CurrencyIcon';
 import TokenDisplay from './TokenDisplay';
@@ -67,16 +72,7 @@ const EngineTokenDisplay = ({
         totalValue={getHiveEngineTokenValue(token, market) * hivePrice}
         toggled={toggled}
         setToggle={setToggle}
-        price={{
-          usd: tokenMarket
-            ? formatBalance(parseFloat(tokenMarket.lastPrice) * hivePrice)
-            : tokenInfo.symbol === 'SWAP.HIVE'
-            ? formatBalance(hivePrice)
-            : '0',
-          usd_24h_change: parseFloat(
-            tokenMarket ? tokenMarket.priceChangePercent : '0',
-          ),
-        }}
+        price={getHiveEngineTokenPriceInfo(tokenMarket, tokenInfo, hivePrice)}
         logo={
           <CurrencyIcon
             currencyName={token.symbol}

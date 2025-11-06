@@ -53,15 +53,12 @@ import {
 import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config.utils';
 import {capitalize, withCommas} from 'utils/format.utils';
+import {getHiveEngineTokenPrice} from 'utils/hiveEngine.utils';
 import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import {goBackAndNavigate, navigate} from 'utils/navigation.utils';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
-import {
-  getAllTokens,
-  getHiveEngineTokenPrice,
-  getTokenPrecision,
-} from 'utils/tokens.utils';
+import {getAllTokens, getTokenPrecision} from 'utils/tokens.utils';
 import OperationThemed from './OperationThemed';
 
 export interface OptionItem {
