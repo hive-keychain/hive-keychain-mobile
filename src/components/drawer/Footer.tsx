@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadAccount} from 'actions/hive';
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import DiscordLogo from 'assets/images/drawer/discord_logo.svg';
@@ -17,7 +16,6 @@ import {
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {
   BACKGROUNDITEMDARKISH,
   PRIMARY_RED_COLOR,
@@ -111,9 +109,6 @@ export default ({
           onPress={() => {
             addTab(`https://peakd.com/@keychain`);
             navigate('Browser');
-          }}
-          onLongPress={() => {
-            AsyncStorage.removeItem(KeychainStorageKeyEnum.RATING_PROMPT_DONE);
           }}
           style={({pressed}) => [
             styles.footerIconContainer,
