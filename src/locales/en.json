@@ -1179,6 +1179,12 @@
       "sub_title": "Widget Account Balance Configuration",
       "intro": "Choose which accounts will be shown in the portfolio widget."
     },
+    "rating": {
+      "title": "Enjoying Hive Keychain?",
+      "description": "Your feedback helps us improve. Do you like your experience so far?",
+      "negative": "Not really",
+      "positive": "I love it!"
+    },
     "tutorial": {
       "title": "Welcome to Keychain!",
       "description": "If you are new to Keychain, or Hive in general, please check our onboarding tutorial.\nYou can always access it later on in Settings > Help > Tutorial."

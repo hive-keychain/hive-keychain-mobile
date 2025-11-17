@@ -76,6 +76,7 @@
     "react": "19.0.0",
     "react-native": "0.79.6",
     "react-native-date-picker": "5.0.12",
+    "react-native-device-info": "^15.0.1",
     "react-native-draggable-flatlist": "4.0.3",
     "react-native-elements": "3.4.3",
     "react-native-gesture-handler": "2.24.0",
@@ -102,7 +103,8 @@
     "sscjs": "0.0.9",
     "stream": "0.0.3",
     "valid-url": "1.0.9",
-    "validator": "13.15.15"
+    "validator": "13.15.15",
+    "expo-store-review": "~8.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

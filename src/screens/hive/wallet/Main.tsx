@@ -24,6 +24,7 @@ import Notifications from 'components/hive/notifications/Notifications';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
+import RatingPrompt from 'components/popups/rating/RatingPrompt';
 import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
 import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
 import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vestingRoutes.interface';
@@ -141,6 +142,8 @@ const Main = ({
     setRefreshing(true);
     updateUserWallet(user.name);
   }, [user.name]);
+
+  // Rating prompt handled by a popup component rendered below
 
   useEffect(() => {
     if (Platform.OS === 'ios') return;
@@ -581,6 +584,7 @@ const Main = ({
               />
             </View>
             <WhatsNew navigation={navigation} />
+            <RatingPrompt navigation={navigation} />
             <WidgetConfiguration
               show={showWidgetConfiguration}
               setShow={setShowWidgetConfiguration}
