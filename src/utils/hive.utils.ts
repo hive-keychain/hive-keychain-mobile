@@ -208,3 +208,9 @@ export const getAccount = async (username: string) => {
   const accounts = await getClient().database.getAccounts([username]);
   return accounts[0];
 };
+
+export const getHardforkVersion = async () => {
+  return parseInt(
+    (await getClient().database.call('get_hardfork_version', [])).split('.')[1],
+  );
+};

@@ -68,7 +68,6 @@ class Bridge extends Component implements InnerProps {
       console.warn(err);
       return;
     }
-    console.log('Webview Message', msgData.data);
     self.pendingMethods[msgData.id].resolve(msgData.data);
   }
   render() {
@@ -129,8 +128,11 @@ export const signedCall = (
   params: string,
   username: string,
 ) =>
-  self.sendMessage('signedCall', [method, params, username, key]) as Promise<
-    string
-  >;
+  self.sendMessage('signedCall', [
+    method,
+    params,
+    username,
+    key,
+  ]) as Promise<string>;
 
 export default Bridge;

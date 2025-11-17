@@ -43,6 +43,7 @@ import {
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
 } from '../interfaces/keychain.interface';
+import {getHardforkVersion} from './hive.utils';
 import {sleep} from './keychain.utils';
 
 type BroadcastResult = {id: string; tx_id: string};
@@ -609,7 +610,13 @@ export const broadcast = async (
 ) => {
   try {
     const tx = new hiveTx.Transaction();
-    const transaction = await tx.create(arr);
+    const hf = await getHardforkVersion();
+    const expiration = options?.multisig
+      ? hf >= 28
+        ? 60 * 60 * 24
+        : 60 * 60
+      : 60;
+    const transaction = await tx.create(arr, expiration);
     const signedTx = tx.sign(hiveTx.PrivateKey.from(key));
     if (options?.multisig && multisigRequestHandler) {
       return multisigRequestHandler({
