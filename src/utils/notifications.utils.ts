@@ -513,10 +513,13 @@ const getNotifications = async (
         break;
       }
       case 'transfer': {
+        console.log('payload', payload);
         if (typeof payload.amount !== 'string')
           payload.amount = fromNaiAndSymbol(payload.amount);
 
-        const amount = withCommas(payload.amount, 3);
+        const amount = `${withCommas(payload.amount, 3)} ${
+          payload.amount.split(' ')[1]
+        }`;
         if (payload.to === username) {
           messageParams = [amount, payload.from];
           message = 'wallet_info_transfer_in';
@@ -527,7 +530,9 @@ const getNotifications = async (
         break;
       }
       case 'fill_recurrent_transfer': {
-        const amount = withCommas(payload.amount, 3);
+        const amount = `${withCommas(payload.amount, 3)} ${
+          payload.amount.split(' ')[1]
+        }`;
         if (payload.to === username) {
           messageParams = [amount, payload.from, payload.remaining_executions];
           message = 'wallet_info_fill_recurrent_transfer_in';
@@ -632,13 +637,13 @@ const getNotifications = async (
       }
       case 'transfer_from_savings': {
         message = 'wallet_info_withdraw_savings';
-        const amount = withCommas(payload.amount, 3);
+        const amount = `${withCommas(payload.amount, 3)} ${payload.symbol}`;
         messageParams = [amount];
         break;
       }
       case 'transfer_to_savings': {
         message = 'wallet_info_deposit_savings';
-        const amount = withCommas(payload.amount, 3);
+        const amount = `${withCommas(payload.amount, 3)} ${payload.symbol}`;
         messageParams = [amount];
         break;
       }
@@ -728,7 +733,7 @@ const getNotifications = async (
         message = 'notification_comment_reward';
         messageParams = [
           payload.author,
-          withCommas(payload.payout, 3),
+          `${withCommas(payload.payout, 3)} ${payload.payout.split(' ')[1]}`,
           payload.permlink,
         ];
         externalUrl = `https://peakd.com/@${payload.author}/${payload.permlink}`;
@@ -736,7 +741,10 @@ const getNotifications = async (
       }
       case 'interest': {
         message = 'notification_hbd_interest';
-        messageParams = [payload.owner, withCommas(payload.interest, 3)];
+        messageParams = [
+          payload.owner,
+          `${withCommas(payload.interest, 3)} HBD`,
+        ];
         break;
       }
       case 'fill_vesting_withdraw': {
@@ -767,13 +775,19 @@ const getNotifications = async (
         messageParams = [
           payload.current_owner,
           payload.open_owner,
-          withCommas(payload.current_pays, 3),
-          withCommas(payload.open_pays, 3),
+          `${withCommas(payload.current_pays, 3)} ${
+            payload.current_pays.split(' ')[1]
+          }`,
+          `${withCommas(payload.open_pays, 3)} ${
+            payload.open_pays.split(' ')[1]
+          }`,
         ];
         break;
       }
       case 'fill_transfer_from_savings': {
-        const amount = withCommas(payload.amount, 3);
+        const amount = `${withCommas(payload.amount, 3)} ${
+          payload.amount.split(' ')[1]
+        }`;
         if (payload.from === payload.to) {
           message = 'notification_fill_transfer_from_savings';
           messageParams = [payload.from, amount];
@@ -799,8 +813,8 @@ const getNotifications = async (
         message = 'notification_comment_benefactor_reward';
         messageParams = [
           payload.benefactor,
-          withCommas(payload.hbd_payout, 3),
-          withCommas(payload.hive_payout, 3),
+          `${withCommas(payload.hbd_payout, 3)} HBD`,
+          `${withCommas(payload.hive_payout, 3)} HIVE`,
           toFormattedHP(
             payload.vesting_payout.toString().replace('VESTS', ''),
             globalProperties,
@@ -835,15 +849,19 @@ const getNotifications = async (
         message = 'notification_fill_collateralized_convert_request';
         messageParams = [
           payload.owner,
-          withCommas(payload.amount_in, 3),
-          withCommas(payload.amount_out, 3),
+          `${withCommas(payload.amount_in, 3)} ${
+            payload.amount_in.split(' ')[1]
+          }`,
+          `${withCommas(payload.amount_out, 3)} ${
+            payload.amount_out.split(' ')[1]
+          }`,
         ];
         break;
       }
       case 'failed_recurrent_transfer': {
         message = 'notification_failed_recurrent_transfer';
         messageParams = [
-          withCommas(payload.amount, 3),
+          `${withCommas(payload.amount, 3)} ${payload.amount.split(' ')[1]}`,
           payload.from,
           payload.to,
         ];
