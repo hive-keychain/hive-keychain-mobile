@@ -459,7 +459,6 @@ const Main = ({
                             100,
                             properties,
                             user.account,
-                            false,
                           ) || '0'
                         }`}
                       />

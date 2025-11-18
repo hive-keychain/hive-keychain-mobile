@@ -513,7 +513,6 @@ const getNotifications = async (
         break;
       }
       case 'transfer': {
-        console.log('payload', payload);
         if (typeof payload.amount !== 'string')
           payload.amount = fromNaiAndSymbol(payload.amount);
 
