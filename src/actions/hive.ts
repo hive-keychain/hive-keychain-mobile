@@ -10,6 +10,7 @@ import {getClient} from 'utils/hiveLibs.utils';
 import PhishingUtils from 'utils/phishing.utils';
 import {getPrices} from 'utils/price.utils';
 import TransactionUtils from 'utils/transactions.utils';
+import {TransferUtils} from 'utils/transfer.utils';
 import {loadUserTokens} from './hiveEngine';
 import {
   ActionPayload,
@@ -25,6 +26,7 @@ import {
   FETCH_DELEGATEES,
   FETCH_DELEGATORS,
   FETCH_PHISHING_ACCOUNTS,
+  FETCH_RECURRENT_TRANSFERS,
   FETCH_SAVINGS_REQUESTS,
   GET_CURRENCY_PRICES,
   GLOBAL_PROPS,
@@ -176,6 +178,20 @@ export const fetchConversionRequests =
     dispatch({
       type: FETCH_CONVERSION_REQUESTS,
       payload: conversions,
+    });
+  };
+
+export const fetchRecurrentTransfers =
+  (name: string): AppThunk =>
+  async (dispatch) => {
+    const recurrentTransfers = (
+      await TransferUtils.getRecurrentTransfers(name)
+    ).recurrent_transfers.sort(
+      (a, b) => a.to.localeCompare(b.to) || a.pair_id - b.pair_id,
+    );
+    dispatch({
+      type: FETCH_RECURRENT_TRANSFERS,
+      payload: recurrentTransfers,
     });
   };
 

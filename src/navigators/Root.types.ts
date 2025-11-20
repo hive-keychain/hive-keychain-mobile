@@ -96,6 +96,7 @@ export type RootStackParam = {
   SwapHistory: undefined;
   ConfirmationPage: ConfirmationPageProps;
   ReceiveTransfer: ReceiveTransferProps;
+  RecurrentTransfers: undefined;
 };
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;

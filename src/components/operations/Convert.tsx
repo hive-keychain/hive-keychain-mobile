@@ -1,11 +1,11 @@
 import {fetchConversionRequests} from 'actions/index';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
-import Icon from 'components/hive/Icon';
 import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
 // import {TemplateStackProps} from 'navigators/Root.types';
+import {CurrentOperationCard} from 'components/ui/CurrentOperationCard';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -16,18 +16,14 @@ import {
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enum';
+import {useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enum';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {getCurrencyProperties} from 'src/lists/hiveReact.list';
-import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {getRotateStyle} from 'src/styles/transform';
-import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
+import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {capitalize, getCleanAmountValue, withCommas} from 'utils/format.utils';
 import {sanitizeAmount} from 'utils/hive.utils';
@@ -52,7 +48,6 @@ const Convert = ({
   currency,
 }: Props) => {
   const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
   const [totalPendingConversions, setTotalPendingConversions] = useState(0);
   const [availableBalance, setAvailableBalance] = useState('');
 
@@ -154,9 +149,7 @@ const Convert = ({
 
   const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
-  const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color, theme);
-
+  const styles = getDimensionedStyles();
   return (
     <OperationThemed
       additionalContentContainerStyle={styles.paddingHorizontal}
@@ -174,43 +167,16 @@ const Convert = ({
           />
           <Separator />
           {totalPendingConversions > 0 && (
-            <TouchableOpacity
-              activeOpacity={1}
+            <CurrentOperationCard
               onPress={() =>
                 navigate('PendingConversions', {
                   currency,
                   currentPendingConversionList: conversions,
                 })
               }
-              style={[
-                getCardStyle(theme).defaultCardItem,
-                styles.displayAction,
-              ]}>
-              <View>
-                <Text
-                  style={[
-                    getFormFontStyle(height, theme).smallLabel,
-                    styles.josefineFont,
-                    styles.opaque,
-                  ]}>
-                  {capitalize(translate(`common.pending`))}
-                </Text>
-                <Text
-                  style={[
-                    getFormFontStyle(height, theme).input,
-                    styles.josefineFont,
-                  ]}>
-                  {totalPendingConversions} {currency}
-                </Text>
-              </View>
-              <Icon
-                theme={theme}
-                name={Icons.EXPAND}
-                additionalContainerStyle={getRotateStyle('90')}
-                width={13}
-                height={13}
-              />
-            </TouchableOpacity>
+              title="common.pending"
+              value={`${totalPendingConversions} ${currency}`}
+            />
           )}
           <Separator height={25} />
         </>
@@ -277,7 +243,7 @@ const Convert = ({
   );
 };
 
-const getDimensionedStyles = (color: string, theme: Theme) =>
+const getDimensionedStyles = () =>
   StyleSheet.create({
     conversionRow: {
       width: '70%',
@@ -289,20 +255,6 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
       height: 80,
     },
     disclaimer: {textAlign: 'justify', fontSize: 14},
-    displayAction: {
-      marginHorizontal: 15,
-      borderRadius: 26,
-      paddingHorizontal: 21,
-      paddingVertical: 13,
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-    },
-    josefineFont: {
-      fontFamily: FontJosefineSansName.MEDIUM,
-    },
-    opaque: {
-      opacity: 0.7,
-    },
     paddingHorizontal: {paddingHorizontal: 15},
     flexRowCenter: {
       flexDirection: 'row',

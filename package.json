@@ -61,10 +61,11 @@
     "expo-sharing": "13.1.5",
     "expo-splash-screen": "0.30.10",
     "expo-status-bar": "2.2.3",
+    "expo-store-review": "~8.1.5",
     "fs": "0.0.1-security",
     "fs-extra": "11.3.1",
     "fuse.js": "7.1.0",
-    "hive-keychain-commons": "^1.11.0",
+    "hive-keychain-commons": "^1.12.0",
     "hive-tx": "github:hive-keychain/hive-tx-js",
     "hive-uri": "0.2.8",
     "i18n-js": "4.5.1",
@@ -103,8 +104,7 @@
     "sscjs": "0.0.9",
     "stream": "0.0.3",
     "valid-url": "1.0.9",
-    "validator": "13.15.15",
-    "expo-store-review": "~8.1.5"
+    "validator": "13.15.15"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -112,7 +112,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.20",
     "@types/md5": "^2.3.5",
-    "@types/react": "~19.0.10",
+    "@types/react": "^19.2.6",
     "@types/react-dom": "^19.1.9",
     "@types/react-native": "^0.73.0",
     "@types/url-parse": "^1.4.11",
@@ -121,6 +121,7 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "eas-cli": "^16.18.1",
     "expo-version-bump": "^1.0.2",
+    "patch-package": "^8.0.1",
     "react-native-svg-transformer": "^1.5.1",
     "typescript": "^5.9.2",
     "url-parse": "^1.5.10"

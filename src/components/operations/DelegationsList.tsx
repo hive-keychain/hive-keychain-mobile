@@ -2,11 +2,10 @@ import {VestingDelegation} from '@hiveio/dhive';
 import {loadAccount, loadDelegatees, loadDelegators} from 'actions/index';
 import {IncomingDelegation, KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
-import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import TwoFaModal from 'components/modals/TwoFaModal';
 import {Caption} from 'components/ui/Caption';
-import ConfirmationInItem from 'components/ui/ConfirmationInItem';
+import EditableListItem from 'components/ui/EditableListItem';
 import Separator from 'components/ui/Separator';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import moment from 'moment';
@@ -16,7 +15,6 @@ import {
   Keyboard,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -26,14 +24,10 @@ import {Icons} from 'src/enums/icons.enum';
 import {MessageModalType} from 'src/enums/messageModal.enum';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {getHorizontalLineStyle, getSeparatorLineStyle} from 'src/styles/line';
-import {MARGIN_PADDING} from 'src/styles/spacing';
-import {getRotateStyle} from 'src/styles/transform';
+import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
   title_primary_body_2,
-  title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {
@@ -76,15 +70,7 @@ const DelegationsList = ({
     setTotalPendingOutgoingUndelegation,
   ] = useState<number>(0);
   const [pendingUndelegationsList, setPendingList] = useState<any[]>([]);
-  const [selectedOutgoingItem, setSelectedOutgoingItem] =
-    useState<VestingDelegation>();
-  const [
-    showCancelConfirmationDelegation,
-    setShowCancelConfirmationDelegation,
-  ] = useState(false);
   const [available, setAvailable] = useState<string | number>('...');
-  const [editedAmountDelegation, setEditedAmountDelegation] = useState('');
-  const [editMode, setEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
   const {width} = useWindowDimensions();
@@ -145,22 +131,21 @@ const DelegationsList = ({
     }
   }, [delegations]);
 
-  const onHandleSelectedOutgoingItem = (item: VestingDelegation) => {
-    setSelectedOutgoingItem(
-      selectedOutgoingItem && selectedOutgoingItem.delegatee === item.delegatee
-        ? undefined
-        : item,
-    );
-    setEditMode(false);
-  };
-
   const renderOutgoingItem = (item: VestingDelegation) => {
-    const onDelegate = async (isCancellingDelegation: boolean) => {
+    const currentHpAmount = toHP(
+      item.vesting_shares + '',
+      properties.globals,
+    ).toString();
+
+    const onDelegate = async (
+      isCancellingDelegation: boolean,
+      editedValue: string,
+    ) => {
       const handleSubmit = async (options: TransactionOptions) => {
         setIsLoading(true);
         Keyboard.dismiss();
         try {
-          const amount = isCancellingDelegation ? '0' : editedAmountDelegation;
+          const amount = isCancellingDelegation ? '0' : editedValue;
           const delegation = await delegate(
             user.keys.active,
             {
@@ -195,9 +180,6 @@ const DelegationsList = ({
               true,
             );
         } finally {
-          setSelectedOutgoingItem(undefined);
-          setShowCancelConfirmationDelegation(false);
-          setEditMode(false);
           setIsLoading(false);
         }
       };
@@ -215,148 +197,26 @@ const DelegationsList = ({
         });
       }
     };
-    const isItemSelected =
-      selectedOutgoingItem && selectedOutgoingItem.id === item.id;
 
     return (
-      <View style={[getCardStyle(theme, 28).defaultCardItem]}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => onHandleSelectedOutgoingItem(item)}
-          style={styles.container}>
-          <View style={styles.row}>
-            <Text style={styles.textBase}> {`@${item.delegatee}`}</Text>
-          </View>
-          <View style={styles.rightContainer}>
-            <Text style={styles.textBase}>{`${withCommas(
-              toHP(item.vesting_shares + '', properties.globals) + '',
-            )} ${getCurrency('HP')}`}</Text>
-            <Icon
-              theme={theme}
-              name={Icons.EXPAND}
-              additionalContainerStyle={[
-                styles.logo,
-                getRotateStyle(
-                  selectedOutgoingItem && selectedOutgoingItem.id === item.id
-                    ? '0'
-                    : '180',
-                ),
-              ]}
-              {...styles.smallIcon}
-              color={PRIMARY_RED_COLOR}
-            />
-          </View>
-        </TouchableOpacity>
-        {!showCancelConfirmationDelegation && isItemSelected && !editMode && (
-          <>
-            <Separator
-              drawLine
-              additionalLineStyle={[
-                getSeparatorLineStyle(theme, 0.5).itemLine,
-                styles.margins,
-              ]}
-            />
-            <View style={styles.buttonRowContainer}>
-              <TouchableOpacity
-                activeOpacity={1}
-                style={[styles.button, styles.marginRight]}
-                onPress={() => setEditMode(true)}>
-                <Icon
-                  name={Icons.EDIT}
-                  theme={theme}
-                  additionalContainerStyle={styles.roundButton}
-                  {...styles.icon}
-                  color={PRIMARY_RED_COLOR}
-                />
-                <Text style={styles.buttonText}>
-                  {translate('common.edit')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={1}
-                style={styles.button}
-                onPress={() => setShowCancelConfirmationDelegation(true)}>
-                <Icon
-                  name={Icons.REMOVE}
-                  theme={theme}
-                  additionalContainerStyle={styles.roundButton}
-                  {...styles.icon}
-                  color={PRIMARY_RED_COLOR}
-                />
-                <Text style={styles.buttonText}>
-                  {translate('common.delete')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </>
+      <EditableListItem
+        label={`@${item.delegatee}`}
+        value={`${withCommas(currentHpAmount)} ${getCurrency('HP')}`}
+        isEditable={true}
+        initialEditValue={currentHpAmount}
+        onEdit={async (editedValue) => {
+          await onDelegate(false, editedValue);
+        }}
+        onDelete={async () => {
+          await onDelegate(true, '');
+        }}
+        deleteConfirmationTitleKey="wallet.operations.delegation.confirm_cancel_delegation"
+        maxValue={getCleanAmountValue(
+          (
+            +available + toHP(item.vesting_shares + '', properties.globals)
+          ).toString(),
         )}
-        {isItemSelected && showCancelConfirmationDelegation && !editMode && (
-          <ConfirmationInItem
-            theme={theme}
-            titleKey="wallet.operations.delegation.confirm_cancel_delegation"
-            onConfirm={() => onDelegate(true)}
-            onCancel={() => setShowCancelConfirmationDelegation(false)}
-            isLoading={isLoading}
-            additionalConfirmTextStyle={styles.whiteText}
-          />
-        )}
-        {editMode && isItemSelected && !showCancelConfirmationDelegation && (
-          <View style={[{alignSelf: 'center', width: '100%'}, styles.margins]}>
-            <OperationInput
-              placeholder={'0.000'}
-              keyboardType="decimal-pad"
-              textAlign="right"
-              value={editedAmountDelegation}
-              onChangeText={setEditedAmountDelegation}
-              additionalOuterContainerStyle={{
-                width: '54%',
-              }}
-              rightIcon={
-                <View style={styles.flexRowCenter}>
-                  <Separator
-                    drawLine
-                    additionalLineStyle={getHorizontalLineStyle(
-                      theme,
-                      1,
-                      35,
-                      16,
-                    )}
-                  />
-                  <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={() => {
-                      setEditedAmountDelegation(
-                        getCleanAmountValue(
-                          (
-                            +available +
-                            toHP(item.vesting_shares + '', properties.globals)
-                          ).toString(),
-                        ),
-                      );
-                    }}>
-                    <Text style={[styles.textBase, styles.redText]}>
-                      {translate('common.max').toUpperCase()}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              }
-            />
-            <View style={styles.editConfirmationPanel}>
-              <ConfirmationInItem
-                theme={theme}
-                onCancel={() => setEditMode(false)}
-                onConfirm={() => onDelegate(false)}
-                isLoading={isLoading}
-                additionalConfirmTextStyle={styles.whiteText}
-              />
-            </View>
-          </View>
-        )}
-        {/* {editMode &&
-          isItemSelected &&
-          !showCancelConfirmationDelegation &&
-          isLoading && <Loader size={'small'} animating />} */}
-      </View>
+      />
     );
   };
 
@@ -481,19 +341,6 @@ const getDimensionedStyles = (theme: Theme, width: number) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
-    rightContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    editConfirmationPanel: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignContent: 'center',
-      justifyContent: 'space-between',
-      marginTop: MARGIN_PADDING,
-    },
-    logo: {marginLeft: 10},
     flexRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -506,64 +353,6 @@ const getDimensionedStyles = (theme: Theme, width: number) =>
     },
     title: {fontSize: getFontSizeSmallDevices(width, 15), paddingHorizontal: 4},
     row: {flexDirection: 'row'},
-    opaque: {opacity: 0.7},
-    paddingHorizontal: {paddingHorizontal: 10},
-    smallIcon: {width: 15, height: 15},
-    buttonRowContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      marginBottom: 10,
-    },
-    icon: {
-      width: 18,
-      height: 18,
-    },
-    confirmationButton: {
-      width: '48%',
-      marginHorizontal: 0,
-      height: 40,
-    },
-    cancelButton: {
-      width: '48%',
-      marginHorizontal: 0,
-      height: 40,
-      borderColor: getColors(theme).quaternaryCardBorderColor,
-      color: getColors(theme).secondaryText,
-    },
-    button: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      width: '30%',
-      borderRadius: 12,
-      borderWidth: 1,
-      justifyContent: 'center',
-      paddingVertical: 10,
-      borderColor: getColors(theme).quaternaryCardBorderColor,
-    },
-    buttonText: {
-      color: getColors(theme).secondaryText,
-      ...title_secondary_body_3,
-      marginLeft: 8,
-    },
-    marginRight: {
-      marginRight: 16,
-    },
-    roundButton: {
-      width: 25,
-      height: 25,
-    },
-    whiteText: {color: '#FFF'},
-    margins: {marginTop: 10, marginBottom: 15},
-    paddingLeft: {
-      paddingLeft: 10,
-    },
-    flexRowCenter: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignContent: 'center',
-    },
-    redText: {color: PRIMARY_RED_COLOR},
-    biggerIcon: {width: 25, height: 25},
   });
 
 const connector = connect(

@@ -14,6 +14,7 @@ import {
 import {formatBalance} from 'utils/format.utils';
 import {getAccount} from 'utils/hive.utils';
 import {getCurrency} from 'utils/hiveLibs.utils';
+import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
 
 type Props = {
@@ -98,7 +99,7 @@ export default ({username, startToken, amount, accounts}: Props) => {
         {balance !== undefined ? (
           Number(balanceAfterSwap) < 0 ? (
             <Text style={[styles.textBase, styles.content, styles.errorText]}>
-              Insufficient Balance
+              {translate('request.error.insufficient_balance')}
             </Text>
           ) : (
             <View style={styles.balanceRow}>

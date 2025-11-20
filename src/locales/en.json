@@ -41,6 +41,8 @@
   },
   "common": {
     "accounts": "Accounts",
+    "active_recurrent_transfers": "{{nb}} active recurrent transfer(s)",
+    "recurrent_transfers": "Recurrent transfers",
     "started_a": "Started a",
     "initiated_a": "Initiated a",
     "dapp_title": "dApp",
@@ -222,6 +224,8 @@
         "currency_savings_title": "{{currency}} Savings"
       },
       "transfer": {
+        "remaining_executions": "{{nb}} remaining execution(s)",
+        "recurrence_period": "Every {{nb}} hours",
         "title": "Transfer funds",
         "memo": "MEMO (optional)",
         "executions": "Number of executions",

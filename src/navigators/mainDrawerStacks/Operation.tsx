@@ -23,6 +23,7 @@ import StakeToken, {
   StakeTokenOperationProps,
 } from 'components/operations/StakeToken';
 import Receive from 'components/operations/transfer/Receive';
+import RecurrentTransfers from 'components/operations/transfer/RecurrentTransfers';
 import Transfer, {
   TransferOperationProps,
 } from 'components/operations/transfer/Transfer';
@@ -249,6 +250,24 @@ export default ({navigation, route}: OperationNavigationProps) => {
             }
           />
         )}
+      />
+      <Stack.Screen
+        name="RecurrentTransfers"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'common.recurrent_transfers'} />
+          ),
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+        children={() => <RecurrentTransfers />}
       />
       <Stack.Screen
         name="ReceiveTransfer"

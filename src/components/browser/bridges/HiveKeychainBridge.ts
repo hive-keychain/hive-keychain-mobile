@@ -675,6 +675,7 @@ window.hive_keychain={
    * @param {Number} executions The times the recurrent payment will be executed.
    * @param {function} callback Keychain's response to the request
    * @param {String} [rpc=null] Override user's RPC settings
+   * @param {Number} [pair_id=0] Pair id of the recurrent transfer
    */
   requestRecurrentTransfer: function (
     username,
@@ -686,6 +687,7 @@ window.hive_keychain={
     executions,
     callback,
     rpc,
+    pair_id,
   ) {
     const request = {
       type: 'recurrentTransfer',
@@ -697,6 +699,7 @@ window.hive_keychain={
       recurrence,
       executions,
       rpc,
+      pair_id,
     };
 
     this.dispatchCustomEvent('swRequest_hive', request, callback);
