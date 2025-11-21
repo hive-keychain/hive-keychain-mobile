@@ -942,6 +942,7 @@
       "permlink": "Permlink",
       "weight": "Weight",
       "data": "Data",
+      "pair_id": "Pair ID",
       "hidden_data": "Click to show",
       "to": "To",
       "amount": "Amount",

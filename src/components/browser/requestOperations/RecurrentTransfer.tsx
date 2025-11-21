@@ -58,7 +58,7 @@ export default ({
         from: getUsername(),
         recurrence,
         executions,
-        extensions: [{type: 1, value: {pair_id: pair_id || 0}}],
+        extensions: [{type: 1, value: {pair_id: +pair_id || 0}}],
       },
       options,
     );
