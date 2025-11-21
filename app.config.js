@@ -119,7 +119,7 @@ export default ({config}) => ({
       [
         'expo-build-properties',
         {
-          ios: {useFrameworks: 'static'},
+          ios: {useFrameworks: 'static', forceStaticLinking: ['RNFBApp']},
         },
       ],
       '@react-native-firebase/app',

@@ -185,7 +185,6 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       flex: 1,
       justifyContent: 'flex-end',
       backgroundColor: '#212838bc',
-      paddingBottom: initialWindowMetrics?.insets.bottom,
     },
     modalContainer: {
       width: '100%',
@@ -203,6 +202,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       borderBottomRightRadius: 0,
       justifyContent: 'space-around',
       alignItems: 'center',
+      paddingBottom: Math.max(20, initialWindowMetrics?.insets.bottom),
     },
     modalContent: {
       width: '100%',
