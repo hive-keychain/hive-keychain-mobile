@@ -26,7 +26,7 @@ export default ({
   sendError,
 }: Props) => {
   const {request_id, ...data} = request;
-  const {amount, to, currency, executions, recurrence, memo} = data;
+  const {amount, to, currency, executions, recurrence, memo, pair_id} = data;
   const [availableBalance, setAvailableBalance] = useState(0);
   const {getAccountKey, RequestUsername, getAccountMemoKey, getUsername} =
     usePotentiallyAnonymousRequest(request, accounts);
@@ -58,11 +58,57 @@ export default ({
         from: getUsername(),
         recurrence,
         executions,
-        extensions: [],
+        extensions: [{type: 1, value: {pair_id: pair_id || 0}}],
       },
       options,
     );
   };
+
+  const getConfirmationData = () => {
+    const confirmationData = [
+      {tag: ConfirmationDataTag.REQUEST_USERNAME, title: '', value: ''},
+      {
+        title: 'request.item.to',
+        value: to,
+        tag: ConfirmationDataTag.USERNAME,
+      },
+      {
+        title: 'request.item.amount',
+        value: amount,
+        currency,
+        tag: ConfirmationDataTag.AMOUNT,
+      },
+      {
+        title: 'request.item.memo',
+        value: memo.length
+          ? memo[0] === '#'
+            ? `${memo.substring(1)} (${translate('common.encrypted')})`
+            : memo
+          : translate('common.none'),
+      },
+      createBalanceData(
+        'wallet.operations.transfer.confirm.balance',
+        availableBalance,
+        parseFloat(amount),
+        currency,
+      ),
+      {
+        title: 'request.item.recurrence',
+        value: translate('wallet.operations.transfer.confirm.recurrenceData', {
+          exec: executions,
+          recurrence,
+        }),
+      },
+    ];
+    if (pair_id) {
+      confirmationData.push({
+        title: 'request.item.pair_id',
+        value: pair_id?.toString() || '',
+      });
+    }
+    return confirmationData;
+  };
+
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -81,41 +127,7 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={performOperation}
-      confirmationData={[
-        {tag: ConfirmationDataTag.REQUEST_USERNAME, title: '', value: ''},
-        {
-          title: 'request.item.to',
-          value: to,
-          tag: ConfirmationDataTag.USERNAME,
-        },
-        {
-          title: 'request.item.amount',
-          value: amount,
-          currency,
-          tag: ConfirmationDataTag.AMOUNT,
-        },
-        {
-          title: 'request.item.memo',
-          value: memo.length
-            ? memo[0] === '#'
-              ? `${memo.substring(1)} (${translate('common.encrypted')})`
-              : memo
-            : translate('common.none'),
-        },
-        createBalanceData(
-          'wallet.operations.transfer.confirm.balance',
-          availableBalance,
-          parseFloat(amount),
-          currency,
-        ),
-        {
-          title: 'request.item.recurrence',
-          value: translate(
-            'wallet.operations.transfer.confirm.recurrenceData',
-            {exec: executions, recurrence},
-          ),
-        },
-      ]}
+      confirmationData={getConfirmationData()}
     />
   );
 };

@@ -226,14 +226,29 @@ const EditableListItem = ({
         </>
       )}
       {isExpanded && showDeleteConfirmation && !editMode && onDelete && (
-        <ConfirmationInItem
-          theme={theme}
-          titleKey={deleteConfirmationTitleKey}
-          onConfirm={handleDeleteConfirm}
-          onCancel={handleDeleteCancel}
-          isLoading={isLoading}
-          additionalConfirmTextStyle={styles.whiteText}
-        />
+        <>
+          {subLabel && subValue && (
+            <View style={[styles.row, {justifyContent: 'space-between'}]}>
+              <Text style={styles.textBase}>{subLabel}</Text>
+              <Text style={styles.textBase}>{subValue}</Text>
+            </View>
+          )}
+          <Separator
+            drawLine
+            additionalLineStyle={[
+              getSeparatorLineStyle(theme, 0.5).itemLine,
+              styles.margins,
+            ]}
+          />
+          <ConfirmationInItem
+            theme={theme}
+            titleKey={deleteConfirmationTitleKey}
+            onConfirm={handleDeleteConfirm}
+            onCancel={handleDeleteCancel}
+            isLoading={isLoading}
+            additionalConfirmTextStyle={styles.whiteText}
+          />
+        </>
       )}
       {editMode && isExpanded && !showDeleteConfirmation && (
         <View style={[{alignSelf: 'center', width: '100%'}, styles.margins]}>

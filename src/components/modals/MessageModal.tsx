@@ -11,6 +11,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
@@ -184,6 +185,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       flex: 1,
       justifyContent: 'flex-end',
       backgroundColor: '#212838bc',
+      paddingBottom: initialWindowMetrics?.insets.bottom,
     },
     modalContainer: {
       width: '100%',

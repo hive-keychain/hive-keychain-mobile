@@ -1,8 +1,9 @@
+import {fetchRecurrentTransfers} from 'actions/hive';
 import OperationThemed from 'components/operations/OperationThemed';
 import EditableListItem from 'components/ui/EditableListItem';
 import Separator from 'components/ui/Separator';
 import {FormatUtils} from 'hive-keychain-commons';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -12,12 +13,23 @@ import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
 import {recurrentTransfer} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation.utils';
 
 type Props = PropsFromRedux;
 
-const RecurrentTransfers = ({recurrentTransfers, user}: Props) => {
+const RecurrentTransfers = ({
+  recurrentTransfers,
+  user,
+  fetchRecurrentTransfers,
+}: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
+
+  useEffect(() => {
+    if (recurrentTransfers.length === 0) {
+      goBack();
+    }
+  }, [recurrentTransfers]);
 
   const renderListItem = useCallback(
     ({item}: {item: PendingRecurrentTransfer}) => {
@@ -37,17 +49,17 @@ const RecurrentTransfers = ({recurrentTransfers, user}: Props) => {
             nb: item.recurrence,
           })}
           isEditable={true}
-          onDelete={() => {
-            recurrentTransfer(user.keys.active, {
+          onDelete={async () => {
+            await recurrentTransfer(user.keys.active, {
               from: item.from,
               to: item.to,
               amount: '0.000 HIVE',
-              recurrence: 2,
-              executions: 24,
+              recurrence: 24,
+              executions: 2,
               memo: '',
-              pair_id: item.pair_id,
-              extensions: [],
+              extensions: [{type: 1, value: {pair_id: item.pair_id}}],
             });
+            fetchRecurrentTransfers(user.name!);
           }}
         />
       );
@@ -96,12 +108,15 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-const connector = connect((state: RootState) => {
-  return {
-    recurrentTransfers: state.recurrentTransfers,
-    user: state.activeAccount,
-  };
-});
+const connector = connect(
+  (state: RootState) => {
+    return {
+      recurrentTransfers: state.recurrentTransfers,
+      user: state.activeAccount,
+    };
+  },
+  {fetchRecurrentTransfers},
+);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(RecurrentTransfers);

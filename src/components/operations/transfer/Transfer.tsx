@@ -227,6 +227,7 @@ const Transfer = ({
   const onSendConfirmation = () => {
     if (
       !amount.length ||
+      +amount === 0 ||
       !to.length ||
       (isRecurrent &&
         (exec.trim().length === 0 || recurrence.trim().length === 0))
