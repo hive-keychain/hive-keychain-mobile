@@ -1,13 +1,9 @@
 import Icon from 'components/hive/Icon';
 import React, {memo} from 'react';
 import {StyleSheet, View, ViewStyle, useWindowDimensions} from 'react-native';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -35,26 +31,28 @@ const SwipeableItem = memo(
     const bgTranslateX = useSharedValue(0);
     const SCREEN_WIDTH = useWindowDimensions().width;
     const SWIPE_THRESHOLD = -SCREEN_WIDTH / 5;
-    const gestureHandler =
-      useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-        onStart: (_, ctx: any) => {
-          ctx.startX = translateX.value;
-        },
-        onActive: (event, ctx: any) => {
-          // Only allow left swipe
-          translateX.value = Math.min(0, ctx.startX + event.translationX);
-        },
-        onEnd: () => {
-          if (translateX.value < SWIPE_THRESHOLD) {
-            runOnJS(onDismiss)();
-            translateX.value = withTiming(-SCREEN_WIDTH, {duration: 150});
-            bgTranslateX.value = withTiming(-SCREEN_WIDTH, {duration: 150});
-          } else {
-            // Snap back
-            translateX.value = withSpring(0);
-            bgTranslateX.value = withSpring(0);
-          }
-        },
+
+    const gestureHandler = Gesture.Pan()
+      .enabled(enabled)
+      .activeOffsetX([-5, 5])
+      .hitSlop(draggable ? {left: 0, width: SCREEN_WIDTH - 60} : undefined)
+      .failOffsetY([-10, 10])
+      .onStart((event) => {
+        event.translationX = translateX.value;
+      })
+      .onUpdate((event) => {
+        // Only allow left swipe
+        translateX.value = Math.min(0, event.translationX);
+      })
+      .onEnd(() => {
+        if (translateX.value < SWIPE_THRESHOLD) {
+          runOnJS(onDismiss)();
+          translateX.value = withTiming(-SCREEN_WIDTH, {duration: 150});
+          bgTranslateX.value = withTiming(-SCREEN_WIDTH, {duration: 150});
+        } else {
+          translateX.value = withSpring(0);
+          bgTranslateX.value = withSpring(0);
+        }
       });
 
     const bgStyle = useAnimatedStyle(() => {
@@ -87,12 +85,7 @@ const SwipeableItem = memo(
             <Icon color="white" name={Icons.REMOVE} width={25} height={25} />
           </View>
         </Animated.View>
-        <PanGestureHandler
-          enabled={enabled}
-          onGestureEvent={gestureHandler}
-          activeOffsetX={[-5, 5]}
-          hitSlop={draggable ? {left: 0, width: SCREEN_WIDTH - 60} : undefined}
-          failOffsetY={[-10, 10]}>
+        <GestureDetector gesture={gestureHandler}>
           <Animated.View
             style={[
               {
@@ -102,7 +95,7 @@ const SwipeableItem = memo(
             ]}>
             {children}
           </Animated.View>
-        </PanGestureHandler>
+        </GestureDetector>
       </View>
     );
   },
