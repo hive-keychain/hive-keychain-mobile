@@ -475,19 +475,23 @@ const getNotifications = async (
   const initialOffset =
     initialList && initialList.length > 0 ? initialList.length : 0;
   let offset = initialOffset;
-
-  do {
-    lastBatch = await PeakDNotificationsApi.get(
-      `notifications/${username}?limit=${100}&offset=${offset}`,
+  try {
+    do {
+      lastBatch = await PeakDNotificationsApi.get(
+        `notifications/${username}?limit=${100}&offset=${offset}`,
+      );
+      rawNotifications = [...rawNotifications, ...lastBatch];
+      offset += limit;
+    } while (
+      lastBatch.length > 0 &&
+      lastBatch.every((rawNotif) => rawNotif.read_at === null)
     );
-    rawNotifications = [...rawNotifications, ...lastBatch];
-    offset += limit;
-  } while (
-    lastBatch.length > 0 &&
-    lastBatch.every((rawNotif) => rawNotif.read_at === null)
-  );
-
+  } catch (error) {
+    console.error('Error getting notifications', error);
+    return [];
+  }
   for (const [index, notif] of rawNotifications.entries()) {
+    if (!notif.payload) continue;
     const payload = JSON.parse(notif.payload);
     let messageParams: string[] = [];
     let message: string = `notification_${notif.operation}`;
