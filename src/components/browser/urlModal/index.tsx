@@ -5,7 +5,6 @@ import React, {MutableRefObject, useRef} from 'react';
 import {
   KeyboardAvoidingView,
   NativeSyntheticEvent,
-  Platform,
   Share,
   StyleSheet,
   Text,
@@ -187,7 +186,7 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       flexGrow: 1,
       width: '100%',
       margin: 0,
-      paddingTop: Platform.OS === 'ios' ? insets.top / 2 : 0,
+      paddingTop: insets.top / 2,
       justifyContent: 'flex-start',
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
