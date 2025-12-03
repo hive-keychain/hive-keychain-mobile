@@ -10,7 +10,13 @@ import SafeArea from 'components/ui/SafeArea';
 import {ModalScreenProps} from 'navigators/Root.types';
 import {SignupStackParamList} from 'navigators/Signup.types';
 import React, {useEffect} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  BackHandler,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import QRCode from 'react-qr-code';
 import {connect, ConnectedProps} from 'react-redux';
@@ -93,17 +99,28 @@ const CreateAccountPeerToPeerQr = ({
   }, [navigation, theme]);
 
   useEffect(() => {
-    if (qrData) {
-      const interval = setInterval(async () => {
-        if (await AccountUtils.doesAccountExist(accountName)) {
-          handleLoadNewAccount();
-          return;
-        }
-      }, 3000);
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        showConfirmationModal();
+        return true;
+      },
+    );
 
-      return () => clearInterval(interval);
-    }
-  }, [qrData]);
+    return () => subscription.remove();
+  }, [theme]),
+    useEffect(() => {
+      if (qrData) {
+        const interval = setInterval(async () => {
+          if (await AccountUtils.doesAccountExist(accountName)) {
+            handleLoadNewAccount();
+            return;
+          }
+        }, 3000);
+
+        return () => clearInterval(interval);
+      }
+    }, [qrData]);
 
   return (
     <Background
