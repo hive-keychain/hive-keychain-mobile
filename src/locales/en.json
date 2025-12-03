@@ -718,7 +718,9 @@
       "create_account_onboarding_message": "You are onboarding @{{name}}, please choose below if you want to delegate them HP or RC.",
       "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created!",
       "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!",
-      "peer_to_peer_waiting_text": "Please ask your friend to scan this QR Code to create your account. Keep this page opened until the account is created."
+      "peer_to_peer_waiting_text": "Please ask your friend to scan this QR Code to create your account. Keep this page opened until the account is created.",
+      "confirm_go_back": "Are you sure you want to go back?",
+      "confirm_go_back_text": "If you go back, the account creation process will be interrupted and you will have to start over with new keys."
     },
     "copy_keys": {
       "title": "Copy a Key",

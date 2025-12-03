@@ -100,12 +100,13 @@ export default () => {
       <Stack.Screen
         name="CreateAccountPeerToPeerScreen"
         options={({navigation}) => ({
-          headerBackTitle: translate('navigation.create_account_peer_to_peer'),
           headerTitle: () => (
             <NavigatorTitle title="navigation.create_account_peer_to_peer" />
           ),
           headerStyle: styles.header,
           headerTintColor: 'white',
+          headerTitleAlign: 'center',
+
           headerRightContainerStyle: styles.paddingRight,
           headerRight: () => {
             return (
