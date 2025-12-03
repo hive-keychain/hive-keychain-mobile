@@ -1,5 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {AccountKeys} from 'actions/interfaces';
 
 export type SignupStackParamList = {
   IntroductionScreen: undefined;
@@ -10,6 +11,11 @@ export type SignupStackParamList = {
   AddAccountByKeyScreen: undefined;
   ScanQRScreen: undefined;
   CreateAccountConfirmationScreen: undefined;
+  CreateAccountPeerToPeerQrScreen: {
+    accountName: string;
+    keys: AccountKeys;
+    qrData: string;
+  };
 };
 
 export type SignupNavigation = StackNavigationProp<

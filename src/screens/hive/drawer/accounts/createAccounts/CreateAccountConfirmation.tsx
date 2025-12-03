@@ -323,7 +323,11 @@ const StepTwo = ({
             }),
           ).toString('base64');
           const fullData = 'keychain://create_account=' + encodedDataAsString;
-          setQrData(fullData);
+          navigate('CreateAccountPeerToPeerQrScreen', {
+            accountName,
+            keys: generatedKeys,
+            qrData: fullData,
+          });
         }
       } catch (err) {
         SimpleToast.show(err.message);
