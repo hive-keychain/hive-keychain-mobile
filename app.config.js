@@ -31,6 +31,7 @@ export default ({config}) => ({
       supportsTablet: false,
       teamId: process.env.APPLE_TEAM_ID,
       id: process.env.APPLE_ID,
+      deploymentTarget: '13.0',
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
           'We need your location to load maps.',
