@@ -69,6 +69,7 @@ const StepTwo = ({
   const [keysTextVersion, setKeysTextVersion] = useState('');
   const [loadingMasterKey, setLoadingMasterKey] = useState(true);
   const [paymentUnderstanding, setPaymentUnderstanding] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [safelyCopied, setSafelyCopied] = useState(false);
   const [notPrimaryStorageUnderstanding, setNotPrimaryStorageUnderstanding] =
     useState(false);
@@ -229,6 +230,7 @@ const StepTwo = ({
             : selectedAccount?.name,
         ),
     );
+    setCopied(true);
     SimpleToast.show(translate('toast.copied_text'));
   };
 
@@ -248,6 +250,10 @@ const StepTwo = ({
   };
 
   const createAccount = async () => {
+    if (!copied) {
+      SimpleToast.show(translate('components.create_account.need_copy_keys'));
+      return;
+    }
     if (
       paymentUnderstanding &&
       safelyCopied &&
