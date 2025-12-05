@@ -92,6 +92,12 @@ const Transfer = ({
     fetchRecurrentTransfers(user.name!);
   }, []);
 
+  useEffect(() => {
+    if (memo.length && memo[0] === '#') {
+      setIsMemoEncrypted(true);
+    }
+  }, [memo]);
+
   const loadAutocompleteTransferUsernames = async () => {
     const autoCompleteListByCategories: AutoCompleteValues =
       await FavoriteUserUtils.getAutocompleteListByCategories(
@@ -369,7 +375,9 @@ const Transfer = ({
       <Separator />
       <View style={{zIndex: -1}}>
         <OperationInput
-          labelInput={capitalize(translate('common.memo'))}
+          labelInput={`${capitalize(translate('common.memo'))} ${
+            isMemoEncrypted ? ` (${translate('common.encrypted')})` : ''
+          }`}
           placeholder={translate('wallet.operations.transfer.memo')}
           value={memo}
           autoCapitalize="none"
