@@ -43,6 +43,7 @@ import {store} from 'store';
 import {urlTransformer} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
 import {getAccount} from 'utils/hive.utils';
+import {downloadFromUrl} from 'utils/image.utils';
 import {
   getRequestTitle,
   getRequiredWifType,
@@ -60,6 +61,7 @@ import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
 import {DESKTOP_MODE} from './bridges/DesktopMode';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
+import {IMAGE_DOWNLOAD_SCRIPT} from './bridges/ImageDownload';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
 
@@ -218,10 +220,23 @@ export default memo(
 
       if (current) {
         current.injectJavaScript(BRIDGE_WV_INFO);
+        current.injectJavaScript(IMAGE_DOWNLOAD_SCRIPT);
       }
     };
 
+    const downloadImage = async (imageUrl: string) => {
+      await downloadFromUrl(imageUrl);
+    };
+
     const onMessage = ({nativeEvent}: WebViewMessageEvent) => {
+      let messageData;
+      try {
+        messageData = JSON.parse(nativeEvent.data);
+      } catch (error) {
+        console.error('Error parsing WebView message:', error);
+        return;
+      }
+
       const {
         name: messageName,
         request_id,
@@ -231,7 +246,8 @@ export default memo(
         showNavigationBar,
         isFlutterCanvasApp,
         domain,
-      } = JSON.parse(nativeEvent.data);
+        imageUrl,
+      } = messageData;
       const {current} = tabRef;
       switch (messageName) {
         case ProviderEvent.SCROLL:
@@ -295,6 +311,11 @@ export default memo(
           ) {
             navigation.setParams({icon: data.icon});
             updateTab(id, {name: data.name, icon: data.icon});
+          }
+          break;
+        case ProviderEvent.IMAGE_DOWNLOAD:
+          if (imageUrl) {
+            downloadImage(imageUrl);
           }
           break;
       }
@@ -472,7 +493,11 @@ export default memo(
                   mixedContentMode={'always'}
                   ref={tabRef}
                   injectedJavaScriptBeforeContentLoaded={hive_keychain}
-                  injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
+                  injectedJavaScript={
+                    desktopMode
+                      ? `${DESKTOP_MODE}\n${IMAGE_DOWNLOAD_SCRIPT}`
+                      : IMAGE_DOWNLOAD_SCRIPT
+                  }
                   mediaPlaybackRequiresUserAction={false}
                   onMessage={onMessage}
                   javaScriptEnabled

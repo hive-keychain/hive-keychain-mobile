@@ -4,4 +4,5 @@ export enum ProviderEvent {
   REQUEST = 'swRequest_hive',
   INFO = 'WV_INFO',
   FLUTTER_CHECK = 'FLUTTER_CHECK',
+  IMAGE_DOWNLOAD = 'IMAGE_DOWNLOAD',
 }
