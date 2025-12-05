@@ -10,15 +10,25 @@ export const IMAGE_DOWNLOAD_SCRIPT = `
   const LONG_PRESS_DURATION = 500; // milliseconds
   const MOVE_THRESHOLD = 10; // pixels
 
-  function getImageElement(target) {
+  function getMediaElement(target) {
+    // Check for images
     if (target.tagName === 'IMG') {
       return target;
     }
-    // Check if target is inside an image
     const img = target.closest('img');
     if (img) {
       return img;
     }
+    
+    // Check for videos
+    if (target.tagName === 'VIDEO') {
+      return target;
+    }
+    const video = target.closest('video');
+    if (video) {
+      return video;
+    }
+    
     // Check if target has background image
     const style = window.getComputedStyle(target);
     const bgImage = style.backgroundImage;
@@ -33,15 +43,18 @@ export const IMAGE_DOWNLOAD_SCRIPT = `
   }
 
   function handleTouchStart(e) {
-    const img = getImageElement(e.target);
+    const media = getMediaElement(e.target);
     
-    if (img) {
-      const imageUrl = img.src || img.currentSrc || img.dataset.src || (img.isBackground ? img.src : null);
+    if (media) {
+      // Handle both images and videos
+      const mediaUrl = media.src || media.currentSrc || media.dataset.src || 
+                       (media.tagName === 'VIDEO' ? (media.currentSrc || media.src) : null) ||
+                       (media.isBackground ? media.src : null);
       
-      if (imageUrl) {
-        longPressTarget = {img, startX: e.touches[0].clientX, startY: e.touches[0].clientY};
+      if (mediaUrl) {
+        longPressTarget = {media, startX: e.touches[0].clientX, startY: e.touches[0].clientY};
         longPressTimer = setTimeout(() => {
-          handleLongPress(img, imageUrl);
+          handleLongPress(media, mediaUrl);
         }, LONG_PRESS_DURATION);
       }
     }
@@ -69,26 +82,31 @@ export const IMAGE_DOWNLOAD_SCRIPT = `
     }
   }
 
-  function handleLongPress(img, imageUrl) {
-    if (!imageUrl) {
-      imageUrl = img.src || img.currentSrc || img.dataset.src;
+  function handleLongPress(media, mediaUrl) {
+    if (!mediaUrl) {
+      // Handle both images and videos
+      if (media.tagName === 'VIDEO') {
+        mediaUrl = media.currentSrc || media.src || media.dataset.src;
+      } else {
+        mediaUrl = media.src || media.currentSrc || media.dataset.src;
+      }
     }
     
-    if (imageUrl) {
+    if (mediaUrl) {
       // Resolve relative URLs to absolute URLs
-      let absoluteUrl = imageUrl;
+      let absoluteUrl = mediaUrl;
       try {
-        if (imageUrl.startsWith('//')) {
-          absoluteUrl = window.location.protocol + imageUrl;
-        } else if (imageUrl.startsWith('/')) {
-          absoluteUrl = window.location.origin + imageUrl;
-        } else if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://') && !imageUrl.startsWith('data:')) {
-          absoluteUrl = new URL(imageUrl, window.location.href).href;
+        if (mediaUrl.startsWith('//')) {
+          absoluteUrl = window.location.protocol + mediaUrl;
+        } else if (mediaUrl.startsWith('/')) {
+          absoluteUrl = window.location.origin + mediaUrl;
+        } else if (!mediaUrl.startsWith('http://') && !mediaUrl.startsWith('https://') && !mediaUrl.startsWith('data:')) {
+          absoluteUrl = new URL(mediaUrl, window.location.href).href;
         }
       } catch (e) {
-        console.error('Error resolving image URL:', e);
+        console.error('Error resolving media URL:', e);
         // Use original URL if resolution fails
-        absoluteUrl = imageUrl;
+        absoluteUrl = mediaUrl;
       }
 
       // Send message to React Native
@@ -97,10 +115,10 @@ export const IMAGE_DOWNLOAD_SCRIPT = `
           window.ReactNativeWebView.postMessage(JSON.stringify({
             name: 'IMAGE_DOWNLOAD',
             imageUrl: absoluteUrl,
-            alt: (img.alt || img.getAttribute('alt') || ''),
+            alt: (media.alt || media.getAttribute('alt') || media.getAttribute('title') || ''),
           }));
         } catch (e) {
-          console.error('Error sending image download message:', e);
+          console.error('Error sending media download message:', e);
         }
       }
     }
@@ -121,12 +139,20 @@ export const IMAGE_DOWNLOAD_SCRIPT = `
 
   // Also handle contextmenu (right-click) for desktop-like behavior
   document.addEventListener('contextmenu', function(e) {
-    const img = getImageElement(e.target);
+    const media = getMediaElement(e.target);
     
-    if (img && (img.src || img.currentSrc || img.dataset.src)) {
-      e.preventDefault();
-      const imageUrl = img.src || img.currentSrc || img.dataset.src;
-      handleLongPress(img, imageUrl);
+    if (media) {
+      let mediaUrl = null;
+      if (media.tagName === 'VIDEO') {
+        mediaUrl = media.currentSrc || media.src || media.dataset.src;
+      } else {
+        mediaUrl = media.src || media.currentSrc || media.dataset.src;
+      }
+      
+      if (mediaUrl) {
+        e.preventDefault();
+        handleLongPress(media, mediaUrl);
+      }
     }
   }, true);
 
