@@ -36,7 +36,6 @@ const seedInstallTimeIfMissing = async () => {
   const existing = await AsyncStorage.getItem(
     KeychainStorageKeyEnum.INSTALL_TIME_MS,
   );
-  console.log('existing', existing);
   if (!existing) {
     const firstInstall = await DeviceInfo.getFirstInstallTime();
     const installMs =

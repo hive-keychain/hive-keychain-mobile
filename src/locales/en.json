@@ -41,6 +41,8 @@
   },
   "common": {
     "save_image": "Save or share image",
+    "share": "Share",
+    "media_download_modal_title": "What would you like to do?",
     "accounts": "Accounts",
     "active_recurrent_transfers": "{{nb}} active recurrent transfer(s)",
     "recurrent_transfers": "Recurrent transfers",
@@ -69,6 +71,8 @@
     "send": "Send",
     "receive": "Receive",
     "save": "Save",
+    "file_saved_successfully": "File saved successfully",
+    "file_save_failed": "Failed to save file",
     "balance": "Balance",
     "available": "Available",
     "back": "Back",

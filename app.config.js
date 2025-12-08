@@ -62,8 +62,6 @@ export default ({config}) => ({
         'android.permission.CAMERA',
         'ACCESS_FINE_LOCATION',
         'ACCESS_COARSE_LOCATION',
-        'android.permission.WRITE_EXTERNAL_STORAGE',
-        'android.permission.READ_EXTERNAL_STORAGE',
       ],
       softwareKeyboardLayoutMode: 'pan',
       adaptiveIcon: {
