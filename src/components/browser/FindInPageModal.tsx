@@ -1,3 +1,4 @@
+import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -9,7 +10,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Modal from 'react-native-modal';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
@@ -43,9 +43,9 @@ const FindInPageModal = ({
   currentMatch,
 }: Props) => {
   const {theme} = useThemeContext();
-  const {width} = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const styles = getStyles(theme, width, insets);
+  const styles = getStyles(theme, width, height, insets);
   const inputRef = useRef<TextInput>(null);
   const [localSearchText, setLocalSearchText] = useState(searchText);
 
@@ -79,21 +79,21 @@ const FindInPageModal = ({
     onClose();
   };
 
+  if (!isVisible) {
+    return null;
+  }
+
   return (
-    <Modal
-      isVisible={isVisible}
-      style={styles.modal}
-      onBackdropPress={handleClose}
-      onBackButtonPress={handleClose}
-      animationIn="slideInUp"
-      animationOut="slideOutDown"
-      backdropOpacity={0}
-      useNativeDriver>
+    <View style={styles.overlay} pointerEvents="box-none">
+      <View style={styles.spacer} pointerEvents="none" />
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.bottom : 0}>
-        <View style={[getCardStyle(theme).defaultCardItem, styles.content]}>
+        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.bottom : 0}
+        pointerEvents="box-none">
+        <View
+          style={[getCardStyle(theme).defaultCardItem, styles.content]}
+          pointerEvents="auto">
           <View style={styles.header}>
             <Text style={styles.title}>
               {translate('browser.find_in_page')}
@@ -109,7 +109,7 @@ const FindInPageModal = ({
 
           <View style={styles.searchContainer}>
             <View style={styles.inputWrapper}>
-              <TextInput
+              <OperationInput
                 ref={inputRef}
                 style={styles.input}
                 value={localSearchText}
@@ -121,35 +121,38 @@ const FindInPageModal = ({
                 autoCorrect={false}
                 returnKeyType="search"
                 keyboardType={Platform.OS === 'ios' ? 'web-search' : 'default'}
+                rightIcon={
+                  localSearchText.length > 0 &&
+                  matchCount > 1 && (
+                    <View style={styles.inputActions}>
+                      <View style={styles.rotatedIcon}>
+                        <Icon
+                          name={Icons.ARROW_RIGHT}
+                          theme={theme}
+                          width={20}
+                          height={20}
+                          onPress={() => {
+                            inputRef.current?.blur();
+                            onPrevious();
+                          }}
+                          additionalContainerStyle={styles.caretButton}
+                        />
+                      </View>
+                      <Icon
+                        name={Icons.ARROW_RIGHT}
+                        theme={theme}
+                        width={20}
+                        height={20}
+                        onPress={() => {
+                          inputRef.current?.blur();
+                          onNext();
+                        }}
+                        additionalContainerStyle={styles.caretButton}
+                      />
+                    </View>
+                  )
+                }
               />
-              {localSearchText.length > 0 && matchCount > 1 && (
-                <View style={styles.inputActions}>
-                  <View style={styles.rotatedIcon}>
-                    <Icon
-                      name={Icons.ARROW_RIGHT}
-                      theme={theme}
-                      width={20}
-                      height={20}
-                      onPress={() => {
-                        inputRef.current?.blur();
-                        onPrevious();
-                      }}
-                      additionalContainerStyle={styles.caretButton}
-                    />
-                  </View>
-                  <Icon
-                    name={Icons.ARROW_RIGHT}
-                    theme={theme}
-                    width={20}
-                    height={20}
-                    onPress={() => {
-                      inputRef.current?.blur();
-                      onNext();
-                    }}
-                    additionalContainerStyle={styles.caretButton}
-                  />
-                </View>
-              )}
             </View>
           </View>
 
@@ -164,18 +167,29 @@ const FindInPageModal = ({
           )}
         </View>
       </KeyboardAvoidingView>
-    </Modal>
+    </View>
   );
 };
 
-const getStyles = (theme: Theme, width: number, insets: EdgeInsets) =>
+const getStyles = (
+  theme: Theme,
+  width: number,
+  height: number,
+  insets: EdgeInsets,
+) =>
   StyleSheet.create({
-    modal: {
-      justifyContent: 'flex-end',
-      margin: 0,
+    overlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 1000,
+    },
+    spacer: {
+      flex: 1,
     },
     container: {
-      flex: 1,
       justifyContent: 'flex-end',
     },
     content: {
@@ -207,12 +221,9 @@ const getStyles = (theme: Theme, width: number, insets: EdgeInsets) =>
       ...body_primary_body_1,
       color: getColors(theme).primaryText,
       backgroundColor: getColors(theme).cardBgLighter,
-      borderRadius: 8,
-      paddingVertical: 12,
-      paddingHorizontal: 16,
+
       paddingRight: 80,
-      borderWidth: 1,
-      borderColor: getColors(theme).cardBorderColor,
+      paddingLeft: 16,
       flex: 1,
     },
     inputActions: {

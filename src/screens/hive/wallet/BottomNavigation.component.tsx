@@ -436,39 +436,6 @@ const BottomNavigation = ({
             </Pressable>
           </Modal>
         )}
-        <FindInPageModal
-          isVisible={showFindInPage}
-          onClose={() => {
-            setShowFindInPage(false);
-            setFindInPageText('');
-            if (webViewRef.current) {
-              webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
-            }
-          }}
-          onSearch={(text) => {
-            setFindInPageText(text);
-            if (webViewRef.current) {
-              if (text && text.trim().length > 0) {
-                webViewRef.current.injectJavaScript(FIND_IN_PAGE_SCRIPT(text));
-              } else {
-                webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
-              }
-            }
-          }}
-          onNext={() => {
-            if (webViewRef.current) {
-              webViewRef.current.injectJavaScript(FIND_IN_PAGE_NEXT);
-            }
-          }}
-          onPrevious={() => {
-            if (webViewRef.current) {
-              webViewRef.current.injectJavaScript(FIND_IN_PAGE_PREVIOUS);
-            }
-          }}
-          searchText={findInPageText}
-          matchCount={findInPageCount?.count || 0}
-          currentMatch={findInPageCount?.current || 0}
-        />
       </View>
     ),
     browser.showManagement && (
@@ -499,99 +466,136 @@ const BottomNavigation = ({
     ),
   ];
   return isVisible ? (
-    <Animated.View
-      style={[
-        getCardStyle(theme).floatingBar,
-        styles.container,
-        {transform: [{translateY}]},
-      ]}>
-      <Pressable
-        onPress={() => onHandlePressButton(BottomBarLink.Wallet)}
+    <>
+      <Animated.View
         style={[
-          styles.itemContainer,
-          activeScreen === BottomBarLink.Wallet && styles.active,
+          getCardStyle(theme).floatingBar,
+          styles.container,
+          {transform: [{translateY}]},
         ]}>
-        <Icon
-          theme={theme}
-          name={Icons.ADD_TAB}
-          color={activeScreen === BottomBarLink.Wallet ? 'white' : undefined}
-          {...getIconDimensions(width)}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.ecosystem')}
-          </Text>
-        )}
-      </Pressable>
-      <Pressable
-        onPress={() => {
-          if (!isBrowser) onHandlePressButton(BottomBarLink.Browser);
-          else setShowBrowserSecondaryLinks(!showBrowserSecondaryLinks);
-        }}
-        onLongPress={() => {
-          SimpleToast.show(translate('browser.clear_all'), {
-            duration: SimpleToast.durations.LONG,
-          });
-          closeAllTabs();
-        }}
-        style={[
-          styles.itemContainer,
-          activeScreen === BottomBarLink.Browser && styles.active,
-        ]}>
-        <Icon
-          theme={theme}
-          name={Icons.BROWSER}
-          {...getIconDimensions(width)}
-          color={activeScreen === BottomBarLink.Browser ? 'white' : undefined}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.browser')}
-          </Text>
-        )}
-      </Pressable>
-      {isBrowser && showBrowserSecondaryLinks && renderBrowserBottomBar()}
-      {(!isBrowser || !showBrowserSecondaryLinks) && (
-        <View
+        <Pressable
+          onPress={() => onHandlePressButton(BottomBarLink.Wallet)}
           style={[
             styles.itemContainer,
-            activeScreen === BottomBarLink.ScanQr && styles.active,
+            activeScreen === BottomBarLink.Wallet && styles.active,
           ]}>
           <Icon
             theme={theme}
-            name={Icons.SCANNER}
+            name={Icons.ADD_TAB}
+            color={activeScreen === BottomBarLink.Wallet ? 'white' : undefined}
             {...getIconDimensions(width)}
-            color={activeScreen === BottomBarLink.ScanQr ? 'white' : undefined}
-            onPress={() => onHandlePressButton(BottomBarLink.ScanQr)}
           />
           {showTags && (
             <Text style={[styles.textBase, styles.marginTop]}>
-              {translate('navigation.floating_bar.buy')}
+              {translate('navigation.floating_bar.ecosystem')}
             </Text>
           )}
-        </View>
-      )}
-      {(!isBrowser || !showBrowserSecondaryLinks) &&
-        PlatformsUtils.showDependingOnPlatform(
-          <View style={[styles.itemContainer]}>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            if (!isBrowser) onHandlePressButton(BottomBarLink.Browser);
+            else setShowBrowserSecondaryLinks(!showBrowserSecondaryLinks);
+          }}
+          onLongPress={() => {
+            SimpleToast.show(translate('browser.clear_all'), {
+              duration: SimpleToast.durations.LONG,
+            });
+            closeAllTabs();
+          }}
+          style={[
+            styles.itemContainer,
+            activeScreen === BottomBarLink.Browser && styles.active,
+          ]}>
+          <Icon
+            theme={theme}
+            name={Icons.BROWSER}
+            {...getIconDimensions(width)}
+            color={activeScreen === BottomBarLink.Browser ? 'white' : undefined}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.browser')}
+            </Text>
+          )}
+        </Pressable>
+        {isBrowser && showBrowserSecondaryLinks && renderBrowserBottomBar()}
+        {(!isBrowser || !showBrowserSecondaryLinks) && (
+          <View
+            style={[
+              styles.itemContainer,
+              activeScreen === BottomBarLink.ScanQr && styles.active,
+            ]}>
             <Icon
               theme={theme}
-              name={Icons.SWAP}
-              color={
-                activeScreen === BottomBarLink.SwapBuy ? 'white' : undefined
-              }
+              name={Icons.SCANNER}
               {...getIconDimensions(width)}
-              onPress={() => onHandlePressButton(BottomBarLink.SwapBuy)}
+              color={
+                activeScreen === BottomBarLink.ScanQr ? 'white' : undefined
+              }
+              onPress={() => onHandlePressButton(BottomBarLink.ScanQr)}
             />
             {showTags && (
               <Text style={[styles.textBase, styles.marginTop]}>
-                {translate('navigation.floating_bar.swap')}
+                {translate('navigation.floating_bar.buy')}
               </Text>
             )}
-          </View>,
-          showSwap,
+          </View>
         )}
-    </Animated.View>
+        {(!isBrowser || !showBrowserSecondaryLinks) &&
+          PlatformsUtils.showDependingOnPlatform(
+            <View style={[styles.itemContainer]}>
+              <Icon
+                theme={theme}
+                name={Icons.SWAP}
+                color={
+                  activeScreen === BottomBarLink.SwapBuy ? 'white' : undefined
+                }
+                {...getIconDimensions(width)}
+                onPress={() => onHandlePressButton(BottomBarLink.SwapBuy)}
+              />
+              {showTags && (
+                <Text style={[styles.textBase, styles.marginTop]}>
+                  {translate('navigation.floating_bar.swap')}
+                </Text>
+              )}
+            </View>,
+            showSwap,
+          )}
+      </Animated.View>
+      <FindInPageModal
+        isVisible={showFindInPage}
+        onClose={() => {
+          setShowFindInPage(false);
+          setFindInPageText('');
+          if (webViewRef.current) {
+            webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
+          }
+        }}
+        onSearch={(text) => {
+          setFindInPageText(text);
+          if (webViewRef.current) {
+            if (text && text.trim().length > 0) {
+              webViewRef.current.injectJavaScript(FIND_IN_PAGE_SCRIPT(text));
+            } else {
+              webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
+            }
+          }
+        }}
+        onNext={() => {
+          if (webViewRef.current) {
+            webViewRef.current.injectJavaScript(FIND_IN_PAGE_NEXT);
+          }
+        }}
+        onPrevious={() => {
+          if (webViewRef.current) {
+            webViewRef.current.injectJavaScript(FIND_IN_PAGE_PREVIOUS);
+          }
+        }}
+        searchText={findInPageText}
+        matchCount={findInPageCount?.count || 0}
+        currentMatch={findInPageCount?.current || 0}
+      />
+    </>
   ) : null;
 };
 
