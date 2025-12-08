@@ -465,8 +465,9 @@ const BottomNavigation = ({
       </Pressable>
     ),
   ];
-  return isVisible ? (
-    <>
+
+  const bottomNavigation =
+    isVisible && !showFindInPage ? (
       <Animated.View
         style={[
           getCardStyle(theme).floatingBar,
@@ -562,41 +563,50 @@ const BottomNavigation = ({
             showSwap,
           )}
       </Animated.View>
-      <FindInPageModal
-        isVisible={showFindInPage}
-        onClose={() => {
-          setShowFindInPage(false);
-          setFindInPageText('');
-          if (webViewRef.current) {
+    ) : null;
+
+  const findInPageModal = (
+    <FindInPageModal
+      isVisible={showFindInPage}
+      onClose={() => {
+        setShowFindInPage(false);
+        setFindInPageText('');
+        if (webViewRef.current) {
+          webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
+        }
+      }}
+      onSearch={(text) => {
+        setFindInPageText(text);
+        if (webViewRef.current) {
+          if (text && text.trim().length > 0) {
+            webViewRef.current.injectJavaScript(FIND_IN_PAGE_SCRIPT(text));
+          } else {
             webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
           }
-        }}
-        onSearch={(text) => {
-          setFindInPageText(text);
-          if (webViewRef.current) {
-            if (text && text.trim().length > 0) {
-              webViewRef.current.injectJavaScript(FIND_IN_PAGE_SCRIPT(text));
-            } else {
-              webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
-            }
-          }
-        }}
-        onNext={() => {
-          if (webViewRef.current) {
-            webViewRef.current.injectJavaScript(FIND_IN_PAGE_NEXT);
-          }
-        }}
-        onPrevious={() => {
-          if (webViewRef.current) {
-            webViewRef.current.injectJavaScript(FIND_IN_PAGE_PREVIOUS);
-          }
-        }}
-        searchText={findInPageText}
-        matchCount={findInPageCount?.count || 0}
-        currentMatch={findInPageCount?.current || 0}
-      />
+        }
+      }}
+      onNext={() => {
+        if (webViewRef.current) {
+          webViewRef.current.injectJavaScript(FIND_IN_PAGE_NEXT);
+        }
+      }}
+      onPrevious={() => {
+        if (webViewRef.current) {
+          webViewRef.current.injectJavaScript(FIND_IN_PAGE_PREVIOUS);
+        }
+      }}
+      searchText={findInPageText}
+      matchCount={findInPageCount?.count || 0}
+      currentMatch={findInPageCount?.current || 0}
+    />
+  );
+
+  return (
+    <>
+      {bottomNavigation}
+      {findInPageModal}
     </>
-  ) : null;
+  );
 };
 
 const getStyles = (

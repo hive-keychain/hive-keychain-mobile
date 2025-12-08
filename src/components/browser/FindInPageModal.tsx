@@ -145,9 +145,9 @@ const FindInPageModal = ({
                 name="keyboard-arrow-up"
                 size={20}
                 color={
-                  matchCount > 1
-                    ? getColors(theme).icon
-                    : getColors(theme).secondaryText
+                  matchCount === 0 || localSearchText.length === 0
+                    ? '#D3D3D3'
+                    : getColors(theme).primaryText
                 }
               />
             </TouchableOpacity>
@@ -165,9 +165,9 @@ const FindInPageModal = ({
                   name="keyboard-arrow-up"
                   size={20}
                   color={
-                    matchCount > 1
-                      ? getColors(theme).icon
-                      : getColors(theme).secondaryText
+                    matchCount === 0 || localSearchText.length === 0
+                      ? '#D3D3D3'
+                      : getColors(theme).primaryText
                   }
                 />
               </View>
@@ -178,6 +178,7 @@ const FindInPageModal = ({
                 theme={theme}
                 width={20}
                 height={20}
+                color={getColors(theme).primaryText}
               />
             </TouchableOpacity>
           </View>
