@@ -1055,7 +1055,7 @@
     "mobile_mode": "Mobile Mode",
     "refresh": "Refresh",
     "find_in_page": "Find in Page",
-    "find_in_page_placeholder": "Search for text on this page",
+    "find_in_page_placeholder": "Search on this page",
     "find_in_page_no_matches": "No matches",
     "history": {
       "clear": "Clear History",

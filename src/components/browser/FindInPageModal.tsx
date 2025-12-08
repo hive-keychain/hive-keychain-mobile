@@ -1,24 +1,22 @@
-import OperationInput from 'components/form/OperationInput';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Icon from 'components/hive/Icon';
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
-import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {
-  body_primary_body_1,
-  title_primary_title_1,
-} from 'src/styles/typography';
+import {body_primary_body_1} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -45,9 +43,30 @@ const FindInPageModal = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const styles = getStyles(theme, width, height, insets);
   const inputRef = useRef<TextInput>(null);
   const [localSearchText, setLocalSearchText] = useState(searchText);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false);
+      },
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const styles = getStyles(theme, width, height, insets, isKeyboardVisible);
 
   useEffect(() => {
     setLocalSearchText(searchText);
@@ -88,83 +107,80 @@ const FindInPageModal = ({
       <View style={styles.spacer} pointerEvents="none" />
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.bottom : 0}
+        behavior={'padding'}
+        keyboardVerticalOffset={-insets.bottom}
         pointerEvents="box-none">
-        <View
-          style={[getCardStyle(theme).defaultCardItem, styles.content]}
-          pointerEvents="auto">
-          <View style={styles.header}>
-            <Text style={styles.title}>
-              {translate('browser.find_in_page')}
-            </Text>
-            <Icon
-              name={Icons.CLOSE_CIRCLE}
-              theme={theme}
-              width={24}
-              height={24}
-              onPress={handleClose}
+        <View style={styles.content} pointerEvents="auto">
+          <View style={styles.inputContainer}>
+            <TextInput
+              ref={inputRef}
+              style={styles.input}
+              value={localSearchText}
+              onChangeText={handleTextChange}
+              onSubmitEditing={handleSubmitEditing}
+              placeholder={translate('browser.find_in_page_placeholder')}
+              placeholderTextColor={getColors(theme).secondaryText}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="search"
+              keyboardType={Platform.OS === 'ios' ? 'web-search' : 'default'}
             />
-          </View>
-
-          <View style={styles.searchContainer}>
-            <View style={styles.inputWrapper}>
-              <OperationInput
-                ref={inputRef}
-                style={styles.input}
-                value={localSearchText}
-                onChangeText={handleTextChange}
-                onSubmitEditing={handleSubmitEditing}
-                placeholder={translate('browser.find_in_page_placeholder')}
-                placeholderTextColor={getColors(theme).secondaryText}
-                autoCapitalize="none"
-                autoCorrect={false}
-                returnKeyType="search"
-                keyboardType={Platform.OS === 'ios' ? 'web-search' : 'default'}
-                rightIcon={
-                  localSearchText.length > 0 &&
-                  matchCount > 1 && (
-                    <View style={styles.inputActions}>
-                      <View style={styles.rotatedIcon}>
-                        <Icon
-                          name={Icons.ARROW_RIGHT}
-                          theme={theme}
-                          width={20}
-                          height={20}
-                          onPress={() => {
-                            inputRef.current?.blur();
-                            onPrevious();
-                          }}
-                          additionalContainerStyle={styles.caretButton}
-                        />
-                      </View>
-                      <Icon
-                        name={Icons.ARROW_RIGHT}
-                        theme={theme}
-                        width={20}
-                        height={20}
-                        onPress={() => {
-                          inputRef.current?.blur();
-                          onNext();
-                        }}
-                        additionalContainerStyle={styles.caretButton}
-                      />
-                    </View>
-                  )
+            <Text style={styles.matchCount}>
+              {localSearchText.length > 0
+                ? matchCount > 0
+                  ? `${currentMatch}/${matchCount}`
+                  : '0/0'
+                : '0/0'}
+            </Text>
+            <TouchableOpacity
+              style={styles.caretButton}
+              onPress={() => {
+                if (matchCount > 1) {
+                  inputRef.current?.blur();
+                  onPrevious();
+                }
+              }}
+              disabled={matchCount <= 1}>
+              <MaterialIcons
+                name="keyboard-arrow-up"
+                size={20}
+                color={
+                  matchCount > 1
+                    ? getColors(theme).icon
+                    : getColors(theme).secondaryText
                 }
               />
-            </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.caretButton}
+              onPress={() => {
+                if (matchCount > 1) {
+                  inputRef.current?.blur();
+                  onNext();
+                }
+              }}
+              disabled={matchCount <= 1}>
+              <View style={styles.rotatedIcon}>
+                <MaterialIcons
+                  name="keyboard-arrow-up"
+                  size={20}
+                  color={
+                    matchCount > 1
+                      ? getColors(theme).icon
+                      : getColors(theme).secondaryText
+                  }
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+              <Icon
+                name={Icons.CLOSE_CIRCLE}
+                theme={theme}
+                width={20}
+                height={20}
+              />
+            </TouchableOpacity>
           </View>
-
-          {localSearchText.length > 0 && (
-            <View style={styles.matchInfo}>
-              <Text style={styles.matchText}>
-                {matchCount > 0
-                  ? `${currentMatch} / ${matchCount}`
-                  : translate('browser.find_in_page_no_matches')}
-              </Text>
-            </View>
-          )}
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -176,6 +192,7 @@ const getStyles = (
   width: number,
   height: number,
   insets: EdgeInsets,
+  isKeyboardVisible: boolean,
 ) =>
   StyleSheet.create({
     overlay: {
@@ -187,54 +204,41 @@ const getStyles = (
       zIndex: 1000,
     },
     spacer: {
-      flex: 1,
+      flexGrow: 1,
     },
     container: {
       justifyContent: 'flex-end',
+      flexShrink: 1,
     },
     content: {
-      padding: 20,
-      paddingBottom: Platform.OS === 'ios' ? insets.bottom + 20 : 20,
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
+      width: '100%',
+      paddingBottom: Platform.OS === 'ios' ? insets.bottom : insets.bottom / 2,
+      backgroundColor: getColors(theme).cardBgColor,
     },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 16,
-    },
-    title: {
-      ...title_primary_title_1,
-      fontWeight: 'bold',
-      color: getColors(theme).primaryText,
-    },
-    searchContainer: {
-      marginBottom: 12,
-    },
-    inputWrapper: {
-      position: 'relative',
+    inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      backgroundColor: getColors(theme).cardBgColor,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      minHeight: 44,
     },
     input: {
       ...body_primary_body_1,
       color: getColors(theme).primaryText,
-      backgroundColor: getColors(theme).cardBgLighter,
-
-      paddingRight: 80,
-      paddingLeft: 16,
       flex: 1,
+      paddingVertical: 4,
+      paddingHorizontal: 8,
     },
-    inputActions: {
-      position: 'absolute',
-      right: 8,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
+    matchCount: {
+      ...body_primary_body_1,
+      color: getColors(theme).secondaryText,
+      minWidth: 36,
+      textAlign: 'center',
+      paddingHorizontal: 10,
     },
     caretButton: {
-      padding: 8,
+      padding: 10,
       minWidth: 36,
       minHeight: 36,
       justifyContent: 'center',
@@ -243,14 +247,12 @@ const getStyles = (
     rotatedIcon: {
       transform: [{rotate: '180deg'}],
     },
-    matchInfo: {
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
+    closeButton: {
+      padding: 10,
+      minWidth: 36,
+      minHeight: 36,
+      justifyContent: 'center',
       alignItems: 'center',
-    },
-    matchText: {
-      ...body_primary_body_1,
-      color: getColors(theme).secondaryText,
     },
   });
 
