@@ -158,11 +158,6 @@ const Browser = ({
           url={searchUrl === 'about:blank' ? '' : searchUrl}
           setUrl={setSearchUrl}
           clearHistory={clearHistory}
-          clearCache={() => {
-            toggleVisibility(false);
-            (webViewRef as MutableRefObject<WebView>).current?.clearCache(true);
-            (webViewRef as MutableRefObject<WebView>).current?.reload();
-          }}
           theme={theme}
         />
       </KeyboardAvoidingView>

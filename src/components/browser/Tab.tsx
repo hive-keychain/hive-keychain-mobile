@@ -1,5 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native';
-import { showFloatingBar, toggleHideFloatingBar } from 'actions/floatingBar';
+import {useFocusEffect} from '@react-navigation/native';
+import {showFloatingBar, toggleHideFloatingBar} from 'actions/floatingBar';
 import {
   Account,
   ActionPayload,
@@ -9,7 +9,7 @@ import {
   Tab,
 } from 'actions/interfaces';
 import CustomRefreshControl from 'components/ui/CustomRefreshControl';
-import { BrowserScreenProps } from 'navigators/mainDrawerStacks/Browser.types';
+import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {
   memo,
   MutableRefObject,
@@ -25,25 +25,25 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
-import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import {runOnJS} from 'react-native-reanimated';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {WebView} from 'react-native-webview';
 import {
   WebViewMessageEvent,
   WebViewNativeEvent,
   WebViewProgressEvent,
 } from 'react-native-webview/lib/WebViewTypes';
-import { UserPreference } from 'reducers/preferences.types';
-import { useTab } from 'src/context/tab.context';
-import { Theme } from 'src/context/theme.context';
-import { ProviderEvent } from 'src/enums/providerEvent.enum';
-import { RequestError, RequestSuccess } from 'src/interfaces/keychain.interface';
-import { store } from 'store';
-import { urlTransformer } from 'utils/browser.utils';
-import { BrowserConfig } from 'utils/config.utils';
-import { getAccount } from 'utils/hive.utils';
-import { downloadFromUrl } from 'utils/image.utils';
+import {UserPreference} from 'reducers/preferences.types';
+import {useTab} from 'src/context/tab.context';
+import {Theme} from 'src/context/theme.context';
+import {ProviderEvent} from 'src/enums/providerEvent.enum';
+import {RequestError, RequestSuccess} from 'src/interfaces/keychain.interface';
+import {store} from 'store';
+import {urlTransformer} from 'utils/browser.utils';
+import {BrowserConfig} from 'utils/config.utils';
+import {getAccount} from 'utils/hive.utils';
+import {downloadFromUrl} from 'utils/image.utils';
 import {
   getRequestTitle,
   getRequiredWifType,
@@ -52,18 +52,18 @@ import {
   validateAuthority,
   validateRequest,
 } from 'utils/keychain.utils';
-import { MultisigUtils } from 'utils/multisig.utils';
-import { navigate, goBack as navigationGoBack } from 'utils/navigation.utils';
-import { hasPreference } from 'utils/preferences.utils';
-import { requestWithoutConfirmation } from 'utils/requestWithoutConfirmation.utils';
+import {MultisigUtils} from 'utils/multisig.utils';
+import {navigate, goBack as navigationGoBack} from 'utils/navigation.utils';
+import {hasPreference} from 'utils/preferences.utils';
+import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation.utils';
 import HomeTab from './HomeTab';
 import MediaDownloadModal from './MediaDownloadModal';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
-import { DESKTOP_MODE } from './bridges/DesktopMode';
-import { hive_keychain } from './bridges/HiveKeychainBridge';
-import { IMAGE_DOWNLOAD_SCRIPT } from './bridges/ImageDownload';
-import { BRIDGE_WV_INFO } from './bridges/WebviewInfo';
+import {DESKTOP_MODE} from './bridges/DesktopMode';
+import {hive_keychain} from './bridges/HiveKeychainBridge';
+import {IMAGE_DOWNLOAD_SCRIPT} from './bridges/ImageDownload';
+import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
 
 type Props = {
@@ -107,7 +107,7 @@ export default memo(
     const insets = useSafeAreaInsets();
     const [canRefresh, setCanRefresh] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const {setWebViewRef, setTabViewRef} = useTab();
+    const {setWebViewRef, setTabViewRef, updateFindInPageCount} = useTab();
     const [isFlutterApp, setIsFlutterApp] = useState(false);
     const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
     const [flutterDomain, setFlutterDomain] = useState('');
@@ -332,6 +332,20 @@ export default memo(
               data,
               request_id,
             });
+          }
+          break;
+        case 'FIND_IN_PAGE_COUNT':
+          // Handle find in page count updates
+          {
+            const findCount = messageData.count;
+            const findCurrent = messageData.current;
+            if (
+              updateFindInPageCount &&
+              typeof findCount === 'number' &&
+              typeof findCurrent === 'number'
+            ) {
+              updateFindInPageCount(findCount, findCurrent);
+            }
           }
           break;
         case ProviderEvent.INFO:

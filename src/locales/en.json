@@ -1051,6 +1051,12 @@
   "browser": {
     "search": "Search or enter url",
     "clear_all": "All your browser tabs have been closed",
+    "desktop_mode": "Desktop Mode",
+    "mobile_mode": "Mobile Mode",
+    "refresh": "Refresh",
+    "find_in_page": "Find in Page",
+    "find_in_page_placeholder": "Search for text on this page",
+    "find_in_page_no_matches": "No matches",
     "history": {
       "clear": "Clear History",
       "clear_cache": "Clear Cache"

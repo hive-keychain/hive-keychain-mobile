@@ -1,11 +1,10 @@
 import {ActionPayload, BrowserPayload, Page} from 'actions/interfaces';
+import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
-import * as Clipboard from 'expo-clipboard';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   KeyboardAvoidingView,
   NativeSyntheticEvent,
-  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -33,7 +32,6 @@ type Props = {
   setUrl: (string: string) => void;
   history: Page[];
   clearHistory: () => ActionPayload<BrowserPayload>;
-  clearCache: () => void;
   theme: Theme;
 };
 const UrlModal = ({
@@ -44,7 +42,6 @@ const UrlModal = ({
   setUrl,
   history,
   clearHistory,
-  clearCache,
   theme,
 }: Props) => {
   const urlInput: MutableRefObject<TextInput> = useRef(null);
@@ -97,52 +94,45 @@ const UrlModal = ({
       useNativeDriver>
       <KeyboardAvoidingView style={{flex: 1}} behavior={'padding'}>
         <View style={styles.urlModalContent}>
-          <Icon
-            name={Icons.ARROW_LEFT}
-            theme={theme}
-            width={17}
-            height={17}
-            onPress={() => toggle(false)}
-            additionalContainerStyle={styles.option}
-            color={PRIMARY_RED_COLOR}
-          />
-          <TextInput
+          <OperationInput
             keyboardType="web-search"
             ref={urlInput}
             autoCapitalize="none"
             autoCorrect={false}
-            clearButtonMode="never"
             onChangeText={setUrl}
             onSubmitEditing={onSubmitUrlFromInput}
             placeholder={translate('browser.search')}
             returnKeyType="go"
-            style={[styles.textBase, styles.urlInput]}
+            style={[styles.textBase]}
+            leftIcon={
+              <Icon
+                name={Icons.ARROW_LEFT}
+                theme={theme}
+                width={17}
+                height={17}
+                onPress={() => toggle(false)}
+                additionalContainerStyle={styles.option}
+                color={PRIMARY_RED_COLOR}
+              />
+            }
+            rightIcon={
+              url.length ? (
+                <Icon
+                  name={Icons.CLOSE_CIRCLE}
+                  theme={theme}
+                  width={17}
+                  height={17}
+                  onPress={() => setUrl('')}
+                  additionalContainerStyle={styles.option}
+                  color={PRIMARY_RED_COLOR}
+                />
+              ) : null
+            }
             value={url}
             selectTextOnFocus
             placeholderTextColor={getColors(theme).secondaryText}
           />
-          {url.length ? (
-            <Icon
-              name={Icons.SHARE}
-              theme={theme}
-              width={17}
-              height={17}
-              onPress={() => Share.share({message: url})}
-              additionalContainerStyle={styles.option}
-              color={PRIMARY_RED_COLOR}
-            />
-          ) : null}
-          {url.length ? (
-            <Icon
-              name={Icons.COPY}
-              theme={theme}
-              width={17}
-              height={17}
-              onPress={() => Clipboard.setStringAsync(url)}
-              additionalContainerStyle={styles.option}
-              color={PRIMARY_RED_COLOR}
-            />
-          ) : null}
+
           {url.length ? (
             <TouchableOpacity
               activeOpacity={1}
@@ -155,11 +145,6 @@ const UrlModal = ({
 
         <View style={[styles.containerHistory]}>
           <View style={styles.clearHistoryContainer}>
-            <TouchableOpacity activeOpacity={1} onPress={clearCache}>
-              <Text style={[styles.textBase, styles.clearHistory]}>
-                {translate('browser.history.clear_cache')}
-              </Text>
-            </TouchableOpacity>
             {history.length ? (
               <TouchableOpacity activeOpacity={1} onPress={clearHistory}>
                 <Text style={[styles.textBase, styles.clearHistory]}>
