@@ -121,6 +121,7 @@ const AddAccountByKey = ({
         <Separator height={height / 22} />
         <OperationInput
           autoCapitalize={'none'}
+          autoCorrect={false}
           labelInput={translate('common.username')}
           placeholder={translate('common.username')}
           value={account}

@@ -18,6 +18,7 @@ import {
 import Icon from 'components/hive/Icon';
 import {BrowserTutorialContent} from 'components/popups/browser-tutorial/BrowserTutorial';
 import SafeArea from 'components/ui/SafeArea';
+import {Camera} from 'expo-camera';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
   Animated,
@@ -34,7 +35,10 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import SimpleToast from 'react-native-root-toast';
+import {
+  default as SimpleToast,
+  default as Toast,
+} from 'react-native-root-toast';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {useOrientation} from 'src/context/orientation.context';
@@ -533,7 +537,17 @@ const BottomNavigation = ({
               color={
                 activeScreen === BottomBarLink.ScanQr ? 'white' : undefined
               }
-              onPress={() => onHandlePressButton(BottomBarLink.ScanQr)}
+              onPress={() => {
+                Camera.requestCameraPermissionsAsync().then((result) => {
+                  if (result.granted) {
+                    onHandlePressButton(BottomBarLink.ScanQr);
+                  } else {
+                    Toast.show(translate('toast.error_camera_permission'), {
+                      duration: Toast.durations.LONG,
+                    });
+                  }
+                });
+              }}
             />
             {showTags && (
               <Text style={[styles.textBase, styles.marginTop]}>

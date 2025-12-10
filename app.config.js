@@ -98,7 +98,8 @@ export default ({config}) => ({
       [
         'expo-camera',
         {
-          cameraPermission: 'Allow $(PRODUCT_NAME) to access your camera',
+          cameraPermission:
+            'We need your camera to scan QR codes for adding accounts and processing transactions.',
         },
       ],
       [
