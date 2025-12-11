@@ -45,6 +45,7 @@ import {
 } from '../interfaces/keychain.interface';
 import {getHardforkVersion} from './hive.utils';
 import {sleep} from './keychain.utils';
+import {useWorkingRPC} from './rpcSwitcher.utils';
 
 type BroadcastResult = {id: string; tx_id: string};
 
@@ -715,22 +716,27 @@ export const getData = async (
   params: any[] | object,
   key?: string,
 ) => {
-  const response = await call(method, params);
-  if (response?.result) {
-    return key ? response.result[key] : response.result;
-  } else {
-    try {
-      const {useWorkingRPC} = await import('./rpcSwitcher.utils');
-      await useWorkingRPC();
-    } catch (e) {
-      // ignore fallback errors
+  try {
+    const response = await call(method, params);
+    if (response?.result) {
+      return key ? response.result[key] : response.result;
+    } else {
+      try {
+        await useWorkingRPC();
+      } catch (e) {
+        // ignore fallback errors
+      }
     }
+    throw new Error(
+      `Error while retrieving data from ${method} : ${JSON.stringify(
+        response.error,
+      )}`,
+    );
+  } catch (e) {
+    console.log('error', e.message);
+    await useWorkingRPC();
+    throw new Error(e.message);
   }
-  throw new Error(
-    `Error while retrieving data from ${method} : ${JSON.stringify(
-      response.error,
-    )}`,
-  );
 };
 
 export const getTransaction = async (txId: string) => {

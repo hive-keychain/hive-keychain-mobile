@@ -269,6 +269,7 @@ const Main = ({
     loadPrices,
     fetchPhishingAccounts,
     lastAccount,
+    rpc.uri,
   ]);
 
   useBackButtonNavigation('Wallet', true);
