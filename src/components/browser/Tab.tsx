@@ -61,9 +61,12 @@ import MediaDownloadModal from './MediaDownloadModal';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
 import {DESKTOP_MODE} from './bridges/DesktopMode';
+import {
+  FIND_IN_PAGE_CLEAR,
+  FIND_IN_PAGE_SPA_CLEANUP,
+} from './bridges/FindInPage';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {IMAGE_DOWNLOAD_SCRIPT} from './bridges/ImageDownload';
-import {FIND_IN_PAGE_CLEAR, FIND_IN_PAGE_SPA_CLEANUP} from './bridges/FindInPage';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
 
@@ -108,7 +111,12 @@ export default memo(
     const insets = useSafeAreaInsets();
     const [canRefresh, setCanRefresh] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const {setWebViewRef, setTabViewRef, updateFindInPageCount, closeFindInPage} = useTab();
+    const {
+      setWebViewRef,
+      setTabViewRef,
+      updateFindInPageCount,
+      closeFindInPage,
+    } = useTab();
     const [isFlutterApp, setIsFlutterApp] = useState(false);
     const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
     const [flutterDomain, setFlutterDomain] = useState('');

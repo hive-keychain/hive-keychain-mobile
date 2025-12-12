@@ -59,9 +59,11 @@ export default ({config}) => ({
           : 'com.mobilekeychain',
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
       permissions: [
-        'android.permission.CAMERA',
+        'CAMERA',
         'ACCESS_FINE_LOCATION',
         'ACCESS_COARSE_LOCATION',
+        'RECORD_AUDIO',
+        'MODIFY_AUDIO_SETTINGS',
       ],
       softwareKeyboardLayoutMode: 'pan',
       adaptiveIcon: {
