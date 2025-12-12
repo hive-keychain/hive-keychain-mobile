@@ -29,7 +29,7 @@ export default ({config}) => ({
       ...base.expo.ios,
       bundleIdentifier: 'com.stoodkev.mobileKeychain',
       supportsTablet: false,
-      teamId: process.env.APPLE_TEAM_ID,
+      appleTeamId: process.env.APPLE_TEAM_ID,
       id: process.env.APPLE_ID,
       deploymentTarget: '13.0',
       infoPlist: {
