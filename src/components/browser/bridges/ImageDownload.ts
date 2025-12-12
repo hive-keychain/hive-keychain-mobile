@@ -1,15 +1,15 @@
 export const IMAGE_DOWNLOAD_SCRIPT = `
- const style = document.createElement('style');
-    style.innerHTML = \`
-      img, a, * {
-        -webkit-touch-callout: none !important;
-        -webkit-user-select: none !important;
-        user-select: none !important;
-      }
-    \`;
-    document.head.appendChild(style);
-    
 (function() {
+  // Create style element for disabling text selection
+  const style = document.createElement('style');
+  style.innerHTML = \`
+    img, a, * {
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+    }
+  \`;
+  document.head.appendChild(style);
   if (window.imageDownloadInitialized) {
     return true;
   }
