@@ -75,3 +75,4 @@ describe('globalProperties reducer', () => {
 
 
 
+

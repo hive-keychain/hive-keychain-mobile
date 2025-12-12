@@ -27,6 +27,27 @@ export const FIND_IN_PAGE_SCRIPT = (searchText: string) => {
     findState.currentIndex = -1;
   }
 
+  function isElementVisible(element) {
+    if (!element) return false;
+    
+    const style = window.getComputedStyle(element);
+    
+    // Check if element is hidden via CSS
+    if (style.display === 'none' || 
+        style.visibility === 'hidden' || 
+        style.opacity === '0') {
+      return false;
+    }
+    
+    // Check if element has zero dimensions
+    const rect = element.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) {
+      return false;
+    }
+    
+    return true;
+  }
+
   function highlightMatches(text) {
     removeHighlights();
     
@@ -54,7 +75,18 @@ export const FIND_IN_PAGE_SCRIPT = (searchText: string) => {
     let node;
     while (node = walker.nextNode()) {
       if (node.textContent && searchRegex.test(node.textContent)) {
-        textNodes.push(node);
+        // Check if the parent element is visible
+        let parent = node.parentElement;
+        while (parent && parent !== document.body) {
+          if (!isElementVisible(parent)) {
+            parent = null;
+            break;
+          }
+          parent = parent.parentElement;
+        }
+        if (parent !== null) {
+          textNodes.push(node);
+        }
       }
     }
 
