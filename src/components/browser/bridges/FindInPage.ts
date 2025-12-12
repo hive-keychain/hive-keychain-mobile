@@ -220,3 +220,46 @@ export const FIND_IN_PAGE_CLEAR = `
   true;
 })();
 `;
+
+// Script to handle SPA navigation by hooking into history API
+export const FIND_IN_PAGE_SPA_CLEANUP = `
+(function() {
+  function clearFindInPage() {
+    if (window._keychainFindInPage && window._keychainFindInPage.removeHighlights) {
+      window._keychainFindInPage.removeHighlights();
+    }
+    // Notify React Native that navigation occurred
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({
+        name: 'FIND_IN_PAGE_NAVIGATION'
+      }));
+    }
+  }
+  
+  // Clear Find in Page on initial load
+  clearFindInPage();
+  
+  // Hook into history API to detect SPA navigation
+  if (typeof window !== 'undefined' && window.history) {
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+    
+    window.history.pushState = function() {
+      clearFindInPage();
+      return originalPushState.apply(window.history, arguments);
+    };
+    
+    window.history.replaceState = function() {
+      clearFindInPage();
+      return originalReplaceState.apply(window.history, arguments);
+    };
+    
+    // Listen to popstate events (back/forward navigation)
+    window.addEventListener('popstate', function() {
+      clearFindInPage();
+    });
+  }
+  
+  true;
+})();
+`;

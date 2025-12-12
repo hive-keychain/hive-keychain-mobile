@@ -63,6 +63,7 @@ import RequestModalContent from './RequestModalContent';
 import {DESKTOP_MODE} from './bridges/DesktopMode';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {IMAGE_DOWNLOAD_SCRIPT} from './bridges/ImageDownload';
+import {FIND_IN_PAGE_CLEAR, FIND_IN_PAGE_SPA_CLEANUP} from './bridges/FindInPage';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
 
@@ -107,7 +108,7 @@ export default memo(
     const insets = useSafeAreaInsets();
     const [canRefresh, setCanRefresh] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const {setWebViewRef, setTabViewRef, updateFindInPageCount} = useTab();
+    const {setWebViewRef, setTabViewRef, updateFindInPageCount, closeFindInPage} = useTab();
     const [isFlutterApp, setIsFlutterApp] = useState(false);
     const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
     const [flutterDomain, setFlutterDomain] = useState('');
@@ -173,6 +174,12 @@ export default memo(
         clearTimeout(urlUpdateTimeoutRef.current);
       }
 
+      // Clear Find in Page highlights when navigation starts
+      const {current} = tabRef;
+      if (current) {
+        current.injectJavaScript(FIND_IN_PAGE_CLEAR);
+      }
+
       // Update URL immediately for normal navigation
       if (
         url !== data.url &&
@@ -222,6 +229,8 @@ export default memo(
       if (current) {
         current.injectJavaScript(BRIDGE_WV_INFO);
         current.injectJavaScript(IMAGE_DOWNLOAD_SCRIPT);
+        // Clear Find in Page highlights and hook into history API for SPA navigation
+        current.injectJavaScript(FIND_IN_PAGE_SPA_CLEANUP);
       }
     };
 
@@ -346,6 +355,12 @@ export default memo(
             ) {
               updateFindInPageCount(findCount, findCurrent);
             }
+          }
+          break;
+        case 'FIND_IN_PAGE_NAVIGATION':
+          // Close Find in Page modal when navigation occurs
+          if (closeFindInPage) {
+            closeFindInPage();
           }
           break;
         case ProviderEvent.INFO:

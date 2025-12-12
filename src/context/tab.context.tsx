@@ -8,6 +8,7 @@ export const TabProvider = ({ children }: { children: React.ReactNode }) => {
   const webViewRef = useRef<WebView>(null);
   const tabViewRef = useRef<WebView>(null);
   const [findInPageCount, setFindInPageCount] = useState({ count: 0, current: 0 });
+  const closeFindInPageRef = useRef<(() => void) | null>(null);
 
   const setWebViewRef = useCallback((ref: WebView) => {
     webViewRef.current = ref;
@@ -21,6 +22,16 @@ export const TabProvider = ({ children }: { children: React.ReactNode }) => {
     setFindInPageCount({ count, current });
   }, []);
 
+  const setCloseFindInPage = useCallback((callback: (() => void) | null) => {
+    closeFindInPageRef.current = callback;
+  }, []);
+
+  const closeFindInPage = useCallback(() => {
+    if (closeFindInPageRef.current) {
+      closeFindInPageRef.current();
+    }
+  }, []);
+
   return (
     <TabContext.Provider
       value={{ 
@@ -29,7 +40,9 @@ export const TabProvider = ({ children }: { children: React.ReactNode }) => {
         setTabViewRef, 
         tabViewRef,
         findInPageCount,
-        updateFindInPageCount
+        updateFindInPageCount,
+        setCloseFindInPage,
+        closeFindInPage
       }}
     >
       {children}

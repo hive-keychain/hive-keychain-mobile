@@ -88,7 +88,7 @@ const BottomNavigation = ({
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme, {width, height}, insets, false);
   const anim = useRef(new Animated.Value(0)).current;
-  const {webViewRef, tabViewRef, findInPageCount} = useTab();
+  const {webViewRef, tabViewRef, findInPageCount, setCloseFindInPage} = useTab();
   const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] =
     useState(true);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
@@ -119,6 +119,21 @@ const BottomNavigation = ({
       keyboardDidHideListener.remove();
     };
   }, []);
+
+  // Register callback to close Find in Page when navigation occurs
+  useEffect(() => {
+    if (setCloseFindInPage) {
+      setCloseFindInPage(() => {
+        setShowFindInPage(false);
+        setFindInPageText('');
+      });
+    }
+    return () => {
+      if (setCloseFindInPage) {
+        setCloseFindInPage(null);
+      }
+    };
+  }, [setCloseFindInPage]);
 
   const onHandlePressButton = (link: BottomBarLink) => {
     let screen = '';
