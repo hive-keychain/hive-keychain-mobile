@@ -1,9 +1,10 @@
 export const IMAGE_DOWNLOAD_SCRIPT = `
 (function() {
-  // Create style element for disabling text selection
+  // Create style element for disabling native callout menu on images and videos only
+  // This prevents the native iOS/Android menu while allowing text selection elsewhere
   const style = document.createElement('style');
   style.innerHTML = \`
-    img, a, * {
+    img, video {
       -webkit-touch-callout: none !important;
       -webkit-user-select: none !important;
       user-select: none !important;
