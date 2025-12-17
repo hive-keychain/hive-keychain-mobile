@@ -88,7 +88,8 @@ const BottomNavigation = ({
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme, {width, height}, insets, false);
   const anim = useRef(new Animated.Value(0)).current;
-  const {webViewRef, tabViewRef, findInPageCount, setCloseFindInPage} = useTab();
+  const {webViewRef, tabViewRef, findInPageCount, setCloseFindInPage} =
+    useTab();
   const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] =
     useState(true);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
@@ -404,8 +405,8 @@ const BottomNavigation = ({
                             browser.tabs,
                             browser.activeTab,
                           )?.desktop
-                            ? Icons.MOBILE
-                            : Icons.DESKTOP
+                            ? Icons.DESKTOP
+                            : Icons.MOBILE
                         }
                         width={20}
                         height={20}
