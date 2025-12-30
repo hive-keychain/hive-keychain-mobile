@@ -91,6 +91,11 @@ const getChangedVestingRoutes = async (localAccounts: Account[]) => {
       (vestingRoute) => vestingRoute.account === account.name,
     );
 
+    // Skip comparison if account was just added (no info in localStorage)
+    if (!oldRoutes) {
+      continue;
+    }
+
     // Compare
     if (!_.isEqual(oldRoutes, currentRoutes)) {
       if (oldRoutes)
