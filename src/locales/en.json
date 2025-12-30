@@ -866,7 +866,8 @@
       "scan_next": "Page: {{index}} of {{total}}, scan next page!",
       "scan_page_first": "Scan page {{page}} first!",
       "scan_completed": "Scan completed, loading accounts!",
-      "already_scanned": "Page already scanned, please move to page {{page}}!"
+      "already_scanned": "Page already scanned, please move to page {{page}}!",
+      "importing": "Importing page {{page}}/{{total}}"
     }
   },
   "navigation": {

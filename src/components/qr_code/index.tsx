@@ -1,8 +1,6 @@
-import {useHeaderHeight} from '@react-navigation/elements';
 import {BarcodeScanningResult, CameraView} from 'expo-camera';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import Marker from './MarkerQR';
@@ -10,22 +8,59 @@ import Marker from './MarkerQR';
 type Props = {
   onSuccess: (event: BarcodeScanningResult) => void;
   topContent?: React.ReactNode;
+  allowMultipleScans?: boolean;
+  scanDebounceMs?: number;
 };
 
-const QRCode = ({onSuccess, topContent}: Props) => {
+const QRCode = ({
+  onSuccess,
+  topContent,
+  allowMultipleScans = false,
+  scanDebounceMs = 2000,
+}: Props) => {
   const {theme} = useThemeContext();
   const [scanned, setScanned] = useState(false);
   const lastScannedTimestampRef = useRef(0);
+  const resetTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const allowMultipleScansRef = useRef(allowMultipleScans);
+
+  // Keep ref in sync with prop
+  useEffect(() => {
+    allowMultipleScansRef.current = allowMultipleScans;
+  }, [allowMultipleScans]);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimeoutRef.current) {
+        clearTimeout(resetTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleBarcodeScanned = (event: BarcodeScanningResult) => {
     const timestamp = Date.now();
 
-    if (scanned || timestamp - lastScannedTimestampRef.current < 2000) {
+    if (
+      scanned ||
+      timestamp - lastScannedTimestampRef.current < scanDebounceMs
+    ) {
       return;
     }
     lastScannedTimestampRef.current = timestamp;
     setScanned(true);
     onSuccess(event);
+
+    // Always set timeout to reset after debounce
+    // The timeout checks allowMultipleScansRef which is kept in sync with the prop
+    if (resetTimeoutRef.current) {
+      clearTimeout(resetTimeoutRef.current);
+    }
+    resetTimeoutRef.current = setTimeout(() => {
+      // Check allowMultipleScansRef at timeout execution time to get current value
+      if (allowMultipleScansRef.current) {
+        setScanned(false);
+      }
+    }, scanDebounceMs);
   };
   return (
     <View
@@ -38,7 +73,7 @@ const QRCode = ({onSuccess, topContent}: Props) => {
         <View
           style={{
             zIndex: 10,
-            marginTop: useHeaderHeight() + useSafeAreaInsets().top + 5,
+            marginTop: 5,
             backgroundColor: getColors(theme).overlay,
             justifyContent: 'center',
             height: 60,
