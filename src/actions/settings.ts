@@ -9,6 +9,7 @@ import {
 import {
   SET_HIVE_ACCOUNT_HISTORY_RPC,
   SET_HIVE_ENGINE_RPC,
+  SET_HIVE_ENGINE_RPC_ERROR,
   SET_MOBILE_SETTINGS,
   SET_RPC,
 } from './types';
@@ -24,6 +25,14 @@ export const setHiveEngineRpc = (hiveEngineRpc: string) => {
   const action: ActionPayload<SettingsPayload> = {
     type: SET_HIVE_ENGINE_RPC,
     payload: {hiveEngineRpc},
+  };
+  return action;
+};
+
+export const setHiveEngineRpcError = (hiveEngineRpcError: string | null) => {
+  const action: ActionPayload<SettingsPayload> = {
+    type: SET_HIVE_ENGINE_RPC_ERROR,
+    payload: {hiveEngineRpcError},
   };
   return action;
 };

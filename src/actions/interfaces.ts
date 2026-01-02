@@ -34,6 +34,7 @@ export interface Rpc {
 export interface Settings {
   rpc: Rpc;
   hiveEngineRpc: string;
+  hiveEngineRpcError: string | null;
   accountHistoryAPIRpc: string;
   mobileSettings: MobileSettings;
 }
@@ -44,6 +45,7 @@ export interface MobileSettings {
 export interface SettingsPayload {
   rpc?: Rpc;
   hiveEngineRpc?: string;
+  hiveEngineRpcError?: string | null;
   accountHistoryAPIRpc?: string;
   mobileSettings?: MobileSettings;
 }

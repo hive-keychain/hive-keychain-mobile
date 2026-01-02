@@ -107,6 +107,7 @@ const Main = ({
   tokensMarket,
   updateNavigationState,
   rpc,
+  hiveEngineRpcError,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -208,16 +209,30 @@ const Main = ({
           getHiveEngineTokenValue(a, tokensMarket)
         );
       });
-      setFilteredUserTokenBalanceList(
-        list.filter((userToken) => !hiddenTokens.includes(userToken.symbol)),
+      const filtered = list.filter(
+        (userToken) => !hiddenTokens.includes(userToken.symbol),
       );
+      setFilteredUserTokenBalanceList(filtered);
       setOrderedUserTokenBalanceList(list);
+      // If token metadata or market data is missing (likely after a failed RPC),
+      // try reloading them once data loads.
+      if (filtered.length > 0 && (!tokens?.length || !tokensMarket?.length)) {
+        loadTokens();
+        loadTokensMarket();
+      }
       setIsHiveEngineLoading(false);
     } else {
       setFilteredUserTokenBalanceList([]);
       setIsHiveEngineLoading(true);
     }
-  }, [userTokens.loading, hiddenTokens, tokensMarket]);
+  }, [
+    userTokens.loading,
+    userTokens.list,
+    hiddenTokens,
+    tokensMarket,
+    loadTokens,
+    loadTokensMarket,
+  ]);
 
   useEffect(() => {
     if (
@@ -365,27 +380,30 @@ const Main = ({
     [],
   );
 
-  const renderEngineTokenDisplay = useCallback(
-    ({item, index}: {item: TokenBalance; index: number}) => {
-      const handleSetToggle = () => {
-        if (toggled === item._id) setToggled(null);
-        else setToggled(item._id);
-        handleClickToView(index, 1);
-      };
-      return (
-        <EngineTokenDisplay
-          key={`engine-token-${item._id}`}
-          addBackground
-          token={item}
-          tokensList={tokens}
-          market={tokensMarket}
-          toggled={toggled === item._id}
-          setToggle={handleSetToggle}
-        />
-      );
-    },
-    [tokens, tokensMarket, toggled, setToggled, handleClickToView],
-  );
+  const renderEngineTokenDisplay = ({
+    item,
+    index,
+  }: {
+    item: TokenBalance;
+    index: number;
+  }) => {
+    const handleSetToggle = () => {
+      if (toggled === item._id) setToggled(null);
+      else setToggled(item._id);
+      handleClickToView(index, 1);
+    };
+    return (
+      <EngineTokenDisplay
+        key={`engine-token-${item._id}`}
+        addBackground
+        token={item}
+        tokensList={tokens}
+        market={tokensMarket}
+        toggled={toggled === item._id}
+        setToggle={handleSetToggle}
+      />
+    );
+  };
 
   return (
     <WalletPage
@@ -428,7 +446,7 @@ const Main = ({
               }}>
               <FlatList
                 style={{
-                  flex: 1,
+                  flexGrow: 1,
                 }}
                 ref={mainScrollRef}
                 initialNumToRender={10}
@@ -549,6 +567,13 @@ const Main = ({
                             </React.Fragment>
                           )}
                         </View>
+                        {hiveEngineRpcError && (
+                          <View style={styles.errorContainer}>
+                            <Text style={styles.no_tokens}>
+                              {translate(hiveEngineRpcError)}
+                            </Text>
+                          </View>
+                        )}
                       </View>
                     </View>
                   </View>
@@ -559,7 +584,8 @@ const Main = ({
                       <View style={styles.extraContainerMiniLoader}>
                         <Loader size={'small'} animating />
                       </View>
-                    ) : !userTokens.loading &&
+                    ) : !hiveEngineRpcError &&
+                      !userTokens.loading &&
                       filteredUserTokenBalanceList.length === 0 &&
                       orderedUserTokenBalanceList.length === 0 ? (
                       <View style={styles.extraContainerMiniLoader}>
@@ -567,7 +593,8 @@ const Main = ({
                           {translate('wallet.no_tokens')}
                         </Text>
                       </View>
-                    ) : !userTokens.loading &&
+                    ) : !hiveEngineRpcError &&
+                      !userTokens.loading &&
                       orderedUserTokenBalanceList.length > 0 &&
                       filteredUserTokenBalanceList.length === 0 ? (
                       <View style={styles.extraContainerMiniLoader}>
@@ -700,6 +727,10 @@ const getDimensionedStyles = (
       borderRadius: 11,
       paddingHorizontal: 6,
     },
+    errorContainer: {
+      paddingHorizontal: 12,
+      paddingVertical: 12,
+    },
   });
 
 const connector = connect(
@@ -715,6 +746,7 @@ const connector = connect(
       userTokens: state.userTokens,
       tokensMarket: state.tokensMarket,
       rpc: state.settings.rpc,
+      hiveEngineRpcError: state.settings.hiveEngineRpcError,
     };
   },
   {

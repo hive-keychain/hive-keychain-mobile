@@ -60,7 +60,15 @@ const EngineTokenDisplay = ({
     } as TokenHistoryProps);
   }, [token.symbol, token.balance, tokenInfo, colors, theme]);
 
-  if (!tokenInfo) return null;
+  if (!tokenInfo) {
+    return (
+      <View
+        style={[
+          getCardStyle(theme).wrapperCardItem,
+          {zIndex: 11, paddingVertical: 12},
+        ]}></View>
+    );
+  }
 
   return (
     <View style={[getCardStyle(theme).wrapperCardItem, {zIndex: 11}]}>
@@ -109,7 +117,7 @@ const areEqualOwnProps = (
   return (
     prevProps.toggled === nextProps.toggled &&
     prevProps.token === nextProps.token &&
-    prevProps.tokensList === nextProps.tokensList &&
+    prevProps.tokensList.length === nextProps.tokensList.length &&
     prevProps.market === nextProps.market
   );
 };
