@@ -10,6 +10,7 @@ import TwoFaModal from 'components/modals/TwoFaModal';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
+import RpcErrorBanner from 'components/ui/RpcErrorBanner';
 import Separator from 'components/ui/Separator';
 import {IStep} from 'hive-keychain-commons';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
@@ -82,6 +83,7 @@ const Swap = ({
   showModal,
   colors,
   tokens,
+  hiveEngineRpcError,
 }: PropsFromRedux & Props) => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation<any>();
@@ -117,6 +119,13 @@ const Swap = ({
     init();
   }, []);
 
+  useEffect(() => {
+    // Stop loading if there's an RPC error
+    if (hiveEngineRpcError) {
+      setLoading(false);
+    }
+  }, [hiveEngineRpcError]);
+
   const init = async () => {
     let tokenInitialization;
     try {
@@ -131,8 +140,10 @@ const Swap = ({
       setSwapConfig(config);
       if (
         serverStatus.layerTwoDelayed &&
-        (!['HIVE', 'HBD'].includes(endToken?.value.symbol) ||
-          !['HIVE', 'HBD'].includes(startToken?.value.symbol))
+        endToken?.value?.symbol &&
+        startToken?.value?.symbol &&
+        (!['HIVE', 'HBD'].includes(endToken.value!.symbol) ||
+          !['HIVE', 'HBD'].includes(startToken.value!.symbol))
       ) {
         setLayerTwoDelayed(true);
         SimpleToast.show(
@@ -208,6 +219,20 @@ const Swap = ({
     ];
 
     const lastUsed = await SwapTokenUtils.getLastUsed();
+
+    // Ensure we have at least HIVE and HBD in the list
+    if (list.length === 0) {
+      // If no tokens available, at least add HIVE
+      list = [
+        {
+          value: {symbol: getCurrency('HIVE'), precision: 3},
+          label: getCurrency('HIVE'),
+          img: 'src/assets/images/hive/hive.svg',
+          imgBackup: 'src/assets/images/hive/hive-engine.svg',
+        },
+      ];
+    }
+
     setStartToken(
       lastUsed.from
         ? list.find((t) => t.value.symbol === lastUsed.from.symbol) || list[0]
@@ -219,8 +244,27 @@ const Swap = ({
         (endItem) => endItem.value.symbol !== start.value.symbol,
       );
     };
+
+    // Ensure endList has at least 2 items (HIVE and HBD)
+    if (endList.length < 2) {
+      endList = [
+        {
+          value: {symbol: getCurrency('HIVE'), precision: 3},
+          label: getCurrency('HIVE'),
+          img: 'will_fire_default',
+        },
+        {
+          value: {symbol: getCurrency('HBD'), precision: 3},
+          label: getCurrency('HBD'),
+          img: 'will_fire_default',
+        },
+      ];
+    }
+
     const endTokenToSet = lastUsed.to
-      ? endList.find((t) => t.value.symbol === lastUsed.to.symbol)
+      ? endList.find((t) => t.value.symbol === lastUsed.to.symbol) ||
+        findDifferentToken(list[0]) ||
+        endList[1]
       : findDifferentToken(list[0]) ?? endList[1];
     setEndToken(endTokenToSet);
     setEndTokenListOptions(endList);
@@ -232,6 +276,9 @@ const Swap = ({
     endToken: OptionItem,
     swapConfig: SwapConfig,
   ) => {
+    if (!startToken || !endToken || !startToken.value || !endToken.value) {
+      return;
+    }
     if (startToken === endToken) {
       SimpleToast.show(
         translate(
@@ -249,8 +296,8 @@ const Swap = ({
       setEstimate(undefined);
       setEstimateValue(undefined);
       const result: IStep[] = await SwapTokenUtils.getEstimate(
-        startToken?.value.symbol,
-        endToken?.value.symbol,
+        startToken.value.symbol,
+        endToken.value.symbol,
         amount,
         () => {
           setAutoRefreshCountdown(null);
@@ -300,7 +347,9 @@ const Swap = ({
   }, []);
 
   useEffect(() => {
-    throttledRefresh(amount, endToken, startToken, swapConfig);
+    if (startToken && endToken) {
+      throttledRefresh(amount, endToken, startToken, swapConfig);
+    }
   }, [amount, endToken, startToken, swapConfig]);
 
   useEffect(() => {
@@ -324,8 +373,8 @@ const Swap = ({
   }, [autoRefreshCountdown]);
 
   const onHandleRequestEstimate = () => {
-    if (!estimate) return;
-    calculateEstimate(amount, startToken!, endToken!, swapConfig!);
+    if (!estimate || !startToken || !endToken || !swapConfig) return;
+    calculateEstimate(amount, startToken, endToken, swapConfig);
     setAutoRefreshCountdown(SwapsConfig.autoRefreshPeriodSec);
   };
 
@@ -368,7 +417,7 @@ const Swap = ({
     } else {
       SimpleToast.show(
         translate('wallet.operations.swap.swap_cannot_switch_tokens', {
-          symbol: endToken.value.symbol,
+          symbol: endToken?.value?.symbol || '',
         }),
         {
           duration: SimpleToast.durations.LONG,
@@ -378,19 +427,22 @@ const Swap = ({
   };
 
   const processSwap = async (estimateId: string) => {
+    if (!startToken || !endToken || !startToken.value || !endToken.value) {
+      return;
+    }
     setLoadingSwap(true);
     const handleSubmit = async (options: TransactionOptions) => {
       try {
         const result = await SwapTokenUtils.processSwap(
           estimateId,
-          startToken?.value.symbol,
+          startToken.value.symbol,
           parseFloat(amount),
           activeAccount,
           swapConfig.account,
           options,
         );
         if (result) {
-          await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
+          await SwapTokenUtils.saveLastUsed(startToken.value, endToken.value);
           await SwapTokenUtils.setAsInitiated(estimateId);
           if (!isMultisig)
             showModal(
@@ -454,7 +506,7 @@ const Swap = ({
       );
       return;
     }
-    if (startToken?.value.symbol === endToken?.value.symbol) {
+    if (startToken.value.symbol === endToken.value.symbol) {
       SimpleToast.show(
         translate(
           'wallet.operations.swap.swap_start_end_token_should_be_different',
@@ -472,10 +524,10 @@ const Swap = ({
       return;
     }
 
-    if (parseFloat(amount) > parseFloat(startToken?.value.balance)) {
+    if (parseFloat(amount) > parseFloat(startToken.value.balance)) {
       SimpleToast.show(
         translate('common.overdraw_balance_error', {
-          currency: startToken?.label!,
+          currency: startToken.label!,
         }),
         {
           duration: SimpleToast.durations.LONG,
@@ -491,8 +543,8 @@ const Swap = ({
       estimateId = await SwapTokenUtils.saveEstimate(
         estimate!,
         slippage,
-        startToken?.value.symbol,
-        endToken?.value.symbol,
+        startToken.value.symbol,
+        endToken.value.symbol,
         parseFloat(amount),
         activeAccount.name!,
       );
@@ -532,309 +584,332 @@ const Swap = ({
 
   return (
     <View style={[{width: '100%'}]}>
-      {!underMaintenance && !loading && !serviceUnavailable && (
-        <OperationThemed
-          additionalSVGOpacity={1}
-          additionalBgSvgImageStyle={{
-            top: -70,
-            opacity: 1,
-          }}
-          childrenTop={
-            <View style={{}}>
-              <Caption text="wallet.operations.swap.disclaimer" hideSeparator />
-              <View style={[styles.flexRowbetween, styles.marginHorizontal]}>
-                <Text style={[styles.textBase, styles.opaque]}>
-                  {translate('wallet.operations.swap.swap_fee_title')}{' '}
-                  {swapConfig.fee.amount} %
-                </Text>
-                <Icon
-                  theme={theme}
-                  name={Icons.HISTORY}
-                  additionalContainerStyle={[styles.squareButton]}
-                  onPress={() => navigate('SwapHistory')}
-                  color={PRIMARY_RED_COLOR}
+      {!underMaintenance &&
+        !loading &&
+        !serviceUnavailable &&
+        !hiveEngineRpcError && (
+          <OperationThemed
+            additionalSVGOpacity={1}
+            additionalBgSvgImageStyle={{
+              top: -70,
+              opacity: 1,
+            }}
+            childrenTop={
+              <View style={{}}>
+                <Caption
+                  text="wallet.operations.swap.disclaimer"
+                  hideSeparator
                 />
+                <View style={[styles.flexRowbetween, styles.marginHorizontal]}>
+                  <Text style={[styles.textBase, styles.opaque]}>
+                    {translate('wallet.operations.swap.swap_fee_title')}{' '}
+                    {swapConfig.fee.amount} %
+                  </Text>
+                  <Icon
+                    theme={theme}
+                    name={Icons.HISTORY}
+                    additionalContainerStyle={[styles.squareButton]}
+                    onPress={() => navigate('SwapHistory')}
+                    color={PRIMARY_RED_COLOR}
+                  />
+                </View>
+                <Separator />
               </View>
-              <Separator />
-            </View>
-          }
-          childrenMiddle={
-            <View style={[styles.marginHorizontal]}>
-              <Separator height={35} />
-              <View
-                style={[
-                  styles.flexRowbetween,
-                  {
-                    width: '100%',
-                  },
-                ]}>
-                <DropdownModal
-                  enableSearch
-                  dropdownTitle="common.token"
-                  dropdownIconScaledSize={ICONMINDIMENSIONS}
-                  additionalDropdowContainerStyle={{paddingHorizontal: 8}}
-                  showSelectedIcon
-                  selected={
-                    {
-                      value: startToken.value.symbol,
-                      label: startToken.label,
-                      icon: (
-                        <CurrencyIcon
-                          symbol={startToken.value.symbol}
-                          addBackground
-                          currencyName={startToken.value.symbol}
-                          colors={colors}
-                          tokenInfo={tokens.find(
-                            (token) => token.symbol === startToken.value.symbol,
-                          )}
-                        />
-                      ),
-                    } as DropdownModalItem
-                  }
-                  onSelected={(item) => {
-                    const selectedItem = startTokenListOptions.find(
-                      (token) => token.value.symbol === item.value,
-                    );
-                    setStartToken(selectedItem);
-                  }}
-                  list={startTokenListOptions.map((startToken) => {
-                    return {
-                      value: startToken.value.symbol,
-                      label: startToken.label,
-                      icon: (
-                        <CurrencyIcon
-                          symbol={startToken.value.symbol}
-                          addBackground
-                          currencyName={startToken.value.symbol}
-                          colors={colors}
-                          tokenInfo={tokens.find(
-                            (token) => token.symbol === startToken.value.symbol,
-                          )}
-                        />
-                      ),
-                    } as DropdownModalItem;
-                  })}
-                  additionalMainContainerDropdown={{
-                    width: '44%',
-                    top: 0,
-                  }}
-                  bottomLabelInfo={`${translate(
-                    'common.available',
-                  )}: ${withCommas(startToken.value.balance)}`}
-                  drawLineBellowSelectedItem
-                  additionalLineStyle={styles.bottomLineDropdownItem}
-                />
-                <OperationInput
-                  keyboardType="decimal-pad"
-                  labelInput={capitalize(translate('common.amount'))}
-                  placeholder={'0'}
-                  value={amount}
-                  onChangeText={setAmount}
-                  additionalOuterContainerStyle={{
-                    width: '54%',
-                  }}
-                  rightIcon={
-                    <View style={styles.flexRowCenter}>
-                      <Separator
-                        drawLine
-                        additionalLineStyle={getHorizontalLineStyle(
-                          theme,
-                          1,
-                          35,
-                          16,
-                        )}
-                      />
-                      <TouchableOpacity
-                        activeOpacity={1}
-                        onPress={() => setAmount(startToken.value.balance)}>
-                        <Text style={[styles.textBase, styles.redText]}>
-                          {translate('common.max').toUpperCase()}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  }
-                />
-              </View>
-              <Separator />
-              <Icon
-                theme={theme}
-                name={Icons.EXCHANGE_ARROW}
-                onPress={swapStartAndEnd}
-                additionalContainerStyle={styles.autoWidthCentered}
-                color={PRIMARY_RED_COLOR}
-              />
-              <Separator />
-              <View style={styles.flexRowbetween}>
-                <DropdownModal
-                  enableSearch
-                  dropdownTitle="common.token"
-                  dropdownIconScaledSize={ICONMINDIMENSIONS}
-                  additionalDropdowContainerStyle={{paddingHorizontal: 8}}
-                  selected={
-                    {
-                      value: endToken.value.symbol,
-                      label: endToken.label,
-                      icon: (
-                        <CurrencyIcon
-                          symbol={endToken.value.symbol}
-                          addBackground
-                          currencyName={endToken.value.symbol}
-                          colors={colors}
-                          tokenInfo={tokens.find(
-                            (token) => token.symbol === endToken.value.symbol,
-                          )}
-                        />
-                      ),
-                    } as DropdownModalItem
-                  }
-                  onSelected={(item) =>
-                    setEndToken(
-                      endTokenListOptions.find(
-                        (token) => token.value.symbol === item.value,
-                      ),
-                    )
-                  }
-                  list={endTokenListOptions.map((endToken) => {
-                    return {
-                      value: endToken.value.symbol,
-                      label: endToken.label,
-                      icon: (
-                        <CurrencyIcon
-                          symbol={endToken.value.symbol}
-                          addBackground
-                          currencyName={endToken.value.symbol}
-                          colors={colors}
-                          tokenInfo={tokens.find(
-                            (token) => token.symbol === endToken.value.symbol,
-                          )}
-                        />
-                      ),
-                    } as DropdownModalItem;
-                  })}
-                  additionalMainContainerDropdown={{
-                    width: '44%',
-                  }}
-                  drawLineBellowSelectedItem
-                  showSelectedIcon
-                  additionalLineStyle={styles.bottomLineDropdownItem}
-                />
-                <OperationInput
-                  disabled
-                  keyboardType="decimal-pad"
-                  labelInput={capitalize(translate('common.amount'))}
-                  placeholder={'0'}
-                  value={estimateValue ? withCommas(estimateValue) : ''}
-                  onChangeText={(text) => {}}
-                  additionalOuterContainerStyle={{
-                    width: '54%',
-                  }}
-                  rightIcon={
-                    <View style={styles.flexRowCenter}>
-                      <Separator
-                        drawLine
-                        additionalLineStyle={getHorizontalLineStyle(
-                          theme,
-                          1,
-                          35,
-                          16,
-                        )}
-                      />
-                      <RotationIconAnimated
-                        theme={theme}
-                        animate={loadingEstimate}
-                        onPressIcon={onHandleRequestEstimate}
-                        color={PRIMARY_RED_COLOR}
-                      />
-                    </View>
-                  }
-                  labelExtraInfo={getTokenUSDPrice(
-                    estimateValue,
-                    endToken.value.symbol,
-                  )}
-                />
-              </View>
-              <Separator height={40} />
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => setIsAdvanceSettingOpen(!isAdvanceSettingOpen)}
-                style={[styles.flexRowbetween, {marginBottom: 12}]}>
-                <Text
+            }
+            childrenMiddle={
+              <View style={[styles.marginHorizontal]}>
+                <Separator height={35} />
+                <View
                   style={[
-                    styles.textBase,
-                    {...body_primary_body_1},
-                    {fontSize: getFontSizeSmallDevices(width, 16)},
+                    styles.flexRowbetween,
+                    {
+                      width: '100%',
+                    },
                   ]}>
-                  {translate('wallet.operations.swap.advanced_settings_title')}
-                </Text>
+                  <DropdownModal
+                    enableSearch
+                    dropdownTitle="common.token"
+                    dropdownIconScaledSize={ICONMINDIMENSIONS}
+                    additionalDropdowContainerStyle={{paddingHorizontal: 8}}
+                    showSelectedIcon
+                    selected={
+                      {
+                        value: startToken.value.symbol,
+                        label: startToken.label,
+                        icon: (
+                          <CurrencyIcon
+                            symbol={startToken.value.symbol}
+                            addBackground
+                            currencyName={startToken.value.symbol}
+                            colors={colors}
+                            tokenInfo={tokens.find(
+                              (token) =>
+                                token.symbol === startToken.value.symbol,
+                            )}
+                          />
+                        ),
+                      } as DropdownModalItem
+                    }
+                    onSelected={(item) => {
+                      const selectedItem = startTokenListOptions.find(
+                        (token) => token.value.symbol === item.value,
+                      );
+                      setStartToken(selectedItem);
+                    }}
+                    list={startTokenListOptions.map((startToken) => {
+                      return {
+                        value: startToken.value.symbol,
+                        label: startToken.label,
+                        icon: (
+                          <CurrencyIcon
+                            symbol={startToken.value.symbol}
+                            addBackground
+                            currencyName={startToken.value.symbol}
+                            colors={colors}
+                            tokenInfo={tokens.find(
+                              (token) =>
+                                token.symbol === startToken.value.symbol,
+                            )}
+                          />
+                        ),
+                      } as DropdownModalItem;
+                    })}
+                    additionalMainContainerDropdown={{
+                      width: '44%',
+                      top: 0,
+                    }}
+                    bottomLabelInfo={`${translate(
+                      'common.available',
+                    )}: ${withCommas(startToken.value.balance ?? '0')}`}
+                    drawLineBellowSelectedItem
+                    additionalLineStyle={styles.bottomLineDropdownItem}
+                  />
+                  <OperationInput
+                    keyboardType="decimal-pad"
+                    labelInput={capitalize(translate('common.amount'))}
+                    placeholder={'0'}
+                    value={amount}
+                    onChangeText={setAmount}
+                    additionalOuterContainerStyle={{
+                      width: '54%',
+                    }}
+                    rightIcon={
+                      <View style={styles.flexRowCenter}>
+                        <Separator
+                          drawLine
+                          additionalLineStyle={getHorizontalLineStyle(
+                            theme,
+                            1,
+                            35,
+                            16,
+                          )}
+                        />
+                        <TouchableOpacity
+                          activeOpacity={1}
+                          onPress={() => setAmount(startToken.value.balance)}>
+                          <Text style={[styles.textBase, styles.redText]}>
+                            {translate('common.max').toUpperCase()}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    }
+                  />
+                </View>
+                <Separator />
                 <Icon
                   theme={theme}
-                  name={Icons.EXPAND}
-                  {...styles.dropdownIcon}
-                  additionalContainerStyle={
-                    isAdvanceSettingOpen
-                      ? getRotateStyle('0')
-                      : getRotateStyle('180')
-                  }
+                  name={Icons.EXCHANGE_ARROW}
+                  onPress={swapStartAndEnd}
+                  additionalContainerStyle={styles.autoWidthCentered}
                   color={PRIMARY_RED_COLOR}
                 />
-              </TouchableOpacity>
-              {isAdvanceSettingOpen && (
-                <OperationInput
-                  keyboardType="decimal-pad"
-                  infoIconAction={() =>
-                    navigate('ModalScreen', {
-                      name: ModalComponent.SWAP_INFO,
-                      fixedHeight: 0.35,
-                    })
-                  }
-                  labelInput={translate('wallet.operations.swap.slippage')}
-                  placeholder={translate('wallet.operations.swap.slippage')}
-                  value={slippage.toString()}
-                  onChangeText={(text) =>
-                    setSlippage(text.trim().length === 0 ? 0 : parseFloat(text))
-                  }
-                />
-              )}
-              <Separator height={16} />
-            </View>
-          }
-          buttonTitle={'wallet.operations.swap.title'}
-          onNext={gotoConfirmationStack}
-        />
-      )}
-      {underMaintenance && !loading && !serviceUnavailable && (
+                <Separator />
+                <View style={styles.flexRowbetween}>
+                  <DropdownModal
+                    enableSearch
+                    dropdownTitle="common.token"
+                    dropdownIconScaledSize={ICONMINDIMENSIONS}
+                    additionalDropdowContainerStyle={{paddingHorizontal: 8}}
+                    selected={
+                      {
+                        value: endToken.value.symbol,
+                        label: endToken.label,
+                        icon: (
+                          <CurrencyIcon
+                            symbol={endToken.value.symbol}
+                            addBackground
+                            currencyName={endToken.value.symbol}
+                            colors={colors}
+                            tokenInfo={tokens.find(
+                              (token) => token.symbol === endToken.value.symbol,
+                            )}
+                          />
+                        ),
+                      } as DropdownModalItem
+                    }
+                    onSelected={(item) =>
+                      setEndToken(
+                        endTokenListOptions.find(
+                          (token) => token.value.symbol === item.value,
+                        ),
+                      )
+                    }
+                    list={endTokenListOptions.map((endToken) => {
+                      return {
+                        value: endToken.value.symbol,
+                        label: endToken.label,
+                        icon: (
+                          <CurrencyIcon
+                            symbol={endToken.value.symbol}
+                            addBackground
+                            currencyName={endToken.value.symbol}
+                            colors={colors}
+                            tokenInfo={tokens.find(
+                              (token) => token.symbol === endToken.value.symbol,
+                            )}
+                          />
+                        ),
+                      } as DropdownModalItem;
+                    })}
+                    additionalMainContainerDropdown={{
+                      width: '44%',
+                    }}
+                    drawLineBellowSelectedItem
+                    showSelectedIcon
+                    additionalLineStyle={styles.bottomLineDropdownItem}
+                  />
+                  <OperationInput
+                    disabled
+                    keyboardType="decimal-pad"
+                    labelInput={capitalize(translate('common.amount'))}
+                    placeholder={'0'}
+                    value={estimateValue ? withCommas(estimateValue) : ''}
+                    onChangeText={(text) => {}}
+                    additionalOuterContainerStyle={{
+                      width: '54%',
+                    }}
+                    rightIcon={
+                      <View style={styles.flexRowCenter}>
+                        <Separator
+                          drawLine
+                          additionalLineStyle={getHorizontalLineStyle(
+                            theme,
+                            1,
+                            35,
+                            16,
+                          )}
+                        />
+                        <RotationIconAnimated
+                          theme={theme}
+                          animate={loadingEstimate}
+                          onPressIcon={onHandleRequestEstimate}
+                          color={PRIMARY_RED_COLOR}
+                        />
+                      </View>
+                    }
+                    labelExtraInfo={getTokenUSDPrice(
+                      estimateValue,
+                      endToken.value.symbol,
+                    )}
+                  />
+                </View>
+                <Separator height={40} />
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => setIsAdvanceSettingOpen(!isAdvanceSettingOpen)}
+                  style={[styles.flexRowbetween, {marginBottom: 12}]}>
+                  <Text
+                    style={[
+                      styles.textBase,
+                      {...body_primary_body_1},
+                      {fontSize: getFontSizeSmallDevices(width, 16)},
+                    ]}>
+                    {translate(
+                      'wallet.operations.swap.advanced_settings_title',
+                    )}
+                  </Text>
+                  <Icon
+                    theme={theme}
+                    name={Icons.EXPAND}
+                    {...styles.dropdownIcon}
+                    additionalContainerStyle={
+                      isAdvanceSettingOpen
+                        ? getRotateStyle('0')
+                        : getRotateStyle('180')
+                    }
+                    color={PRIMARY_RED_COLOR}
+                  />
+                </TouchableOpacity>
+                {isAdvanceSettingOpen && (
+                  <OperationInput
+                    keyboardType="decimal-pad"
+                    infoIconAction={() =>
+                      navigate('ModalScreen', {
+                        name: ModalComponent.SWAP_INFO,
+                        fixedHeight: 0.35,
+                      })
+                    }
+                    labelInput={translate('wallet.operations.swap.slippage')}
+                    placeholder={translate('wallet.operations.swap.slippage')}
+                    value={slippage.toString()}
+                    onChangeText={(text) =>
+                      setSlippage(
+                        text.trim().length === 0 ? 0 : parseFloat(text),
+                      )
+                    }
+                  />
+                )}
+                <Separator height={16} />
+              </View>
+            }
+            buttonTitle={'wallet.operations.swap.title'}
+            onNext={gotoConfirmationStack}
+          />
+        )}
+      {hiveEngineRpcError && (
         <View style={styles.flexCentered}>
-          <ErrorSvg {...styles.icon} />
-          <Text
-            style={[
-              styles.textBase,
-              styles.biggerText,
-              styles.marginHorizontal,
-              styles.textCentered,
-            ]}>
-            {translate('wallet.operations.swap.swap_under_maintenance')}
-          </Text>
+          <RpcErrorBanner errorMessageKey={hiveEngineRpcError} goBack />
         </View>
       )}
-      {loading && (
+      {underMaintenance &&
+        !loading &&
+        !serviceUnavailable &&
+        !hiveEngineRpcError && (
+          <View style={styles.flexCentered}>
+            <ErrorSvg {...styles.icon} />
+            <Text
+              style={[
+                styles.textBase,
+                styles.biggerText,
+                styles.marginHorizontal,
+                styles.textCentered,
+              ]}>
+              {translate('wallet.operations.swap.swap_under_maintenance')}
+            </Text>
+          </View>
+        )}
+      {loading && !hiveEngineRpcError && (
         <View style={styles.flexCentered}>
           <Loader animating size={'large'} />
         </View>
       )}
-      {!underMaintenance && !loading && serviceUnavailable && (
-        <View style={styles.flexCentered}>
-          <ErrorSvg {...styles.icon} />
-          <Text
-            style={[
-              styles.textBase,
-              styles.biggerText,
-              styles.marginHorizontal,
-              styles.textCentered,
-            ]}>
-            {translate('wallet.operations.swap.service_unavailable_message')}
-          </Text>
-        </View>
-      )}
+      {!underMaintenance &&
+        !loading &&
+        serviceUnavailable &&
+        !hiveEngineRpcError && (
+          <View style={styles.flexCentered}>
+            <ErrorSvg {...styles.icon} />
+            <Text
+              style={[
+                styles.textBase,
+                styles.biggerText,
+                styles.marginHorizontal,
+                styles.textCentered,
+              ]}>
+              {translate('wallet.operations.swap.service_unavailable_message')}
+            </Text>
+          </View>
+        )}
     </View>
   );
 };
@@ -951,6 +1026,7 @@ const connector = connect(
       price: state.currencyPrices,
       tokens: state.tokens,
       colors: state.colors,
+      hiveEngineRpcError: state.settings.hiveEngineRpcError,
     };
   },
   {loadTokensMarket, showModal},

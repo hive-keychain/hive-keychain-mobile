@@ -4,18 +4,20 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation.utils';
+import {goBackAndNavigate, navigate} from 'utils/navigation.utils';
 
 interface RpcErrorBannerProps {
   errorMessageKey: string;
   style?: any;
   inSettings?: boolean;
+  goBack?: boolean;
 }
 
 const RpcErrorBanner = ({
   errorMessageKey,
   style,
   inSettings = false,
+  goBack = false,
 }: RpcErrorBannerProps) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
@@ -24,7 +26,10 @@ const RpcErrorBanner = ({
     if (inSettings) {
       navigate('SettingsRpcNodesScreen');
     } else {
-      navigate('SettingsScreen', {screen: 'SettingsRpcNodesScreen'});
+      if (!goBack)
+        navigate('SettingsScreen', {screen: 'SettingsRpcNodesScreen'});
+      else
+        goBackAndNavigate('SettingsScreen', {screen: 'SettingsRpcNodesScreen'});
     }
   }, []);
 
