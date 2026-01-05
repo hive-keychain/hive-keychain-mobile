@@ -10,7 +10,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {Dimensions as Dim} from 'src/interfaces/common.interface';
 import {getColors} from 'src/styles/colors';
@@ -121,7 +120,6 @@ class StyleSheetFactory {
       },
       modalWrapper: {
         position: 'absolute',
-        bottom: initialWindowMetrics?.insets.bottom,
         left: 0,
         right: 0,
         justifyContent: 'center',
