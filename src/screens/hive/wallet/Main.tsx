@@ -33,6 +33,7 @@ import WidgetConfiguration from 'components/popups/widget-configuration/WidgetCo
 import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
+import RpcErrorBanner from 'components/ui/RpcErrorBanner';
 import Separator from 'components/ui/Separator';
 import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
@@ -568,11 +569,9 @@ const Main = ({
                           )}
                         </View>
                         {hiveEngineRpcError && (
-                          <View style={styles.errorContainer}>
-                            <Text style={styles.no_tokens}>
-                              {translate(hiveEngineRpcError)}
-                            </Text>
-                          </View>
+                          <RpcErrorBanner
+                            errorMessageKey={hiveEngineRpcError}
+                          />
                         )}
                       </View>
                     </View>
@@ -726,10 +725,6 @@ const getDimensionedStyles = (
         theme === Theme.LIGHT ? NEUTRAL_WHITE_COLOR : DARKBLUELIGHTER,
       borderRadius: 11,
       paddingHorizontal: 6,
-    },
-    errorContainer: {
-      paddingHorizontal: 12,
-      paddingVertical: 12,
     },
   });
 

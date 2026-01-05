@@ -93,6 +93,7 @@
     "delegate": "Delegate",
     "got_it": "Got it!",
     "deleg": "Deleg.",
+    "tap_to_change_hive_engine_rpc": "Tap here to change your Hive Engine RPC node  in the settings.",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
     "next": "Next",
@@ -859,7 +860,7 @@
     "rpc_node_removed_success": "RPC removed succesfully",
     "error_missing_fields": "Missing fields!",
     "missing_memo_key": "The account @{{account}} is missing the memo key to encrypt the message!",
-    "tokens_timeout": "This node is not replying. Please go to token settings and change the Hive Engine RPC node",
+    "tokens_timeout": "This node is not responding.",
     "account_not_in_hive": "The account @{{account}} does not exist, please check the username.",
     "account_removed": "The account @{{account}} has been removed from Keychain.",
     "export_qr_accounts": {

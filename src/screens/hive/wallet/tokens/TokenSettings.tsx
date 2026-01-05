@@ -3,6 +3,7 @@ import {loadTokens} from 'actions/index';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
+import RpcErrorBanner from 'components/ui/RpcErrorBanner';
 import Separator from 'components/ui/Separator';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
@@ -31,6 +32,7 @@ const TokenSettings = ({
   tokens,
   userTokens,
   username,
+  hiveEngineRpcError,
 }: PropsFromRedux) => {
   const [searchValue, setSearchValue] = useState('');
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
@@ -75,8 +77,11 @@ const TokenSettings = ({
           ),
         ),
       );
+    } else if (hiveEngineRpcError) {
+      // Stop loading if there's an RPC error
+      setLoadingTokens(false);
     }
-  }, [tokens, userTokens.list]);
+  }, [tokens, userTokens.list, hiveEngineRpcError]);
 
   const toggleHiddenToken = async (symbol: string) => {
     let newHiddenTokens = hiddenTokens;
@@ -125,43 +130,52 @@ const TokenSettings = ({
   return (
     <View style={styles.container}>
       <FocusAwareStatusBar />
-      <Separator height={10} />
-      <Text style={styles.padding}>
-        <Text style={[getCaptionStyle(width, theme)]}>
-          {translate('wallet.operations.token_settings.tokens_settings_text')}{' '}
-        </Text>
-        <Text style={[getCaptionStyle(width, theme), styles.link]}>
-          {hiveEngineWebsiteURL}{' '}
-        </Text>
-      </Text>
-      <Separator height={10} />
-      <CustomSearchBar
-        theme={theme}
-        value={searchValue}
-        onChangeText={(text) => setSearchValue(text)}
-        additionalContainerStyle={styles.searchBar}
-      />
 
-      <Separator height={8} />
-      {loadingTokens ? (
+      {hiveEngineRpcError ? (
+        <View style={styles.flexCentered}>
+          <RpcErrorBanner errorMessageKey={hiveEngineRpcError} />
+        </View>
+      ) : loadingTokens ? (
         <View style={styles.flexCentered}>
           <Loader animating size={'small'} />
         </View>
       ) : (
-        <FlatList
-          data={filteredTokens}
-          renderItem={renderTokenSettingsItem}
-          ListEmptyComponent={
-            <View style={[styles.containerCentered, styles.marginTop]}>
-              <Text style={[styles.textBase]}>
-                {translate('wallet.operations.token_settings.empty_results')}
-              </Text>
-            </View>
-          }
-          ListFooterComponent={() => (
-            <Separator height={initialWindowMetrics.insets.bottom} />
-          )}
-        />
+        <>
+          <Separator height={10} />
+          <Text style={styles.padding}>
+            <Text style={[getCaptionStyle(width, theme)]}>
+              {translate(
+                'wallet.operations.token_settings.tokens_settings_text',
+              )}{' '}
+            </Text>
+            <Text style={[getCaptionStyle(width, theme), styles.link]}>
+              {hiveEngineWebsiteURL}{' '}
+            </Text>
+          </Text>
+          <Separator height={10} />
+          <CustomSearchBar
+            theme={theme}
+            value={searchValue}
+            onChangeText={(text) => setSearchValue(text)}
+            additionalContainerStyle={styles.searchBar}
+          />
+
+          <Separator height={8} />
+          <FlatList
+            data={filteredTokens}
+            renderItem={renderTokenSettingsItem}
+            ListEmptyComponent={
+              <View style={[styles.containerCentered, styles.marginTop]}>
+                <Text style={[styles.textBase]}>
+                  {translate('wallet.operations.token_settings.empty_results')}
+                </Text>
+              </View>
+            }
+            ListFooterComponent={() => (
+              <Separator height={initialWindowMetrics.insets.bottom} />
+            )}
+          />
+        </>
       )}
     </View>
   );
@@ -223,6 +237,7 @@ const mapStateToProps = (state: RootState) => {
     tokens: state.tokens,
     userTokens: state.userTokens,
     username: state.activeAccount?.name,
+    hiveEngineRpcError: state.settings.hiveEngineRpcError,
   };
 };
 const connector = connect(mapStateToProps, {
