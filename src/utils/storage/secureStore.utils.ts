@@ -7,7 +7,7 @@ const saveOnSecureStore = async (
   title: string,
 ) => {
   await SecureStore.setItemAsync(radix, string, {
-    keychainAccessible: SecureStore.WHEN_UNLOCKED,
+    keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     keychainService: radix,
     requireAuthentication: true,
     authenticationPrompt: translate(title),
@@ -19,7 +19,7 @@ const getFromSecureStore = async (radix: string) => {
     keychainService: radix,
     authenticationPrompt: translate('encryption.retrieve'),
     requireAuthentication: true,
-    keychainAccessible: SecureStore.WHEN_UNLOCKED,
+    keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
   });
 };
 

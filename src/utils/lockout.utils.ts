@@ -1,7 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import Toast from 'react-native-root-toast';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {translate} from 'utils/localize';
+
+interface LockoutData {
+  failCount: number;
+  lockUntil: number;
+}
 
 const formatRemaining = (ms: number) => {
   const totalSeconds = Math.ceil(ms / 1000);
@@ -45,62 +51,148 @@ const showActiveLockoutToast = (remainingMs: number) => {
   });
 };
 
-export const LockoutUtils = {
-  checkActiveLockout: async (): Promise<boolean> => {
-    const lockUntilStr = await AsyncStorage.getItem(
-      KeychainStorageKeyEnum.UNLOCK_LOCK_UNTIL,
+const getLockoutData = async (): Promise<LockoutData> => {
+  try {
+    const dataStr = await SecureStore.getItemAsync(
+      KeychainStorageKeyEnum.LOCKOUT_DATA,
+      {
+        keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+        keychainService: KeychainStorageKeyEnum.LOCKOUT_DATA,
+      },
     );
-    const now = Date.now();
-    const lockUntil = parseInt(lockUntilStr || '0', 10) || 0;
-    if (lockUntil && now < lockUntil) {
-      showActiveLockoutToast(lockUntil - now);
-      return true;
+    if (dataStr) {
+      return JSON.parse(dataStr);
     }
-    return false;
-  },
+  } catch (error) {
+    // If secure store read fails, return default values
+    console.warn('Failed to read lockout data from secure store:', error);
+  }
+  return {failCount: 0, lockUntil: 0};
+};
 
-  reset: async () => {
+const saveLockoutData = async (data: LockoutData): Promise<void> => {
+  try {
+    await SecureStore.setItemAsync(
+      KeychainStorageKeyEnum.LOCKOUT_DATA,
+      JSON.stringify(data),
+      {
+        keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+        keychainService: KeychainStorageKeyEnum.LOCKOUT_DATA,
+      },
+    );
+  } catch (error) {
+    console.error('Failed to save lockout data to secure store:', error);
+    throw error;
+  }
+};
+
+const deleteLockoutData = async (): Promise<void> => {
+  try {
+    await SecureStore.deleteItemAsync(KeychainStorageKeyEnum.LOCKOUT_DATA, {
+      keychainService: KeychainStorageKeyEnum.LOCKOUT_DATA,
+    });
+  } catch (error) {
+    console.warn('Failed to delete lockout data from secure store:', error);
+  }
+};
+
+const migrateFromAsyncStorage = async (): Promise<void> => {
+  // Check if migration has already been completed
+  const migrationComplete = await AsyncStorage.getItem(
+    KeychainStorageKeyEnum.LOCKOUT_MIGRATION_COMPLETE,
+  );
+  if (migrationComplete === 'true') {
+    return;
+  }
+
+  try {
+    // Read existing data from AsyncStorage
+    const [failCountStr, lockUntilStr] = await AsyncStorage.multiGet([
+      KeychainStorageKeyEnum.UNLOCK_FAIL_COUNT,
+      KeychainStorageKeyEnum.UNLOCK_LOCK_UNTIL,
+    ]);
+
+    const failCount = parseInt(failCountStr[1] || '0', 10) || 0;
+    const lockUntil = parseInt(lockUntilStr[1] || '0', 10) || 0;
+
+    // Only migrate if there's actual data to migrate
+    if (failCount > 0 || lockUntil > 0) {
+      const lockoutData: LockoutData = {
+        failCount,
+        lockUntil,
+      };
+      await saveLockoutData(lockoutData);
+    }
+
+    // Delete old data from AsyncStorage
     await AsyncStorage.multiRemove([
       KeychainStorageKeyEnum.UNLOCK_FAIL_COUNT,
       KeychainStorageKeyEnum.UNLOCK_LOCK_UNTIL,
     ]);
-  },
 
-  recordFailure: async () => {
-    const failCountStr =
-      (await AsyncStorage.getItem(KeychainStorageKeyEnum.UNLOCK_FAIL_COUNT)) ||
-      '0';
-    let failCount = parseInt(failCountStr || '0', 10) || 0;
-    failCount += 1;
+    // Mark migration as complete
+    await AsyncStorage.setItem(
+      KeychainStorageKeyEnum.LOCKOUT_MIGRATION_COMPLETE,
+      'true',
+    );
+  } catch (error) {
+    console.error('Failed to migrate lockout data from AsyncStorage:', error);
+    // Don't throw - allow the app to continue even if migration fails
+  }
+};
+const checkActiveLockout = async (): Promise<boolean> => {
+  // Ensure migration is complete before checking
+  await migrateFromAsyncStorage();
 
-    showWarningIfNeeded(failCount);
+  const lockoutData = await getLockoutData();
+  const now = Date.now();
+  if (lockoutData.lockUntil && now < lockoutData.lockUntil) {
+    showActiveLockoutToast(lockoutData.lockUntil - now);
+    return true;
+  }
+  return false;
+};
 
-    const lockoutMs = getLockoutMs(failCount);
-    const multiSetPairs: [string, string][] = [
-      [KeychainStorageKeyEnum.UNLOCK_FAIL_COUNT, failCount.toString()],
-    ];
-    if (lockoutMs > 0) {
-      const until = Date.now() + lockoutMs;
-      multiSetPairs.push([
-        KeychainStorageKeyEnum.UNLOCK_LOCK_UNTIL,
-        until.toString(),
-      ]);
-      const human =
-        lockoutMs >= 60 * 60 * 1000
-          ? translate('lockout.duration.hour')
-          : lockoutMs >= 15 * 60 * 1000
-          ? translate('lockout.duration.fifteen_minutes')
-          : lockoutMs >= 5 * 60 * 1000
-          ? translate('lockout.duration.five_minutes')
-          : lockoutMs >= 60 * 1000
-          ? translate('lockout.duration.minute')
-          : translate('lockout.duration.thirty_seconds');
-      Toast.show(translate('lockout.locked_for', {time: human}), {
-        duration: Toast.durations.LONG,
-      });
-    }
-    await AsyncStorage.multiSet(multiSetPairs);
-  },
+const reset = async () => {
+  await migrateFromAsyncStorage();
+  await deleteLockoutData();
+};
+
+const recordFailure = async () => {
+  await migrateFromAsyncStorage();
+
+  const lockoutData = await getLockoutData();
+  lockoutData.failCount += 1;
+
+  showWarningIfNeeded(lockoutData.failCount);
+
+  const lockoutMs = getLockoutMs(lockoutData.failCount);
+  if (lockoutMs > 0) {
+    lockoutData.lockUntil = Date.now() + lockoutMs;
+    const human =
+      lockoutMs >= 60 * 60 * 1000
+        ? translate('lockout.duration.hour')
+        : lockoutMs >= 15 * 60 * 1000
+        ? translate('lockout.duration.fifteen_minutes')
+        : lockoutMs >= 5 * 60 * 1000
+        ? translate('lockout.duration.five_minutes')
+        : lockoutMs >= 60 * 1000
+        ? translate('lockout.duration.minute')
+        : translate('lockout.duration.thirty_seconds');
+    Toast.show(translate('lockout.locked_for', {time: human}), {
+      duration: Toast.durations.LONG,
+    });
+  } else {
+    lockoutData.lockUntil = 0;
+  }
+
+  await saveLockoutData(lockoutData);
+};
+
+const LockoutUtils = {
+  checkActiveLockout,
+  reset,
+  recordFailure,
 };
 
 export default LockoutUtils;
