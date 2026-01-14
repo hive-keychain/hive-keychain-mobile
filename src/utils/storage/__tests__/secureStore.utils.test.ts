@@ -45,11 +45,32 @@ describe('SecureStoreUtils', () => {
   });
 
   describe('clearSecureStore', () => {
-    it('should clear all chunks from secure store', async () => {
+    it('should clear known keys and chunked entries', async () => {
       (SecureStore.getItemAsync as jest.Mock).mockResolvedValueOnce('2');
       (SecureStore.deleteItemAsync as jest.Mock).mockResolvedValue(true);
       await SecureStoreUtils.clearSecureStore('test');
-      expect(SecureStore.deleteItemAsync).toHaveBeenCalledTimes(3); // 2 chunks + length
+
+      expect(SecureStore.getItemAsync).toHaveBeenCalledWith('test_length', {
+        keychainService: 'test',
+      });
+
+      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('test_0', {
+        keychainService: 'test_0',
+      });
+      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('test_1', {
+        keychainService: 'test_1',
+      });
+      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('test_length', {
+        keychainService: 'test_length',
+      });
+      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('test', {
+        keychainService: 'test',
+      });
+      // Also clears known app keys (e.g., master key, pin hash)
+      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith(
+        expect.stringMatching(/SECURE_MK|MASTER_KEY|PIN_SALT|PIN_HASH|LOCKOUT_DATA/),
+        expect.any(Object),
+      );
     });
   });
 });

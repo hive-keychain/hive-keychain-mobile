@@ -18,7 +18,7 @@ export const signUp =
     const masterKey = AuthUtils.generateMasterKey();
 
     await AuthUtils.persistPinSecret(pin);
-    await AuthUtils.persistMasterKey(masterKey);
+    await AuthUtils.persistMasterKey(masterKey, false);
     await AsyncStorage.setItem(
       KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
       '3',

@@ -103,7 +103,7 @@ const migrateAccountsToV3 = async (
     );
   }
 
-  await AuthUtils.persistMasterKey(masterKey);
+  await AuthUtils.persistMasterKey(masterKey, false);
   await AsyncStorage.setItem(
     KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
     `${ACCOUNT_STORAGE_TARGET_VERSION}`,

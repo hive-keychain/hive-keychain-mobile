@@ -81,19 +81,25 @@ const ensurePinSecrets = async (pin: string) => {
 const generateMasterKey = () =>
   CryptoJS.lib.WordArray.random(32).toString(CryptoJS.enc.Hex);
 
-const persistMasterKey = async (masterKey: string) => {
+const persistMasterKey = async (
+  masterKey: string,
+  persistSecureCopy: boolean = false,
+) => {
   await SecureStoreUtils.saveOnSecureStore(
     KeychainStorageKeyEnum.MASTER_KEY,
     masterKey,
     'auth.master_key',
     {requireAuthentication: false},
   );
-  await SecureStoreUtils.saveOnSecureStore(
-    KeychainStorageKeyEnum.SECURE_MK,
-    masterKey,
-    'auth.master_key',
-    {requireAuthentication: true},
-  );
+
+  if (persistSecureCopy) {
+    await SecureStoreUtils.saveOnSecureStore(
+      KeychainStorageKeyEnum.SECURE_MK,
+      masterKey,
+      'auth.master_key',
+      {requireAuthentication: true},
+    );
+  }
 };
 
 const getMasterKey = async (requireAuthentication = false) => {
@@ -111,7 +117,7 @@ const ensureMasterKey = async () => {
     return existing;
   }
   const masterKey = generateMasterKey();
-  await persistMasterKey(masterKey);
+  await persistMasterKey(masterKey, false);
   return masterKey;
 };
 

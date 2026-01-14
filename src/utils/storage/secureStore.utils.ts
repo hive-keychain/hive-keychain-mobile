@@ -1,4 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {translate} from '../localize';
 
 type SecureStoreOptions = {
@@ -59,21 +60,22 @@ const deleteFromSecureStore = async (radix: string) => {
   });
 };
 
-const clearSecureStore = async (radix: string) => {
-  const password = await SecureStore.getItemAsync(`${radix}_length`, {
-    keychainService: radix,
-  });
-  const length = parseInt(password || '0');
-  let i = 0;
-  while (i < length) {
-    await SecureStore.deleteItemAsync(`${radix}_${i}`, {
-      keychainService: radix,
-    });
-    i++;
-  }
-  await SecureStore.deleteItemAsync(`${radix}_length`, {
-    keychainService: radix,
-  });
+const clearSecureStore = async () => {
+  const knownKeys: string[] = [
+    KeychainStorageKeyEnum.SECURE_MK,
+    KeychainStorageKeyEnum.MASTER_KEY,
+    KeychainStorageKeyEnum.PIN_SALT,
+    KeychainStorageKeyEnum.PIN_HASH,
+    KeychainStorageKeyEnum.LOCKOUT_DATA,
+  ];
+
+  const targets: string[] = [...knownKeys];
+
+  await Promise.all(
+    targets.map((key) =>
+      SecureStore.deleteItemAsync(key, {keychainService: key}),
+    ),
+  );
 };
 
 const chunkArray = (myArray: any[], chunk_size: number) => {
