@@ -96,10 +96,10 @@ const App = ({
   };
 
   useEffect(() => {
-    setupLinking();
+    const subscription = setupLinking();
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     return () => {
-      clearLinkingListeners();
+      clearLinkingListeners(subscription);
     };
   }, []);
 

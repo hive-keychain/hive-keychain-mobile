@@ -27,7 +27,9 @@ jest.mock('hive-uri', () => ({
 }));
 jest.mock('react-native', () => ({
   Linking: {
-    addEventListener: jest.fn(),
+    addEventListener: jest.fn(() => ({
+      remove: jest.fn(),
+    })),
     getInitialURL: jest.fn(),
     removeAllListeners: jest.fn(),
   },
@@ -158,9 +160,14 @@ describe('linking.utils', () => {
   });
 
   describe('clearLinkingListeners', () => {
-    it('should remove all URL listeners', () => {
-      clearLinkingListeners();
-      expect(Linking.removeAllListeners).toHaveBeenCalledWith('url');
+    it('should remove subscription when provided', () => {
+      const mockSubscription = {remove: jest.fn()};
+      clearLinkingListeners(mockSubscription);
+      expect(mockSubscription.remove).toHaveBeenCalled();
+    });
+
+    it('should handle undefined subscription gracefully', () => {
+      expect(() => clearLinkingListeners()).not.toThrow();
     });
   });
 });
