@@ -4,31 +4,47 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import {Platform} from 'react-native';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {ModalComponent} from 'src/enums/modal.enum';
+import AuthUtils from 'utils/authentication.utils';
 import {decryptToJson} from 'utils/encrypt.utils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation.utils';
 import {EncryptedStorageUtils} from './encryptedStorage.utils';
 import {clearKeychain, getFromKeychain} from './keychainStorage.utils';
 import SecureStoreUtils from './secureStore.utils';
-const getAccounts = async (mk: string) => {
-  const version = +(await AsyncStorage.getItem(
+
+const ACCOUNT_STORAGE_TARGET_VERSION = 3;
+
+const getAccountStorageVersion = async () => {
+  const version = await AsyncStorage.getItem(
     KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
-  ));
+  );
+  return parseInt(version || '0', 10);
+};
+
+const getAccounts = async (mk: string) => {
+  const version = await getAccountStorageVersion();
+  if (version >= ACCOUNT_STORAGE_TARGET_VERSION) {
+    return await EncryptedStorageUtils.getFromEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      mk,
+    );
+  }
+
   if (version === 2) {
     return await EncryptedStorageUtils.getFromEncryptedStorage(
       KeychainStorageKeyEnum.ACCOUNTS,
       mk,
     );
-  } else {
-    const accountsEncrypted = await getFromKeychain('accounts');
-    await AsyncStorage.multiSet([
-      [KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2'],
-      [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
-    ]);
-    await clearKeychain('accounts');
-    await requireBiometricsLogin(mk, 'encryption.save');
-    return decryptToJson(accountsEncrypted, mk);
   }
+
+  const accountsEncrypted = await getFromKeychain('accounts');
+  await AsyncStorage.multiSet([
+    [KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2'],
+    [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
+  ]);
+  await clearKeychain('accounts');
+  await requireBiometricsLogin(mk, 'encryption.save');
+  return decryptToJson(accountsEncrypted, mk);
 };
 
 const requireBiometricsLogin = async (mk: string, title: string) => {
@@ -58,6 +74,41 @@ const saveOnStore = async (mk: string, title: string) => {
     KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
     'true',
   );
+};
+
+const migrateAccountsToV3 = async (
+  pin: string,
+  masterKey: string,
+  existingAccounts?: any,
+) => {
+  console.log('[storage] migrateAccountsToV3 start');
+  const version = await getAccountStorageVersion();
+  if (version >= ACCOUNT_STORAGE_TARGET_VERSION) return;
+
+  const legacyAccounts =
+    existingAccounts ??
+    (await EncryptedStorageUtils.getFromEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      pin,
+    ));
+
+  if (legacyAccounts?.list) {
+    console.log(
+      `[storage] re-encrypting ${legacyAccounts.list.length} accounts to v${ACCOUNT_STORAGE_TARGET_VERSION}`,
+    );
+    await EncryptedStorageUtils.saveOnEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      legacyAccounts,
+      masterKey,
+    );
+  }
+
+  await AuthUtils.persistMasterKey(masterKey);
+  await AsyncStorage.setItem(
+    KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
+    `${ACCOUNT_STORAGE_TARGET_VERSION}`,
+  );
+  console.log('[storage] migrateAccountsToV3 complete');
 };
 export enum BiometricsLoginStatus {
   ENABLED = 'ENABLED',
@@ -100,7 +151,9 @@ const requireBiometricsLoginIOS = async (
 };
 
 const StorageUtils = {
+  getAccountStorageVersion,
   getAccounts,
+  migrateAccountsToV3,
   requireBiometricsLogin,
   requireBiometricsLoginIOS,
   saveOnStore,

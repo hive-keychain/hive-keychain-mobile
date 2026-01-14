@@ -28,6 +28,17 @@ jest.mock('utils/lockout.utils', () => ({
 
 jest.mock('utils/storage/storage.utils', () => ({
   getAccounts: jest.fn(),
+  getAccountStorageVersion: jest.fn(),
+  migrateAccountsToV3: jest.fn(),
+}));
+
+jest.mock('utils/authentication.utils', () => ({
+  ensureMasterKey: jest.fn(() => 'generated-master-key'),
+  ensurePinSecrets: jest.fn(),
+  generateMasterKey: jest.fn(() => 'generated-master-key'),
+  persistMasterKey: jest.fn(),
+  persistPinSecret: jest.fn(),
+  verifyPin: jest.fn(),
 }));
 
 jest.mock('src/background', () => ({
@@ -49,6 +60,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
 import BackGroundUtils from 'src/background';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import AuthUtils from 'utils/authentication.utils';
 import LockoutUtils from 'utils/lockout.utils';
 import {navigate} from 'utils/navigation.utils';
 import StorageUtils from 'utils/storage/storage.utils';
@@ -68,18 +80,25 @@ describe('actions/index', () => {
   });
 
   describe('signUp', () => {
-    it('should create SIGN_UP action and navigate', () => {
+    it('should create SIGN_UP action and navigate', async () => {
       const password = 'test-password';
-      const result = actions.signUp(password);
+      const mockDispatch = jest.fn();
+      const signUpThunk = actions.signUp(password);
 
-      expect(result).toEqual({
+      await signUpThunk(mockDispatch, jest.fn(), undefined);
+
+      expect(AuthUtils.persistPinSecret).toHaveBeenCalledWith(password);
+      expect(AuthUtils.persistMasterKey).toHaveBeenCalledWith(
+        'generated-master-key',
+      );
+      expect(mockDispatch).toHaveBeenCalledWith({
         type: SIGN_UP,
-        payload: password,
+        payload: 'generated-master-key',
       });
       expect(navigate).toHaveBeenCalledWith('ChooseAccountOptionsScreen');
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
-        '2',
+        '3',
       );
     });
   });
@@ -234,12 +253,8 @@ describe('actions/index', () => {
       (StorageUtils.getAccounts as jest.Mock).mockRejectedValue(error);
       (LockoutUtils.recordFailure as jest.Mock).mockResolvedValue(undefined);
 
-      // The code will throw if errorCallback is not provided, so we need to catch it
       const unlockAction = actions.unlock(mk);
-
-      // The code calls errorCallback() unconditionally, so it will throw
-      // This test documents the current behavior
-      await expect(unlockAction(mockDispatch, mockGetState)).rejects.toThrow();
+      await unlockAction(mockDispatch, mockGetState);
 
       expect(Toast.show).toHaveBeenCalled();
     });
@@ -268,6 +283,34 @@ describe('actions/index', () => {
 
       expect(mockDispatch).not.toHaveBeenCalled();
       expect(BackGroundUtils.init).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('unlockWithPin', () => {
+    const mockDispatch = jest.fn();
+
+    beforeEach(() => {
+      (StorageUtils.getAccountStorageVersion as jest.Mock).mockResolvedValue(3);
+      (AuthUtils.verifyPin as jest.Mock).mockResolvedValue(true);
+      (AuthUtils.ensureMasterKey as jest.Mock).mockResolvedValue(
+        'generated-master-key',
+      );
+    });
+
+    it('should unlock when PIN is valid on version 3', async () => {
+      const unlockSpy = jest.spyOn(actions, 'unlock');
+      const thunk = actions.unlockWithPin('123456');
+      await thunk(mockDispatch);
+      expect(AuthUtils.verifyPin).toHaveBeenCalledWith('123456');
+      expect(mockDispatch).toHaveBeenCalled();
+      expect(unlockSpy).toHaveBeenCalled();
+    });
+
+    it('should record failure on invalid PIN', async () => {
+      (AuthUtils.verifyPin as jest.Mock).mockResolvedValue(false);
+      const thunk = actions.unlockWithPin('badpin');
+      await thunk(mockDispatch);
+      expect(LockoutUtils.recordFailure).toHaveBeenCalled();
     });
   });
 });

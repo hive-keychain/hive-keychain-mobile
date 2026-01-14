@@ -1,26 +1,56 @@
 import * as SecureStore from 'expo-secure-store';
 import {translate} from '../localize';
 
+type SecureStoreOptions = {
+  requireAuthentication?: boolean;
+  authenticationPrompt?: string;
+};
+
+const buildOptions = (
+  radix: string,
+  title?: string,
+  options?: SecureStoreOptions,
+) => {
+  const requireAuthentication =
+    options?.requireAuthentication === undefined
+      ? true
+      : options.requireAuthentication;
+  return {
+    keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+    keychainService: radix,
+    requireAuthentication,
+    ...(requireAuthentication
+      ? {
+          authenticationPrompt: translate(
+            options?.authenticationPrompt ?? title ?? 'encryption.retrieve',
+          ),
+        }
+      : {}),
+  };
+};
+
 const saveOnSecureStore = async (
   radix: string,
   string: string,
   title: string,
+  options?: SecureStoreOptions,
 ) => {
-  await SecureStore.setItemAsync(radix, string, {
-    keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-    keychainService: radix,
-    requireAuthentication: true,
-    authenticationPrompt: translate(title),
-  });
+  await SecureStore.setItemAsync(
+    radix,
+    string,
+    buildOptions(radix, title, options),
+  );
 };
 
-const getFromSecureStore = async (radix: string) => {
-  return await SecureStore.getItemAsync(radix, {
-    keychainService: radix,
-    authenticationPrompt: translate('encryption.retrieve'),
-    requireAuthentication: true,
-    keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-  });
+const getFromSecureStore = async (
+  radix: string,
+  options?: SecureStoreOptions,
+  title: string = 'encryption.retrieve',
+) => {
+  return await SecureStore.getItemAsync(
+    radix,
+    buildOptions(radix, title, options),
+  );
 };
 
 const deleteFromSecureStore = async (radix: string) => {

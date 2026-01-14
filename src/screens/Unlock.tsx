@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {unlock} from 'actions/index';
+import {unlock, unlockWithPin} from 'actions/index';
 import InfoPIN from 'components/info_buttons/ForgotPin';
 import Pincode from 'components/pin_code';
 import Background from 'components/ui/Background';
@@ -13,12 +13,13 @@ import {useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import SecureStoreUtils from 'utils/storage/secureStore.utils';
+import AuthUtils from 'utils/authentication.utils';
 import StorageUtils, {BiometricsLoginStatus} from 'utils/storage/storage.utils';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;
 const Unlock = ({
   unlock,
+  unlockWithPin,
   navigation,
   ignoreNextBiometrics,
 }: UnlockScreenProps) => {
@@ -31,27 +32,30 @@ const Unlock = ({
       KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
     ]).then(async ([accountStorageVersion, isBiometricsLoginEnabled]) => {
       if (
-        accountStorageVersion[1] === '2' &&
+        accountStorageVersion[1] === '3' &&
         isBiometricsLoginEnabled[1] === 'true' &&
         !ignoreNextBiometrics
       ) {
-        const isBiometricsLoginEnabled =
+        const biometricsStatus =
           await StorageUtils.requireBiometricsLoginIOS('encryption.retrieve');
-        if (isBiometricsLoginEnabled !== BiometricsLoginStatus.ENABLED) {
-          console.log('isBiometricsLoginEnabled', isBiometricsLoginEnabled);
+        if (biometricsStatus !== BiometricsLoginStatus.ENABLED) {
+          console.log('isBiometricsLoginEnabled', biometricsStatus);
           AsyncStorage.setItem(
             KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
             'false',
           );
           return;
         }
-        const pin = await SecureStoreUtils.getFromSecureStore(
-          KeychainStorageKeyEnum.SECURE_MK,
-        );
-        unlock(pin);
+        const masterKey = await AuthUtils.getMasterKey(true);
+        if (masterKey) {
+          unlock(masterKey);
+        }
       }
     });
   }, []);
+
+  const handleUnlockWithPin = (pin: string, callback?: (unsafe?: boolean) => void) =>
+    unlockWithPin(pin, callback);
 
   return (
     <Background
@@ -65,7 +69,7 @@ const Unlock = ({
         <Pincode
           navigation={navigation}
           title={translate('unlock.enterPIN')}
-          submit={unlock}
+          submit={handleUnlockWithPin}
           theme={theme}
           infoPin={<InfoPIN />}
           infoPinContainerStyle={styles.infoPinContainer}>
@@ -82,6 +86,7 @@ const connector = connect(
   }),
   {
     unlock,
+    unlockWithPin,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
