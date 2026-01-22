@@ -626,7 +626,13 @@
         "error_no_biometrics": "No biometrics enrolled",
         "biometrics_refused": "Enable Fingerprint or Face ID for Hive Keychain in your iOS settings",
         "enable_biometrics": "Enable biometrics",
-        "enable_biometrics_description": "Enable biometrics login to access your Hive Keychain wallet faster. You can change this setting in Settings > Security."
+        "enable_biometrics_description": "Enable biometrics login to access your Hive Keychain wallet faster. You can change this setting in Settings > Security.",
+        "change_pin_button": "Change PIN",
+        "change_pin_title": "Change PIN",
+        "change_pin_current": "Enter your current PIN",
+        "change_pin_new": "Choose your new PIN",
+        "change_pin_confirm": "Confirm your new PIN",
+        "change_pin_success": "Your PIN has been updated"
       },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
