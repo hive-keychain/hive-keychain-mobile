@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
-import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
-import {translate} from '../localize';
+import { KeychainStorageKeyEnum } from 'src/enums/keychainStorageKey.enum';
+import { translate } from '../localize';
 
 type SecureStoreOptions = {
   requireAuthentication?: boolean;
@@ -76,18 +76,6 @@ const clearSecureStore = async () => {
       SecureStore.deleteItemAsync(key, {keychainService: key}),
     ),
   );
-};
-
-const chunkArray = (myArray: any[], chunk_size: number) => {
-  const arrayLength = myArray.length;
-  let tempArray = [];
-
-  for (let index = 0; index < arrayLength; index += chunk_size) {
-    const myChunk = myArray.slice(index, index + chunk_size);
-    tempArray.push(myChunk);
-  }
-
-  return tempArray;
 };
 
 const SecureStoreUtils = {

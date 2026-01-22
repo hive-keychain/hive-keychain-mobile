@@ -39,6 +39,7 @@ interface Props {
   infoPinContainerStyle?: StyleProp<ViewStyle>;
   signup?: boolean;
   mode?: 'unlock' | 'signup' | 'changePin';
+  startStep?: number;
   title: string;
   confirm?: string;
   newTitle?: string;
@@ -52,6 +53,7 @@ const PinCode = ({
   children,
   signup = false,
   mode,
+  startStep,
   title,
   confirm,
   newTitle,
@@ -93,12 +95,12 @@ const PinCode = ({
   const [code, setCode] = useState<string[]>([]);
   const [confirmCode, setConfirmCode] = useState<string[]>([]);
   const [pendingPin, setPendingPin] = useState<string | null>(null);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(startStep ?? 0);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setStep(0);
+      setStep(startStep ?? 0);
       setCode([]);
       setConfirmCode([]);
       setPendingPin(null);
@@ -106,7 +108,16 @@ const PinCode = ({
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, startStep]);
+
+  useEffect(() => {
+    if (startStep !== undefined) {
+      setStep(startStep);
+      setCode([]);
+      setConfirmCode([]);
+      setPendingPin(null);
+    }
+  }, [startStep]);
 
   useEffect(() => {
     if (code.length === 6) {
