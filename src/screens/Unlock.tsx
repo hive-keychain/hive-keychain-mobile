@@ -1,20 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {unlock, unlockWithPin} from 'actions/index';
+import { unlock, unlockWithPin } from 'actions/index';
 import InfoPIN from 'components/info_buttons/ForgotPin';
 import Pincode from 'components/pin_code';
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
-import {UnlockNavigationProp} from 'navigators/Unlock.types';
-import React, {useEffect} from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
-import {ConnectedProps, connect} from 'react-redux';
-import {useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
-import {RootState} from 'store';
-import {translate} from 'utils/localize';
+import { UnlockNavigationProp } from 'navigators/Unlock.types';
+import React, { useEffect } from 'react';
+import { StyleSheet, useWindowDimensions } from 'react-native';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
+import { ConnectedProps, connect } from 'react-redux';
+import { useThemeContext } from 'src/context/theme.context';
+import { KeychainStorageKeyEnum } from 'src/enums/keychainStorageKey.enum';
+import { RootState } from 'store';
 import AuthUtils from 'utils/authentication.utils';
-import StorageUtils, {BiometricsLoginStatus} from 'utils/storage/storage.utils';
+import { translate } from 'utils/localize';
+import StorageUtils, { BiometricsLoginStatus } from 'utils/storage/storage.utils';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;
 const Unlock = ({
