@@ -24,7 +24,9 @@ export default ({config}) => ({
       },
       ios: {
         buildNumber: '191',
-        bundleIdentifier: 'com.stoodkev.mobileKeychain',
+        bundleIdentifier: process.env.APP_VARIANT !== 'prod'
+        ? 'com.stoodkev.mobileKeychain.dev'
+        : 'com.stoodkev.mobileKeychain',
         supportsTablet: true,
         infoPlist: {
           NSLocationWhenInUseUsageDescription:
@@ -102,7 +104,7 @@ export default ({config}) => ({
         [
           'expo-build-properties',
           {
-            ios: {useFrameworks: 'static'},
+            ios: {useFrameworks: 'static', forceStaticLinking: ['RNFBApp']},
           },
         ],
         '@react-native-firebase/app',
