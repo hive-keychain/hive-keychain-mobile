@@ -31,11 +31,9 @@ const Unlock = ({
       KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
       KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
     ]).then(async ([accountStorageVersion, isBiometricsLoginEnabled]) => {
-      if (
-        accountStorageVersion[1] === '3' &&
-        isBiometricsLoginEnabled[1] === 'true' &&
-        !ignoreNextBiometrics
-      ) {
+      const version = parseInt(accountStorageVersion[1] ?? '0', 10);
+      const biometricsEnabled = isBiometricsLoginEnabled[1] === 'true';
+      if (version >= 2 && biometricsEnabled && !ignoreNextBiometrics) {
         const biometricsStatus =
           await StorageUtils.requireBiometricsLoginIOS('encryption.retrieve');
         if (biometricsStatus !== BiometricsLoginStatus.ENABLED) {
@@ -46,10 +44,26 @@ const Unlock = ({
           );
           return;
         }
-        const masterKey = await AuthUtils.getMasterKey(true);
-        if (masterKey) {
-          unlock(masterKey);
+
+        const secureValue = await AuthUtils.getMasterKey(true);
+        if (!secureValue) return;
+
+        if (version >= 3) {
+          unlock(secureValue);
+          return;
         }
+
+        const legacyAccounts = await StorageUtils.getAccounts(secureValue);
+        if (!legacyAccounts || !legacyAccounts.list) return;
+
+        const masterKey = await AuthUtils.ensureMasterKey();
+        await AuthUtils.persistPinSecret(secureValue);
+        await StorageUtils.migrateAccountsToV3(
+          secureValue,
+          masterKey,
+          legacyAccounts,
+        );
+        unlock(masterKey);
       }
     });
   }, []);

@@ -18,12 +18,19 @@ const getAccountStorageVersion = async () => {
   const version = await AsyncStorage.getItem(
     KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
   );
-  return parseInt(version || '0', 10);
+  const parsedVersion = parseInt(version || '0', 10);
+  if (!version) {
+    console.log('[storage] account storage version undefined (treat as v1)');
+  } else {
+    console.log(`[storage] account storage version v${parsedVersion}`);
+  }
+  return parsedVersion;
 };
 
 const getAccounts = async (mk: string) => {
   const version = await getAccountStorageVersion();
   if (version >= ACCOUNT_STORAGE_TARGET_VERSION) {
+    console.log(`[storage] accounts already on v${version}`);
     return await EncryptedStorageUtils.getFromEncryptedStorage(
       KeychainStorageKeyEnum.ACCOUNTS,
       mk,
@@ -31,12 +38,14 @@ const getAccounts = async (mk: string) => {
   }
 
   if (version === 2) {
+    console.log('[storage] accounts already on v2');
     return await EncryptedStorageUtils.getFromEncryptedStorage(
       KeychainStorageKeyEnum.ACCOUNTS,
       mk,
     );
   }
 
+  console.log('[storage] migrating accounts from v1/undefined to v2');
   const accountsEncrypted = await getFromKeychain('accounts');
   await AsyncStorage.multiSet([
     [KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2'],
@@ -84,6 +93,9 @@ const migrateAccountsToV3 = async (
   console.log('[storage] migrateAccountsToV3 start');
   const version = await getAccountStorageVersion();
   if (version >= ACCOUNT_STORAGE_TARGET_VERSION) return;
+  console.log(
+    `[storage] migrating accounts from v${version} to v${ACCOUNT_STORAGE_TARGET_VERSION}`,
+  );
 
   const legacyAccounts =
     existingAccounts ??
@@ -103,7 +115,14 @@ const migrateAccountsToV3 = async (
     );
   }
 
-  await AuthUtils.persistMasterKey(masterKey, false);
+  const biometricsEnabled =
+    (await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+    )) === 'true';
+  if (biometricsEnabled) {
+    console.log('[storage] persisting secure master key for biometrics');
+  }
+  await AuthUtils.persistMasterKey(masterKey, biometricsEnabled);
   await AsyncStorage.setItem(
     KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
     `${ACCOUNT_STORAGE_TARGET_VERSION}`,

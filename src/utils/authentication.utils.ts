@@ -1,5 +1,5 @@
 import CryptoJS from 'crypto-es';
-import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import { KeychainStorageKeyEnum } from 'src/enums/keychainStorageKey.enum';
 import SecureStoreUtils from './storage/secureStore.utils';
 
 const PIN_PEPPER =
@@ -88,7 +88,7 @@ const persistMasterKey = async (
   await SecureStoreUtils.saveOnSecureStore(
     KeychainStorageKeyEnum.MASTER_KEY,
     masterKey,
-    'auth.master_key',
+    'encryption.save',
     {requireAuthentication: false},
   );
 
@@ -96,7 +96,7 @@ const persistMasterKey = async (
     await SecureStoreUtils.saveOnSecureStore(
       KeychainStorageKeyEnum.SECURE_MK,
       masterKey,
-      'auth.master_key',
+      'encryption.save',
       {requireAuthentication: true},
     );
   }
