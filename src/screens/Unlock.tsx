@@ -49,7 +49,21 @@ const Unlock = ({
         if (!secureValue) return;
 
         if (version >= 3) {
-          unlock(secureValue);
+          const fallbackMasterKey = await AuthUtils.getMasterKey(false);
+          const masterKey = fallbackMasterKey ?? secureValue;
+          if (!masterKey) return;
+
+          if (!fallbackMasterKey) {
+            unlock(masterKey);
+            return;
+          }
+
+          if (secureValue !== masterKey) {
+            console.log('[auth] secure master key mismatch, refreshing');
+            await AuthUtils.persistMasterKey(masterKey, true);
+          }
+
+          unlock(masterKey);
           return;
         }
 
