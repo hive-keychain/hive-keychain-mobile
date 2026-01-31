@@ -113,13 +113,25 @@ export const unlockWithPin =
         return;
       }
 
-      const legacyAccounts = await StorageUtils.getAccounts(pin);
-      console.log('[auth] legacy accounts fetched', {
-        hasAccounts: !!legacyAccounts,
-        count: legacyAccounts?.list?.length,
-      });
+      let legacyAccounts: any = null;
+      try {
+        legacyAccounts = await StorageUtils.getAccounts(pin);
+        console.log('[auth] legacy accounts fetched', {
+          hasAccounts: !!legacyAccounts,
+          count: legacyAccounts?.list?.length,
+        });
+      } catch (error: any) {
+        console.log('[auth] legacy accounts decrypt failed', error?.message);
+      }
 
       if (!legacyAccounts || !legacyAccounts.list) {
+        const fallbackMasterKey =
+          await StorageUtils.recoverFromFailedPinDecrypt(pin);
+        if (fallbackMasterKey) {
+          await dispatch(unlock(fallbackMasterKey, errorCallback));
+          return;
+        }
+
         Toast.show(translate('toast.authFailed'), {
           duration: Toast.durations.LONG,
         });

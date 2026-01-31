@@ -129,6 +129,30 @@ const migrateAccountsToV3 = async (
   );
   console.log('[storage] migrateAccountsToV3 complete');
 };
+
+const recoverFromFailedPinDecrypt = async (pin: string) => {
+  const fallbackMasterKey = await AuthUtils.getMasterKey(false);
+  if (!fallbackMasterKey) return null;
+  try {
+    const fallbackAccounts = await EncryptedStorageUtils.getFromEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      fallbackMasterKey,
+    );
+    if (!fallbackAccounts?.list) return null;
+    await AuthUtils.persistPinSecret(pin);
+    const version = await getAccountStorageVersion();
+    if (version < ACCOUNT_STORAGE_TARGET_VERSION) {
+      await AsyncStorage.setItem(
+        KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
+        `${ACCOUNT_STORAGE_TARGET_VERSION}`,
+      );
+    }
+    return fallbackMasterKey;
+  } catch (error: any) {
+    console.log('[auth] fallback decrypt failed', error?.message);
+    return null;
+  }
+};
 export enum BiometricsLoginStatus {
   ENABLED = 'ENABLED',
   DISABLED = 'DISABLED',
@@ -176,6 +200,7 @@ const StorageUtils = {
   requireBiometricsLogin,
   requireBiometricsLoginIOS,
   saveOnStore,
+  recoverFromFailedPinDecrypt,
 };
 
 export default StorageUtils;
