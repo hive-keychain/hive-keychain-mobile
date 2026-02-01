@@ -122,7 +122,18 @@ const migrateAccountsToV3 = async (
   if (biometricsEnabled) {
     console.log('[storage] persisting secure master key for biometrics');
   }
-  await AuthUtils.persistMasterKey(masterKey, biometricsEnabled);
+  try {
+    await AuthUtils.persistMasterKey(masterKey, biometricsEnabled);
+  } catch (error: any) {
+    console.log(
+      '[storage] biometrics master key persistence failed',
+      error?.message,
+    );
+    await AsyncStorage.setItem(
+      KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+      'false',
+    );
+  }
   await AsyncStorage.setItem(
     KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
     `${ACCOUNT_STORAGE_TARGET_VERSION}`,
