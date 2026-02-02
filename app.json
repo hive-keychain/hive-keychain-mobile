@@ -2,11 +2,11 @@
   "name": "mobileKeychain",
   "expo": {
     "android": {
-      "versionCode": 230
+      "versionCode": 231
     },
     "ios": {
-      "buildNumber": "231"
+      "buildNumber": "232"
     },
-    "version": "2.11.11"
+    "version": "2.11.12"
   }
 }
