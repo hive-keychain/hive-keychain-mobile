@@ -49,6 +49,8 @@ export const KeychainConfig = {
     'signBuffer',
     'transfer',
     'recurrentTransfer',
+    'updateProposalVote',
+    'swap',
   ],
 };
 

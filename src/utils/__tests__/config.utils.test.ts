@@ -104,6 +104,8 @@ describe('config.utils', () => {
       expect(KeychainConfig.ANONYMOUS_REQUESTS).toContain('delegation');
       expect(KeychainConfig.ANONYMOUS_REQUESTS).toContain('signBuffer');
       expect(KeychainConfig.ANONYMOUS_REQUESTS).toContain('transfer');
+      expect(KeychainConfig.ANONYMOUS_REQUESTS).toContain('updateProposalVote');
+      expect(KeychainConfig.ANONYMOUS_REQUESTS).toContain('swap');
     });
   });
 

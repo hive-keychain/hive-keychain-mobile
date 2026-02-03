@@ -202,7 +202,8 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.username) &&
         isProposalIDs(req.proposal_ids)) ||
       (req.type === 'updateProposalVote' &&
-        isFilled(req.username) &&
+        (isFilled(req.username) ||
+          KeychainConfig.ANONYMOUS_REQUESTS.includes(req.type)) &&
         isProposalIDs(req.proposal_ids) &&
         isBoolean(req.approve)) ||
       (req.type === 'sendToken' &&
