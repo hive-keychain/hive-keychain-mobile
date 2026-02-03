@@ -49,6 +49,9 @@ const RequestModalContent = ({
     if (req.type === 'signBuffer' && req.title) {
       return req.title;
     }
+    if (req.type === 'savings' && 'operation' in req) {
+      return translate(`request.title.savings_${req.operation}`);
+    }
     return translate(`request.title.${req.type}`);
   };
   return (

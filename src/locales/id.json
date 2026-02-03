@@ -940,6 +940,9 @@
       "convert": "Konversi",
       "recurrentTransfer": "Transfer berkala",
       "multisig": "Multisig",
+      "savings_deposit": "Setor ke Savings",
+      "savings_withdraw": "Tarik dari Savings",
+      "savings": "Savings",
       "swap": "Keychain Swap"
     },
     "message": {

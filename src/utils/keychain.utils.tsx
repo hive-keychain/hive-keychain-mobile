@@ -167,6 +167,11 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.to) &&
         isFilledCurrency(req.currency) &&
         hasTransferInfo(req)) ||
+      (req.type === 'savings' &&
+        isFilledAmt(req.amount) &&
+        isFilled(req.to) &&
+        isFilledCurrency(req.currency) &&
+        isFilledSavingsOperation(req.operation)) ||
       (req.type === 'sendToken' &&
         isFilledAmt(req.amount, false) &&
         isFilled(req.to) &&
@@ -246,6 +251,7 @@ export const getRequiredWifType: (
     case 'signedCall':
       return request.typeWif.toLowerCase() as KeyTypes;
     case 'transfer':
+    case 'savings':
     case 'sendToken':
     case 'delegation':
     case 'witnessVote':
@@ -341,6 +347,10 @@ const isFilledWeight = (obj: string | number) => {
 
 const isFilledCurrency = (obj: string) => {
   return isFilled(obj) && (obj === 'HIVE' || obj === 'HBD');
+};
+
+const isFilledSavingsOperation = (obj: string) => {
+  return obj === 'deposit' || obj === 'withdraw';
 };
 
 const isFilledKey = (obj: string) => {

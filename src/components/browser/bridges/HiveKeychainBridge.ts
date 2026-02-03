@@ -378,6 +378,44 @@ window.hive_keychain={
     this.dispatchCustomEvent('swRequest_hive', request, callback);
   },
   /**
+   * Requests a savings operation (deposit or withdraw)
+   * @param {String} username Hive account to perform the request
+   * @param {String} to Account to receive the savings transfer
+   * @param {String} amount Amount to be transferred. Requires 3 decimals.
+   * @param {String} currency 'HIVE' or 'HBD'
+   * @param {String} operation 'deposit' or 'withdraw'
+   * @param {String} [memo=''] Memo attached to the savings operation
+   * @param {function} callback Keychain's response to the request
+   * @param {String} [rpc=null] Override user's RPC settings
+   */
+  requestSavingsOperation: function (
+    username,
+    to,
+    amount,
+    currency,
+    operation,
+    memo,
+    callback,
+    rpc,
+  ) {
+    if (typeof memo === 'function') {
+      rpc = callback;
+      callback = memo;
+      memo = '';
+    }
+    var request = {
+      type: 'savings',
+      username,
+      to,
+      amount,
+      currency,
+      operation,
+      memo: memo || '',
+      rpc,
+    };
+    this.dispatchCustomEvent('swRequest_hive', request, callback);
+  },
+  /**
    * Requests a token transfer
    * @param {String} account Hive account to perform the request
    * @param {String} to Hive account to receive the transfer

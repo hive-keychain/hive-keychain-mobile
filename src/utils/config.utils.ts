@@ -44,6 +44,7 @@ export const KeychainConfig = {
     'delegation',
     'witnessVote',
     'proxy',
+    'savings',
     'custom',
     'signBuffer',
     'transfer',
