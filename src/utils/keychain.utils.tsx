@@ -113,7 +113,8 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.message) &&
         isFilledKey(req.method)) ||
       (req.type === 'vote' &&
-        isFilled(req.username) &&
+        (isFilled(req.username) ||
+          KeychainConfig.ANONYMOUS_REQUESTS.includes(req.type)) &&
         isFilledWeight(req.weight) &&
         isFilled(req.permlink) &&
         isFilled(req.author)) ||
@@ -177,7 +178,8 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.to) &&
         isFilled(req.currency)) ||
       (req.type === 'powerUp' &&
-        isFilled(req.username) &&
+        (isFilled(req.username) ||
+          KeychainConfig.ANONYMOUS_REQUESTS.includes(req.type)) &&
         isFilledAmt(req.steem) &&
         isFilled(req.recipient)) ||
       (req.type === 'powerDown' &&
@@ -212,7 +214,8 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.currency)) ||
       (req.type === 'addAccount' && isFilledKeys(req.keys)) ||
       (req.type === 'convert' &&
-        isFilled(req.username) &&
+        (isFilled(req.username) ||
+          KeychainConfig.ANONYMOUS_REQUESTS.includes(req.type)) &&
         isFilledAmt(req.amount) &&
         isBoolean(req.collaterized)) ||
       (req.type === 'recurrentTransfer' &&

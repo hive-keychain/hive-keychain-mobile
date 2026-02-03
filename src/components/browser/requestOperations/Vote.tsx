@@ -1,4 +1,5 @@
 import {Account, KeyTypes} from 'actions/interfaces';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {
@@ -28,7 +29,21 @@ export default ({
   sendError,
 }: Props) => {
   const {request_id, has, ...data} = request;
-  const {username, author, permlink, weight} = data;
+  const {author, permlink, weight} = data;
+  const {getUsername, getAccountKey, RequestUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
+  const performOperation = async (options: TransactionOptions) => {
+    return await vote(
+      getAccountKey(),
+      {
+        voter: getUsername(),
+        author,
+        permlink,
+        weight: +weight,
+      },
+      options,
+    );
+  };
   return (
     <RequestOperation
       has={has}
@@ -43,14 +58,14 @@ export default ({
       method={KeyTypes.posting}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={(options: TransactionOptions) => {
-        return performVoteOperation(accounts, request, options);
-      }}
+      selectedUsername={getUsername()}
+      RequestUsername={RequestUsername}
+      performOperation={performOperation}
       confirmationData={[
         {
           title: 'request.item.username',
-          value: username,
-          tag: ConfirmationDataTag.USERNAME,
+          value: '',
+          tag: ConfirmationDataTag.REQUEST_USERNAME,
         },
         {
           title: 'request.item.author',
@@ -77,11 +92,11 @@ const performVoteOperation = async (
 ) => {
   const {username, author, permlink, weight} = request;
   const account = accounts.find((e) => e.name === request.username);
-  const key = account.keys.posting;
+  const key = account!.keys.posting;
   return await vote(
     key,
     {
-      voter: username,
+      voter: username!,
       author,
       permlink,
       weight: +weight,

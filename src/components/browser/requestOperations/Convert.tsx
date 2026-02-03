@@ -1,4 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {RequestConvert, RequestId} from 'src/interfaces/keychain.interface';
@@ -20,15 +21,16 @@ export default ({
   sendError,
 }: Props) => {
   const {request_id, ...data} = request;
-  const {username, amount, collaterized} = data;
+  const {amount, collaterized} = data;
+  const {getUsername, getAccountKey, RequestUsername} =
+    usePotentiallyAnonymousRequest(request, accounts);
   const performOperation = async (options: TransactionOptions) => {
-    const account = accounts.find((e) => e.name === request.username);
-    const key = account.keys.active;
+    const username = getUsername();
     const conversions = await getConversionRequests(username);
     const requestid = Math.max(...conversions.map((e) => e.requestid), 0) + 1;
     if (!collaterized) {
       return await convert(
-        key,
+        getAccountKey(),
         {
           owner: username,
           amount: `${amount} HBD`,
@@ -38,7 +40,7 @@ export default ({
       );
     } else {
       return await collateralizedConvert(
-        key,
+        getAccountKey(),
         {
           owner: username,
           amount: `${amount} HIVE`,
@@ -61,12 +63,14 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
+      selectedUsername={getUsername()}
+      RequestUsername={RequestUsername}
       performOperation={performOperation}
       confirmationData={[
         {
           title: 'request.item.username',
-          value: `@${username}`,
-          tag: ConfirmationDataTag.USERNAME,
+          value: '',
+          tag: ConfirmationDataTag.REQUEST_USERNAME,
         },
         {
           title: 'request.item.amount',
