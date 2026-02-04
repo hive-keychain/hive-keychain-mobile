@@ -1,6 +1,6 @@
 import {PrivateKey} from '@hiveio/dhive';
 import {addAccount} from 'actions/accounts';
-import {Account, KeyTypes} from 'actions/interfaces';
+import {Account, AccountKeys, KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
@@ -57,6 +57,15 @@ const DEFAULT_EMPTY_KEYS = {
   posting: {public: '', private: ''},
   memo: {public: '', private: ''},
 } as GeneratedKeys;
+
+const toAccountKeys = (keys: GeneratedKeys): AccountKeys => ({
+  posting: keys.posting.private,
+  postingPubkey: keys.posting.public,
+  active: keys.active.private,
+  activePubkey: keys.active.public,
+  memo: keys.memo.private,
+  memoPubkey: keys.memo.public,
+});
 
 const StepTwo = ({
   user,
@@ -325,7 +334,7 @@ const StepTwo = ({
           const fullData = 'keychain://create_account=' + encodedDataAsString;
           navigate('CreateAccountPeerToPeerQrScreen', {
             accountName,
-            keys: generatedKeys,
+            keys: toAccountKeys(generatedKeys),
             qrData: fullData,
           });
         }
@@ -372,14 +381,7 @@ const StepTwo = ({
   const handleLoadNewAccount = () => {
     addAccount(
       accountName,
-      {
-        posting: generatedKeys.posting.private,
-        postingPubkey: generatedKeys.posting.public,
-        active: generatedKeys.active.private,
-        activePubkey: generatedKeys.active.public,
-        memo: generatedKeys.memo.private,
-        memoPubkey: generatedKeys.memo.public,
-      },
+      toAccountKeys(generatedKeys),
       true,
       false,
     );
