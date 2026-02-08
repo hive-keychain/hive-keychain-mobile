@@ -7,8 +7,14 @@ import HASInfo from 'components/hive_authentication_service/Info';
 import CustomModal from 'components/modals/CustomModal';
 import EnableIosBiometrics from 'components/modals/EnableIosBiometrics';
 import {ModalNavigationProps} from 'navigators/Root.types';
-import React from 'react';
-import {StatusBar, StyleProp, ViewStyle} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {
+  LayoutChangeEvent,
+  StatusBar,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
 import {ModalComponent} from 'src/enums/modal.enum';
 import {getColors} from 'src/styles/colors';
@@ -25,6 +31,11 @@ export default ({navigation, route}: ModalNavigationProps) => {
   const modalPosition = route.params?.modalPosition;
   const buttonElement = route.params?.renderButtonElement;
   const bottomHalf = route.params?.bottomHalf;
+  const [operationModalHeight, setOperationModalHeight] = useState<
+    number | undefined
+  >(undefined);
+  const shouldLockOperationHeight =
+    !!name && name.toLowerCase().includes('operation');
 
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
@@ -72,6 +83,25 @@ export default ({navigation, route}: ModalNavigationProps) => {
         return null;
     }
   };
+  const handleOperationLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      if (operationModalHeight === undefined) {
+        setOperationModalHeight(e.nativeEvent.layout.height);
+      }
+    },
+    [operationModalHeight],
+  );
+
+  const modalBody = (
+    <>
+      <StatusBar
+        barStyle={getColors(theme).barStyle}
+        backgroundColor={getColors(theme).primaryBackground}
+      />
+      {route.params && !renderContent() && route.params!.modalContent}
+      {renderContent()}
+    </>
+  );
 
   return (
     <CustomModal
@@ -84,17 +114,21 @@ export default ({navigation, route}: ModalNavigationProps) => {
       fixedHeight={fixedHeight}
       bottomHalf={bottomHalf === undefined ? true : bottomHalf}
       containerStyle={[containerStyle]}
-      additionalWrapperFixedStyle={wrapperFixedStyle}
+      additionalWrapperFixedStyle={[
+        wrapperFixedStyle,
+        shouldLockOperationHeight && operationModalHeight !== undefined
+          ? {height: operationModalHeight}
+          : undefined,
+      ]}
       additionalClickeableAreaStyle={{opacity: 0.5, backgroundColor: 'black'}}
       modalPosition={modalPosition}
       theme={theme}
       buttonElement={buttonElement}>
-      <StatusBar
-        barStyle={getColors(theme).barStyle}
-        backgroundColor={getColors(theme).primaryBackground}
-      />
-      {route.params && !renderContent() && route.params!.modalContent}
-      {renderContent()}
+      {shouldLockOperationHeight ? (
+        <View onLayout={handleOperationLayout}>{modalBody}</View>
+      ) : (
+        modalBody
+      )}
     </CustomModal>
   );
 };

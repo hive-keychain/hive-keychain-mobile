@@ -4,9 +4,11 @@ import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
 import {Linking, StyleSheet, Text, View} from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
+import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation.utils';
 import {RatingsUtils} from 'utils/ratings.utils';
@@ -17,13 +19,17 @@ interface Props {
 
 const FEEDBACK_URL = 'https://discord.gg/3EM6YfRrGv';
 
-const RatingPrompt = ({navigation}: Props): null => {
+const RatingPrompt = ({
+  navigation,
+  activeScreen,
+}: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   useEffect(() => {
     (async () => {
-      if (await RatingsUtils.shouldPromptNow()) {
+      const isModalOpen = activeScreen?.startsWith('ModalScreen');
+      if (!isModalOpen && (await RatingsUtils.shouldPromptNow())) {
         navigate('ModalScreen', {
           name: 'RatingPrompt',
           fixedHeight: 0.35,
@@ -33,7 +39,7 @@ const RatingPrompt = ({navigation}: Props): null => {
         });
       }
     })();
-  }, []);
+  }, [activeScreen]);
 
   const renderContent = () => {
     return (
@@ -113,4 +119,10 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-export default RatingPrompt;
+const connector = connect((state: RootState) => ({
+  activeScreen: state.navigation.activeScreen,
+}));
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(RatingPrompt);

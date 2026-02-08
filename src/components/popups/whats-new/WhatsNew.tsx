@@ -15,6 +15,7 @@ import {
   body_primary_body_3,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation.utils';
 import {VersionLogUtils} from 'utils/version.utils';
@@ -40,7 +41,11 @@ export function prefetchImage(url: string) {
 export function isPrefetched(url: string) {
   return prefetchedImages[url] !== undefined;
 }
-const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
+const WhatsNew = ({
+  navigation,
+  addTab,
+  activeScreen,
+}: Props & PropsFromRedux): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
   const [index, setIndex] = useState(0);
   const locale = 'en'; // later use getUILanguage()
@@ -73,7 +78,8 @@ const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
 
   useEffect(() => {
     (async () => {
-      if (whatsNewContent) {
+      const isModalOpen = activeScreen?.startsWith('ModalScreen');
+      if (whatsNewContent && !isModalOpen) {
         for (const feature of whatsNewContent.features[locale]) {
           await prefetchImage(feature.image);
         }
@@ -85,7 +91,7 @@ const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
         } as ModalScreenProps);
       }
     })();
-  }, [whatsNewContent]);
+  }, [whatsNewContent, activeScreen]);
 
   const finish = async () => {
     await WhatsNewUtils.saveLastSeen();
@@ -205,7 +211,10 @@ const getStyles = (theme: Theme, windowHeight: number) =>
     },
   });
 
-const connector = connect(null, {addTab});
+const connector = connect(
+  (state: RootState) => ({activeScreen: state.navigation.activeScreen}),
+  {addTab},
+);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(WhatsNew);
