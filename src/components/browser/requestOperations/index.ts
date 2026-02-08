@@ -17,6 +17,7 @@ import RecurrentTransfer from './RecurrentTransfer';
 import RemoveAccountAuthority from './RemoveAccountAuthority';
 import RemoveKeyAuthority from './RemoveKeyAuthority';
 import RemoveProposal from './RemoveProposal';
+import Savings from './Savings';
 import SendToken from './SendToken';
 import SignBuffer from './SignBuffer';
 import SignTx from './SignTx';
@@ -32,6 +33,7 @@ const map = {
   vote: Vote,
   custom: Custom,
   transfer: Transfer,
+  savings: Savings,
   post: Post,
   broadcast: Broadcast,
   witnessVote: WitnessVote,

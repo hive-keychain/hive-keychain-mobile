@@ -1,24 +1,25 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {unlock} from 'actions/index';
+import { unlock, unlockWithPin } from 'actions/index';
 import InfoPIN from 'components/info_buttons/ForgotPin';
 import Pincode from 'components/pin_code';
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
-import {UnlockNavigationProp} from 'navigators/Unlock.types';
-import React, {useEffect} from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
-import {ConnectedProps, connect} from 'react-redux';
-import {useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
-import {RootState} from 'store';
-import {translate} from 'utils/localize';
-import SecureStoreUtils from 'utils/storage/secureStore.utils';
-import StorageUtils, {BiometricsLoginStatus} from 'utils/storage/storage.utils';
+import { UnlockNavigationProp } from 'navigators/Unlock.types';
+import React, { useEffect } from 'react';
+import { StyleSheet, useWindowDimensions } from 'react-native';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
+import { ConnectedProps, connect } from 'react-redux';
+import { useThemeContext } from 'src/context/theme.context';
+import { KeychainStorageKeyEnum } from 'src/enums/keychainStorageKey.enum';
+import { RootState } from 'store';
+import AuthUtils from 'utils/authentication.utils';
+import { translate } from 'utils/localize';
+import StorageUtils, { BiometricsLoginStatus } from 'utils/storage/storage.utils';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;
 const Unlock = ({
   unlock,
+  unlockWithPin,
   navigation,
   ignoreNextBiometrics,
 }: UnlockScreenProps) => {
@@ -30,21 +31,59 @@ const Unlock = ({
       KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
       KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
     ]).then(async ([accountStorageVersion, isBiometricsLoginEnabled]) => {
-      if (
-        accountStorageVersion[1] === '2' &&
-        isBiometricsLoginEnabled[1] === 'true' &&
-        !ignoreNextBiometrics
-      ) {
-        const isBiometricsLoginEnabled =
+      const version = parseInt(accountStorageVersion[1] ?? '0', 10);
+      const biometricsEnabled = isBiometricsLoginEnabled[1] === 'true';
+      if (version >= 2 && biometricsEnabled && !ignoreNextBiometrics) {
+        const biometricsStatus =
           await StorageUtils.requireBiometricsLoginIOS('encryption.retrieve');
-        if (isBiometricsLoginEnabled !== BiometricsLoginStatus.ENABLED) return;
-        const pin = await SecureStoreUtils.getFromSecureStore(
-          KeychainStorageKeyEnum.SECURE_MK,
+        if (biometricsStatus !== BiometricsLoginStatus.ENABLED) {
+          console.log('isBiometricsLoginEnabled', biometricsStatus);
+          AsyncStorage.setItem(
+            KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+            'false',
+          );
+          return;
+        }
+
+        const secureValue = await AuthUtils.getMasterKey(true);
+        if (!secureValue) return;
+
+        if (version >= 3) {
+          const fallbackMasterKey = await AuthUtils.getMasterKey(false);
+          const masterKey = fallbackMasterKey ?? secureValue;
+          if (!masterKey) return;
+
+          if (!fallbackMasterKey) {
+            unlock(masterKey);
+            return;
+          }
+
+          if (secureValue !== masterKey) {
+            console.log('[auth] secure master key mismatch, refreshing');
+            await AuthUtils.persistMasterKey(masterKey, true);
+          }
+
+          unlock(masterKey);
+          return;
+        }
+
+        const legacyAccounts = await StorageUtils.getAccounts(secureValue);
+        if (!legacyAccounts || !legacyAccounts.list) return;
+
+        const masterKey = await AuthUtils.ensureMasterKey();
+        await AuthUtils.persistPinSecret(secureValue);
+        await StorageUtils.migrateAccountsToV3(
+          secureValue,
+          masterKey,
+          legacyAccounts,
         );
-        unlock(pin);
+        unlock(masterKey);
       }
     });
   }, []);
+
+  const handleUnlockWithPin = (pin: string, callback?: (unsafe?: boolean) => void) =>
+    unlockWithPin(pin, callback);
 
   return (
     <Background
@@ -58,7 +97,7 @@ const Unlock = ({
         <Pincode
           navigation={navigation}
           title={translate('unlock.enterPIN')}
-          submit={unlock}
+          submit={handleUnlockWithPin}
           theme={theme}
           infoPin={<InfoPIN />}
           infoPinContainerStyle={styles.infoPinContainer}>
@@ -75,6 +114,7 @@ const connector = connect(
   }),
   {
     unlock,
+    unlockWithPin,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;

@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import {Provider} from 'react-redux';
 import {store} from 'store';
+import {onLocaleChange} from 'utils/localize';
 import EVMApp from './EVMApp';
 import HiveApp from './HiveApp';
 import {Chain, ChainContext} from './context/multichain.context';
@@ -14,9 +15,18 @@ export default () => {
   const [chain, setChain] = useState<Chain>();
   const [theme, setTheme] = useState<Theme>();
   const [ready, setReady] = useState(false);
-
+  const [localeKey, setLocaleKey] = useState(0);
   useEffect(() => {
     init();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onLocaleChange(() => {
+      // bump key to rerender everything
+      setLocaleKey((prev) => prev + 1);
+    });
+
+    return unsubscribe;
   }, []);
 
   const init = async () => {
@@ -59,7 +69,9 @@ export default () => {
 
   if (ready && chain && theme)
     return (
-      <ThemeContext.Provider value={{theme, setTheme, toggleTheme}}>
+      <ThemeContext.Provider
+        value={{theme, setTheme, toggleTheme}}
+        key={localeKey}>
         <ChainContext.Provider value={{chain, setChain}}>
           <OrientationProvider>
             <TabProvider>{renderChain(chain)}</TabProvider>

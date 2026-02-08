@@ -58,16 +58,22 @@ const persistor = persistStore(store);
 
 const getSafeState = () => {
   const state: RootState = {...store.getState()};
-  state.accounts.forEach((e) => delete e.keys);
-  delete state.activeAccount.keys;
+  if (state.accounts && Array.isArray(state.accounts)) {
+    state.accounts.forEach((e) => delete e.keys);
+  }
+  if (state.activeAccount) {
+    delete state.activeAccount.keys;
+    delete state.activeAccount.account;
+  }
   delete state.auth;
   delete state.conversions;
   delete state.phishingAccounts;
-  delete state.activeAccount.account;
   delete state._persist;
   for (const e in state) {
     //@ts-ignore
-    delete state[e]._persist;
+    if (state[e] && typeof state[e] === 'object') {
+      delete state[e]._persist;
+    }
   }
   return state;
 };

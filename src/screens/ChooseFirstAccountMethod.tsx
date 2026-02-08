@@ -3,9 +3,11 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
+import {Camera} from 'expo-camera';
 import {SignupNavProp} from 'navigators/Signup.types';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import Toast from 'react-native-root-toast';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Dimensions} from 'src/interfaces/common.interface';
@@ -52,7 +54,15 @@ const ChooseAccountOption = ({navigation}: SignupNavProp) => {
           <EllipticButton
             title={translate('navigation.import_all')}
             onPress={() => {
-              navigation.navigate('ScanQRScreen');
+              Camera.requestCameraPermissionsAsync().then((result) => {
+                if (result.granted) {
+                  navigation.navigate('ScanQRScreen');
+                } else {
+                  Toast.show(translate('toast.error_camera_permission'), {
+                    duration: Toast.durations.LONG,
+                  });
+                }
+              });
             }}
             style={styles.outlineButton}
             additionalTextStyle={styles.textOutLineButton}

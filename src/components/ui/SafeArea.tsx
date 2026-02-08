@@ -26,7 +26,9 @@ const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
 
   const isAndroid35 = Platform.OS === 'android' && Platform.Version >= 35;
   const bottomSpacerHeight =
-    !isAndroid35 && skipBottom ? initialWindowMetrics.insets.bottom : 0;
+    Platform.OS === 'android' && !isAndroid35 && skipBottom
+      ? initialWindowMetrics.insets.bottom
+      : 0;
 
   return (
     <SafeAreaView

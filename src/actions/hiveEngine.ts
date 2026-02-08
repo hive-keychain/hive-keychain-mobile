@@ -7,6 +7,7 @@ import {DEFAULT_HE_RPC_NODE} from 'src/interfaces/hiveEngineRpc.interface';
 import {
   OperationsHiveEngine,
   Token,
+  TokenBalance,
   TokenMarket,
   TokenTransaction,
 } from 'src/interfaces/tokens.interface';
@@ -14,9 +15,9 @@ import {RootState, store} from 'store';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine.utils';
 import {HiveEngineConfigUtils} from 'utils/hiveEngineConfig.utils';
 import {getAllTokens, getUserBalance} from 'utils/tokens.utils';
-import {ActionPayload, TokenBalance} from './interfaces';
+import {ActionPayload} from './interfaces';
 import {showModal} from './message';
-import {setHiveEngineRpc} from './settings';
+import {setHiveEngineRpc, setHiveEngineRpcError} from './settings';
 import {
   CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,
@@ -66,6 +67,8 @@ export const loadUserTokens =
       dispatch({
         type: CLEAR_USER_TOKENS,
       });
+      // Clear any previous error when attempting to load tokens
+      dispatch(setHiveEngineRpcError(null));
 
       let tokensBalance: TokenBalance[] = await getUserBalance(account);
       tokensBalance = tokensBalance.sort(
@@ -93,8 +96,14 @@ export const loadUserTokens =
         const newApi = await HiveEngineConfigUtils.switchToNextRpc();
         dispatch(setHiveEngineRpc(newApi));
         dispatch(loadUserTokens(account));
-      } else
-        dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
+      } else {
+        // Instead of showing a popup, store the error in the reducer
+        dispatch(setHiveEngineRpcError('toast.tokens_timeout'));
+        // Stop loading state so the wallet doesn't get stuck
+        dispatch({
+          type: STOP_USER_TOKENS_LOADING,
+        });
+      }
     }
   };
 

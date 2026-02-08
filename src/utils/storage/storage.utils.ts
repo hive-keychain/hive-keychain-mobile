@@ -1,8 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Device from 'expo-device';
 import * as LocalAuthentication from 'expo-local-authentication';
 import {Platform} from 'react-native';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {ModalComponent} from 'src/enums/modal.enum';
+import AuthUtils from 'utils/authentication.utils';
 import {decryptToJson} from 'utils/encrypt.utils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation.utils';
@@ -10,25 +12,48 @@ import {EncryptedStorageUtils} from './encryptedStorage.utils';
 import {clearKeychain, getFromKeychain} from './keychainStorage.utils';
 import SecureStoreUtils from './secureStore.utils';
 
-const getAccounts = async (mk: string) => {
-  const version = +(await AsyncStorage.getItem(
+const ACCOUNT_STORAGE_TARGET_VERSION = 3;
+
+const getAccountStorageVersion = async () => {
+  const version = await AsyncStorage.getItem(
     KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
-  ));
-  if (version === 2) {
+  );
+  const parsedVersion = parseInt(version || '0', 10);
+  if (!version) {
+    console.log('[storage] account storage version undefined (treat as v1)');
+  } else {
+    console.log(`[storage] account storage version v${parsedVersion}`);
+  }
+  return parsedVersion;
+};
+
+const getAccounts = async (mk: string) => {
+  const version = await getAccountStorageVersion();
+  if (version >= ACCOUNT_STORAGE_TARGET_VERSION) {
+    console.log(`[storage] accounts already on v${version}`);
     return await EncryptedStorageUtils.getFromEncryptedStorage(
       KeychainStorageKeyEnum.ACCOUNTS,
       mk,
     );
-  } else {
-    const accountsEncrypted = await getFromKeychain('accounts');
-    await AsyncStorage.multiSet([
-      [KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2'],
-      [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
-    ]);
-    await clearKeychain('accounts');
-    await requireBiometricsLogin(mk, 'encryption.save');
-    return decryptToJson(accountsEncrypted, mk);
   }
+
+  if (version === 2) {
+    console.log('[storage] accounts already on v2');
+    return await EncryptedStorageUtils.getFromEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      mk,
+    );
+  }
+
+  console.log('[storage] migrating accounts from v1/undefined to v2');
+  const accountsEncrypted = await getFromKeychain('accounts');
+  await AsyncStorage.multiSet([
+    [KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2'],
+    [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
+  ]);
+  await clearKeychain('accounts');
+  await requireBiometricsLogin(mk, 'encryption.save');
+  return decryptToJson(accountsEncrypted, mk);
 };
 
 const requireBiometricsLogin = async (mk: string, title: string) => {
@@ -59,20 +84,106 @@ const saveOnStore = async (mk: string, title: string) => {
     'true',
   );
 };
+
+const migrateAccountsToV3 = async (
+  pin: string,
+  masterKey: string,
+  existingAccounts?: any,
+) => {
+  console.log('[storage] migrateAccountsToV3 start');
+  const version = await getAccountStorageVersion();
+  if (version >= ACCOUNT_STORAGE_TARGET_VERSION) return;
+  console.log(
+    `[storage] migrating accounts from v${version} to v${ACCOUNT_STORAGE_TARGET_VERSION}`,
+  );
+
+  const legacyAccounts =
+    existingAccounts ??
+    (await EncryptedStorageUtils.getFromEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      pin,
+    ));
+
+  if (legacyAccounts?.list) {
+    console.log(
+      `[storage] re-encrypting ${legacyAccounts.list.length} accounts to v${ACCOUNT_STORAGE_TARGET_VERSION}`,
+    );
+    await EncryptedStorageUtils.saveOnEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      legacyAccounts,
+      masterKey,
+    );
+  }
+
+  const biometricsEnabled =
+    (await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+    )) === 'true';
+  if (biometricsEnabled) {
+    console.log('[storage] persisting secure master key for biometrics');
+  }
+  try {
+    await AuthUtils.persistMasterKey(masterKey, biometricsEnabled);
+  } catch (error: any) {
+    console.log(
+      '[storage] biometrics master key persistence failed',
+      error?.message,
+    );
+    await AsyncStorage.setItem(
+      KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_ENABLED,
+      'false',
+    );
+  }
+  await AsyncStorage.setItem(
+    KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
+    `${ACCOUNT_STORAGE_TARGET_VERSION}`,
+  );
+  console.log('[storage] migrateAccountsToV3 complete');
+};
+
+const recoverFromFailedPinDecrypt = async (pin: string) => {
+  const fallbackMasterKey = await AuthUtils.getMasterKey(false);
+  if (!fallbackMasterKey) return null;
+  try {
+    const fallbackAccounts = await EncryptedStorageUtils.getFromEncryptedStorage(
+      KeychainStorageKeyEnum.ACCOUNTS,
+      fallbackMasterKey,
+    );
+    if (!fallbackAccounts?.list) return null;
+    await AuthUtils.persistPinSecret(pin);
+    const version = await getAccountStorageVersion();
+    if (version < ACCOUNT_STORAGE_TARGET_VERSION) {
+      await AsyncStorage.setItem(
+        KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
+        `${ACCOUNT_STORAGE_TARGET_VERSION}`,
+      );
+    }
+    return fallbackMasterKey;
+  } catch (error: any) {
+    console.log('[auth] fallback decrypt failed', error?.message);
+    return null;
+  }
+};
 export enum BiometricsLoginStatus {
   ENABLED = 'ENABLED',
   DISABLED = 'DISABLED',
   REFUSED = 'REFUSED',
 }
 
-const requireBiometricsLoginIOS = async (title: string) => {
+const requireBiometricsLoginIOS = async (
+  title: string,
+  checkAuth: boolean = false,
+) => {
   if (Platform.OS !== 'ios') return BiometricsLoginStatus.ENABLED;
   const isBiometricsAvailable = await LocalAuthentication.isEnrolledAsync();
   if (isBiometricsAvailable) {
-    const result = await LocalAuthentication.authenticateAsync({
-      promptMessage: translate(title),
-      disableDeviceFallback: true,
-    });
+    let result = {success: true};
+    if (!Device.isDevice) {
+      result = await LocalAuthentication.authenticateAsync({
+        promptMessage: translate(title),
+        disableDeviceFallback: true,
+      });
+    }
     if (!result.success) {
       await AsyncStorage.setItem(
         KeychainStorageKeyEnum.IS_BIOMETRICS_LOGIN_REFUSED,
@@ -94,10 +205,13 @@ const requireBiometricsLoginIOS = async (title: string) => {
 };
 
 const StorageUtils = {
+  getAccountStorageVersion,
   getAccounts,
+  migrateAccountsToV3,
   requireBiometricsLogin,
   requireBiometricsLoginIOS,
   saveOnStore,
+  recoverFromFailedPinDecrypt,
 };
 
 export default StorageUtils;

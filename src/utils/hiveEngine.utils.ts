@@ -1,8 +1,17 @@
-import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {HiveEngineApi} from 'api/hiveEngine.api';
 import {decodeMemo} from 'components/bridge';
+import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {
+  HiddenTokens,
+  Token,
+  TokenBalance,
+  TokenMarket,
+} from 'src/interfaces/tokens.interface';
+import {formatBalance} from './format.utils';
 import {translate} from './localize';
 
+const MAX_SPREAD = 100;
 type sscjsResult = {logs: string};
 
 export interface TokenDelegation {
@@ -66,6 +75,8 @@ export const getHiveEngineTokenTradingInfo = (
   market: TokenMarket[],
 ) => {
   const tokenMarket = market.find((t) => t.symbol === balance.symbol);
+  if (!isAcceptableSpread(tokenMarket))
+    return {price: 0, volume: tokenMarket?.volume};
   const price = tokenMarket
     ? parseFloat(tokenMarket.lastPrice)
     : balance.symbol === 'SWAP.HIVE'
@@ -159,4 +170,40 @@ export const getHiveEngineTokenPrice = (
     ? 1
     : 0;
   return price;
+};
+
+export const getHiddenTokens = async (): Promise<HiddenTokens> => {
+  const hiddenTokens = await AsyncStorage.getItem(
+    KeychainStorageKeyEnum.HIDDEN_TOKENS,
+  );
+  return hiddenTokens ? JSON.parse(hiddenTokens) : {};
+};
+
+export const getHiveEngineTokenPriceInfo = (
+  tokenMarket: TokenMarket,
+  tokenInfo: Token,
+  hivePrice: number,
+) => {
+  if (!tokenMarket || !isAcceptableSpread(tokenMarket))
+    return {
+      usd: tokenInfo.symbol === 'SWAP.HIVE' ? formatBalance(hivePrice) : '0',
+      usd_24h_change: 0,
+    };
+  const usd = tokenMarket
+    ? formatBalance(parseFloat(tokenMarket.lastPrice) * hivePrice)
+    : '0';
+  const usd_24h_change = parseFloat(tokenMarket.priceChangePercent);
+  return {
+    usd,
+    usd_24h_change,
+  };
+};
+
+export const isAcceptableSpread = (tokenMarket: TokenMarket) => {
+  if (!tokenMarket?.highestBid || !tokenMarket?.lowestAsk) return false;
+
+  const spread =
+    parseFloat(tokenMarket.lowestAsk) / parseFloat(tokenMarket.highestBid);
+
+  return spread <= MAX_SPREAD;
 };

@@ -50,12 +50,10 @@ export const getVotingDollarsPerAccount = (
   voteWeight: number,
   properties: GlobalProperties,
   account: ExtendedAccount,
-  full: boolean,
 ) => {
   if (!properties.globals || !account.name) {
     return null;
   }
-  const vp = getVP(account)! * 100;
   const rewardBalance = getRewardBalance(properties);
   const recentClaims = getRecentClaims(properties);
   const hivePrice = getHivePrice(properties);
@@ -65,13 +63,13 @@ export const getVotingDollarsPerAccount = (
     const effective_vesting_shares = Math.round(
       getEffectiveVestingSharesPerAccount(account) * 1000000,
     );
-    const current_power = full ? 10000 : vp;
+    const CURRENT_POWER = 10000;
     const weight = voteWeight * 100;
 
     const max_vote_denom =
       (votePowerReserveRate * HIVE_VOTING_MANA_REGENERATION_SECONDS) /
       (60 * 60 * 24);
-    let used_power = Math.round((current_power * weight) / HIVE_100_PERCENT);
+    let used_power = Math.round((CURRENT_POWER * weight) / HIVE_100_PERCENT);
     used_power = Math.round((used_power + max_vote_denom - 1) / max_vote_denom);
     const rshares = Math.round(
       (effective_vesting_shares * used_power) / HIVE_100_PERCENT,
@@ -207,4 +205,10 @@ export const getAccountPrice = async () => {
 export const getAccount = async (username: string) => {
   const accounts = await getClient().database.getAccounts([username]);
   return accounts[0];
+};
+
+export const getHardforkVersion = async () => {
+  return parseInt(
+    (await getClient().database.call('get_hardfork_version', [])).split('.')[1],
+  );
 };

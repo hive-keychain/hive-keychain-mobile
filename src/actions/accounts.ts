@@ -7,6 +7,8 @@ import validateKeys from 'utils/keyValidation.utils';
 import {translate} from 'utils/localize';
 import {goBack, navigate, resetStackAndNavigate} from 'utils/navigation.utils';
 import {EncryptedStorageUtils} from 'utils/storage/encryptedStorage.utils';
+import {clearKeychain} from 'utils/storage/keychainStorage.utils';
+import SecureStoreUtils from 'utils/storage/secureStore.utils';
 import StorageUtils from 'utils/storage/storage.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 import {
@@ -83,7 +85,10 @@ export const addAccount =
   };
 
 export const forgetAccounts = (): AppThunk => async (dispatch) => {
-  EncryptedStorageUtils.clearEncryptedStorage();
+  // Clear persisted data across all storage backends
+  await EncryptedStorageUtils.clearEncryptedStorage();
+  await SecureStoreUtils.clearSecureStore();
+  await clearKeychain('accounts');
   dispatch({
     type: FORGET_ACCOUNTS,
   });

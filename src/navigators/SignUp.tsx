@@ -12,6 +12,7 @@ import AddAccountByKey from 'screens/hive/drawer/accounts/addAccounts/AddAccount
 import CreateAccount from 'screens/hive/drawer/accounts/createAccounts/CreateAccount';
 import CreateAccountConfirmation from 'screens/hive/drawer/accounts/createAccounts/CreateAccountConfirmation';
 import CreateAccountPeerToPeer from 'screens/hive/drawer/accounts/createAccountsPeerToPeer/CreateAccountPeerToPeer';
+import CreateAccountPeerToPeerQr from 'screens/hive/drawer/accounts/createAccountsPeerToPeer/CreateAccountPeerToPeerQr';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
@@ -99,12 +100,13 @@ export default () => {
       <Stack.Screen
         name="CreateAccountPeerToPeerScreen"
         options={({navigation}) => ({
-          headerBackTitle: translate('navigation.create_account_peer_to_peer'),
           headerTitle: () => (
             <NavigatorTitle title="navigation.create_account_peer_to_peer" />
           ),
           headerStyle: styles.header,
           headerTintColor: 'white',
+          headerTitleAlign: 'center',
+
           headerRightContainerStyle: styles.paddingRight,
           headerRight: () => {
             return (
@@ -122,6 +124,28 @@ export default () => {
           ),
         })}
         component={CreateAccountPeerToPeer}
+      />
+      <Stack.Screen
+        name="CreateAccountPeerToPeerQrScreen"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTintColor: 'white',
+          headerBackTitle: translate('navigation.create_an_account'),
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title="navigation.create_an_account" />
+          ),
+          headerLeft: () => (
+            <Icon
+              name={Icons.ARROW_LEFT}
+              theme={theme}
+              additionalContainerStyle={[styles.marginLeft]}
+              onPress={() => navigation.goBack()}
+              color={getColors(theme).iconBW}
+            />
+          ),
+        })}
+        component={CreateAccountPeerToPeerQr}
       />
       <Stack.Screen
         name="AddAccountByKeyScreen"

@@ -1,25 +1,27 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import BackNavigationButton from 'components/ui/BackNavigationButton';
 import CloseButton from 'components/ui/CloseButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import { StyleSheet, useWindowDimensions } from 'react-native';
+import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import AutomatedTasks from 'screens/hive/drawer/settings/AutomatedTasks';
+import ChangePin from 'screens/hive/drawer/settings/ChangePin';
 import ExportTransaction from 'screens/hive/drawer/settings/ExportTransactions';
+import Languages from 'screens/hive/drawer/settings/Languages';
 import Multisig from 'screens/hive/drawer/settings/Multisig';
 import Notifications from 'screens/hive/drawer/settings/Notifications';
 import Operations from 'screens/hive/drawer/settings/Operations';
 import RpcNodes from 'screens/hive/drawer/settings/RpcNodes';
 import Security from 'screens/hive/drawer/settings/Security';
 import SettingsMenu from 'screens/hive/drawer/settings/SettingsMenu';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Dimensions} from 'src/interfaces/common.interface';
-import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
-import {HEADER_ICON_MARGIN} from 'src/styles/headers';
-import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {buildIOSHorizontalStackOptions} from 'utils/navigation.utils';
+import { Theme, useThemeContext } from 'src/context/theme.context';
+import { Dimensions } from 'src/interfaces/common.interface';
+import { CARD_PADDING_HORIZONTAL } from 'src/styles/card';
+import { getColors } from 'src/styles/colors';
+import { HEADER_ICON_MARGIN } from 'src/styles/headers';
+import { STACK_HEADER_HEIGHT } from 'src/styles/spacing';
+import { buildIOSHorizontalStackOptions } from 'utils/navigation.utils';
 
 const Stack = createStackNavigator();
 
@@ -225,6 +227,58 @@ export default () => {
           headerTitleAlign: 'center',
           headerTitle: () => (
             <NavigatorTitle title={'settings.settings.security.title'} />
+          ),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('Wallet')}
+            />
+          ),
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="ChangePinScreen"
+        component={ChangePin}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.security.change_pin_title'} />
+          ),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('Wallet')}
+            />
+          ),
+          headerLeft: () => (
+            <BackNavigationButton
+              theme={theme}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="LanguagesScreen"
+        component={Languages}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.language.title'} />
           ),
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,

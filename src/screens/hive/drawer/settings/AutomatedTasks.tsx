@@ -6,6 +6,7 @@ import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import RpcErrorBanner from 'components/ui/RpcErrorBanner';
 import Separator from 'components/ui/Separator';
 import Spoiler from 'components/ui/Spoiler';
 import React, {
@@ -41,7 +42,12 @@ import AutomatedTasksUtils from 'utils/automatedTasks.utils';
 import {ClaimsConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 
-const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
+const AutomatedTasks = ({
+  active,
+  tokens,
+  colors,
+  hiveEngineRpcError,
+}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   const {width} = useWindowDimensions();
@@ -273,87 +279,95 @@ const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
               }}
               subTitle="settings.settings.automated_tasks.he_auto.subtitle"
             />
-            {enabledAutoStake && (
-              <View>
+            {enabledAutoStake &&
+              (hiveEngineRpcError ? (
+                <RpcErrorBanner
+                  errorMessageKey={hiveEngineRpcError}
+                  inSettings={true}
+                />
+              ) : (
                 <View>
-                  <DropdownModal
-                    enableSearch
-                    dropdownTitle="common.token"
-                    dropdownIconScaledSize={ICONMINDIMENSIONS}
-                    additionalDropdowContainerStyle={{paddingHorizontal: 8}}
-                    selected={
-                      {
-                        value: undefined,
-                        label: 'Select a token',
-                        icon: null,
-                      } as DropdownModalItem
-                    }
-                    onSelected={(item) => {
-                      if (
-                        !autoStakeTokenList?.find((a) => a.value === item.value)
-                      ) {
-                        const copyAutoStakeList = [...autoStakeTokenList];
-                        copyAutoStakeList.unshift(item);
-                        setAndSaveAutoStakeTokenList(copyAutoStakeList);
-                        ref.current.scrollToEnd();
+                  <View>
+                    <DropdownModal
+                      enableSearch
+                      dropdownTitle="common.token"
+                      dropdownIconScaledSize={ICONMINDIMENSIONS}
+                      additionalDropdowContainerStyle={{paddingHorizontal: 8}}
+                      selected={
+                        {
+                          value: undefined,
+                          label: 'Select a token',
+                          icon: null,
+                        } as DropdownModalItem
                       }
-                    }}
-                    list={tokens
-                      .filter(
-                        (token) =>
-                          token.stakingEnabled &&
-                          !autoStakeTokenList.find(
-                            (e) => e.value === token.symbol,
-                          ),
-                      )
-                      .map((token) => {
-                        return {
-                          value: token.symbol,
-                          label: token.symbol,
-                          icon: (
-                            <CurrencyIcon
-                              symbol={token.symbol}
-                              addBackground
-                              currencyName={token.symbol}
-                              colors={colors}
-                              tokenInfo={tokens.find(
-                                (t) => t.symbol === token.symbol,
-                              )}
-                            />
-                          ),
-                        } as DropdownModalItem;
-                      })}
-                    drawLineBellowSelectedItem
-                    showSelectedIcon
-                    additionalLineStyle={styles.bottomLineDropdownItem}
-                  />
+                      onSelected={(item) => {
+                        if (
+                          !autoStakeTokenList?.find(
+                            (a) => a.value === item.value,
+                          )
+                        ) {
+                          const copyAutoStakeList = [...autoStakeTokenList];
+                          copyAutoStakeList.unshift(item);
+                          setAndSaveAutoStakeTokenList(copyAutoStakeList);
+                          ref.current.scrollToEnd();
+                        }
+                      }}
+                      list={tokens
+                        .filter(
+                          (token) =>
+                            token.stakingEnabled &&
+                            !autoStakeTokenList.find(
+                              (e) => e.value === token.symbol,
+                            ),
+                        )
+                        .map((token) => {
+                          return {
+                            value: token.symbol,
+                            label: token.symbol,
+                            icon: (
+                              <CurrencyIcon
+                                symbol={token.symbol}
+                                addBackground
+                                currencyName={token.symbol}
+                                colors={colors}
+                                tokenInfo={tokens.find(
+                                  (t) => t.symbol === token.symbol,
+                                )}
+                              />
+                            ),
+                          } as DropdownModalItem;
+                        })}
+                      drawLineBellowSelectedItem
+                      showSelectedIcon
+                      additionalLineStyle={styles.bottomLineDropdownItem}
+                    />
+                  </View>
+                  <Separator />
+                  {autoStakeTokenList.length > 0 && enabledAutoStake && (
+                    <>
+                      <Text
+                        style={[
+                          inputStyle(theme, width).label,
+                          {marginLeft: 10},
+                        ]}>
+                        {translate(
+                          'settings.settings.automated_tasks.he_auto.list_title',
+                        )}
+                      </Text>
+                      <View style={getCardStyle(theme).defaultCardItem}>
+                        {/* className="auto-stake-token-list"> */}
+                        <FlatList
+                          keyboardDismissMode="none"
+                          keyboardShouldPersistTaps="handled"
+                          data={autoStakeTokenList}
+                          keyExtractor={(item) => item.label}
+                          renderItem={renderTokenItem}
+                        />
+                      </View>
+                    </>
+                  )}
                 </View>
-                <Separator />
-                {autoStakeTokenList.length > 0 && enabledAutoStake && (
-                  <>
-                    <Text
-                      style={[
-                        inputStyle(theme, width).label,
-                        {marginLeft: 10},
-                      ]}>
-                      {translate(
-                        'settings.settings.automated_tasks.he_auto.list_title',
-                      )}
-                    </Text>
-                    <View style={getCardStyle(theme).defaultCardItem}>
-                      {/* className="auto-stake-token-list"> */}
-                      <FlatList
-                        keyboardDismissMode="none"
-                        keyboardShouldPersistTaps="handled"
-                        data={autoStakeTokenList}
-                        keyExtractor={(item) => item.label}
-                        renderItem={renderTokenItem}
-                      />
-                    </View>
-                  </>
-                )}
-              </View>
-            )}
+              ))}
           </>
         </Spoiler>
       </ScrollView>
@@ -387,6 +401,7 @@ const mapStateToProps = (state: RootState) => ({
   active: state.activeAccount,
   tokens: state.tokens,
   colors: state.colors,
+  hiveEngineRpcError: state.settings.hiveEngineRpcError,
 });
 
 const connector = connect(mapStateToProps);

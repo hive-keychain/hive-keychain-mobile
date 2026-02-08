@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDrawerStatus} from '@react-navigation/drawer';
 import {useFocusEffect} from '@react-navigation/native';
 import {
@@ -25,6 +24,7 @@ import Notifications from 'components/hive/notifications/Notifications';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
+import RatingPrompt from 'components/popups/rating/RatingPrompt';
 import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
 import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
 import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vestingRoutes.interface';
@@ -33,12 +33,13 @@ import WidgetConfiguration from 'components/popups/widget-configuration/WidgetCo
 import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
+import RpcErrorBanner from 'components/ui/RpcErrorBanner';
 import Separator from 'components/ui/Separator';
 import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -59,7 +60,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BottomBarLink} from 'src/enums/bottomBarLink.enum';
 import {Icons} from 'src/enums/icons.enum';
-import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Dimensions} from 'src/interfaces/common.interface';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
@@ -79,7 +79,7 @@ import {
 import {RootState} from 'store';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hive.utils';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
+import {getHiddenTokens, getHiveEngineTokenValue} from 'utils/hiveEngine.utils';
 import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation.utils';
@@ -108,12 +108,16 @@ const Main = ({
   tokensMarket,
   updateNavigationState,
   rpc,
+  hiveEngineRpcError,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
-  const styles = getDimensionedStyles({width, height}, theme, insets);
+  const styles = useMemo(
+    () => getDimensionedStyles({width, height}, theme, insets),
+    [width, height, theme, insets],
+  );
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
   const sectionListRef = useRef<FlatList<TokenBalance>>(null);
   const [toggled, setToggled] = useState<number>(null);
@@ -140,6 +144,8 @@ const Main = ({
     setRefreshing(true);
     updateUserWallet(user.name);
   }, [user.name]);
+
+  // Rating prompt handled by a popup component rendered below
 
   useEffect(() => {
     if (Platform.OS === 'ios') return;
@@ -204,16 +210,30 @@ const Main = ({
           getHiveEngineTokenValue(a, tokensMarket)
         );
       });
-      setFilteredUserTokenBalanceList(
-        list.filter((userToken) => !hiddenTokens.includes(userToken.symbol)),
+      const filtered = list.filter(
+        (userToken) => !hiddenTokens.includes(userToken.symbol),
       );
+      setFilteredUserTokenBalanceList(filtered);
       setOrderedUserTokenBalanceList(list);
+      // If token metadata or market data is missing (likely after a failed RPC),
+      // try reloading them once data loads.
+      if (filtered.length > 0 && (!tokens?.length || !tokensMarket?.length)) {
+        loadTokens();
+        loadTokensMarket();
+      }
       setIsHiveEngineLoading(false);
     } else {
       setFilteredUserTokenBalanceList([]);
       setIsHiveEngineLoading(true);
     }
-  }, [userTokens.loading, hiddenTokens, tokensMarket]);
+  }, [
+    userTokens.loading,
+    userTokens.list,
+    hiddenTokens,
+    tokensMarket,
+    loadTokens,
+    loadTokensMarket,
+  ]);
 
   useEffect(() => {
     if (
@@ -224,9 +244,7 @@ const Main = ({
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
       initCheckVestingRoutes();
-      if (!userTokens.loading) {
-        loadHiddenTokens();
-      }
+      loadHiddenTokens();
     }
   }, [properties, user.account?.name]);
 
@@ -267,6 +285,7 @@ const Main = ({
     loadPrices,
     fetchPhishingAccounts,
     lastAccount,
+    rpc.uri,
   ]);
 
   useBackButtonNavigation('Wallet', true);
@@ -329,17 +348,13 @@ const Main = ({
   };
 
   const loadHiddenTokens = async () => {
-    let customHiddenTokens = null;
     try {
-      customHiddenTokens = JSON.parse(
-        await AsyncStorage.getItem(KeychainStorageKeyEnum.HIDDEN_TOKENS),
-      );
-      setHiddenTokens(customHiddenTokens ?? []);
+      const customHiddenTokens = await getHiddenTokens();
+      setHiddenTokens(customHiddenTokens[user.name] ?? []);
     } catch (error) {
       console.log('Error reading hiddenTokens');
     }
   };
-
   const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     showFloatingBar(
       event.nativeEvent.contentOffset.y <= 0 ||
@@ -366,27 +381,30 @@ const Main = ({
     [],
   );
 
-  const renderEngineTokenDisplay = useCallback(
-    ({item, index}: {item: TokenBalance; index: number}) => {
-      const handleSetToggle = () => {
-        if (toggled === item._id) setToggled(null);
-        else setToggled(item._id);
-        handleClickToView(index, 1);
-      };
-      return (
-        <EngineTokenDisplay
-          key={`engine-token-${item._id}`}
-          addBackground
-          token={item}
-          tokensList={tokens}
-          market={tokensMarket}
-          toggled={toggled === item._id}
-          setToggle={handleSetToggle}
-        />
-      );
-    },
-    [tokens, tokensMarket, toggled, setToggled, handleClickToView],
-  );
+  const renderEngineTokenDisplay = ({
+    item,
+    index,
+  }: {
+    item: TokenBalance;
+    index: number;
+  }) => {
+    const handleSetToggle = () => {
+      if (toggled === item._id) setToggled(null);
+      else setToggled(item._id);
+      handleClickToView(index, 1);
+    };
+    return (
+      <EngineTokenDisplay
+        key={`engine-token-${item._id}`}
+        addBackground
+        token={item}
+        tokensList={tokens}
+        market={tokensMarket}
+        toggled={toggled === item._id}
+        setToggle={handleSetToggle}
+      />
+    );
+  };
 
   return (
     <WalletPage
@@ -409,8 +427,8 @@ const Main = ({
                   <UserDropdown
                     dropdownIconScaledSize={styles.smallIcon}
                     additionalDropdowContainerStyle={styles.userdropdown}
-                    additionalMainContainerDropdown={[styles.dropdownContainer]}
-                    additionalOverlayStyle={[styles.dropdownOverlay]}
+                    additionalMainContainerDropdown={styles.dropdownContainer}
+                    additionalOverlayStyle={styles.dropdownOverlay}
                     canBeReordered
                     additionalListExpandedContainerStyle={
                       styles.dropdownExpandedContainer
@@ -429,7 +447,7 @@ const Main = ({
               }}>
               <FlatList
                 style={{
-                  flex: 1,
+                  flexGrow: 1,
                 }}
                 ref={mainScrollRef}
                 initialNumToRender={10}
@@ -461,7 +479,6 @@ const Main = ({
                             100,
                             properties,
                             user.account,
-                            false,
                           ) || '0'
                         }`}
                       />
@@ -551,6 +568,11 @@ const Main = ({
                             </React.Fragment>
                           )}
                         </View>
+                        {hiveEngineRpcError && (
+                          <RpcErrorBanner
+                            errorMessageKey={hiveEngineRpcError}
+                          />
+                        )}
                       </View>
                     </View>
                   </View>
@@ -561,7 +583,8 @@ const Main = ({
                       <View style={styles.extraContainerMiniLoader}>
                         <Loader size={'small'} animating />
                       </View>
-                    ) : !userTokens.loading &&
+                    ) : !hiveEngineRpcError &&
+                      !userTokens.loading &&
                       filteredUserTokenBalanceList.length === 0 &&
                       orderedUserTokenBalanceList.length === 0 ? (
                       <View style={styles.extraContainerMiniLoader}>
@@ -569,7 +592,8 @@ const Main = ({
                           {translate('wallet.no_tokens')}
                         </Text>
                       </View>
-                    ) : !userTokens.loading &&
+                    ) : !hiveEngineRpcError &&
+                      !userTokens.loading &&
                       orderedUserTokenBalanceList.length > 0 &&
                       filteredUserTokenBalanceList.length === 0 ? (
                       <View style={styles.extraContainerMiniLoader}>
@@ -586,6 +610,7 @@ const Main = ({
               />
             </View>
             <WhatsNew navigation={navigation} />
+            <RatingPrompt navigation={navigation} />
             <WidgetConfiguration
               show={showWidgetConfiguration}
               setShow={setShowWidgetConfiguration}
@@ -716,6 +741,7 @@ const connector = connect(
       userTokens: state.userTokens,
       tokensMarket: state.tokensMarket,
       rpc: state.settings.rpc,
+      hiveEngineRpcError: state.settings.hiveEngineRpcError,
     };
   },
   {

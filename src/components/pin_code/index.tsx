@@ -1,9 +1,8 @@
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import EllipticButton from 'components/form/EllipticButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
-import {SignupNavigation} from 'navigators/Signup.types';
-import {UnlockNavigation} from 'navigators/Unlock.types';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Linking,
   StyleProp,
@@ -12,25 +11,25 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import {Text} from 'react-native-elements';
+import { Text } from 'react-native-elements';
 import Toast from 'react-native-root-toast';
-import {Theme} from 'src/context/theme.context';
-import {Width} from 'src/interfaces/common.interface';
+import { Theme } from 'src/context/theme.context';
+import { Width } from 'src/interfaces/common.interface';
 import {
   PRIMARY_RED_COLOR,
   RED_SHADOW_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
-import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
+import { generateBoxShadowStyle } from 'src/styles/shadow';
+import { getSpaceAdjustMultiplier, getSpacing } from 'src/styles/spacing';
 import {
   body_primary_body_3,
   button_link_primary_medium,
   headlines_primary_headline_1,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation.utils';
+import { translate } from 'utils/localize';
+import { navigate } from 'utils/navigation.utils';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
 
@@ -39,19 +38,27 @@ interface Props {
   infoPin?: React.ReactNode;
   infoPinContainerStyle?: StyleProp<ViewStyle>;
   signup?: boolean;
+  mode?: 'unlock' | 'signup' | 'changePin';
+  startStep?: number;
   title: string;
   confirm?: string;
+  newTitle?: string;
   submit: (pin: string, callback?: (unsafe?: boolean) => void) => void;
-  navigation: UnlockNavigation | SignupNavigation;
+  verifyCurrentPin?: (pin: string) => Promise<boolean>;
+  navigation: NavigationProp<ParamListBase>;
   theme: Theme;
 }
 
 const PinCode = ({
   children,
   signup = false,
+  mode,
+  startStep,
   title,
   confirm,
+  newTitle,
   submit,
+  verifyCurrentPin,
   navigation,
   theme,
   infoPin,
@@ -60,6 +67,7 @@ const PinCode = ({
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width});
   const spaced = getSpaceAdjustMultiplier(width, height);
+  const flow = mode ?? (signup ? 'signup' : 'unlock');
   interface PinItem {
     refNumber: number;
     number?: number;
@@ -86,23 +94,75 @@ const PinCode = ({
   ];
   const [code, setCode] = useState<string[]>([]);
   const [confirmCode, setConfirmCode] = useState<string[]>([]);
-  const [step, setStep] = useState(0);
+  const [pendingPin, setPendingPin] = useState<string | null>(null);
+  const [step, setStep] = useState(startStep ?? 0);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setStep(0);
+      setStep(startStep ?? 0);
       setCode([]);
       setConfirmCode([]);
+      setPendingPin(null);
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, startStep]);
+
+  useEffect(() => {
+    if (startStep !== undefined) {
+      setStep(startStep);
+      setCode([]);
+      setConfirmCode([]);
+      setPendingPin(null);
+    }
+  }, [startStep]);
 
   useEffect(() => {
     if (code.length === 6) {
-      if (signup) {
+      if (flow === 'changePin') {
+        const entry = code.join('');
+        if (step === 0) {
+          const verify = verifyCurrentPin ?? (async () => false);
+          verify(entry)
+            .then((isValid) => {
+              if (!isValid) {
+                Toast.show(translate('toast.authFailed'), {
+                  duration: Toast.durations.LONG,
+                });
+                setCode([]);
+                return;
+              }
+              setStep(1);
+              setCode([]);
+            })
+            .catch(() => {
+              Toast.show(translate('toast.authFailed'), {
+                duration: Toast.durations.LONG,
+              });
+              setCode([]);
+            });
+          return;
+        }
+        if (step === 1) {
+          setPendingPin(entry);
+          setStep(2);
+          setCode([]);
+          return;
+        }
+        if (step === 2) {
+          if (pendingPin !== entry) {
+            Toast.show(translate('toast.noMatch'));
+            setStep(1);
+            setPendingPin(null);
+            setCode([]);
+            return;
+          }
+          submit(entry);
+          return;
+        }
+      } else if (flow === 'signup') {
         setStep(1);
       } else {
         submit(code.join(''), (unsafeBiometrics) => {
@@ -113,7 +173,7 @@ const PinCode = ({
         });
       }
     }
-    if (confirmCode.length === 6) {
+    if (flow === 'signup' && confirmCode.length === 6) {
       if (
         !(
           confirmCode.length === code.length &&
@@ -128,7 +188,15 @@ const PinCode = ({
         submit(code.join(''));
       }
     }
-  }, [code, confirmCode, signup, submit]);
+  }, [
+    code,
+    confirmCode,
+    flow,
+    pendingPin,
+    step,
+    submit,
+    verifyCurrentPin,
+  ]);
 
   useEffect(() => {
     if (visible) {
@@ -190,6 +258,15 @@ const PinCode = ({
   }, [visible]);
 
   const onPressElement = (number: number | undefined, back?: boolean) => {
+    if (flow === 'changePin') {
+      if ((number || number === 0) && code.length !== 6) {
+        setCode([...code, number + '']);
+      }
+      if (back) {
+        setCode(code.slice(0, -1));
+      }
+      return;
+    }
     if (step === 0) {
       if ((number || number === 0) && code.length !== 6) {
         setCode([...code, number + '']);
@@ -207,10 +284,18 @@ const PinCode = ({
     }
   };
   let h4;
-  if (!signup || step === 0) {
-    h4 = title;
+  if (flow === 'changePin') {
+    if (step === 0) {
+      h4 = title;
+    } else if (step === 1) {
+      h4 = newTitle || title;
+    } else {
+      h4 = confirm || title;
+    }
+  } else if (flow === 'signup') {
+    h4 = step === 0 ? title : confirm;
   } else {
-    h4 = confirm;
+    h4 = title;
   }
   return (
     <View style={styles.bgd}>
@@ -227,7 +312,7 @@ const PinCode = ({
           <Text style={styles.sub}>{h4}</Text>
           <Separator height={height * spaced.spaceBase} />
           <PinCompletionIndicator
-            code={step === 0 ? code : confirmCode}
+            code={flow === 'changePin' ? code : step === 0 ? code : confirmCode}
             theme={theme}
           />
         </View>

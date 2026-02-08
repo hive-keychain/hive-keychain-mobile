@@ -19,6 +19,7 @@ import SafeArea from 'components/ui/SafeArea';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {useEffect} from 'react';
+import {Platform} from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
 import {useChainContext} from 'src/context/multichain.context';
@@ -63,7 +64,7 @@ const BrowserScreen = ({
   const {theme} = useThemeContext();
 
   return (
-    <SafeArea>
+    <SafeArea skipBottom={Platform.OS === 'ios'}>
       <Browser
         theme={theme}
         accounts={accounts}

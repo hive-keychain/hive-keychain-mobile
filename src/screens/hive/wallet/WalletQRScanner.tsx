@@ -2,11 +2,15 @@ import {NavigationProp, RouteProp, useRoute} from '@react-navigation/native';
 import {addAccount} from 'actions/index';
 import {Account} from 'actions/interfaces';
 import QRCode from 'components/qr_code';
+import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import Loader from 'components/ui/Loader';
 import {BarcodeScanningResult} from 'expo-camera';
-import React, {useState} from 'react';
-import {Text} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {StyleSheet, Text} from 'react-native';
 import SimpleToast from 'react-native-root-toast';
+import {useThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {KeyUtils} from 'utils/key.utils';
@@ -21,9 +25,13 @@ type AnyWalletQRRoute = RouteProp<
 
 const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
   const route = useRoute<AnyWalletQRRoute>();
+  const {theme} = useThemeContext();
   const [processingAccounts, setProcessingAccounts] = useState(false);
   const [qrDataAccounts, setQrDataAccounts] = useState<Account[]>([]);
   const [acctPageTotal, setAcctPageTotal] = useState(0);
+  const [scannedPages, setScannedPages] = useState(0);
+  const [currentImportingPage, setCurrentImportingPage] = useState(0);
+  const scannedPageTimestampsRef = useRef<Map<number, number>>(new Map());
   const onSuccess = async ({data}: BarcodeScanningResult) => {
     try {
       if (data.startsWith('keychain://add_accounts=')) {
@@ -35,28 +43,39 @@ const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
         try {
           const dataAccounts = JSON.parse(accountDataStr);
           setAcctPageTotal(dataAccounts.total);
-          if (qrDataAccounts.length / 2 + 1 !== dataAccounts.index) {
-            SimpleToast.show(
-              translate(
-                `toast.export_qr_accounts.${
-                  qrDataAccounts.length / 2 + 1 < dataAccounts.index
-                    ? 'scan_page_first'
-                    : 'already_scanned'
-                }`,
-                {
-                  page: qrDataAccounts.length / 2 + 1,
-                },
-              ),
-            );
-            return;
+          const expectedPageIndex = scannedPages + 1;
+          if (expectedPageIndex !== dataAccounts.index) {
+            // Only show "already_scanned" if it was scanned more than 3 seconds ago
+            if (expectedPageIndex > dataAccounts.index) {
+              const lastScannedTime = scannedPageTimestampsRef.current.get(
+                dataAccounts.index,
+              );
+              const now = Date.now();
+              if (lastScannedTime && now - lastScannedTime > 5000) {
+                SimpleToast.show(
+                  translate('toast.export_qr_accounts.already_scanned', {
+                    page: expectedPageIndex,
+                  }),
+                );
+              }
+              return;
+            } else {
+              SimpleToast.show(
+                translate('toast.export_qr_accounts.scan_page_first', {
+                  page: expectedPageIndex,
+                }),
+              );
+              return;
+            }
           }
 
           const acc = [...qrDataAccounts, ...dataAccounts.data];
           setQrDataAccounts(acc);
-          if (
-            dataAccounts.total > 1 &&
-            qrDataAccounts.length < dataAccounts.total
-          ) {
+          const newScannedPages = scannedPages + 1;
+          setScannedPages(newScannedPages);
+          // Track when this page was scanned
+          scannedPageTimestampsRef.current.set(dataAccounts.index, Date.now());
+          if (dataAccounts.total > 1 && newScannedPages < dataAccounts.total) {
             SimpleToast.show(
               translate('toast.export_qr_accounts.scan_next', {
                 index: dataAccounts.index,
@@ -87,7 +106,12 @@ const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
     qrDataAccounts: Account[],
     wallet = true,
   ) => {
-    for (const dataAcc of qrDataAccounts) {
+    for (let i = 0; i < qrDataAccounts.length; i++) {
+      const dataAcc = qrDataAccounts[i];
+      // Calculate which page we're currently importing (pages contain 2 accounts each)
+      const currentPage = Math.floor(i / 2) + 1;
+      setCurrentImportingPage(currentPage);
+
       let keys = {};
       if (
         (dataAcc.keys.activePubkey &&
@@ -139,21 +163,47 @@ const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
     }
     setQrDataAccounts([]);
     setProcessingAccounts(false);
-    console.log('there');
-    return navigation.getParent()?.goBack();
+    setScannedPages(0);
+    setAcctPageTotal(0);
+    setCurrentImportingPage(0);
+    scannedPageTimestampsRef.current.clear();
+    navigation.goBack();
   };
+
+  const isScanningMultipleAccounts =
+    acctPageTotal > 0 && scannedPages < acctPageTotal && !processingAccounts;
+
+  if (processingAccounts) {
+    return (
+      <>
+        <FocusAwareStatusBar />
+        <Background theme={theme} containerStyle={styles.loadingContainer}>
+          <Loader animating size="large" />
+          <Text
+            style={[styles.loadingText, {color: getColors(theme).primaryText}]}>
+            {translate('toast.export_qr_accounts.importing', {
+              page: currentImportingPage,
+              total: acctPageTotal,
+            })}
+          </Text>
+        </Background>
+      </>
+    );
+  }
 
   return (
     <>
       <FocusAwareStatusBar />
       <QRCode
         onSuccess={onSuccess}
+        allowMultipleScans={isScanningMultipleAccounts}
+        scanDebounceMs={isScanningMultipleAccounts ? 500 : 2000}
         topContent={
           acctPageTotal > 0 && !processingAccounts ? (
             <Text
               style={{textAlign: 'center', fontWeight: 'bold', fontSize: 16}}>
               {translate('components.export_qr_accounts.scanning', {
-                page: qrDataAccounts.length / 2 + 1,
+                page: scannedPages + 1,
                 total: acctPageTotal,
               })}
             </Text>
@@ -163,5 +213,19 @@ const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
 
 export default WalletQRScanner;

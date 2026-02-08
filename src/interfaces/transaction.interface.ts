@@ -1,4 +1,4 @@
-import {OperationName, VirtualOperationName} from '@hiveio/dhive';
+import {Asset, OperationName, VirtualOperationName} from '@hiveio/dhive';
 
 export type CustomTransactionType = 'savings' | 'power_up_down';
 export interface Transactions {
@@ -34,6 +34,18 @@ export interface FillRecurrentTransfer extends Transfer {
   remainingExecutions: number;
 }
 
+export interface PendingRecurrentTransfer {
+  amount: Asset;
+  consecutive_failures: number;
+  from: string;
+  id: number;
+  memo: string;
+  pair_id: number;
+  recurrence: number;
+  remaining_executions: number;
+  to: string;
+  trigger_date: string;
+}
 export interface Delegation extends Transaction {
   amount: string;
   delegator: string;

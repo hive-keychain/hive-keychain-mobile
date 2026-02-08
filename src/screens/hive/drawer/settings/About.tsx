@@ -26,6 +26,7 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {getSafeState} from 'store';
+import {translate} from 'utils/localize';
 
 export default ({navigation}: {navigation: AboutNavigation}) => {
   useLockedPortrait(navigation);
@@ -52,39 +53,44 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
                 setPressed(pressed + 1);
               } else {
                 Clipboard.setStringAsync(JSON.stringify(getSafeState()));
-                SimpleToast.show(
-                  'Debug Mode : The Application state has been copied to the clipboard. Contact our team to help you debug.',
-                  {
-                    duration: SimpleToast.durations.LONG,
-                  },
-                );
+                SimpleToast.show(translate('toast.debug_state_copied'), {
+                  duration: SimpleToast.durations.LONG,
+                });
               }
             }}>
             <Text style={[styles.textBase, styles.title, styles.textCentered]}>
-              Keychain Mobile v{Constants.expoConfig?.version}
+              {translate('about.title', {
+                version: Constants.expoConfig?.version,
+              })}
             </Text>
             <Separator height={10} />
           </TouchableOpacity>
           <Text style={[styles.textBase, styles.text]}>
-            Hive Keychain for mobile is developed by the Keychain team and
-            founded through the <Text style={styles.highLigth}>Hive DAO</Text>.
+            {translate('about.developed_by_prefix')}
+            <Text style={styles.highLigth}>{translate('common.hive_dao')}</Text>
+            .
           </Text>
           <Separator height={20} />
           <Text style={[styles.textBase, styles.text]}>
-            Process transactions and enjoy your favorite dApps on your{' '}
-            <Text style={styles.highLigth}>Mobile Device!</Text>
+            {translate('about.process_transactions')}
+            <Text style={styles.highLigth}>
+              {translate('about.mobile_device_highlight')}
+            </Text>
           </Text>
           <Separator height={20} />
           <Text style={[styles.textBase, styles.text]}>
-            Should you encounter any issue, contact us on our{' '}
+            {translate('about.contact_prefix')}{' '}
             <Text
               style={styles.highLigth}
               onPress={() => {
                 Linking.openURL('https://discord.gg/3EM6YfRrGv');
               }}>
-              Discord Server
+              {translate('common.discord_server')}
             </Text>
-            <Text style={[styles.textBase, styles.text]}> or </Text>
+            <Text style={[styles.textBase, styles.text]}>
+              {' '}
+              {translate('common.or')}{' '}
+            </Text>
             <Text
               style={styles.highLigth}
               onPress={() => {
@@ -92,7 +98,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
                   'https://github.com/stoodkev/hive-keychain-mobile',
                 );
               }}>
-              on our Github
+              {translate('about.on_our_github')}.
             </Text>
           </Text>
         </View>

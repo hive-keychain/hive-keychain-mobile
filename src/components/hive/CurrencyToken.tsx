@@ -154,7 +154,7 @@ const CurrencyToken = ({
       <>
         <Separator />
         <View style={styles.tokenInformationRow}>
-          <Text style={[styles.priceText]}>Price</Text>
+          <Text style={[styles.priceText]}>{translate('common.price')}</Text>
           <View style={{flexDirection: 'row'}}>
             <Text
               style={[

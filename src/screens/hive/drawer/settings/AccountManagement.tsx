@@ -36,7 +36,7 @@ import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation.utils';
+import {goBack} from 'utils/navigation.utils';
 
 const AccountManagement = ({
   account,
@@ -90,10 +90,8 @@ const AccountManagement = ({
       const confirmationData = {
         title: 'common.confirm_account_remove',
         onConfirm: () => {
+          goBack();
           forgetAccount(username);
-          setTimeout(() => {
-            navigate('WalletScreen');
-          }, 1000);
         },
         data: [
           {
@@ -112,6 +110,7 @@ const AccountManagement = ({
         name: 'ConfirmationPageModal',
         modalContent: (
           <ConfirmationPage
+            navigation={navigation}
             route={
               {params: confirmationData} as unknown as ConfirmationPageRoute
             }

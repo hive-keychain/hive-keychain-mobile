@@ -8,7 +8,7 @@ import MultisigCaption from 'components/ui/MultisigCaption';
 import {useDomainCheck} from 'hooks/domainCheck';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import SimpleToast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -96,58 +96,64 @@ const RequestOperation = ({
 
   const renderRequestSummary = () => (
     <View style={styles.container}>
-      <View>
-        {domainHeader && (
-          <RequestMessage
-            message={domainHeader}
-            additionalTextStyle={[
-              getCaptionStyle(width, theme),
-              {paddingHorizontal: 10, marginTop: 0, color: PRIMARY_RED_COLOR},
-            ]}
-          />
-        )}
-        {message && message.length > 0 && (
-          <RequestMessage
-            message={message}
-            additionalTextStyle={[
-              getCaptionStyle(width, theme),
-              {paddingHorizontal: 10, marginTop: 0},
-            ]}
-          />
-        )}
-        {isMultisig && <MultisigCaption />}
-
-        <ConfirmationCard
-          data={confirmationData}
-          tokens={tokens}
-          colors={colors}
-          request={request}
-          accounts={accounts}
-          RequestUsername={RequestUsername}
-        />
-        <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
-        {method !== KeyTypes.active &&
-        !!domain &&
-        type !== KeychainRequestTypes.addAccount ? (
-          <View style={styles.keep}>
-            <CheckBoxPanel
-              smallText
-              checked={keep}
-              onPress={() => {
-                setKeep(!keep);
-              }}
-              title={translate(`request.keep${has ? '_has' : ''}`, {
-                domain,
-                username: selectedUsername || username,
-                type,
-              })}
-              containerStyle={{paddingRight: 16, flex: 1, flexGrow: 1}}
-              skipTranslation
+      <View style={styles.scrollContainer}>
+        <ScrollView
+          style={styles.scrollView}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+          contentContainerStyle={styles.scrollContent}>
+          {domainHeader && (
+            <RequestMessage
+              message={domainHeader}
+              additionalTextStyle={[
+                getCaptionStyle(width, theme),
+                {paddingHorizontal: 10, marginTop: 0, color: PRIMARY_RED_COLOR},
+              ]}
             />
-          </View>
-        ) : (
-          <></>
-        )}
+          )}
+          {message && message.length > 0 && (
+            <RequestMessage
+              message={message}
+              additionalTextStyle={[
+                getCaptionStyle(width, theme),
+                {paddingHorizontal: 10, marginTop: 0},
+              ]}
+            />
+          )}
+          {isMultisig && <MultisigCaption />}
+
+          <ConfirmationCard
+            data={confirmationData}
+            tokens={tokens}
+            colors={colors}
+            request={request}
+            accounts={accounts}
+            RequestUsername={RequestUsername}
+          />
+          <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
+          {method !== KeyTypes.active &&
+          !!domain &&
+          type !== KeychainRequestTypes.addAccount ? (
+            <View style={styles.keep}>
+              <CheckBoxPanel
+                smallText
+                checked={keep}
+                onPress={() => {
+                  setKeep(!keep);
+                }}
+                title={translate(`request.keep${has ? '_has' : ''}`, {
+                  domain,
+                  username: selectedUsername || username,
+                  type,
+                })}
+                containerStyle={{paddingRight: 16, flex: 1, flexGrow: 1}}
+                skipTranslation
+              />
+            </View>
+          ) : (
+            <></>
+          )}
+        </ScrollView>
       </View>
       <OperationButton
         style={[getButtonStyle(theme).warningStyleButton, styles.button]}
@@ -222,6 +228,9 @@ const RequestOperation = ({
 
 const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
+    scrollContainer: {flex: 1, minHeight: 0},
+    scrollView: {flex: 1},
+    scrollContent: {paddingBottom: 8},
     keep: {marginTop: 16, flexDirection: 'row'},
     text: {
       color: getColors(theme).secondaryText,

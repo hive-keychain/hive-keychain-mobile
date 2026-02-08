@@ -1,6 +1,6 @@
 import {loadAccount, reorderAccounts} from 'actions/index';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import React, {ComponentProps, useEffect, useState} from 'react';
+import React, {ComponentProps, useEffect, useMemo, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {MARGIN_PADDING} from 'src/styles/spacing';
@@ -29,6 +29,10 @@ const UserDropdown = ({
       icon: <UserProfilePicture username={username} style={styles.avatar} />,
     };
   };
+  const selectedMemo = useMemo(
+    () => getItemDropDownSelected(activeAccount.name!),
+    [activeAccount.name, accounts],
+  );
 
   const getListFromAccount = () =>
     accounts.map((acc) => {
@@ -47,7 +51,7 @@ const UserDropdown = ({
     <DropdownModal
       hideLabel
       list={list}
-      selected={getItemDropDownSelected(activeAccount.name!)}
+      selected={selectedMemo}
       onSelected={(selectedAccount) => loadAccount(selectedAccount.value, true)}
       additionalDropdowContainerStyle={styles.dropdownContainer}
       additionalOverlayStyle={styles.dropdownOverlay}

@@ -1,9 +1,9 @@
 import {loadAccount} from 'actions/hive';
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import DiscordLogo from 'assets/images/drawer/discord_logo.svg';
-import HiveLogo from 'assets/images/hive/hive_logo.svg';
 import MediumLogo from 'assets/images/drawer/medium.svg';
 import XLogo from 'assets/images/drawer/x_logo.svg';
+import HiveLogo from 'assets/images/hive/hive_logo.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import React, {useEffect, useState} from 'react';
 import {

@@ -43,6 +43,7 @@ import {store} from 'store';
 import {urlTransformer} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
 import {getAccount} from 'utils/hive.utils';
+import {downloadFromUrl} from 'utils/image.utils';
 import {
   getRequestTitle,
   getRequiredWifType,
@@ -56,10 +57,16 @@ import {navigate, goBack as navigationGoBack} from 'utils/navigation.utils';
 import {hasPreference} from 'utils/preferences.utils';
 import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation.utils';
 import HomeTab from './HomeTab';
+import MediaDownloadModal from './MediaDownloadModal';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
 import {DESKTOP_MODE} from './bridges/DesktopMode';
+import {
+  FIND_IN_PAGE_CLEAR,
+  FIND_IN_PAGE_SPA_CLEANUP,
+} from './bridges/FindInPage';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
+import {IMAGE_DOWNLOAD_SCRIPT} from './bridges/ImageDownload';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
 
@@ -104,7 +111,12 @@ export default memo(
     const insets = useSafeAreaInsets();
     const [canRefresh, setCanRefresh] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const {setWebViewRef, setTabViewRef} = useTab();
+    const {
+      setWebViewRef,
+      setTabViewRef,
+      updateFindInPageCount,
+      closeFindInPage,
+    } = useTab();
     const [isFlutterApp, setIsFlutterApp] = useState(false);
     const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
     const [flutterDomain, setFlutterDomain] = useState('');
@@ -170,6 +182,12 @@ export default memo(
         clearTimeout(urlUpdateTimeoutRef.current);
       }
 
+      // Clear Find in Page highlights when navigation starts
+      const {current} = tabRef;
+      if (current) {
+        current.injectJavaScript(FIND_IN_PAGE_CLEAR);
+      }
+
       // Update URL immediately for normal navigation
       if (
         url !== data.url &&
@@ -218,10 +236,55 @@ export default memo(
 
       if (current) {
         current.injectJavaScript(BRIDGE_WV_INFO);
+        current.injectJavaScript(IMAGE_DOWNLOAD_SCRIPT);
+        // Clear Find in Page highlights and hook into history API for SPA navigation
+        current.injectJavaScript(FIND_IN_PAGE_SPA_CLEANUP);
+      }
+    };
+
+    const downloadImage = async (imageUrl: string) => {
+      if (Platform.OS === 'android') {
+        // Show modal for Android
+        await downloadFromUrl(imageUrl, (onSave, onShare) => {
+          navigate('ModalScreen', {
+            name: 'MediaDownload',
+            fixedHeight: 0.4,
+            modalContent: (
+              <MediaDownloadModal
+                onSave={() => {
+                  onSave(() => {
+                    navigationGoBack();
+                  });
+                }}
+                onShare={() => {
+                  onShare();
+                  navigationGoBack();
+                }}
+                onCancel={() => {
+                  navigationGoBack();
+                }}
+              />
+            ),
+            onForceCloseModal: () => {
+              navigationGoBack();
+            },
+          });
+        });
+      } else {
+        // iOS - direct share
+        await downloadFromUrl(imageUrl);
       }
     };
 
     const onMessage = ({nativeEvent}: WebViewMessageEvent) => {
+      let messageData;
+      try {
+        messageData = JSON.parse(nativeEvent.data);
+      } catch (error) {
+        console.error('Error parsing WebView message:', error);
+        return;
+      }
+
       const {
         name: messageName,
         request_id,
@@ -231,7 +294,8 @@ export default memo(
         showNavigationBar,
         isFlutterCanvasApp,
         domain,
-      } = JSON.parse(nativeEvent.data);
+        imageUrl,
+      } = messageData;
       const {current} = tabRef;
       switch (messageName) {
         case ProviderEvent.SCROLL:
@@ -287,6 +351,26 @@ export default memo(
             });
           }
           break;
+        case 'FIND_IN_PAGE_COUNT':
+          // Handle find in page count updates
+          {
+            const findCount = messageData.count;
+            const findCurrent = messageData.current;
+            if (
+              updateFindInPageCount &&
+              typeof findCount === 'number' &&
+              typeof findCurrent === 'number'
+            ) {
+              updateFindInPageCount(findCount, findCurrent);
+            }
+          }
+          break;
+        case 'FIND_IN_PAGE_NAVIGATION':
+          // Close Find in Page modal when navigation occurs
+          if (closeFindInPage) {
+            closeFindInPage();
+          }
+          break;
         case ProviderEvent.INFO:
           if (
             data.url !== 'about:blank' &&
@@ -295,6 +379,11 @@ export default memo(
           ) {
             navigation.setParams({icon: data.icon});
             updateTab(id, {name: data.name, icon: data.icon});
+          }
+          break;
+        case ProviderEvent.IMAGE_DOWNLOAD:
+          if (imageUrl) {
+            downloadImage(imageUrl);
           }
           break;
       }
@@ -472,7 +561,11 @@ export default memo(
                   mixedContentMode={'always'}
                   ref={tabRef}
                   injectedJavaScriptBeforeContentLoaded={hive_keychain}
-                  injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
+                  injectedJavaScript={
+                    desktopMode
+                      ? `${DESKTOP_MODE}\n${IMAGE_DOWNLOAD_SCRIPT}`
+                      : IMAGE_DOWNLOAD_SCRIPT
+                  }
                   mediaPlaybackRequiresUserAction={false}
                   onMessage={onMessage}
                   javaScriptEnabled

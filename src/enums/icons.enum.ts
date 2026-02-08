@@ -85,6 +85,7 @@ export enum Icons {
   SETTINGS_MULTISIG = 'SETTINGS_MULTISIG',
   SETTINGS_NOTIFICATIONS = 'SETTINGS_NOTIFICATIONS',
   ACCOUNT_KEY = 'ACCOUNT_KEY',
+  SETTINGS_LANGUAGE = 'SETTINGS_LANGUAGE',
   ADD_ACCOUNT = 'ADD_ACCOUNT',
   CREATE_ACCOUNT = 'CREATE_ACCOUNT',
   CALENDAR = 'CALENDAR',
@@ -164,7 +165,7 @@ import SettingsWheel from 'assets/images/menus/settings/settings-wheel.svg';
 import AddAccount from 'assets/images/menus/accounts/add-account.svg';
 import CreateAccount from 'assets/images/menus/accounts/create-account.svg';
 import Key from 'assets/images/menus/accounts/key.svg';
-
+import Language from 'assets/images/menus/language.svg';
 import Theme from 'assets/images/menus/theme.svg';
 
 // Wallet & Hive assets
@@ -290,4 +291,5 @@ export const ICON_COMPONENTS: Record<Icons, React.FC<SvgProps>> = {
   [Icons.SWIPE_DOWN]: SwipeDown,
   [Icons.DRAG]: Drag,
   [Icons.TWO_FINGERS_TAP]: TwoFingersTap,
+  [Icons.SETTINGS_LANGUAGE]: Language,
 };

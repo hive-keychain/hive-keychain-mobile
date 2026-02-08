@@ -397,9 +397,12 @@ const CreateAccountStepOne = ({
             ),
           });
         }
-        navigate('Operation', {
-          screen: 'ConfirmationPage',
-          params: confirmationData,
+        navigate('Wallet', {
+          screen: 'Operation',
+          params: {
+            screen: 'ConfirmationPage',
+            params: confirmationData,
+          },
         });
       } else {
         Toast.show(translate('toast.account_creation_not_enough_found'));

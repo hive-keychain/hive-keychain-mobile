@@ -71,6 +71,16 @@ const SettingsMenu = () => {
         drawBottomLine
       />
       <MenuItem
+        labelTranslationKey={'settings.settings.language.title'}
+        theme={theme}
+        onPress={() => navigate('LanguagesScreen')}
+        iconImage={
+          <Icon name={Icons.SETTINGS_LANGUAGE} color={PRIMARY_RED_COLOR} />
+        }
+        additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
+        drawBottomLine
+      />
+      <MenuItem
         labelTranslationKey={'settings.settings.multisig.title'}
         theme={theme}
         onPress={() => navigate('SettingsMultisigScreen')}

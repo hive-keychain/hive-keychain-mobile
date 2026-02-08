@@ -378,6 +378,44 @@ window.hive_keychain={
     this.dispatchCustomEvent('swRequest_hive', request, callback);
   },
   /**
+   * Requests a savings operation (deposit or withdraw)
+   * @param {String} username Hive account to perform the request
+   * @param {String} to Account to receive the savings transfer
+   * @param {String} amount Amount to be transferred. Requires 3 decimals.
+   * @param {String} currency 'HIVE' or 'HBD'
+   * @param {String} operation 'deposit' or 'withdraw'
+   * @param {String} [memo=''] Memo attached to the savings operation
+   * @param {function} callback Keychain's response to the request
+   * @param {String} [rpc=null] Override user's RPC settings
+   */
+  requestSavingsOperation: function (
+    username,
+    to,
+    amount,
+    currency,
+    operation,
+    memo,
+    callback,
+    rpc,
+  ) {
+    if (typeof memo === 'function') {
+      rpc = callback;
+      callback = memo;
+      memo = '';
+    }
+    var request = {
+      type: 'savings',
+      username,
+      to,
+      amount,
+      currency,
+      operation,
+      memo: memo || '',
+      rpc,
+    };
+    this.dispatchCustomEvent('swRequest_hive', request, callback);
+  },
+  /**
    * Requests a token transfer
    * @param {String} account Hive account to perform the request
    * @param {String} to Hive account to receive the transfer
@@ -675,6 +713,7 @@ window.hive_keychain={
    * @param {Number} executions The times the recurrent payment will be executed.
    * @param {function} callback Keychain's response to the request
    * @param {String} [rpc=null] Override user's RPC settings
+   * @param {Number} [pair_id=0] Pair id of the recurrent transfer
    */
   requestRecurrentTransfer: function (
     username,
@@ -686,6 +725,7 @@ window.hive_keychain={
     executions,
     callback,
     rpc,
+    pair_id,
   ) {
     const request = {
       type: 'recurrentTransfer',
@@ -697,6 +737,7 @@ window.hive_keychain={
       recurrence,
       executions,
       rpc,
+      pair_id,
     };
 
     this.dispatchCustomEvent('swRequest_hive', request, callback);

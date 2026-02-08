@@ -8,21 +8,37 @@ import {
   updateTab,
 } from 'actions/index';
 import {Tab} from 'actions/interfaces';
+import FindInPageModal from 'components/browser/FindInPageModal';
+import {
+  FIND_IN_PAGE_CLEAR,
+  FIND_IN_PAGE_NEXT,
+  FIND_IN_PAGE_PREVIOUS,
+  FIND_IN_PAGE_SCRIPT,
+} from 'components/browser/bridges/FindInPage';
 import Icon from 'components/hive/Icon';
+import {BrowserTutorialContent} from 'components/popups/browser-tutorial/BrowserTutorial';
+import SafeArea from 'components/ui/SafeArea';
+import {Camera} from 'expo-camera';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
   Keyboard,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
-import SimpleToast from 'react-native-root-toast';
+import {
+  default as SimpleToast,
+  default as Toast,
+} from 'react-native-root-toast';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {useOrientation} from 'src/context/orientation.context';
@@ -34,6 +50,7 @@ import {Dimensions} from 'src/interfaces/common.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getIconDimensions} from 'src/styles/icon';
+import {getModalBaseStyle} from 'src/styles/modal';
 import {body_primary_body_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {BrowserUtils} from 'utils/browser.utils';
@@ -71,13 +88,17 @@ const BottomNavigation = ({
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme, {width, height}, insets, false);
   const anim = useRef(new Animated.Value(0)).current;
-  const {webViewRef, tabViewRef} = useTab();
+  const {webViewRef, tabViewRef, findInPageCount, setCloseFindInPage} =
+    useTab();
   const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] =
     useState(true);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(
     !isModal && show && rpc && rpc.uri !== 'NULL',
   );
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [showFindInPage, setShowFindInPage] = useState(false);
+  const [findInPageText, setFindInPageText] = useState('');
   const orientation = useOrientation();
 
   // Listen to keyboard events, and hide the bottom navigation when the keyboard is visible
@@ -99,6 +120,21 @@ const BottomNavigation = ({
       keyboardDidHideListener.remove();
     };
   }, []);
+
+  // Register callback to close Find in Page when navigation occurs
+  useEffect(() => {
+    if (setCloseFindInPage) {
+      setCloseFindInPage(() => {
+        setShowFindInPage(false);
+        setFindInPageText('');
+      });
+    }
+    return () => {
+      if (setCloseFindInPage) {
+        setCloseFindInPage(null);
+      }
+    };
+  }, [setCloseFindInPage]);
 
   const onHandlePressButton = (link: BottomBarLink) => {
     let screen = '';
@@ -236,31 +272,191 @@ const BottomNavigation = ({
       </Pressable>
     ),
     !browser.showManagement && (
-      <Pressable
-        key="desktop-tab"
-        onPress={() => {
-          updateTab(browser.activeTab, {
-            desktop: !BrowserUtils.findTabById(browser.tabs, browser.activeTab)
-              ?.desktop,
-          });
-          setTimeout(() => {
-            webViewRef.current?.reload();
-          }, 100);
-        }}
-        style={({pressed}) => {
-          return [styles.pressable, pressed && styles.pressed];
-        }}>
-        <Icon
-          theme={theme}
-          name={
-            !BrowserUtils.findTabById(browser.tabs, browser.activeTab)?.desktop
-              ? Icons.MOBILE
-              : Icons.DESKTOP
-          }
-          width={26}
-          height={26}
-        />
-      </Pressable>
+      <View key="context-menu" style={styles.contextMenuContainer}>
+        <Pressable
+          onPress={() => {
+            setShowContextMenu(!showContextMenu);
+          }}
+          style={({pressed}) => {
+            return [styles.pressable, pressed && styles.pressed];
+          }}>
+          <MaterialIcon name="more-vert" style={styles.icon} size={22} />
+        </Pressable>
+        {showContextMenu && (
+          <Modal
+            transparent
+            visible={showContextMenu}
+            animationType="fade"
+            onRequestClose={() => setShowContextMenu(false)}>
+            <Pressable
+              style={styles.menuOverlay}
+              onPress={() => setShowContextMenu(false)}>
+              <View style={styles.contextMenuWrapper}>
+                <View style={styles.contextMenu}>
+                  <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={() => {
+                      webViewRef.current?.reload();
+                      setShowContextMenu(false);
+                    }}>
+                    <View style={styles.menuIconContainer}>
+                      <MaterialIcon
+                        name="refresh"
+                        style={styles.menuIcon}
+                        size={20}
+                      />
+                    </View>
+                    <Text style={styles.menuItemText}>
+                      {translate('browser.refresh')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={() => {
+                      if (webViewRef.current) {
+                        webViewRef.current.clearCache(true);
+                        webViewRef.current.reload();
+                      }
+                      setShowContextMenu(false);
+                    }}>
+                    <View style={styles.menuIconContainer}>
+                      <MaterialIcon
+                        name="delete-sweep"
+                        style={styles.menuIcon}
+                        size={20}
+                      />
+                    </View>
+                    <Text style={styles.menuItemText}>
+                      {translate('browser.history.clear_cache')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={async () => {
+                      const activeTab = BrowserUtils.findTabById(
+                        browser.tabs,
+                        browser.activeTab,
+                      );
+                      const urlToShare = activeTab?.url;
+                      if (
+                        urlToShare &&
+                        urlToShare !== BrowserConfig.HOMEPAGE_URL &&
+                        urlToShare !== 'about:blank'
+                      ) {
+                        try {
+                          await Share.share({
+                            message: urlToShare,
+                          });
+                        } catch (error) {
+                          console.error('Error sharing URL:', error);
+                        }
+                      }
+                      setShowContextMenu(false);
+                    }}>
+                    <View style={styles.menuIconContainer}>
+                      <Icon
+                        theme={theme}
+                        name={Icons.SHARE}
+                        width={20}
+                        height={20}
+                      />
+                    </View>
+                    <Text style={styles.menuItemText}>
+                      {translate('common.share')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={() => {
+                      setShowContextMenu(false);
+                      setShowFindInPage(true);
+                    }}>
+                    <View style={styles.menuIconContainer}>
+                      <Icon
+                        theme={theme}
+                        name={Icons.SEARCH}
+                        width={15}
+                        height={15}
+                      />
+                    </View>
+                    <Text style={styles.menuItemText}>
+                      {translate('browser.find_in_page')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.menuItem]}
+                    onPress={() => {
+                      updateTab(browser.activeTab, {
+                        desktop: !BrowserUtils.findTabById(
+                          browser.tabs,
+                          browser.activeTab,
+                        )?.desktop,
+                      });
+                      setTimeout(() => {
+                        webViewRef.current?.reload();
+                      }, 100);
+                      setShowContextMenu(false);
+                    }}>
+                    <View style={styles.menuIconContainer}>
+                      <Icon
+                        theme={theme}
+                        name={
+                          !BrowserUtils.findTabById(
+                            browser.tabs,
+                            browser.activeTab,
+                          )?.desktop
+                            ? Icons.DESKTOP
+                            : Icons.MOBILE
+                        }
+                        width={20}
+                        height={20}
+                      />
+                    </View>
+                    <Text style={styles.menuItemText}>
+                      {translate(
+                        !BrowserUtils.findTabById(
+                          browser.tabs,
+                          browser.activeTab,
+                        )?.desktop
+                          ? 'browser.desktop_mode'
+                          : 'browser.mobile_mode',
+                      )}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.menuItem, styles.menuItemLast]}
+                    onPress={() => {
+                      navigate('ModalScreen', {
+                        name: 'BrowserTutorial',
+                        modalContent: (
+                          <SafeArea skipTop>
+                            <BrowserTutorialContent />
+                          </SafeArea>
+                        ),
+                        modalContainerStyle:
+                          getModalBaseStyle(theme).roundedTop,
+                        onForceCloseModal: () => {},
+                      });
+                      setShowContextMenu(false);
+                    }}>
+                    <View style={styles.menuIconContainer}>
+                      <Icon
+                        theme={theme}
+                        name={Icons.TUTORIAL}
+                        width={20}
+                        height={20}
+                      />
+                    </View>
+                    <Text style={styles.menuItemText}>
+                      {translate('navigation.tutorial')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Pressable>
+          </Modal>
+        )}
+      </View>
     ),
     browser.showManagement && (
       <Pressable
@@ -289,101 +485,158 @@ const BottomNavigation = ({
       </Pressable>
     ),
   ];
-  return isVisible ? (
-    <Animated.View
-      style={[
-        getCardStyle(theme).floatingBar,
-        styles.container,
-        {transform: [{translateY}]},
-      ]}>
-      <Pressable
-        onPress={() => onHandlePressButton(BottomBarLink.Wallet)}
+
+  const bottomNavigation =
+    isVisible && !showFindInPage ? (
+      <Animated.View
         style={[
-          styles.itemContainer,
-          activeScreen === BottomBarLink.Wallet && styles.active,
+          getCardStyle(theme).floatingBar,
+          styles.container,
+          {transform: [{translateY}]},
         ]}>
-        <Icon
-          theme={theme}
-          name={Icons.ADD_TAB}
-          color={activeScreen === BottomBarLink.Wallet ? 'white' : undefined}
-          {...getIconDimensions(width)}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.ecosystem')}
-          </Text>
-        )}
-      </Pressable>
-      <Pressable
-        onPress={() => {
-          if (!isBrowser) onHandlePressButton(BottomBarLink.Browser);
-          else setShowBrowserSecondaryLinks(!showBrowserSecondaryLinks);
-        }}
-        onLongPress={() => {
-          SimpleToast.show(translate('browser.clear_all'), {
-            duration: SimpleToast.durations.LONG,
-          });
-          closeAllTabs();
-        }}
-        style={[
-          styles.itemContainer,
-          activeScreen === BottomBarLink.Browser && styles.active,
-        ]}>
-        <Icon
-          theme={theme}
-          name={Icons.BROWSER}
-          {...getIconDimensions(width)}
-          color={activeScreen === BottomBarLink.Browser ? 'white' : undefined}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.browser')}
-          </Text>
-        )}
-      </Pressable>
-      {isBrowser && showBrowserSecondaryLinks && renderBrowserBottomBar()}
-      {(!isBrowser || !showBrowserSecondaryLinks) && (
-        <View
+        <Pressable
+          onPress={() => onHandlePressButton(BottomBarLink.Wallet)}
           style={[
             styles.itemContainer,
-            activeScreen === BottomBarLink.ScanQr && styles.active,
+            activeScreen === BottomBarLink.Wallet && styles.active,
           ]}>
           <Icon
             theme={theme}
-            name={Icons.SCANNER}
+            name={Icons.ADD_TAB}
+            color={activeScreen === BottomBarLink.Wallet ? 'white' : undefined}
             {...getIconDimensions(width)}
-            color={activeScreen === BottomBarLink.ScanQr ? 'white' : undefined}
-            onPress={() => onHandlePressButton(BottomBarLink.ScanQr)}
           />
           {showTags && (
             <Text style={[styles.textBase, styles.marginTop]}>
-              {translate('navigation.floating_bar.buy')}
+              {translate('navigation.floating_bar.ecosystem')}
             </Text>
           )}
-        </View>
-      )}
-      {(!isBrowser || !showBrowserSecondaryLinks) &&
-        PlatformsUtils.showDependingOnPlatform(
-          <View style={[styles.itemContainer]}>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            if (!isBrowser) onHandlePressButton(BottomBarLink.Browser);
+            else setShowBrowserSecondaryLinks(!showBrowserSecondaryLinks);
+          }}
+          onLongPress={() => {
+            SimpleToast.show(translate('browser.clear_all'), {
+              duration: SimpleToast.durations.LONG,
+            });
+            closeAllTabs();
+          }}
+          style={[
+            styles.itemContainer,
+            activeScreen === BottomBarLink.Browser && styles.active,
+          ]}>
+          <Icon
+            theme={theme}
+            name={Icons.BROWSER}
+            {...getIconDimensions(width)}
+            color={activeScreen === BottomBarLink.Browser ? 'white' : undefined}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.browser')}
+            </Text>
+          )}
+        </Pressable>
+        {isBrowser && showBrowserSecondaryLinks && renderBrowserBottomBar()}
+        {(!isBrowser || !showBrowserSecondaryLinks) && (
+          <View
+            style={[
+              styles.itemContainer,
+              activeScreen === BottomBarLink.ScanQr && styles.active,
+            ]}>
             <Icon
               theme={theme}
-              name={Icons.SWAP}
-              color={
-                activeScreen === BottomBarLink.SwapBuy ? 'white' : undefined
-              }
+              name={Icons.SCANNER}
               {...getIconDimensions(width)}
-              onPress={() => onHandlePressButton(BottomBarLink.SwapBuy)}
+              color={
+                activeScreen === BottomBarLink.ScanQr ? 'white' : undefined
+              }
+              onPress={() => {
+                Camera.requestCameraPermissionsAsync().then((result) => {
+                  if (result.granted) {
+                    onHandlePressButton(BottomBarLink.ScanQr);
+                  } else {
+                    Toast.show(translate('toast.error_camera_permission'), {
+                      duration: Toast.durations.LONG,
+                    });
+                  }
+                });
+              }}
             />
             {showTags && (
               <Text style={[styles.textBase, styles.marginTop]}>
-                {translate('navigation.floating_bar.swap')}
+                {translate('navigation.floating_bar.buy')}
               </Text>
             )}
-          </View>,
-          showSwap,
+          </View>
         )}
-    </Animated.View>
-  ) : null;
+        {(!isBrowser || !showBrowserSecondaryLinks) &&
+          PlatformsUtils.showDependingOnPlatform(
+            <View style={[styles.itemContainer]}>
+              <Icon
+                theme={theme}
+                name={Icons.SWAP}
+                color={
+                  activeScreen === BottomBarLink.SwapBuy ? 'white' : undefined
+                }
+                {...getIconDimensions(width)}
+                onPress={() => onHandlePressButton(BottomBarLink.SwapBuy)}
+              />
+              {showTags && (
+                <Text style={[styles.textBase, styles.marginTop]}>
+                  {translate('navigation.floating_bar.swap')}
+                </Text>
+              )}
+            </View>,
+            showSwap,
+          )}
+      </Animated.View>
+    ) : null;
+
+  const findInPageModal = (
+    <FindInPageModal
+      isVisible={showFindInPage}
+      onClose={() => {
+        setShowFindInPage(false);
+        setFindInPageText('');
+        if (webViewRef.current) {
+          webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
+        }
+      }}
+      onSearch={(text) => {
+        setFindInPageText(text);
+        if (webViewRef.current) {
+          if (text && text.trim().length > 0) {
+            webViewRef.current.injectJavaScript(FIND_IN_PAGE_SCRIPT(text));
+          } else {
+            webViewRef.current.injectJavaScript(FIND_IN_PAGE_CLEAR);
+          }
+        }
+      }}
+      onNext={() => {
+        if (webViewRef.current) {
+          webViewRef.current.injectJavaScript(FIND_IN_PAGE_NEXT);
+        }
+      }}
+      onPrevious={() => {
+        if (webViewRef.current) {
+          webViewRef.current.injectJavaScript(FIND_IN_PAGE_PREVIOUS);
+        }
+      }}
+      searchText={findInPageText}
+      matchCount={findInPageCount?.count || 0}
+      currentMatch={findInPageCount?.current || 0}
+    />
+  );
+
+  return (
+    <>
+      {bottomNavigation}
+      {findInPageModal}
+    </>
+  );
 };
 
 const getStyles = (
@@ -453,6 +706,66 @@ const getStyles = (
       height: 22,
       borderColor: getColors(theme).icon,
       borderWidth: 1,
+    },
+    contextMenuContainer: {
+      position: 'relative',
+      flex: 1,
+    },
+    menuOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      justifyContent: 'flex-end',
+      alignItems: 'flex-end',
+      paddingBottom:
+        Platform.OS === 'ios' ? insets.bottom / 2 + 50 : insets.bottom + 50,
+      paddingRight: width * 0.025,
+    },
+    contextMenuWrapper: {
+      alignItems: 'flex-end',
+    },
+    contextMenu: {
+      backgroundColor: getColors(theme).cardBgColor,
+      borderRadius: 12,
+      minWidth: 200,
+      maxWidth: width * 0.8,
+      marginBottom: 10,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+      overflow: 'hidden',
+    },
+    menuItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor:
+        getColors(theme).cardBorderColor || getColors(theme).icon + '20',
+    },
+    menuItemLast: {
+      borderBottomWidth: 0,
+    },
+    menuIconContainer: {
+      width: 20,
+      height: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    menuIcon: {
+      width: 20,
+      height: 20,
+      color: getColors(theme).icon,
+    },
+    menuItemText: {
+      ...body_primary_body_1,
+      color: getColors(theme).primaryText,
+      marginLeft: 12,
     },
   });
 

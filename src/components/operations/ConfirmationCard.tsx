@@ -7,7 +7,13 @@ import Separator from 'components/ui/Separator';
 import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import {FormatUtils} from 'hive-keychain-commons';
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {
@@ -59,6 +65,27 @@ const ConfirmationCard = ({
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
   const styles = getDimensionedStyles(width, theme);
+  const TruncatableText = ({
+    text,
+    lines = 10,
+  }: {
+    text: string;
+    lines?: number;
+  }) => {
+    const [expanded, setExpanded] = React.useState(false);
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => setExpanded(!expanded)}
+        style={{flexShrink: 1}}>
+        <Text
+          numberOfLines={expanded ? undefined : lines}
+          style={[getFormFontStyle(width, theme).title, styles.textContent]}>
+          {text}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
   const renderConfirmationValue = (e: ConfirmationData) => {
     switch (e.tag) {
       case ConfirmationDataTag.USERNAME:
@@ -157,17 +184,7 @@ const ConfirmationCard = ({
           />
         );
       default:
-        return (
-          <View style={{flexShrink: 1}}>
-            <Text
-              style={[
-                getFormFontStyle(width, theme).title,
-                styles.textContent,
-              ]}>
-              {e.value}
-            </Text>
-          </View>
-        );
+        return <TruncatableText text={String(e.value)} lines={10} />;
     }
   };
   return (

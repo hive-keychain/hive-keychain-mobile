@@ -17,6 +17,7 @@ export enum KeychainRequestTypes {
   custom = 'custom',
   signedCall = 'signedCall',
   transfer = 'transfer',
+  savings = 'savings',
   sendToken = 'sendToken',
   delegation = 'delegation',
   witnessVote = 'witnessVote',
@@ -135,7 +136,7 @@ export type RequestPost = CommonRequestParams & {
 
 export type RequestVote = CommonRequestParams & {
   type: KeychainRequestTypes.vote;
-  username: string;
+  username?: string;
   permlink: string;
   author: string;
   weight: string | number;
@@ -168,9 +169,19 @@ export type RequestTransfer = CommonRequestParams & {
   currency: string;
 };
 
+export type RequestSavings = CommonRequestParams & {
+  type: KeychainRequestTypes.savings;
+  username?: string;
+  to: string;
+  amount: string;
+  currency: string;
+  memo?: string;
+  operation: 'deposit' | 'withdraw';
+};
+
 export type RequestSendToken = CommonRequestParams & {
   type: KeychainRequestTypes.sendToken;
-  username: string;
+  username?: string;
   to: string;
   amount: string;
   memo: string;
@@ -200,7 +211,7 @@ export type RequestProxy = CommonRequestParams & {
 
 export type RequestPowerUp = CommonRequestParams & {
   type: KeychainRequestTypes.powerUp;
-  username: string;
+  username?: string;
   recipient: string;
   steem: string;
 };
@@ -262,7 +273,7 @@ export type RequestAddAccount = CommonRequestParams & {
 
 export type RequestConvert = CommonRequestParams & {
   type: KeychainRequestTypes.convert;
-  username: string;
+  username?: string;
   amount: string;
   collaterized: boolean;
 };
@@ -276,6 +287,7 @@ export type RequestRecurrentTransfer = CommonRequestParams & {
   memo: string;
   recurrence: number;
   executions: number;
+  pair_id?: number;
 };
 
 export type KeychainRequestData =
@@ -293,6 +305,7 @@ export type KeychainRequestData =
   | RequestCustomJSON
   | RequestSignedCall
   | RequestTransfer
+  | RequestSavings
   | RequestSendToken
   | RequestDelegation
   | RequestWitnessVote

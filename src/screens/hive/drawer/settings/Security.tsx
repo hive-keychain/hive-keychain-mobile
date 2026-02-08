@@ -1,22 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
+import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
-import {Caption} from 'components/ui/Caption';
+import { Caption } from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import Toast from 'react-native-root-toast';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
-import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
-import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
-import {title_primary_title_1} from 'src/styles/typography';
-import {RootState} from 'store';
-import {translate} from 'utils/localize';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
+import { ConnectedProps, connect } from 'react-redux';
+import { Theme, useThemeContext } from 'src/context/theme.context';
+import { KeychainStorageKeyEnum } from 'src/enums/keychainStorageKey.enum';
+import { CARD_PADDING_HORIZONTAL } from 'src/styles/card';
+import { getColors } from 'src/styles/colors';
+import { title_primary_title_1 } from 'src/styles/typography';
+import { RootState } from 'store';
+import { translate } from 'utils/localize';
+import { navigate } from 'utils/navigation.utils';
 import SecureStoreUtils from 'utils/storage/secureStore.utils';
-import StorageUtils, {BiometricsLoginStatus} from 'utils/storage/storage.utils';
+import StorageUtils, { BiometricsLoginStatus } from 'utils/storage/storage.utils';
 
 const Security = ({mk}: PropsFromRedux) => {
   const [isActive, setActive] = useState(false);
@@ -40,7 +42,7 @@ const Security = ({mk}: PropsFromRedux) => {
         paddingBottom: initialWindowMetrics.insets.bottom,
       }}>
       <View style={styles.container}>
-        <Caption text={'settings.settings.security.disclaimer'} />
+        <Caption text={'settings.settings.security.disclaimer'} hideSeparator />
         <Separator />
         <CheckBoxPanel
           checked={isActive}
@@ -50,6 +52,7 @@ const Security = ({mk}: PropsFromRedux) => {
                 const isBiometricsAvailable =
                   await StorageUtils.requireBiometricsLoginIOS(
                     'settings.settings.security.biometrics',
+                    true,
                   );
                 if (isBiometricsAvailable !== BiometricsLoginStatus.ENABLED)
                   throw new Error(isBiometricsAvailable);
@@ -83,6 +86,13 @@ const Security = ({mk}: PropsFromRedux) => {
           }}
           title="settings.settings.security.checkbox"
         />
+        <Separator height={20} drawLine additionalLineStyle={{borderColor: getColors(theme).lineSeparatorStroke}}/>
+        <EllipticButton
+          title={translate('settings.settings.security.change_pin_button')}
+          onPress={() => navigate('ChangePinScreen')}
+          style={styles.changePinButton}
+        />
+
       </View>
     </Background>
   );
@@ -91,6 +101,7 @@ const Security = ({mk}: PropsFromRedux) => {
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {flex: 1, padding: CARD_PADDING_HORIZONTAL},
+    changePinButton: {marginTop: 10,width: '100%'},
     title: {
       ...title_primary_title_1,
       color: getColors(theme).primaryText,

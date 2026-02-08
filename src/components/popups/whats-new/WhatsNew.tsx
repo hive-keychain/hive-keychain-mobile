@@ -4,7 +4,8 @@ import Carousel from 'components/carousel/CustomCarousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
@@ -14,6 +15,7 @@ import {
   body_primary_body_3,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation.utils';
 import {VersionLogUtils} from 'utils/version.utils';
@@ -39,11 +41,16 @@ export function prefetchImage(url: string) {
 export function isPrefetched(url: string) {
   return prefetchedImages[url] !== undefined;
 }
-const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
+const WhatsNew = ({
+  navigation,
+  addTab,
+  activeScreen,
+}: Props & PropsFromRedux): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
   const [index, setIndex] = useState(0);
   const locale = 'en'; // later use getUILanguage()
   const {theme} = useThemeContext();
+  const {height} = useWindowDimensions();
 
   useEffect(() => {
     init();
@@ -71,7 +78,8 @@ const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
 
   useEffect(() => {
     (async () => {
-      if (whatsNewContent) {
+      const isModalOpen = activeScreen?.startsWith('ModalScreen');
+      if (whatsNewContent && !isModalOpen) {
         for (const feature of whatsNewContent.features[locale]) {
           await prefetchImage(feature.image);
         }
@@ -83,14 +91,14 @@ const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
         } as ModalScreenProps);
       }
     })();
-  }, [whatsNewContent]);
+  }, [whatsNewContent, activeScreen]);
 
   const finish = async () => {
     await WhatsNewUtils.saveLastSeen();
     navigation.goBack();
   };
 
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, height);
 
   const handleOnClickItem = async (
     content: WhatsNewContent,
@@ -157,9 +165,13 @@ const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
   return null;
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, windowHeight: number) =>
   StyleSheet.create({
-    rootContainer: {flex: 1, marginTop: 15},
+    rootContainer: {
+      flex: 1,
+      marginTop: 15,
+      paddingBottom: Math.max(16, initialWindowMetrics.insets.bottom + 12),
+    },
     whatsNewTitle: {
       textAlign: 'center',
       color: getColors(theme).secondaryText,
@@ -171,6 +183,7 @@ const getStyles = (theme: Theme) =>
       aspectRatio: 1.6,
       alignSelf: 'center',
       width: '100%',
+      maxHeight: windowHeight * 0.28,
     },
     itemContainer: {
       alignItems: 'center',
@@ -198,7 +211,10 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-const connector = connect(null, {addTab});
+const connector = connect(
+  (state: RootState) => ({activeScreen: state.navigation.activeScreen}),
+  {addTab},
+);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(WhatsNew);

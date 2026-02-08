@@ -1,5 +1,6 @@
 import {AuthorityType, PrivateKey} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
+import {AccountsUtils} from 'hive-keychain-commons';
 import {Key} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import AccountUtils from './account.utils';
@@ -152,19 +153,35 @@ const generateAccountAuthorities = (
 };
 
 const validateNewAccountName = async (username: string, simpleToast: any) => {
-  if (username.length < 3) {
-    simpleToast.show(translate('toast.username_too_short'));
-    return false;
-  }
-  if (!AccountCreationUtils.validateUsername(username)) {
-    simpleToast.show(translate('toast.account_name_not_valid'));
-    return false;
-  }
-  if (await AccountCreationUtils.checkAccountNameAvailable(username)) {
-    return true;
-  } else {
-    simpleToast.show(translate('toast.account_username_already_used'));
-    return false;
+  const accountValidation = await AccountsUtils.validateUsername(username);
+  switch (accountValidation) {
+    case AccountsUtils.UsernameValidation.too_short:
+      simpleToast.show(translate('toast.username_too_short'));
+      return false;
+    case AccountsUtils.UsernameValidation.too_long:
+      simpleToast.show(translate('toast.username_too_long'));
+      return false;
+    case AccountsUtils.UsernameValidation.invalid_last_character:
+      simpleToast.show(translate('toast.username_invalid_last_character'));
+      return false;
+    case AccountsUtils.UsernameValidation.invalid_first_character:
+      simpleToast.show(translate('toast.username_invalid_first_character'));
+      return false;
+    case AccountsUtils.UsernameValidation.invalid_middle_characters:
+      simpleToast.show(translate('toast.username_invalid_middle_characters'));
+      return false;
+    case AccountsUtils.UsernameValidation.invalid_segment_length:
+      simpleToast.show(translate('toast.username_invalid_segment_length'));
+      return false;
+    case AccountsUtils.UsernameValidation.valid:
+      if (await AccountCreationUtils.checkAccountNameAvailable(username)) {
+        return true;
+      } else {
+        simpleToast.show(translate('toast.account_username_already_used'));
+        return false;
+      }
+    default:
+      return false;
   }
 };
 

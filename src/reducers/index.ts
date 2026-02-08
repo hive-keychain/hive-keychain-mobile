@@ -20,6 +20,7 @@ import navigation from './navigation';
 import notifications from './notifications';
 import phishingAccounts from './phishing';
 import preferences from './preferences';
+import recurrentTransfers from './recurrentTransfers';
 import rpcSwitcher from './rpcSwitcher';
 import settings from './settings';
 import tokenHistory from './tokenHistory';
@@ -59,4 +60,5 @@ export default combineReducers({
   colors,
   navigation,
   notifications,
+  recurrentTransfers,
 });

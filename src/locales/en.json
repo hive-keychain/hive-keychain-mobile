@@ -40,7 +40,12 @@
     "warning_private_key_in_memo": "Please do not send any sentitive information about your keys in a memo."
   },
   "common": {
+    "save_image": "Save or share image",
+    "share": "Share",
+    "media_download_modal_title": "What would you like to do?",
     "accounts": "Accounts",
+    "active_recurrent_transfers": "{{nb}} active recurrent transfer(s)",
+    "recurrent_transfers": "Recurrent transfers",
     "started_a": "Started a",
     "initiated_a": "Initiated a",
     "dapp_title": "dApp",
@@ -66,9 +71,12 @@
     "send": "Send",
     "receive": "Receive",
     "save": "Save",
+    "file_saved_successfully": "File saved successfully",
+    "file_save_failed": "Failed to save file",
     "balance": "Balance",
     "available": "Available",
     "back": "Back",
+    "price": "Price",
     "encrypted": "encrypted",
     "vote": "Vote",
     "unvote": "Unvote",
@@ -85,6 +93,7 @@
     "delegate": "Delegate",
     "got_it": "Got it!",
     "deleg": "Deleg.",
+    "tap_to_change_hive_engine_rpc": "Tap here to change your Hive Engine RPC node  in the settings.",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
     "next": "Next",
@@ -146,7 +155,9 @@
     "experimental": "Experimental",
     "generate_qr": "Generate QR Code",
     "lets_go": "Let's go!",
-    "discord_server": "Discord Server"
+    "discord_server": "Discord Server",
+    "hive_dao": "Hive DAO",
+    "or": "or"
   },
   "wallet": {
     "proposal": {
@@ -219,6 +230,8 @@
         "currency_savings_title": "{{currency}} Savings"
       },
       "transfer": {
+        "remaining_executions": "{{nb}} remaining execution(s)",
+        "recurrence_period": "Every {{nb}} hours",
         "title": "Transfer funds",
         "memo": "MEMO (optional)",
         "executions": "Number of executions",
@@ -596,6 +609,12 @@
         "enable_active_key_multisig": "Enable active key multisig",
         "enable_posting_key_multisig": "Enable posting key multisig"
       },
+      "language": {
+        "title": "Languages",
+        "description": "Choose your preferred language for the Hive Keychain wallet.",
+        "checkbox_default_language": "Use device language if available or default to English",
+        "dropdown_title": "Select your language"
+      },
       "export_transactions": {
         "title": "Export Transactions"
       },
@@ -607,7 +626,13 @@
         "error_no_biometrics": "No biometrics enrolled",
         "biometrics_refused": "Enable Fingerprint or Face ID for Hive Keychain in your iOS settings",
         "enable_biometrics": "Enable biometrics",
-        "enable_biometrics_description": "Enable biometrics login to access your Hive Keychain wallet faster. You can change this setting in Settings > Security."
+        "enable_biometrics_description": "Enable biometrics login to access your Hive Keychain wallet faster. You can change this setting in Settings > Security.",
+        "change_pin_button": "Change PIN",
+        "change_pin_title": "Change PIN",
+        "change_pin_current": "Enter your current PIN",
+        "change_pin_new": "Choose your new PIN",
+        "change_pin_confirm": "Confirm your new PIN",
+        "change_pin_success": "Your PIN has been updated"
       },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
@@ -699,12 +724,15 @@
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
       "create_account_ticket": "{{tickets}} account creation ticket",
+      "need_copy_keys": "You need to copy your keys before creating the account",
       "ticket": "Ticket",
       "buying": "Buying",
       "create_account_onboarding_message": "You are onboarding @{{name}}, please choose below if you want to delegate them HP or RC.",
       "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created!",
       "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!",
-      "peer_to_peer_waiting_text": "Please ask your friend to scan this QR Code to create your account. Keep this page opened until the account is created."
+      "peer_to_peer_waiting_text": "Please ask your friend to scan this QR Code to create your account. Keep this page opened until the account is created.",
+      "confirm_go_back": "Are you sure you want to go back?",
+      "confirm_go_back_text": "If you go back, the account creation process will be interrupted and you will have to start over with new keys."
     },
     "copy_keys": {
       "title": "Copy a Key",
@@ -776,6 +804,7 @@
   },
   "toast": {
     "error_camera_permission": "Camera permission is required to scan QR codes",
+    "debug_state_copied": "Debug Mode: The application state has been copied to the clipboard. Contact our team to help you debug.",
     "receive_success": "The transfer has been received successfully",
     "error_witness_account_update": "Error while updating witness account @{{account}}",
     "noMatch": "The PIN codes do not match",
@@ -815,7 +844,12 @@
     "token_timeout": "We could not verify this transaction on Hive Engine. This might mean that Hive Engine is behind blocks, wait for the operation to appear in your history, or contact the Hive Engine team on Discord.",
     "tokens_operation_failed": "Failed to {{tokenOperation}} a token",
     "no_such_account": "We could not find this account on the blockchain.",
-    "username_too_short": "Username is too short. Needs minimum 4 characters",
+    "username_too_short": "This username is too short. Use at least 3 characters",
+    "username_too_long": "This username is too long. Use at most 16 characters",
+    "username_invalid_last_character": "Each segment must end with a lowercase letter or digit",
+    "username_invalid_first_character": "Each segment must start with a lowercase letter",
+    "username_invalid_middle_characters": "Only lowercase letters, digits, or hyphens (-) are allowed inside segments. Segments are separated by a dot (.) ",
+    "username_invalid_segment_length": "Each segment must be at least 3 characters long",
     "account_name_not_valid": "Account name is not valid",
     "account_username_already_used": "Username is already used. Please pick a new one",
     "account_creation_not_enough_found": "You don't have enough HIVE to buy an account",
@@ -832,14 +866,15 @@
     "rpc_node_removed_success": "RPC removed succesfully",
     "error_missing_fields": "Missing fields!",
     "missing_memo_key": "The account @{{account}} is missing the memo key to encrypt the message!",
-    "tokens_timeout": "This node is not replying. Please go to token settings and change the Hive Engine RPC node",
+    "tokens_timeout": "This node is not responding.",
     "account_not_in_hive": "The account @{{account}} does not exist, please check the username.",
     "account_removed": "The account @{{account}} has been removed from Keychain.",
     "export_qr_accounts": {
       "scan_next": "Page: {{index}} of {{total}}, scan next page!",
       "scan_page_first": "Scan page {{page}} first!",
       "scan_completed": "Scan completed, loading accounts!",
-      "already_scanned": "Page already scanned, please move to page {{page}}!"
+      "already_scanned": "Page already scanned, please move to page {{page}}!",
+      "importing": "Importing page {{page}}/{{total}}"
     }
   },
   "navigation": {
@@ -907,6 +942,9 @@
       "convert": "Convert",
       "recurrentTransfer": "Recurrent Transfers",
       "multisig": "Multisig",
+      "savings_deposit": "Deposit to Savings",
+      "savings_withdraw": "Withdraw from Savings",
+      "savings": "Savings",
       "swap": "Keychain Swap"
     },
     "message": {
@@ -923,6 +961,7 @@
       "permlink": "Permlink",
       "weight": "Weight",
       "data": "Data",
+      "pair_id": "Pair ID",
       "hidden_data": "Click to show",
       "to": "To",
       "amount": "Amount",
@@ -972,6 +1011,7 @@
       "broadcasting": "There was an error broadcasting this transaction, please try again.",
       "addAccount": "There was an error adding this account. Please verify its username and keys.",
       "timeout": "Request timeout",
+      "insufficient_balance": "Insufficient balance",
       "transfer": {
         "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
         "get_account": "Cannot find account @{{to}}",
@@ -1022,6 +1062,12 @@
   "browser": {
     "search": "Search or enter url",
     "clear_all": "All your browser tabs have been closed",
+    "desktop_mode": "Desktop Mode",
+    "mobile_mode": "Mobile Mode",
+    "refresh": "Refresh",
+    "find_in_page": "Find in Page",
+    "find_in_page_placeholder": "Search on this page",
+    "find_in_page_no_matches": "No matches",
     "history": {
       "clear": "Clear History",
       "clear_cache": "Clear Cache"
@@ -1163,6 +1209,12 @@
       "sub_title": "Widget Account Balance Configuration",
       "intro": "Choose which accounts will be shown in the portfolio widget."
     },
+    "rating": {
+      "title": "Enjoying Hive Keychain?",
+      "description": "Your feedback helps us improve. Do you like your experience so far?",
+      "negative": "Not really",
+      "positive": "I love it!"
+    },
     "tutorial": {
       "title": "Welcome to Keychain!",
       "description": "If you are new to Keychain, or Hive in general, please check our onboarding tutorial.\nYou can always access it later on in Settings > Help > Tutorial."
@@ -1244,5 +1296,13 @@
       "s": "s",
       "separator": " "
     }
+  },
+  "about": {
+    "title": "Keychain Mobile v{{version}}",
+    "developed_by_prefix": "Hive Keychain for mobile is developed by the Keychain team and founded through the ",
+    "process_transactions": "Process transactions and enjoy your favorite dApps on your ",
+    "mobile_device_highlight": "Mobile Device!",
+    "contact_prefix": "Should you encounter any issue, contact us on our",
+    "on_our_github": "on our Github"
   }
 }

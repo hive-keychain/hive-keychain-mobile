@@ -6,6 +6,7 @@ export default ({config}) => ({
   expo: {
     name: 'Hive Keychain',
     slug: 'hive-keychain',
+
     version: base.expo.version,
     orientation: 'portrait',
     icon: './src/assets/images/icons/ios_launcher.png',
@@ -26,9 +27,14 @@ export default ({config}) => ({
     },
     ios: {
       ...base.expo.ios,
-      bundleIdentifier: 'com.stoodkev.mobileKeychain',
+      bundleIdentifier:
+        process.env.APP_VARIANT !== 'prod'
+          ? 'com.stoodkev.mobileKeychain.dev'
+          : 'com.stoodkev.mobileKeychain',
       supportsTablet: false,
-
+      appleTeamId: process.env.APPLE_TEAM_ID,
+      id: process.env.APPLE_ID,
+      deploymentTarget: '13.0',
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
           'We need your location to load maps.',
@@ -56,9 +62,11 @@ export default ({config}) => ({
           : 'com.mobilekeychain',
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
       permissions: [
-        'android.permission.CAMERA',
+        'CAMERA',
         'ACCESS_FINE_LOCATION',
         'ACCESS_COARSE_LOCATION',
+        'RECORD_AUDIO',
+        'MODIFY_AUDIO_SETTINGS',
       ],
       softwareKeyboardLayoutMode: 'pan',
       adaptiveIcon: {
@@ -95,7 +103,8 @@ export default ({config}) => ({
       [
         'expo-camera',
         {
-          cameraPermission: 'Allow $(PRODUCT_NAME) to access your camera',
+          cameraPermission:
+            'We need your camera to scan QR codes for adding accounts and processing transactions.',
         },
       ],
       [
@@ -117,7 +126,7 @@ export default ({config}) => ({
       [
         'expo-build-properties',
         {
-          ios: {useFrameworks: 'static'},
+          ios: {useFrameworks: 'static', forceStaticLinking: ['RNFBApp']},
         },
       ],
       '@react-native-firebase/app',

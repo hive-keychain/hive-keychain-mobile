@@ -3,6 +3,7 @@ import Toast from 'react-native-root-toast';
 import BackGroundUtils from 'src/background';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {AppThunk} from 'src/hooks/redux';
+import AuthUtils from 'utils/authentication.utils';
 import {translate} from 'utils/localize';
 import LockoutUtils from 'utils/lockout.utils';
 import {navigate} from 'utils/navigation.utils';
@@ -10,12 +11,25 @@ import StorageUtils from 'utils/storage/storage.utils';
 import {AccountsPayload, ActionPayload, NullableString} from './interfaces';
 import {INIT_ACCOUNTS, LOCK, SIGN_UP, UNLOCK} from './types';
 
-export const signUp = (pwd: string) => {
-  navigate('ChooseAccountOptionsScreen');
-  const action: ActionPayload<NullableString> = {type: SIGN_UP, payload: pwd};
-  AsyncStorage.setItem(KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2');
-  return action;
-};
+export const signUp =
+  (pin: string): AppThunk =>
+  async (dispatch) => {
+    navigate('ChooseAccountOptionsScreen');
+    const masterKey = AuthUtils.generateMasterKey();
+
+    await AuthUtils.persistPinSecret(pin);
+    await AuthUtils.persistMasterKey(masterKey, false);
+    await AsyncStorage.setItem(
+      KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION,
+      '3',
+    );
+
+    const action: ActionPayload<NullableString> = {
+      type: SIGN_UP,
+      payload: masterKey,
+    };
+    dispatch(action);
+  };
 
 export const unlock =
   (mk: string, errorCallback?: (b?: boolean) => void): AppThunk =>
@@ -24,7 +38,7 @@ export const unlock =
       // Check active lockout before attempting unlock
       const isLocked = await LockoutUtils.checkActiveLockout();
       if (isLocked) {
-        if (errorCallback) errorCallback();
+        errorCallback?.();
         return;
       }
 
@@ -51,7 +65,7 @@ export const unlock =
       }
     } catch (e) {
       if (e.message === 'Wrapped error: User not authenticated') {
-        errorCallback(true);
+        errorCallback?.(true);
       } else {
         Toast.show(`${translate('toast.authFailed')}: ${e.message}`, {
           duration: Toast.durations.LONG,
@@ -64,8 +78,78 @@ export const unlock =
           console.log('Failed to update unlock lockout state', err);
         }
 
-        errorCallback();
+        errorCallback?.();
       }
+    }
+  };
+
+export const unlockWithPin =
+  (pin: string, errorCallback?: (b?: boolean) => void): AppThunk =>
+  async (dispatch) => {
+    try {
+      const isLocked = await LockoutUtils.checkActiveLockout();
+      if (isLocked) {
+        errorCallback?.();
+        return;
+      }
+
+      const version = await StorageUtils.getAccountStorageVersion();
+      console.log('[auth] unlockWithPin version', version);
+
+      if (version >= 3) {
+        const isValid = await AuthUtils.verifyPin(pin);
+        console.log('[auth] v3 pin validation', {isValid});
+        if (!isValid) {
+          Toast.show(translate('toast.authFailed'), {
+            duration: Toast.durations.LONG,
+          });
+          await LockoutUtils.recordFailure();
+          errorCallback?.();
+          return;
+        }
+        const masterKey = await AuthUtils.ensureMasterKey();
+        console.log('[auth] v3 master key retrieved');
+        await dispatch(unlock(masterKey, errorCallback));
+        return;
+      }
+
+      let legacyAccounts: any = null;
+      try {
+        legacyAccounts = await StorageUtils.getAccounts(pin);
+        console.log('[auth] legacy accounts fetched', {
+          hasAccounts: !!legacyAccounts,
+          count: legacyAccounts?.list?.length,
+        });
+      } catch (error: any) {
+        console.log('[auth] legacy accounts decrypt failed', error?.message);
+      }
+
+      if (!legacyAccounts || !legacyAccounts.list) {
+        const fallbackMasterKey =
+          await StorageUtils.recoverFromFailedPinDecrypt(pin);
+        if (fallbackMasterKey) {
+          await dispatch(unlock(fallbackMasterKey, errorCallback));
+          return;
+        }
+
+        Toast.show(translate('toast.authFailed'), {
+          duration: Toast.durations.LONG,
+        });
+        await LockoutUtils.recordFailure();
+        errorCallback?.();
+        return;
+      }
+
+      const masterKey = await AuthUtils.ensureMasterKey();
+      console.log('[auth] generated master key for migration');
+      await AuthUtils.persistPinSecret(pin);
+      await StorageUtils.migrateAccountsToV3(pin, masterKey, legacyAccounts);
+
+      await dispatch(unlock(masterKey, errorCallback));
+    } catch (e) {
+      console.log('Failed to unlock with PIN', e);
+      await LockoutUtils.recordFailure();
+      errorCallback?.();
     }
   };
 

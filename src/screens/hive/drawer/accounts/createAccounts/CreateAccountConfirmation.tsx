@@ -1,6 +1,6 @@
 import {PrivateKey} from '@hiveio/dhive';
 import {addAccount} from 'actions/accounts';
-import {Account, KeyTypes} from 'actions/interfaces';
+import {Account, AccountKeys, KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
@@ -58,6 +58,15 @@ const DEFAULT_EMPTY_KEYS = {
   memo: {public: '', private: ''},
 } as GeneratedKeys;
 
+const toAccountKeys = (keys: GeneratedKeys): AccountKeys => ({
+  posting: keys.posting.private,
+  postingPubkey: keys.posting.public,
+  active: keys.active.private,
+  activePubkey: keys.active.public,
+  memo: keys.memo.private,
+  memoPubkey: keys.memo.public,
+});
+
 const StepTwo = ({
   user,
   addAccount,
@@ -69,6 +78,7 @@ const StepTwo = ({
   const [keysTextVersion, setKeysTextVersion] = useState('');
   const [loadingMasterKey, setLoadingMasterKey] = useState(true);
   const [paymentUnderstanding, setPaymentUnderstanding] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [safelyCopied, setSafelyCopied] = useState(false);
   const [notPrimaryStorageUnderstanding, setNotPrimaryStorageUnderstanding] =
     useState(false);
@@ -229,6 +239,7 @@ const StepTwo = ({
             : selectedAccount?.name,
         ),
     );
+    setCopied(true);
     SimpleToast.show(translate('toast.copied_text'));
   };
 
@@ -248,6 +259,10 @@ const StepTwo = ({
   };
 
   const createAccount = async () => {
+    if (!copied) {
+      SimpleToast.show(translate('components.create_account.need_copy_keys'));
+      return;
+    }
     if (
       paymentUnderstanding &&
       safelyCopied &&
@@ -317,7 +332,11 @@ const StepTwo = ({
             }),
           ).toString('base64');
           const fullData = 'keychain://create_account=' + encodedDataAsString;
-          setQrData(fullData);
+          navigate('CreateAccountPeerToPeerQrScreen', {
+            accountName,
+            keys: toAccountKeys(generatedKeys),
+            qrData: fullData,
+          });
         }
       } catch (err) {
         SimpleToast.show(err.message);
@@ -362,14 +381,7 @@ const StepTwo = ({
   const handleLoadNewAccount = () => {
     addAccount(
       accountName,
-      {
-        posting: generatedKeys.posting.private,
-        postingPubkey: generatedKeys.posting.public,
-        active: generatedKeys.active.private,
-        activePubkey: generatedKeys.active.public,
-        memo: generatedKeys.memo.private,
-        memoPubkey: generatedKeys.memo.public,
-      },
+      toAccountKeys(generatedKeys),
       true,
       false,
     );

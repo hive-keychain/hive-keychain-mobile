@@ -121,6 +121,7 @@ const AddAccountByKey = ({
         <Separator height={height / 22} />
         <OperationInput
           autoCapitalize={'none'}
+          autoCorrect={false}
           labelInput={translate('common.username')}
           placeholder={translate('common.username')}
           value={account}
@@ -140,7 +141,9 @@ const AddAccountByKey = ({
               onPress={() => {
                 Camera.requestCameraPermissionsAsync().then((result) => {
                   if (result.granted) {
-                    navigate('ScanQRScreen', {wallet: true});
+                    navigate('ScanQRScreen', {
+                      wallet: route.params ? route.params.wallet : false,
+                    });
                   } else {
                     Toast.show(translate('toast.error_camera_permission'), {
                       duration: Toast.durations.LONG,

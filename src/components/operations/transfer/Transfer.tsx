@@ -1,8 +1,10 @@
+import {fetchRecurrentTransfers} from 'actions/hive';
 import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import {encodeMemo} from 'components/bridge';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {CurrentOperationCard} from 'components/ui/CurrentOperationCard';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
@@ -63,6 +65,8 @@ const Transfer = ({
   phishingAccounts,
   showModal,
   localAccounts,
+  recurrentTransfers,
+  fetchRecurrentTransfers,
 }: Props) => {
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
@@ -85,7 +89,14 @@ const Transfer = ({
 
   useEffect(() => {
     loadAutocompleteTransferUsernames();
+    fetchRecurrentTransfers(user.name!);
   }, []);
+
+  useEffect(() => {
+    if (memo.length && memo[0] === '#') {
+      setIsMemoEncrypted(true);
+    }
+  }, [memo]);
 
   const loadAutocompleteTransferUsernames = async () => {
     const autoCompleteListByCategories: AutoCompleteValues =
@@ -116,6 +127,10 @@ const Transfer = ({
         options,
       );
     } else {
+      const pair_id = TransferUtils.getRecurrentTransferPairId(
+        recurrentTransfers,
+        to,
+      );
       await recurrentTransfer(
         user.keys.active,
         {
@@ -125,7 +140,7 @@ const Transfer = ({
           from: user.account.name,
           recurrence: +recurrence,
           executions: +exec,
-          extensions: [],
+          extensions: [{type: 1, value: {pair_id}}],
         },
         options,
       );
@@ -218,6 +233,7 @@ const Transfer = ({
   const onSendConfirmation = () => {
     if (
       !amount.length ||
+      +amount === 0 ||
       !to.length ||
       (isRecurrent &&
         (exec.trim().length === 0 || recurrence.trim().length === 0))
@@ -359,9 +375,13 @@ const Transfer = ({
       <Separator />
       <View style={{zIndex: -1}}>
         <OperationInput
-          labelInput={capitalize(translate('common.memo'))}
+          labelInput={`${capitalize(translate('common.memo'))} ${
+            isMemoEncrypted ? ` (${translate('common.encrypted')})` : ''
+          }`}
           placeholder={translate('wallet.operations.transfer.memo')}
           value={memo}
+          autoCapitalize="none"
+          autoCorrect={true}
           trim={false}
           onChangeText={setMemo}
           rightIcon={
@@ -458,6 +478,8 @@ const Transfer = ({
       <Separator />
       <View style={{zIndex: -1}}>
         <OperationInput
+          autoCapitalize="none"
+          autoCorrect={true}
           labelInput={capitalize(translate('common.memo'))}
           placeholder={translate('wallet.operations.transfer.memo')}
           value={memoReceive}
@@ -490,6 +512,15 @@ const Transfer = ({
               theme={theme}
             />
             <Separator />
+            {recurrentTransfers.length > 0 && (
+              <CurrentOperationCard
+                onPress={() => navigate('RecurrentTransfers')}
+                title="keys.active"
+                value={translate('common.active_recurrent_transfers', {
+                  nb: recurrentTransfers.length,
+                })}
+              />
+            )}
           </>
         }
         childrenMiddle={
@@ -551,9 +582,10 @@ const connector = connect(
       user: state.activeAccount,
       localAccounts: state.accounts,
       phishingAccounts: state.phishingAccounts,
+      recurrentTransfers: state.recurrentTransfers,
     };
   },
-  {showModal},
+  {showModal, fetchRecurrentTransfers},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

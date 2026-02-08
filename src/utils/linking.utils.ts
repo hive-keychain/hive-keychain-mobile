@@ -14,24 +14,21 @@ import {validateFromObject} from './keyValidation.utils';
 import {translate} from './localize';
 import {goBack, goBackAndNavigate} from './navigation.utils';
 
-let flagCurrentlyProcessing = false;
-let qrDataAccounts: {
-  data: string;
-  index: number;
-  total: number;
-}[] = [];
-
-export default async () => {
-  Linking.addEventListener('url', ({url}) => {
+export default () => {
+  const subscription = Linking.addEventListener('url', ({url}) => {
     if (url) {
       handleUrl(url);
     }
   });
 
-  const initialUrl = await Linking.getInitialURL();
-  if (initialUrl) {
-    handleUrl(initialUrl);
-  }
+  // Handle initial URL asynchronously
+  Linking.getInitialURL().then((initialUrl) => {
+    if (initialUrl) {
+      handleUrl(initialUrl);
+    }
+  });
+
+  return subscription;
 };
 
 export const handleUrl = async (url: string, qr: boolean = false) => {
@@ -138,7 +135,7 @@ export const handleAddAccountQR = async (
   } else {
     keys = await validateFromObject(obj);
   }
-  if (wallet && KeyUtils.hasKeys(keys)) {
+  if (KeyUtils.hasKeys(keys)) {
     store.dispatch<any>(
       addAccount(obj.name, keys, wallet, true, false, mainStack),
     );
@@ -147,6 +144,8 @@ export const handleAddAccountQR = async (
   }
 };
 
-export const clearLinkingListeners = () => {
-  Linking.removeAllListeners('url');
+export const clearLinkingListeners = (subscription?: {remove: () => void}) => {
+  if (subscription) {
+    subscription.remove();
+  }
 };
