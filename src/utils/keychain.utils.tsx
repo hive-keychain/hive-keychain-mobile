@@ -113,7 +113,8 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.message) &&
         isFilledKey(req.method)) ||
       (req.type === 'vote' &&
-        isFilled(req.username) &&
+        (isFilled(req.username) ||
+          KeychainConfig.ANONYMOUS_REQUESTS.includes(req.type)) &&
         isFilledWeight(req.weight) &&
         isFilled(req.permlink) &&
         isFilled(req.author)) ||
@@ -167,12 +168,18 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.to) &&
         isFilledCurrency(req.currency) &&
         hasTransferInfo(req)) ||
+      (req.type === 'savings' &&
+        isFilledAmt(req.amount) &&
+        isFilled(req.to) &&
+        isFilledCurrency(req.currency) &&
+        isFilledSavingsOperation(req.operation)) ||
       (req.type === 'sendToken' &&
         isFilledAmt(req.amount, false) &&
         isFilled(req.to) &&
         isFilled(req.currency)) ||
       (req.type === 'powerUp' &&
-        isFilled(req.username) &&
+        (isFilled(req.username) ||
+          KeychainConfig.ANONYMOUS_REQUESTS.includes(req.type)) &&
         isFilledAmt(req.steem) &&
         isFilled(req.recipient)) ||
       (req.type === 'powerDown' &&
@@ -197,7 +204,8 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.username) &&
         isProposalIDs(req.proposal_ids)) ||
       (req.type === 'updateProposalVote' &&
-        isFilled(req.username) &&
+        (isFilled(req.username) ||
+          KeychainConfig.ANONYMOUS_REQUESTS.includes(req.type)) &&
         isProposalIDs(req.proposal_ids) &&
         isBoolean(req.approve)) ||
       (req.type === 'sendToken' &&
@@ -206,7 +214,8 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.currency)) ||
       (req.type === 'addAccount' && isFilledKeys(req.keys)) ||
       (req.type === 'convert' &&
-        isFilled(req.username) &&
+        (isFilled(req.username) ||
+          KeychainConfig.ANONYMOUS_REQUESTS.includes(req.type)) &&
         isFilledAmt(req.amount) &&
         isBoolean(req.collaterized)) ||
       (req.type === 'recurrentTransfer' &&
@@ -246,6 +255,7 @@ export const getRequiredWifType: (
     case 'signedCall':
       return request.typeWif.toLowerCase() as KeyTypes;
     case 'transfer':
+    case 'savings':
     case 'sendToken':
     case 'delegation':
     case 'witnessVote':
@@ -341,6 +351,10 @@ const isFilledWeight = (obj: string | number) => {
 
 const isFilledCurrency = (obj: string) => {
   return isFilled(obj) && (obj === 'HIVE' || obj === 'HBD');
+};
+
+const isFilledSavingsOperation = (obj: string) => {
+  return obj === 'deposit' || obj === 'withdraw';
 };
 
 const isFilledKey = (obj: string) => {

@@ -942,6 +942,9 @@
       "convert": "Convert",
       "recurrentTransfer": "Recurrent Transfers",
       "multisig": "Multisig",
+      "savings_deposit": "Deposit to Savings",
+      "savings_withdraw": "Withdraw from Savings",
+      "savings": "Savings",
       "swap": "Keychain Swap"
     },
     "message": {

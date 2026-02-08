@@ -940,6 +940,9 @@
       "convert": "Converter",
       "recurrentTransfer": "Transferências Recorrentes",
       "multisig": "Multisig",
+      "savings_deposit": "Depósito na poupança",
+      "savings_withdraw": "Saque da poupança",
+      "savings": "Poupança",
       "swap": "Keychain Swap"
     },
     "message": {

@@ -43,11 +43,18 @@ export const KeychainConfig = {
   ANONYMOUS_REQUESTS: [
     'delegation',
     'witnessVote',
+    'vote',
     'proxy',
+    'savings',
     'custom',
     'signBuffer',
+    'sendToken',
+    'powerUp',
+    'convert',
     'transfer',
     'recurrentTransfer',
+    'updateProposalVote',
+    'swap',
   ],
 };
 

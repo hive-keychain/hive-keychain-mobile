@@ -940,6 +940,9 @@
       "convert": "Convertir",
       "recurrentTransfer": "Transferencias recurrentes",
       "multisig": "Multifirma",
+      "savings_deposit": "Depositar en ahorros",
+      "savings_withdraw": "Retirar de ahorros",
+      "savings": "Ahorros",
       "swap": "Keychain Swap"
     },
     "message": {

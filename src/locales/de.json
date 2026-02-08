@@ -940,6 +940,9 @@
       "convert": "Konvertieren",
       "recurrentTransfer": "Wiederkehrende Überweisungen",
       "multisig": "Multisig",
+      "savings_deposit": "Einzahlung auf das Sparkonto",
+      "savings_withdraw": "Auszahlung vom Sparkonto",
+      "savings": "Sparkonto",
       "swap": "Keychain Swap"
     },
     "message": {

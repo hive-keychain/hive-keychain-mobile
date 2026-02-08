@@ -2,47 +2,67 @@ import {KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
-import {RequestId, RequestPowerUp} from 'src/interfaces/keychain.interface';
+import {RequestId, RequestSavings} from 'src/interfaces/keychain.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {powerUp} from 'utils/hiveLibs.utils';
+import {beautifyTransferError} from 'utils/format.utils';
+import {depositToSavings, withdrawFromSavings} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
-  request: RequestPowerUp & RequestId;
+  request: RequestSavings & RequestId;
 } & RequestComponentCommonProps;
-export default ({
+
+const Savings = ({
   request,
   accounts,
   closeGracefully,
   sendResponse,
   sendError,
 }: Props) => {
-  const {request_id, ...data} = request;
-  const {recipient: to, steem: hive} = data;
+  const {to, amount, currency, operation} = request;
+  const memo = request.memo || '';
+  const isDeposit = operation === 'deposit';
   const {getUsername, getAccountKey, RequestUsername} =
     usePotentiallyAnonymousRequest(request, accounts);
+
+  const successMessage = translate(
+    isDeposit
+      ? 'toast.savings_deposit_success'
+      : 'toast.savings_withdraw_success',
+    {amount: `${amount} ${currency}`},
+  );
+
   const performOperation = async (options: TransactionOptions) => {
-    return await powerUp(
-      getAccountKey(),
-      {
-        from: getUsername(),
-        to,
-        amount: `${hive} HIVE`,
-      },
-      options,
-    );
+    const op = {
+      from: getUsername(),
+      to,
+      amount: `${amount} ${currency}`,
+      memo,
+      request_id: Date.now(),
+    };
+    return isDeposit
+      ? await depositToSavings(getAccountKey(), op, options)
+      : await withdrawFromSavings(getAccountKey(), op, options);
   };
+
+  const memoLabel = memo.startsWith('#')
+    ? `${memo.substring(1)} (${translate('common.encrypted')})`
+    : memo;
+
   return (
     <RequestOperation
       sendResponse={sendResponse}
       sendError={sendError}
-      successMessage={translate('request.success.power_up', {
-        hive,
-        to,
-      })}
-      beautifyError
+      successMessage={successMessage}
+      errorMessage={(error, _data) =>
+        beautifyTransferError(error, {
+          currency,
+          username: getUsername(),
+          to,
+        })
+      }
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
@@ -51,7 +71,7 @@ export default ({
       performOperation={performOperation}
       confirmationData={[
         {
-          title: 'request.item.username',
+          title: '',
           value: '',
           tag: ConfirmationDataTag.REQUEST_USERNAME,
         },
@@ -62,11 +82,21 @@ export default ({
         },
         {
           title: 'request.item.amount',
-          value: hive,
-          currency: 'HIVE',
+          value: amount,
+          currency,
           tag: ConfirmationDataTag.AMOUNT,
         },
+        ...(memo.length
+          ? [
+              {
+                title: 'request.item.memo',
+                value: memoLabel,
+              },
+            ]
+          : []),
       ]}
     />
   );
 };
+
+export default Savings;
