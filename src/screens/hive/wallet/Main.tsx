@@ -145,8 +145,6 @@ const Main = ({
     updateUserWallet(user.name);
   }, [user.name]);
 
-  // Rating prompt handled by a popup component rendered below
-
   useEffect(() => {
     if (Platform.OS === 'ios') return;
     const eventEmitter = new NativeEventEmitter(NativeModules.WidgetBridge);

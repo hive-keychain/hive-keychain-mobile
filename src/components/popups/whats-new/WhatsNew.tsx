@@ -95,6 +95,7 @@ const WhatsNew = ({
 
   const finish = async () => {
     await WhatsNewUtils.saveLastSeen();
+    setWhatsNewContent(undefined);
     navigation.goBack();
   };
 
