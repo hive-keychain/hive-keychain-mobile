@@ -270,8 +270,8 @@ const getAccountTransactions = async (
         blockNumber: e[1].block,
         url:
           e[1].trx_id === '0000000000000000000000000000000000000000'
-            ? `https://hiveblocks.com/b/${e[1].block}#${e[1].trx_id}`
-            : `https://hiveblocks.com/tx/${e[1].trx_id}`,
+            ? `https://hivehub.dev/b/${e[1].block}#${e[1].trx_id}`
+            : `https://hivehub.dev/tx/${e[1].trx_id}`,
         last: false,
         lastFetched: false,
       };
