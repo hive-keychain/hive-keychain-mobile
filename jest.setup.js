@@ -18,6 +18,7 @@ jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(),
   setItemAsync: jest.fn(),
   deleteItemAsync: jest.fn(),
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'WHEN_UNLOCKED_THIS_DEVICE_ONLY',
 }));
 
 jest.mock('expo-local-authentication', () => ({
@@ -185,6 +186,13 @@ jest.mock('expo-image', () => ({
 // (Fixes setInterval open handle warnings)
 // -----------------------------------------
 jest.mock('src/background/index', () => ({}));
+
+// -----------------------------------------
+// react-native-webview
+// -----------------------------------------
+jest.mock('react-native-webview', () => ({
+  WebView: 'WebView',
+}));
 
 // -----------------------------------------
 // Silence noisy logs

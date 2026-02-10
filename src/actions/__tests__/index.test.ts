@@ -90,6 +90,7 @@ describe('actions/index', () => {
       expect(AuthUtils.persistPinSecret).toHaveBeenCalledWith(password);
       expect(AuthUtils.persistMasterKey).toHaveBeenCalledWith(
         'generated-master-key',
+        false,
       );
       expect(mockDispatch).toHaveBeenCalledWith({
         type: SIGN_UP,
