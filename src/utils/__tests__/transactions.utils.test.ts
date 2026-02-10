@@ -700,6 +700,132 @@ describe('transactions.utils', () => {
       expect(result[0][0].subType).toBe('account_create');
     });
 
+    it('should handle escrow_transfer transactions', async () => {
+      const mockHistory = [
+        [
+          1000000,
+          {
+            op: [
+              'escrow_transfer',
+              {
+                from: 'user1',
+                to: 'user2',
+                escrow_id: 1,
+                agent: 'agent',
+                hbd_amount: '1.000 HBD',
+                hive_amount: '2.000 HIVE',
+                fee: '0.010 HIVE',
+              },
+            ],
+            trx_id: 'tx1',
+            block: 1000000,
+            timestamp: '2023-01-01T00:00:00',
+          },
+        ],
+      ];
+      mockDatabase.getAccountHistory.mockResolvedValue(mockHistory);
+      const result = await TransactionUtils.getAccountTransactions(
+        'user1',
+        1000000,
+        mockGlobals,
+      );
+      expect(result[0][0].type).toBe('escrow_transfer');
+    });
+
+    it('should handle escrow_approve transactions', async () => {
+      const mockHistory = [
+        [
+          1000000,
+          {
+            op: [
+              'escrow_approve',
+              {
+                from: 'user1',
+                to: 'user2',
+                escrow_id: 1,
+                approve: true,
+                who: 'user1',
+                agent: 'agent',
+              },
+            ],
+            trx_id: 'tx1',
+            block: 1000000,
+            timestamp: '2023-01-01T00:00:00',
+          },
+        ],
+      ];
+      mockDatabase.getAccountHistory.mockResolvedValue(mockHistory);
+      const result = await TransactionUtils.getAccountTransactions(
+        'user1',
+        1000000,
+        mockGlobals,
+      );
+      expect(result[0][0].type).toBe('escrow_approve');
+    });
+
+    it('should handle escrow_dispute transactions', async () => {
+      const mockHistory = [
+        [
+          1000000,
+          {
+            op: [
+              'escrow_dispute',
+              {
+                from: 'user1',
+                to: 'user2',
+                escrow_id: 1,
+                who: 'user2',
+                agent: 'agent',
+              },
+            ],
+            trx_id: 'tx1',
+            block: 1000000,
+            timestamp: '2023-01-01T00:00:00',
+          },
+        ],
+      ];
+      mockDatabase.getAccountHistory.mockResolvedValue(mockHistory);
+      const result = await TransactionUtils.getAccountTransactions(
+        'user1',
+        1000000,
+        mockGlobals,
+      );
+      expect(result[0][0].type).toBe('escrow_dispute');
+    });
+
+    it('should handle escrow_release transactions', async () => {
+      const mockHistory = [
+        [
+          1000000,
+          {
+            op: [
+              'escrow_release',
+              {
+                from: 'user1',
+                to: 'user2',
+                escrow_id: 1,
+                who: 'user1',
+                receiver: 'user2',
+                agent: 'agent',
+                hbd_amount: '0.000 HBD',
+                hive_amount: '2.000 HIVE',
+              },
+            ],
+            trx_id: 'tx1',
+            block: 1000000,
+            timestamp: '2023-01-01T00:00:00',
+          },
+        ],
+      ];
+      mockDatabase.getAccountHistory.mockResolvedValue(mockHistory);
+      const result = await TransactionUtils.getAccountTransactions(
+        'user1',
+        1000000,
+        mockGlobals,
+      );
+      expect(result[0][0].type).toBe('escrow_release');
+    });
+
     it('should set last flag when appropriate', async () => {
       const mockHistory = [
         [

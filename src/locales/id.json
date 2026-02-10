@@ -791,7 +791,18 @@
       "notification_producer_reward": "@{{0}} menerima ${{1}} sebagai reward produsen",
       "notification_changed_recovery_account": "Akun pemulihan @{{0}} telah diubah dari @{{1}}menjadi @{{2}}",
       "notification_fill_collateralized_convert_request": "@{{0}} telah menyelesaikan konversi: {{1}} menjadi {{2}}",
-      "notification_failed_recurrent_transfer": "Transfer berkala {{0}} dari @{{1}} ke @{{2}} gagal!"
+      "notification_failed_recurrent_transfer": "Transfer berkala {{0}} dari @{{1}} ke @{{2}} gagal!",
+      "wallet_info_escrow_transfer_out": "Mengirim escrow {{0}} ke @{{1}}",
+      "wallet_info_escrow_transfer_in": "Escrow {{0}} menunggu dari @{{1}}",
+      "wallet_info_escrow_transfer_other": "Escrow {{0}} dari @{{1}} ke @{{2}}",
+      "wallet_info_escrow_approve_self": "Escrow #{{0}} disetujui",
+      "wallet_info_escrow_approve_other": "@{{0}} menyetujui escrow #{{1}}",
+      "wallet_info_escrow_reject_self": "Escrow #{{0}} ditolak",
+      "wallet_info_escrow_reject_other": "@{{0}} menolak escrow #{{1}}",
+      "wallet_info_escrow_dispute_self": "Escrow #{{0}} disengketakan",
+      "wallet_info_escrow_dispute_other": "@{{0}} menyengketakan escrow #{{1}}",
+      "wallet_info_escrow_release_self": "Melepas escrow {{0}} ke @{{1}} (#{{2}})",
+      "wallet_info_escrow_release_other": "@{{0}} melepas escrow {{1}} ke @{{2}} (#{{3}})"
     },
     "createAccountPeerToPeer": {
       "text1": "Terima kasih telah menggunakan Keychain Onboarding!",

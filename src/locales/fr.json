@@ -791,7 +791,18 @@
       "notification_producer_reward": "@{{0}} a reçu {{1}} rewards pour la production de blocs",
       "notification_changed_recovery_account": "Le compte de récupération de @{{0}} est passé de @{{1}} à @{{2}}",
       "notification_fill_collateralized_convert_request": "@{{0}} a effectué une conversion : {{1}} en {{2}}",
-      "notification_failed_recurrent_transfer": "Le transfert récurrent {{0}} de @{{1}} à @{{2}} a échoué"
+      "notification_failed_recurrent_transfer": "Le transfert récurrent {{0}} de @{{1}} à @{{2}} a échoué",
+      "wallet_info_escrow_transfer_out": "Envoi d'un séquestre de {{0}} à @{{1}}",
+      "wallet_info_escrow_transfer_in": "Séquestre en attente de {{0}} de @{{1}}",
+      "wallet_info_escrow_transfer_other": "Séquestre de {{0}} de @{{1}} à @{{2}}",
+      "wallet_info_escrow_approve_self": "Séquestre #{{0}} approuvé",
+      "wallet_info_escrow_approve_other": "@{{0}} a approuvé le séquestre #{{1}}",
+      "wallet_info_escrow_reject_self": "Séquestre #{{0}} rejeté",
+      "wallet_info_escrow_reject_other": "@{{0}} a rejeté le séquestre #{{1}}",
+      "wallet_info_escrow_dispute_self": "Séquestre #{{0}} contesté",
+      "wallet_info_escrow_dispute_other": "@{{0}} a contesté le séquestre #{{1}}",
+      "wallet_info_escrow_release_self": "Séquestre de {{0}} libéré vers @{{1}} (#{{2}})",
+      "wallet_info_escrow_release_other": "@{{0}} a libéré {{1}} du séquestre vers @{{2}} (#{{3}})"
     },
     "createAccountPeerToPeer": {
       "text1": "Merci d'utiliser Keychain Onboarding !",

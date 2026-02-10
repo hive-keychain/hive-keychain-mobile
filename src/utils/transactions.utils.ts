@@ -14,6 +14,10 @@ import {
   CreateClaimedAccount,
   Delegation,
   DepositSavings,
+  EscrowApprove,
+  EscrowDispute,
+  EscrowRelease,
+  EscrowTransfer,
   FillCollateralizedConvert,
   FillConvert,
   FillRecurrentTransfer,
@@ -73,6 +77,10 @@ const getAccountTransactions = async (
       op.fill_collateralized_convert_request,
       op.account_create,
       op.create_claimed_account,
+      op.escrow_approve,
+      op.escrow_dispute,
+      op.escrow_release,
+      op.escrow_transfer,
     ]) as [number, number];
 
     let limit = Math.min(start, NB_TRANSACTION_FETCHED);
@@ -233,6 +241,22 @@ const getAccountTransactions = async (
           specificTransaction = e[1].op[1] as CreateAccount;
           specificTransaction.type = 'account_create';
           specificTransaction.subType = 'account_create';
+          break;
+        }
+        case 'escrow_transfer': {
+          specificTransaction = e[1].op[1] as EscrowTransfer;
+          break;
+        }
+        case 'escrow_approve': {
+          specificTransaction = e[1].op[1] as EscrowApprove;
+          break;
+        }
+        case 'escrow_dispute': {
+          specificTransaction = e[1].op[1] as EscrowDispute;
+          break;
+        }
+        case 'escrow_release': {
+          specificTransaction = e[1].op[1] as EscrowRelease;
           break;
         }
       }
