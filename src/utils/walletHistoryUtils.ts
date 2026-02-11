@@ -1,4 +1,5 @@
 import {ActiveAccount} from 'actions/interfaces';
+import {EscrowHistoryUtils} from 'hive-keychain-commons';
 import moment from 'moment';
 import {WalletHistoryFilter} from 'src/interfaces/walletHistory.interface';
 import {
@@ -7,6 +8,10 @@ import {
   Convert,
   Delegation,
   DepositSavings,
+  EscrowApprove,
+  EscrowDispute,
+  EscrowRelease,
+  EscrowTransfer,
   FillCollateralizedConvert,
   FillConvert,
   PowerDown,
@@ -213,6 +218,26 @@ const applyAllFilters = (
           transaction as Convert,
           filter.filterValue,
         )) ||
+      (transaction.type === 'escrow_transfer' &&
+        WalletHistoryUtils.filterEscrowTransfer(
+          transaction as EscrowTransfer,
+          filter.filterValue,
+        )) ||
+      (transaction.type === 'escrow_approve' &&
+        WalletHistoryUtils.filterEscrowApprove(
+          transaction as EscrowApprove,
+          filter.filterValue,
+        )) ||
+      (transaction.type === 'escrow_dispute' &&
+        WalletHistoryUtils.filterEscrowDispute(
+          transaction as EscrowDispute,
+          filter.filterValue,
+        )) ||
+      (transaction.type === 'escrow_release' &&
+        WalletHistoryUtils.filterEscrowRelease(
+          transaction as EscrowRelease,
+          filter.filterValue,
+        )) ||
       (transaction.timestamp &&
         moment(transaction.timestamp)
           .format('L')
@@ -230,5 +255,9 @@ export const WalletHistoryUtils = {
   filterInterest,
   filterFillConversion,
   filterConversion,
+  filterEscrowTransfer: EscrowHistoryUtils.filterEscrowTransfer,
+  filterEscrowApprove: EscrowHistoryUtils.filterEscrowApprove,
+  filterEscrowDispute: EscrowHistoryUtils.filterEscrowDispute,
+  filterEscrowRelease: EscrowHistoryUtils.filterEscrowRelease,
   applyAllFilters,
 };

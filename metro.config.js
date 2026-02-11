@@ -15,6 +15,7 @@ module.exports = (() => {
   const config = getDefaultConfig(__dirname);
 
   const {transformer, resolver} = config;
+  const appNodeModules = path.resolve(__dirname, 'node_modules');
 
   config.transformer = {
     ...transformer,
@@ -25,6 +26,16 @@ module.exports = (() => {
     ...resolver,
     assetExts: resolver.assetExts.filter((ext) => ext !== 'svg'),
     sourceExts: [...resolver.sourceExts, 'svg'],
+    nodeModulesPaths: [...(resolver.nodeModulesPaths || []), appNodeModules],
+    extraNodeModules: {
+      ...(resolver.extraNodeModules || {}),
+      'hive-keychain-commons': path.resolve(
+        __dirname,
+        'node_modules/hive-keychain-commons',
+      ),
+      bs58: path.resolve(__dirname, 'node_modules/bs58'),
+      'crypto-js': path.resolve(__dirname, 'node_modules/crypto-js'),
+    },
   };
   config.watchFolders = watchFolders;
 

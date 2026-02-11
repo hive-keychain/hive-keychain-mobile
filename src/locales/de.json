@@ -791,7 +791,18 @@
       "notification_producer_reward": "@{{0}} hat {{1}} als Producer-Belohnung erhalten",
       "notification_changed_recovery_account": "@{{0}}'s Wiederherstellungskonto wurde von @{{1}} auf @{{2}} geändert",
       "notification_fill_collateralized_convert_request": "@{{0}} hat eine Umwandlung abgeschlossen: {{1}} nach {{2}}",
-      "notification_failed_recurrent_transfer": "{{0}} wiederkehrende Überweisung von @{{1}} auf @{{2}} ist fehlgeschlagen"
+      "notification_failed_recurrent_transfer": "{{0}} wiederkehrende Überweisung von @{{1}} auf @{{2}} ist fehlgeschlagen",
+      "wallet_info_escrow_transfer_out": "Sende {{0}} Escrow an @{{1}}",
+      "wallet_info_escrow_transfer_in": "Ausstehendes {{0}} Escrow von @{{1}}",
+      "wallet_info_escrow_transfer_other": "Escrow von {{0}} von @{{1}} an @{{2}}",
+      "wallet_info_escrow_approve_self": "Escrow #{{0}} genehmigt",
+      "wallet_info_escrow_approve_other": "@{{0}} genehmigte Escrow #{{1}}",
+      "wallet_info_escrow_reject_self": "Escrow #{{0}} abgelehnt",
+      "wallet_info_escrow_reject_other": "@{{0}} lehnte Escrow #{{1}} ab",
+      "wallet_info_escrow_dispute_self": "Escrow #{{0}} angefochten",
+      "wallet_info_escrow_dispute_other": "@{{0}} hat Escrow #{{1}} angefochten",
+      "wallet_info_escrow_release_self": "Escrow von {{0}} an @{{1}} freigegeben (#{{2}})",
+      "wallet_info_escrow_release_other": "@{{0}} hat {{1}} Escrow an @{{2}} freigegeben (#{{3}})"
     },
     "createAccountPeerToPeer": {
       "text1": "Vielen Dank für die Nutzung von Keychain Onboarding!",

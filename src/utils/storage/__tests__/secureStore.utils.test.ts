@@ -45,31 +45,17 @@ describe('SecureStoreUtils', () => {
   });
 
   describe('clearSecureStore', () => {
-    it('should clear known keys and chunked entries', async () => {
-      (SecureStore.getItemAsync as jest.Mock).mockResolvedValueOnce('2');
+    it('should clear known keys', async () => {
       (SecureStore.deleteItemAsync as jest.Mock).mockResolvedValue(true);
-      await SecureStoreUtils.clearSecureStore('test');
+      await SecureStoreUtils.clearSecureStore();
 
-      expect(SecureStore.getItemAsync).toHaveBeenCalledWith('test_length', {
-        keychainService: 'test',
-      });
-
-      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('test_0', {
-        keychainService: 'test_0',
-      });
-      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('test_1', {
-        keychainService: 'test_1',
-      });
-      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('test_length', {
-        keychainService: 'test_length',
-      });
-      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('test', {
-        keychainService: 'test',
-      });
-      // Also clears known app keys (e.g., master key, pin hash)
+      // Should delete all known keys
+      expect(SecureStore.deleteItemAsync).toHaveBeenCalledTimes(5);
       expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith(
         expect.stringMatching(/SECURE_MK|MASTER_KEY|PIN_SALT|PIN_HASH|LOCKOUT_DATA/),
-        expect.any(Object),
+        expect.objectContaining({
+          keychainService: expect.any(String),
+        }),
       );
     });
   });

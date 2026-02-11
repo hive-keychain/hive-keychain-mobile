@@ -53,7 +53,7 @@ export const getWitnessInfo = async (
     ),
     blockMissed: resultFromBlockchain.total_missed || 0,
     lastBlock: resultFromBlockchain.last_confirmed_block_num || 0,
-    lastBlockUrl: `https://hiveblocks.com/b/${resultFromBlockchain.last_confirmed_block_num}`,
+    lastBlockUrl: `https://hivehub.dev/b/${resultFromBlockchain.last_confirmed_block_num}`,
     priceFeed: fromNaiAndSymbol(resultFromBlockchain.hbd_exchange_rate.base),
     priceFeedUpdatedAt: moment(lastFeedUpdate),
     priceFeedUpdatedAtWarning: wasUpdatedAfterThreshold(moment(lastFeedUpdate)),

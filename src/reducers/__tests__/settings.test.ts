@@ -15,6 +15,7 @@ describe('settings reducer', () => {
   const initialState = {
     rpc: DEFAULT_RPC,
     hiveEngineRpc: DEFAULT_HE_RPC_NODE,
+    hiveEngineRpcError: null,
     accountHistoryAPIRpc: DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
     mobileSettings: {
       platformRelevantFeatures: {
