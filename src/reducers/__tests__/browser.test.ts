@@ -165,6 +165,124 @@ describe('browser reducer', () => {
     expect(result.tabs[0].name).toBe('New');
   });
 
+  it('should initialize tab navigation state when adding a tab', () => {
+    const action = {
+      type: ADD_BROWSER_TAB,
+      payload: {id: 'tab1', url: 'https://example.com'},
+    };
+    const result = browserReducer(initialState, action);
+    expect(result.tabs[0].navigationHistory).toEqual(['https://example.com']);
+    expect(result.tabs[0].navigationIndex).toBe(0);
+    expect(result.tabs[0].canGoBack).toBe(false);
+    expect(result.tabs[0].canGoForward).toBe(false);
+  });
+
+  it('should append to tab navigation history when URL changes', () => {
+    const state = {
+      ...initialState,
+      tabs: [
+        {
+          id: 'tab1',
+          url: 'https://example.com',
+          navigationHistory: ['https://example.com'],
+          navigationIndex: 0,
+        },
+      ],
+    };
+    const action = {
+      type: UPDATE_BROWSER_TAB,
+      payload: {id: 'tab1', data: {url: 'https://next.com'}},
+    };
+    const result = browserReducer(state, action);
+    expect(result.tabs[0].navigationHistory).toEqual([
+      'https://example.com',
+      'https://next.com',
+    ]);
+    expect(result.tabs[0].navigationIndex).toBe(1);
+    expect(result.tabs[0].canGoBack).toBe(true);
+    expect(result.tabs[0].canGoForward).toBe(false);
+  });
+
+  it('should not create a new history entry for slash variants of same URL', () => {
+    const state = {
+      ...initialState,
+      tabs: [
+        {
+          id: 'tab1',
+          url: 'https://example.com',
+          navigationHistory: ['https://example.com'],
+          navigationIndex: 0,
+        },
+      ],
+    };
+    const action = {
+      type: UPDATE_BROWSER_TAB,
+      payload: {id: 'tab1', data: {url: 'https://example.com/'}},
+    };
+    const result = browserReducer(state, action);
+    expect(result.tabs[0].navigationHistory).toEqual(['https://example.com']);
+    expect(result.tabs[0].navigationIndex).toBe(0);
+    expect(result.tabs[0].canGoBack).toBe(false);
+    expect(result.tabs[0].canGoForward).toBe(false);
+  });
+
+  it('should move navigation index back when URL matches previous history entry', () => {
+    const state = {
+      ...initialState,
+      tabs: [
+        {
+          id: 'tab1',
+          url: 'https://next.com',
+          navigationHistory: ['https://example.com', 'https://next.com'],
+          navigationIndex: 1,
+        },
+      ],
+    };
+    const action = {
+      type: UPDATE_BROWSER_TAB,
+      payload: {id: 'tab1', data: {url: 'https://example.com'}},
+    };
+    const result = browserReducer(state, action);
+    expect(result.tabs[0].navigationHistory).toEqual([
+      'https://example.com',
+      'https://next.com',
+    ]);
+    expect(result.tabs[0].navigationIndex).toBe(0);
+    expect(result.tabs[0].canGoBack).toBe(false);
+    expect(result.tabs[0].canGoForward).toBe(true);
+  });
+
+  it('should drop forward history when navigating to a new URL from the middle', () => {
+    const state = {
+      ...initialState,
+      tabs: [
+        {
+          id: 'tab1',
+          url: 'https://example.com',
+          navigationHistory: [
+            'https://start.com',
+            'https://example.com',
+            'https://next.com',
+          ],
+          navigationIndex: 1,
+        },
+      ],
+    };
+    const action = {
+      type: UPDATE_BROWSER_TAB,
+      payload: {id: 'tab1', data: {url: 'https://new.com'}},
+    };
+    const result = browserReducer(state, action);
+    expect(result.tabs[0].navigationHistory).toEqual([
+      'https://start.com',
+      'https://example.com',
+      'https://new.com',
+    ]);
+    expect(result.tabs[0].navigationIndex).toBe(2);
+    expect(result.tabs[0].canGoBack).toBe(true);
+    expect(result.tabs[0].canGoForward).toBe(false);
+  });
+
   it('should handle BROWSER_FOCUS', () => {
     const action = {
       type: BROWSER_FOCUS,

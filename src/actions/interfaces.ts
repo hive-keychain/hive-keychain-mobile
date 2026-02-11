@@ -63,6 +63,10 @@ export interface Tab {
   icon?: string;
   image?: string;
   desktop?: boolean;
+  navigationHistory?: string[];
+  navigationIndex?: number;
+  canGoBack?: boolean;
+  canGoForward?: boolean;
 }
 
 export interface BrowserPayload {

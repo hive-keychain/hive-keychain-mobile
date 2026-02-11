@@ -123,6 +123,12 @@ export default memo(
     const [isLoading, setIsLoading] = useState(false);
     const [pendingUrl, setPendingUrl] = useState('');
     const urlUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const nativeCanGoBackRef = useRef(false);
+    const nativeCanGoForwardRef = useRef(false);
+    const areEquivalentUrls = (a?: string, b?: string) => {
+      if (!a || !b) return a === b;
+      return a === b || `${a}/` === b || `${b}/` === a;
+    };
     useEffect(() => {
       addToHistory({url: data.url, name: data.name, icon: data.icon});
     }, [data.url, data.name, data.icon]);
@@ -146,13 +152,65 @@ export default memo(
       return () => backHandler.remove();
     });
 
+    const getPersistedNavigation = () => {
+      const history =
+        data.navigationHistory && data.navigationHistory.length
+          ? data.navigationHistory
+          : [data.url];
+      const index =
+        typeof data.navigationIndex === 'number'
+          ? Math.min(Math.max(data.navigationIndex, 0), history.length - 1)
+          : history.length - 1;
+      return {history, index};
+    };
+
+    const goBackFallback = () => {
+      const {history, index} = getPersistedNavigation();
+      if (index <= 0) {
+        return;
+      }
+      const previousUrl = history[index - 1];
+      if (previousUrl && !areEquivalentUrls(previousUrl, url)) {
+        updateTab(id, {url: previousUrl});
+      }
+    };
+
+    const goForwardFallback = () => {
+      const {history, index} = getPersistedNavigation();
+      if (index >= history.length - 1) {
+        return;
+      }
+      const nextUrl = history[index + 1];
+      if (nextUrl && !areEquivalentUrls(nextUrl, url)) {
+        updateTab(id, {url: nextUrl});
+      }
+    };
+
     const goBack = () => {
+      const {history, index} = getPersistedNavigation();
+      if (index > 0 && history.length > 1) {
+        goBackFallback();
+        return;
+      }
       const {current} = tabRef;
-      current && current.goBack();
+      if (nativeCanGoBackRef.current && current) {
+        current.goBack();
+      } else {
+        goBackFallback();
+      }
     };
     const goForward = () => {
+      const {history, index} = getPersistedNavigation();
+      if (index < history.length - 1 && history.length > 1) {
+        goForwardFallback();
+        return;
+      }
       const {current} = tabRef;
-      current && current.goForward();
+      if (nativeCanGoForwardRef.current && current) {
+        current.goForward();
+      } else {
+        goForwardFallback();
+      }
     };
 
     // Debounced URL update to handle redirects
@@ -164,7 +222,7 @@ export default memo(
 
       // Set a new timeout to update the URL after a short delay
       urlUpdateTimeoutRef.current = setTimeout(() => {
-        if (newUrl !== url) {
+        if (!areEquivalentUrls(newUrl, url)) {
           updateTab(id, {url: newUrl});
         }
         setPendingUrl('');
@@ -187,15 +245,6 @@ export default memo(
       if (current) {
         current.injectJavaScript(FIND_IN_PAGE_CLEAR);
       }
-
-      // Update URL immediately for normal navigation
-      if (
-        url !== data.url &&
-        url + '/' !== data.url &&
-        url !== data.url + '/'
-      ) {
-        updateTab(id, {url});
-      }
     };
     const updateTabUrl = (link: string) => {
       updateTab(id, {url: link});
@@ -212,9 +261,6 @@ export default memo(
       nativeEvent: WebViewNativeEvent;
     }) => {
       const {current} = tabRef;
-      if (Platform.OS === 'ios') {
-        updateTab(id, {url});
-      }
       setProgress(0);
       setIsLoading(false);
 
@@ -228,7 +274,7 @@ export default memo(
         debouncedUpdateUrl(url);
       } else {
         // Normal navigation, update immediately
-        if (url !== data.url) {
+        if (!areEquivalentUrls(url, data.url)) {
           updateTab(id, {url});
         }
         setPendingUrl('');
@@ -577,6 +623,17 @@ export default memo(
                   onLoadEnd={onLoadEnd}
                   onLoadStart={onLoadStart}
                   onLoadProgress={onLoadProgress}
+                  onNavigationStateChange={(navigationState) => {
+                    nativeCanGoBackRef.current = navigationState.canGoBack;
+                    nativeCanGoForwardRef.current =
+                      navigationState.canGoForward;
+                    if (
+                      navigationState.url &&
+                      !areEquivalentUrls(navigationState.url, data.url)
+                    ) {
+                      updateTab(id, {url: navigationState.url});
+                    }
+                  }}
                   onError={(error) => {
                     console.log('Error', error);
                   }}
