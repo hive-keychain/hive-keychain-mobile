@@ -791,7 +791,18 @@
       "notification_producer_reward": "@{{0}} recebeu {{1}} como recompensas do produtor",
       "notification_changed_recovery_account": "A conta de recuperação de @{{0}} foi alterada de @{{1}} para @{{2}}",
       "notification_fill_collateralized_convert_request": "@{{0}} completou uma conversão : {{1}} para {{2}}",
-      "notification_failed_recurrent_transfer": "Transferência recorrente {{0}} de @{{1}} para @{{2}} falhou"
+      "notification_failed_recurrent_transfer": "Transferência recorrente {{0}} de @{{1}} para @{{2}} falhou",
+      "wallet_info_escrow_transfer_out": "Enviando escrow de {{0}} para @{{1}}",
+      "wallet_info_escrow_transfer_in": "Escrow pendente de {{0}} de @{{1}}",
+      "wallet_info_escrow_transfer_other": "Escrow de {{0}} de @{{1}} para @{{2}}",
+      "wallet_info_escrow_approve_self": "Escrow #{{0}} aprovado",
+      "wallet_info_escrow_approve_other": "@{{0}} aprovou escrow #{{1}}",
+      "wallet_info_escrow_reject_self": "Escrow #{{0}} rejeitado",
+      "wallet_info_escrow_reject_other": "@{{0}} rejeitou escrow #{{1}}",
+      "wallet_info_escrow_dispute_self": "Escrow #{{0}} contestado",
+      "wallet_info_escrow_dispute_other": "@{{0}} contestou escrow #{{1}}",
+      "wallet_info_escrow_release_self": "Escrow de {{0}} liberado para @{{1}} (#{{2}})",
+      "wallet_info_escrow_release_other": "@{{0}} liberou {{1}} de escrow para @{{2}} (#{{3}})"
     },
     "createAccountPeerToPeer": {
       "text1": "Obrigado por usar o Keychain Onboarding!",

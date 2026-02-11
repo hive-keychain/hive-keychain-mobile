@@ -12,6 +12,7 @@ export enum Icons {
   TRANSFER = 'TRANSFER',
   RECURRENT_TRANSFER = 'RECURRENT_TRANSFER',
   FILL_RECURRENT_TRANSFER = 'FILL_RECURRENT_TRANSFER',
+  ESCROW = 'ESCROW',
 
   SAVINGS = 'SAVINGS',
 
@@ -188,6 +189,7 @@ import Swap from 'assets/images/wallet/swap.svg';
 import ExchangeArrowCircled from 'assets/images/wallet/swap/exchange-arrow-circled.svg';
 import ExchangeArrow from 'assets/images/wallet/swap/exchange-arrow.svg';
 import Transfer from 'assets/images/wallet/transfer.svg';
+import Escrow from 'assets/images/wallet/escrow.svg';
 import Unstake from 'assets/images/wallet/unstake.svg';
 import VotingMana from 'assets/images/wallet/voting-mana.svg';
 
@@ -210,6 +212,7 @@ export const ICON_COMPONENTS: Record<Icons, React.FC<SvgProps>> = {
   [Icons.TRANSFER]: Transfer,
   [Icons.RECURRENT_TRANSFER]: Transfer,
   [Icons.FILL_RECURRENT_TRANSFER]: Transfer,
+  [Icons.ESCROW]: Escrow,
 
   [Icons.SAVINGS]: Savings,
 

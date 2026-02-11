@@ -12,6 +12,10 @@ import {
   Convert,
   ReceivedInterests,
   Delegation,
+  EscrowApprove,
+  EscrowDispute,
+  EscrowRelease,
+  EscrowTransfer,
 } from 'src/interfaces/transaction.interface';
 
 describe('walletHistoryUtils', () => {
@@ -110,6 +114,62 @@ describe('walletHistoryUtils', () => {
         delegator: 'user1',
       } as Delegation;
       const result = WalletHistoryUtils.filterDelegation(delegation, 'user2', 'user1');
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('escrow filters', () => {
+    it('should filter escrow transfer transactions', () => {
+      const escrow: EscrowTransfer = {
+        from: 'user1',
+        to: 'user2',
+        hive_amount: '1.000 HIVE',
+        hbd_amount: '0.000 HBD',
+        fee: '0.010 HIVE',
+        agent: 'agent',
+        escrow_id: 7,
+      } as EscrowTransfer;
+      const result = WalletHistoryUtils.filterEscrowTransfer(escrow, 'agent');
+      expect(result).toBe(true);
+    });
+
+    it('should filter escrow approve transactions', () => {
+      const escrow: EscrowApprove = {
+        from: 'user1',
+        to: 'user2',
+        who: 'user1',
+        agent: 'agent',
+        escrow_id: 8,
+        approve: true,
+      } as EscrowApprove;
+      const result = WalletHistoryUtils.filterEscrowApprove(escrow, '8');
+      expect(result).toBe(true);
+    });
+
+    it('should filter escrow dispute transactions', () => {
+      const escrow: EscrowDispute = {
+        from: 'user1',
+        to: 'user2',
+        who: 'user2',
+        agent: 'agent',
+        escrow_id: 9,
+      } as EscrowDispute;
+      const result = WalletHistoryUtils.filterEscrowDispute(escrow, 'user2');
+      expect(result).toBe(true);
+    });
+
+    it('should filter escrow release transactions', () => {
+      const escrow: EscrowRelease = {
+        from: 'user1',
+        to: 'user2',
+        who: 'user1',
+        receiver: 'user2',
+        agent: 'agent',
+        hive_amount: '1.000 HIVE',
+        hbd_amount: '0.000 HBD',
+        escrow_id: 10,
+      } as EscrowRelease;
+      const result = WalletHistoryUtils.filterEscrowRelease(escrow, '10');
       expect(result).toBe(true);
     });
   });
