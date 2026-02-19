@@ -8,7 +8,9 @@ import {
   Page,
   Tab,
 } from 'actions/interfaces';
+import Icon from 'components/hive/Icon';
 import CustomRefreshControl from 'components/ui/CustomRefreshControl';
+import * as Clipboard from 'expo-clipboard';
 import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {
   memo,
@@ -20,9 +22,14 @@ import React, {
 import {
   BackHandler,
   Platform,
+  Pressable,
   RefreshControl,
   ScrollView,
+  Share,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
@@ -37,8 +44,11 @@ import {
 import {UserPreference} from 'reducers/preferences.types';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enum';
 import {ProviderEvent} from 'src/enums/providerEvent.enum';
 import {RequestError, RequestSuccess} from 'src/interfaces/keychain.interface';
+import {getColors} from 'src/styles/colors';
+import {button_link_primary_small} from 'src/styles/typography';
 import {store} from 'store';
 import {urlTransformer} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
@@ -52,6 +62,7 @@ import {
   validateAuthority,
   validateRequest,
 } from 'utils/keychain.utils';
+import {translate} from 'utils/localize';
 import {MultisigUtils} from 'utils/multisig.utils';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation.utils';
 import {hasPreference} from 'utils/preferences.utils';
@@ -67,6 +78,7 @@ import {
 } from './bridges/FindInPage';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {IMAGE_DOWNLOAD_SCRIPT} from './bridges/ImageDownload';
+import {LINK_LONG_PRESS_SCRIPT} from './bridges/LinkLongPress';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
 
@@ -88,6 +100,21 @@ type Props = {
   orientation: string;
   theme: Theme;
 };
+
+const LINK_TOOLTIP_WIDTH = 240;
+const LINK_TOOLTIP_HEIGHT = 184;
+const LINK_TOOLTIP_MARGIN = 0;
+const LINK_TOOLTIP_LINK_GAP_ABOVE = 0;
+const LINK_TOOLTIP_LINK_GAP_BELOW = 25;
+
+type LinkTooltipState = {
+  url: string;
+  x: number;
+  y: number;
+};
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
 
 export default memo(
   ({
@@ -122,9 +149,17 @@ export default memo(
     const [flutterDomain, setFlutterDomain] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [pendingUrl, setPendingUrl] = useState('');
+    const [linkTooltip, setLinkTooltip] = useState<LinkTooltipState | null>(
+      null,
+    );
     const urlUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const nativeCanGoBackRef = useRef(false);
     const nativeCanGoForwardRef = useRef(false);
+    const {width: screenWidth, height: screenHeight} = useWindowDimensions();
+    const injectedJavaScriptBeforeContentLoaded = `${hive_keychain}\n${LINK_LONG_PRESS_SCRIPT}`;
+    const injectedJavaScript = desktopMode
+      ? `${DESKTOP_MODE}\n${IMAGE_DOWNLOAD_SCRIPT}\n${LINK_LONG_PRESS_SCRIPT}`
+      : `${IMAGE_DOWNLOAD_SCRIPT}\n${LINK_LONG_PRESS_SCRIPT}`;
     const areEquivalentUrls = (a?: string, b?: string) => {
       if (!a || !b) return a === b;
       return a === b || `${a}/` === b || `${b}/` === a;
@@ -136,7 +171,8 @@ export default memo(
       setRefreshing(true);
       tabRef.current?.reload(); // reload the WebView
     };
-    const styles = getStyles(insets);
+    const colorPalette = getColors(theme);
+    const styles = getStyles(insets, theme);
     useFocusEffect(() => {
       if (!active) return;
       const backAction = () => {
@@ -234,6 +270,7 @@ export default memo(
       const {url} = nativeEvent;
       setIsLoading(true);
       setPendingUrl(url);
+      setLinkTooltip(null);
 
       // Clear any pending URL update
       if (urlUpdateTimeoutRef.current) {
@@ -283,6 +320,7 @@ export default memo(
       if (current) {
         current.injectJavaScript(BRIDGE_WV_INFO);
         current.injectJavaScript(IMAGE_DOWNLOAD_SCRIPT);
+        current.injectJavaScript(LINK_LONG_PRESS_SCRIPT);
         // Clear Find in Page highlights and hook into history API for SPA navigation
         current.injectJavaScript(FIND_IN_PAGE_SPA_CLEANUP);
       }
@@ -341,6 +379,9 @@ export default memo(
         isFlutterCanvasApp,
         domain,
         imageUrl,
+        linkUrl,
+        x,
+        y,
       } = messageData;
       const {current} = tabRef;
       switch (messageName) {
@@ -430,6 +471,15 @@ export default memo(
         case ProviderEvent.IMAGE_DOWNLOAD:
           if (imageUrl) {
             downloadImage(imageUrl);
+          }
+          break;
+        case ProviderEvent.LINK_LONG_PRESS:
+          if (typeof linkUrl === 'string' && linkUrl.length) {
+            setLinkTooltip({
+              url: linkUrl,
+              x: typeof x === 'number' ? x : LINK_TOOLTIP_MARGIN,
+              y: typeof y === 'number' ? y : LINK_TOOLTIP_MARGIN,
+            });
           }
           break;
       }
@@ -550,6 +600,78 @@ export default memo(
         }
       };
     }, [tabRef, homeRef, active, url]);
+
+    const closeLinkTooltip = () => {
+      setLinkTooltip(null);
+    };
+
+    const openLinkInCurrentTab = (nextUrl: string) => {
+      setLinkTooltip(null);
+      updateTab(id, {url: nextUrl});
+    };
+
+    const openLinkInAnotherTab = (nextUrl: string) => {
+      setLinkTooltip(null);
+      setTimeout(() => {
+        addTab(false, {url, icon, id}, tabParentRef, nextUrl);
+      }, 0);
+    };
+
+    const copyLinkToClipboard = async (nextUrl: string) => {
+      setLinkTooltip(null);
+      try {
+        await Clipboard.setStringAsync(nextUrl);
+      } catch (error) {
+        console.error('Error copying URL:', error);
+      }
+    };
+
+    const shareLink = async (nextUrl: string) => {
+      setLinkTooltip(null);
+      try {
+        await Share.share({
+          message: nextUrl,
+          url: nextUrl,
+        });
+      } catch (error) {
+        console.error('Error sharing URL:', error);
+      }
+    };
+
+    const tooltipLeft = linkTooltip
+      ? clamp(
+          linkTooltip.x - LINK_TOOLTIP_WIDTH / 2,
+          LINK_TOOLTIP_MARGIN,
+          Math.max(
+            LINK_TOOLTIP_MARGIN,
+            screenWidth - LINK_TOOLTIP_WIDTH - LINK_TOOLTIP_MARGIN,
+          ),
+        )
+      : LINK_TOOLTIP_MARGIN;
+    const tooltipTop = (() => {
+      if (!linkTooltip) {
+        return LINK_TOOLTIP_MARGIN;
+      }
+      const maxTop = Math.max(
+        LINK_TOOLTIP_MARGIN,
+        screenHeight - LINK_TOOLTIP_HEIGHT - LINK_TOOLTIP_MARGIN,
+      );
+      const belowTop = linkTooltip.y + LINK_TOOLTIP_LINK_GAP_BELOW;
+      const aboveTop =
+        linkTooltip.y - LINK_TOOLTIP_HEIGHT - LINK_TOOLTIP_LINK_GAP_ABOVE;
+      const shouldPreferAbove =
+        belowTop > maxTop || linkTooltip.y > screenHeight * 0.65;
+      let preferredTop = shouldPreferAbove ? aboveTop : belowTop;
+      if (
+        shouldPreferAbove &&
+        preferredTop < LINK_TOOLTIP_MARGIN &&
+        belowTop <= maxTop
+      ) {
+        preferredTop = belowTop;
+      }
+      return clamp(preferredTop, LINK_TOOLTIP_MARGIN, maxTop);
+    })();
+
     return (
       <View
         style={[
@@ -606,18 +728,17 @@ export default memo(
                   allowUniversalAccessFromFileURLs={true}
                   mixedContentMode={'always'}
                   ref={tabRef}
-                  injectedJavaScriptBeforeContentLoaded={hive_keychain}
-                  injectedJavaScript={
-                    desktopMode
-                      ? `${DESKTOP_MODE}\n${IMAGE_DOWNLOAD_SCRIPT}`
-                      : IMAGE_DOWNLOAD_SCRIPT
+                  injectedJavaScriptBeforeContentLoaded={
+                    injectedJavaScriptBeforeContentLoaded
                   }
+                  injectedJavaScript={injectedJavaScript}
                   mediaPlaybackRequiresUserAction={false}
                   onMessage={onMessage}
                   javaScriptEnabled
                   bounces={false}
                   pullToRefreshEnabled={false}
                   geolocationEnabled
+                  allowsLinkPreview={false}
                   allowsInlineMediaPlayback
                   allowsFullscreenVideo
                   onLoadEnd={onLoadEnd}
@@ -654,6 +775,91 @@ export default memo(
             </ScrollView>
           </GestureDetector>
         </View>
+        {linkTooltip ? (
+          <>
+            <Pressable
+              style={styles.linkTooltipBackdrop}
+              onPress={closeLinkTooltip}
+            />
+            <View
+              style={[
+                styles.linkTooltipContainer,
+                {left: tooltipLeft, top: tooltipTop},
+              ]}>
+              <TouchableOpacity
+                style={styles.linkTooltipAction}
+                activeOpacity={0.8}
+                onPress={() => openLinkInCurrentTab(linkTooltip.url)}>
+                <View style={styles.linkTooltipActionContent}>
+                  <Icon
+                    theme={theme}
+                    name={Icons.OPEN}
+                    width={16}
+                    height={16}
+                    color={colorPalette.secondaryText}
+                  />
+                  <Text style={styles.linkTooltipActionText}>
+                    {translate('browser.link_long_press.open')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.linkTooltipDivider} />
+              <TouchableOpacity
+                style={styles.linkTooltipAction}
+                activeOpacity={0.8}
+                onPress={() => openLinkInAnotherTab(linkTooltip.url)}>
+                <View style={styles.linkTooltipActionContent}>
+                  <Icon
+                    theme={theme}
+                    name={Icons.ADD_TAB}
+                    width={16}
+                    height={16}
+                    color={colorPalette.secondaryText}
+                  />
+                  <Text style={styles.linkTooltipActionText}>
+                    {translate('browser.link_long_press.open_in_another_tab')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.linkTooltipDivider} />
+              <TouchableOpacity
+                style={styles.linkTooltipAction}
+                activeOpacity={0.8}
+                onPress={() => copyLinkToClipboard(linkTooltip.url)}>
+                <View style={styles.linkTooltipActionContent}>
+                  <Icon
+                    theme={theme}
+                    name={Icons.COPY}
+                    width={16}
+                    height={16}
+                    color={colorPalette.secondaryText}
+                  />
+                  <Text style={styles.linkTooltipActionText}>
+                    {translate('browser.link_long_press.copy_link')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.linkTooltipDivider} />
+              <TouchableOpacity
+                style={styles.linkTooltipAction}
+                activeOpacity={0.8}
+                onPress={() => shareLink(linkTooltip.url)}>
+                <View style={styles.linkTooltipActionContent}>
+                  <Icon
+                    theme={theme}
+                    name={Icons.SHARE}
+                    width={16}
+                    height={16}
+                    color={colorPalette.secondaryText}
+                  />
+                  <Text style={styles.linkTooltipActionText}>
+                    {translate('common.share')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : null}
       </View>
     );
   },
@@ -662,11 +868,50 @@ export default memo(
   },
 );
 
-const getStyles = (insets: EdgeInsets) =>
-  StyleSheet.create({
+const getStyles = (insets: EdgeInsets, theme: Theme) => {
+  const colors = getColors(theme);
+  return StyleSheet.create({
     container: {
       flexGrow: 1,
       flexDirection: 'column',
     },
     hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
+    linkTooltipBackdrop: {
+      ...StyleSheet.absoluteFillObject,
+      zIndex: 20,
+    },
+    linkTooltipContainer: {
+      position: 'absolute',
+      width: LINK_TOOLTIP_WIDTH,
+      backgroundColor: colors.secondaryCardBgColor,
+      borderWidth: 1,
+      borderColor: colors.cardBorderColor,
+      borderRadius: 10,
+      overflow: 'hidden',
+      zIndex: 21,
+      elevation: 4,
+      shadowColor: '#000',
+      shadowOffset: {width: 0, height: 2},
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+    },
+    linkTooltipAction: {
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+    },
+    linkTooltipActionContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    linkTooltipActionText: {
+      ...button_link_primary_small,
+      color: colors.secondaryText,
+      marginLeft: 10,
+      flexShrink: 1,
+    },
+    linkTooltipDivider: {
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: colors.cardBorderColor,
+    },
   });
+};
