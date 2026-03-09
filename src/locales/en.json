@@ -1,5 +1,8 @@
 {
-  "unlock": {"enterPIN": "Enter your PIN", "authenticate": "Authenticate"},
+  "unlock": {
+    "enterPIN": "Enter your PIN",
+    "authenticate": "Authenticate"
+  },
   "signup": {
     "confirm": "Confirm your PIN",
     "choose": "Choose your PIN",
@@ -18,11 +21,15 @@
     "on_boarding_title": "Create on hive.io",
     "peer_to_peer_on_boarding_title": "Create with a friend"
   },
-  "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
+  "addAccountByKey": {
+    "text": "Add your existing HIVE account to Keychain"
+  },
   "addAccountByAuth": {
     "text": "Add the new account by specifying an account that has authority over it, and that is already saved in Hive Keychain."
   },
-  "addAccountByQR": {"wrongQR": "Please scan a Hive Keychain account QR Code"},
+  "addAccountByQR": {
+    "wrongQR": "Please scan a Hive Keychain account QR Code"
+  },
   "keys": {
     "master_password": "Master Password",
     "owner_key": "Owner Key",
@@ -167,7 +174,11 @@
       "vote_success": "Vote successful! Thank you for supporting Keychain development through our DHF proposal",
       "vote_fail": "There was an error while voting for the proposal!"
     },
-    "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
+    "menu": {
+      "hive": "Hive",
+      "history": "History",
+      "tokens": "Tokens"
+    },
     "rc": "Resource Credits",
     "vp": "Voting Mana",
     "balance": "balance",
@@ -351,7 +362,9 @@
         "warning": {
           "missing_info": "Please fill the amount to proceed"
         },
-        "confirm": {"info": "Please confirm the conversion."}
+        "confirm": {
+          "info": "Please confirm the conversion."
+        }
       },
       "more_token_info": "{{currency}} information",
       "tokens_transfer": {
@@ -382,7 +395,9 @@
         "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient."
       },
       "token_delegation": {
-        "confirm": {"info": "Please confirm this token delegation."},
+        "confirm": {
+          "info": "Please confirm this token delegation."
+        },
         "title": "Delegate",
         "delegating": "Delegating",
         "delegating_token": "Delegating {{currency}}",
@@ -517,7 +532,10 @@
         "t2": "To connect to a desktop dApp, use the QR Code scanner. On mobile, simply chose 'Sign in with Hive' on your favorite dApp.",
         "h3": "Hive Auth Indicator",
         "indicator": {
-          "grey": {"title": "No connection", "press": "Open info panel"},
+          "grey": {
+            "title": "No connection",
+            "press": "Open info panel"
+          },
           "red": {
             "title": "Disconnected",
             "press": "Open info panel",
@@ -792,7 +810,18 @@
       "notification_producer_reward": "@{{0}} received {{1}} as a producer rewards",
       "notification_changed_recovery_account": "@{{0}}'s recovery account has been change from @{{1}} to @{{2}}",
       "notification_fill_collateralized_convert_request": "@{{0}} has completed a conversion : {{1}} to {{2}}",
-      "notification_failed_recurrent_transfer": "{{0}} recurrent transfer from @{{1}} to @{{2}} has failed"
+      "notification_failed_recurrent_transfer": "{{0}} recurrent transfer from @{{1}} to @{{2}} has failed",
+      "wallet_info_escrow_transfer_out": "Sending {{0}} escrow to @{{1}}",
+      "wallet_info_escrow_transfer_in": "Pending {{0}} escrow from @{{1}}",
+      "wallet_info_escrow_transfer_other": "Escrow of {{0}} from @{{1}} to @{{2}}",
+      "wallet_info_escrow_approve_self": "Approved escrow #{{0}}",
+      "wallet_info_escrow_approve_other": "@{{0}} approved escrow #{{1}}",
+      "wallet_info_escrow_reject_self": "Rejected escrow #{{0}}",
+      "wallet_info_escrow_reject_other": "@{{0}} rejected escrow #{{1}}",
+      "wallet_info_escrow_dispute_self": "Disputed escrow #{{0}}",
+      "wallet_info_escrow_dispute_other": "@{{0}} disputed escrow #{{1}}",
+      "wallet_info_escrow_release_self": "Released {{0}} escrow to @{{1}} (#{{2}})",
+      "wallet_info_escrow_release_other": "@{{0}} released {{1}} escrow to @{{2}} (#{{3}})"
     },
     "createAccountPeerToPeer": {
       "text1": "Thank you for using Keychain Onboarding!",
@@ -1161,7 +1190,10 @@
       "proxy_def": "Adding an account as a proxy means that the proxy account can use the weight of your HP in governance matters (voting for witnesses and proposals). This will not affect your HP regarding curation, and you can remove the proxy at any given moment.",
       "using_proxy": "You are currently using @{{name}} as a proxy. Their governances votes are displayed.",
       "placeholder": "Proxy",
-      "buttons": {"set": "Set as Proxy", "clear": "Clear Proxy"},
+      "buttons": {
+        "set": "Set as Proxy",
+        "clear": "Clear Proxy"
+      },
       "error": {
         "active": "To change your proxy, you must first add your account active key",
         "set_proxy": "Error while setting user as proxy",
@@ -1240,7 +1272,6 @@
       "title": "Wrong key{{plural}} found",
       "intro": "Your account @{{account}} has a wrong {{keyNames}} key.\n\nWould you like to update this key right now?",
       "intro_plural": "Your account @{{account}} has wrong {{keyNames}}, and {{lastKeyName}} keys.\n\nWould you like to update these keys right now?",
-
       "button_action": {
         "do_nothing": "Do nothing",
         "replace": "Replace"
@@ -1258,7 +1289,6 @@
     "transaction_signed_successfully": "The multisig transaction has been signed successfully",
     "pending": "The request is currently pending multisig approval from other signers. You will be notified by Keychain if/when it is successfully broadcasted."
   },
-
   "export_transactions": {
     "start_date": "Start Date",
     "end_date": "End Date",

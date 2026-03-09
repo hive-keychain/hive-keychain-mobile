@@ -18,8 +18,13 @@ export const IMAGE_DOWNLOAD_SCRIPT = `
 
   let longPressTimer = null;
   let longPressTarget = null;
+  let currentTouchCount = 0;
   const LONG_PRESS_DURATION = 500; // milliseconds
   const MOVE_THRESHOLD = 10; // pixels
+
+  function updateTouchCount(e) {
+    currentTouchCount = e.touches.length;
+  }
 
   function getMediaElement(target) {
     // Check for images
@@ -94,6 +99,12 @@ export const IMAGE_DOWNLOAD_SCRIPT = `
   }
 
   function handleLongPress(media, mediaUrl) {
+    // Only trigger if exactly one finger is currently touching
+    if (currentTouchCount !== 1) {
+      longPressTimer = null;
+      longPressTarget = null;
+      return;
+    }
     if (!mediaUrl) {
       // Handle both images and videos
       if (media.tagName === 'VIDEO') {
@@ -141,6 +152,12 @@ export const IMAGE_DOWNLOAD_SCRIPT = `
     }
     longPressTarget = null;
   }
+
+  // Track current touch count (checked at trigger time)
+  document.addEventListener('touchstart', updateTouchCount, {capture: true, passive: true});
+  document.addEventListener('touchmove', updateTouchCount, {capture: true, passive: true});
+  document.addEventListener('touchend', updateTouchCount, {capture: true, passive: true});
+  document.addEventListener('touchcancel', updateTouchCount, {capture: true, passive: true});
 
   // Add event listeners with capture phase to catch events early
   document.addEventListener('touchstart', handleTouchStart, {capture: true, passive: true});

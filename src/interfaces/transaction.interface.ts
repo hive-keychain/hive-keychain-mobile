@@ -112,3 +112,44 @@ export interface CreateAccount extends Transaction {
   new_account_name: string;
   fee: string;
 }
+
+export interface EscrowTransfer extends Transaction {
+  from: string;
+  to: string;
+  escrow_id: number;
+  agent: string;
+  hbd_amount: string;
+  hive_amount: string;
+  fee: string;
+  ratification_deadline: string;
+  escrow_expiration: string;
+  json_meta: string;
+}
+
+export interface EscrowApprove extends Transaction {
+  from: string;
+  to: string;
+  escrow_id: number;
+  approve: boolean;
+  who: string;
+  agent: string;
+}
+
+export interface EscrowDispute extends Transaction {
+  from: string;
+  to: string;
+  escrow_id: number;
+  who: string;
+  agent: string;
+}
+
+export interface EscrowRelease extends Transaction {
+  from: string;
+  to: string;
+  escrow_id: number;
+  who: string;
+  receiver: string;
+  agent: string;
+  hbd_amount: string;
+  hive_amount: string;
+}

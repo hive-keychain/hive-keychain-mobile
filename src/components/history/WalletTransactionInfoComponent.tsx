@@ -11,6 +11,10 @@ import {
   CreateClaimedAccount,
   Delegation,
   DepositSavings,
+  EscrowApprove,
+  EscrowDispute,
+  EscrowRelease,
+  EscrowTransfer,
   FillCollateralizedConvert,
   FillConvert,
   FillRecurrentTransfer as FillRecurrentTransferInterface,
@@ -32,6 +36,10 @@ import CreateAccountTransactionComponent from './history-elements/CreateAccountT
 import CreateClaimedAccountTransactionComponent from './history-elements/CreateClaimedAccountTransactionComponent';
 import DelegationTransactionComponent from './history-elements/DelegationTransactionComponent';
 import DepositSavingsTransactionComponent from './history-elements/DepositSavingsTransactionComponent';
+import EscrowApproveTransactionComponent from './history-elements/EscrowApproveTransactionComponent';
+import EscrowDisputeTransactionComponent from './history-elements/EscrowDisputeTransactionComponent';
+import EscrowReleaseTransactionComponent from './history-elements/EscrowReleaseTransactionComponent';
+import EscrowTransferTransactionComponent from './history-elements/EscrowTransferTransactionComponent';
 import FillCollateralizedConvertTransactionComponent from './history-elements/FillCollateralizedConvertTransactionComponent';
 import FillConvertTransactionComponent from './history-elements/FillConvertTransactionComponent';
 import FillRecurrentTransfer from './history-elements/FillRecurrentTransfer';
@@ -263,6 +271,46 @@ const WalletTransactionInfo = ({
             );
         }
       }
+      case 'escrow_transfer':
+        return (
+          <EscrowTransferTransactionComponent
+            transaction={transaction as EscrowTransfer}
+            user={user}
+            locale={locale}
+            useIcon={true}
+            theme={theme}
+          />
+        );
+      case 'escrow_approve':
+        return (
+          <EscrowApproveTransactionComponent
+            transaction={transaction as EscrowApprove}
+            user={user}
+            locale={locale}
+            useIcon={true}
+            theme={theme}
+          />
+        );
+      case 'escrow_dispute':
+        return (
+          <EscrowDisputeTransactionComponent
+            transaction={transaction as EscrowDispute}
+            user={user}
+            locale={locale}
+            useIcon={true}
+            theme={theme}
+          />
+        );
+      case 'escrow_release':
+        return (
+          <EscrowReleaseTransactionComponent
+            transaction={transaction as EscrowRelease}
+            user={user}
+            locale={locale}
+            useIcon={true}
+            theme={theme}
+          />
+        );
     }
   };
   return <View>{getTransactionContent()}</View>;

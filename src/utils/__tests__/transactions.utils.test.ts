@@ -34,15 +34,14 @@ jest.mock('utils/hiveLibs.utils', () => ({
   getClient: jest.fn(() => mockClient),
 }));
 
+import {translate} from 'utils/localize';
 import TransactionUtils, {
+  CONVERT_TYPE_TRANSACTIONS,
+  HAS_IN_OUT_TRANSACTIONS,
   MINIMUM_FETCHED_TRANSACTIONS,
   NB_TRANSACTION_FETCHED,
-  HAS_IN_OUT_TRANSACTIONS,
   TRANSFER_TYPE_TRANSACTIONS,
-  CONVERT_TYPE_TRANSACTIONS,
 } from '../transactions.utils';
-import {decodeMemo} from 'components/bridge';
-import {translate} from 'utils/localize';
 
 // Use the mock function directly
 const decodeMemoMock = mockDecodeMemo;
@@ -89,7 +88,10 @@ describe('transactions.utils', () => {
         [
           1000000,
           {
-            op: ['transfer', {from: 'user1', to: 'user2', amount: '1 HIVE', memo: ''}],
+            op: [
+              'transfer',
+              {from: 'user1', to: 'user2', amount: '1 HIVE', memo: ''},
+            ],
             trx_id: 'tx1',
             block: 1000000,
             timestamp: '2023-01-01T00:00:00',
@@ -700,12 +702,141 @@ describe('transactions.utils', () => {
       expect(result[0][0].subType).toBe('account_create');
     });
 
+    it('should handle escrow_transfer transactions', async () => {
+      const mockHistory = [
+        [
+          1000000,
+          {
+            op: [
+              'escrow_transfer',
+              {
+                from: 'user1',
+                to: 'user2',
+                escrow_id: 1,
+                agent: 'agent',
+                hbd_amount: '1.000 HBD',
+                hive_amount: '2.000 HIVE',
+                fee: '0.010 HIVE',
+              },
+            ],
+            trx_id: 'tx1',
+            block: 1000000,
+            timestamp: '2023-01-01T00:00:00',
+          },
+        ],
+      ];
+      mockDatabase.getAccountHistory.mockResolvedValue(mockHistory);
+      const result = await TransactionUtils.getAccountTransactions(
+        'user1',
+        1000000,
+        mockGlobals,
+      );
+      expect(result[0][0].type).toBe('escrow_transfer');
+    });
+
+    it('should handle escrow_approve transactions', async () => {
+      const mockHistory = [
+        [
+          1000000,
+          {
+            op: [
+              'escrow_approve',
+              {
+                from: 'user1',
+                to: 'user2',
+                escrow_id: 1,
+                approve: true,
+                who: 'user1',
+                agent: 'agent',
+              },
+            ],
+            trx_id: 'tx1',
+            block: 1000000,
+            timestamp: '2023-01-01T00:00:00',
+          },
+        ],
+      ];
+      mockDatabase.getAccountHistory.mockResolvedValue(mockHistory);
+      const result = await TransactionUtils.getAccountTransactions(
+        'user1',
+        1000000,
+        mockGlobals,
+      );
+      expect(result[0][0].type).toBe('escrow_approve');
+    });
+
+    it('should handle escrow_dispute transactions', async () => {
+      const mockHistory = [
+        [
+          1000000,
+          {
+            op: [
+              'escrow_dispute',
+              {
+                from: 'user1',
+                to: 'user2',
+                escrow_id: 1,
+                who: 'user2',
+                agent: 'agent',
+              },
+            ],
+            trx_id: 'tx1',
+            block: 1000000,
+            timestamp: '2023-01-01T00:00:00',
+          },
+        ],
+      ];
+      mockDatabase.getAccountHistory.mockResolvedValue(mockHistory);
+      const result = await TransactionUtils.getAccountTransactions(
+        'user1',
+        1000000,
+        mockGlobals,
+      );
+      expect(result[0][0].type).toBe('escrow_dispute');
+    });
+
+    it('should handle escrow_release transactions', async () => {
+      const mockHistory = [
+        [
+          1000000,
+          {
+            op: [
+              'escrow_release',
+              {
+                from: 'user1',
+                to: 'user2',
+                escrow_id: 1,
+                who: 'user1',
+                receiver: 'user2',
+                agent: 'agent',
+                hbd_amount: '0.000 HBD',
+                hive_amount: '2.000 HIVE',
+              },
+            ],
+            trx_id: 'tx1',
+            block: 1000000,
+            timestamp: '2023-01-01T00:00:00',
+          },
+        ],
+      ];
+      mockDatabase.getAccountHistory.mockResolvedValue(mockHistory);
+      const result = await TransactionUtils.getAccountTransactions(
+        'user1',
+        1000000,
+        mockGlobals,
+      );
+      expect(result[0][0].type).toBe('escrow_release');
+    });
+
     it('should set last flag when appropriate', async () => {
       const mockHistory = [
         [
           100,
           {
-            op: ['transfer', {from: 'user1', to: 'user2', amount: '1 HIVE', memo: ''}],
+            op: [
+              'transfer',
+              {from: 'user1', to: 'user2', amount: '1 HIVE', memo: ''},
+            ],
             trx_id: 'tx1',
             block: 100,
             timestamp: '2023-01-01T00:00:00',
@@ -714,7 +845,10 @@ describe('transactions.utils', () => {
         [
           99,
           {
-            op: ['transfer', {from: 'user1', to: 'user2', amount: '2 HIVE', memo: ''}],
+            op: [
+              'transfer',
+              {from: 'user1', to: 'user2', amount: '2 HIVE', memo: ''},
+            ],
             trx_id: 'tx2',
             block: 99,
             timestamp: '2023-01-01T00:00:01',
@@ -736,7 +870,10 @@ describe('transactions.utils', () => {
         [
           150,
           {
-            op: ['transfer', {from: 'user1', to: 'user2', amount: '1 HIVE', memo: ''}],
+            op: [
+              'transfer',
+              {from: 'user1', to: 'user2', amount: '1 HIVE', memo: ''},
+            ],
             trx_id: 'tx1',
             block: 150,
             timestamp: '2023-01-01T00:00:00',
@@ -745,7 +882,10 @@ describe('transactions.utils', () => {
         [
           149,
           {
-            op: ['transfer', {from: 'user1', to: 'user2', amount: '2 HIVE', memo: ''}],
+            op: [
+              'transfer',
+              {from: 'user1', to: 'user2', amount: '2 HIVE', memo: ''},
+            ],
             trx_id: 'tx2',
             block: 149,
             timestamp: '2023-01-01T00:00:01',
@@ -767,7 +907,10 @@ describe('transactions.utils', () => {
         [
           1000000,
           {
-            op: ['transfer', {from: 'user1', to: 'user2', amount: '1 HIVE', memo: ''}],
+            op: [
+              'transfer',
+              {from: 'user1', to: 'user2', amount: '1 HIVE', memo: ''},
+            ],
             trx_id: '0000000000000000000000000000000000000000',
             block: 1000000,
             timestamp: '2023-01-01T00:00:00',
@@ -780,7 +923,7 @@ describe('transactions.utils', () => {
         1000000,
         mockGlobals,
       );
-      expect(result[0][0].url).toContain('hiveblocks.com/b/');
+      expect(result[0][0].url).toContain('hivehub.dev/b/');
     });
 
     it('should handle Request Timeout error', async () => {
@@ -853,8 +996,14 @@ describe('transactions.utils', () => {
         amount: '1 HIVE',
         memo: '#encrypted_memo',
       };
-      const result = await TransactionUtils.decodeMemoIfNeeded(transfer as any, 'memo_key');
-      expect(mockDecodeMemo).toHaveBeenCalledWith('memo_key', '#encrypted_memo');
+      const result = await TransactionUtils.decodeMemoIfNeeded(
+        transfer as any,
+        'memo_key',
+      );
+      expect(mockDecodeMemo).toHaveBeenCalledWith(
+        'memo_key',
+        '#encrypted_memo',
+      );
       expect(result.memo).toBe('decoded_encrypted_memo');
     });
 
@@ -866,7 +1015,10 @@ describe('transactions.utils', () => {
         memo: 'plain_memo',
       };
       const decodeMemoCallCount = mockDecodeMemo.mock.calls.length;
-      const result = await TransactionUtils.decodeMemoIfNeeded(transfer as any, 'memo_key');
+      const result = await TransactionUtils.decodeMemoIfNeeded(
+        transfer as any,
+        'memo_key',
+      );
       expect(result.memo).toBe('plain_memo');
       // decodeMemo should not be called for plain memos
       expect(mockDecodeMemo.mock.calls.length).toBe(decodeMemoCallCount);
@@ -879,7 +1031,10 @@ describe('transactions.utils', () => {
         amount: '1 HIVE',
         memo: '#encrypted_memo',
       };
-      const result = await TransactionUtils.decodeMemoIfNeeded(transfer as any, '');
+      const result = await TransactionUtils.decodeMemoIfNeeded(
+        transfer as any,
+        '',
+      );
       expect(translate).toHaveBeenCalledWith('wallet.add_memo');
       expect(result.memo).toBe('wallet.add_memo');
     });
@@ -892,7 +1047,10 @@ describe('transactions.utils', () => {
         amount: '1 HIVE',
         memo: '#encrypted_memo',
       };
-      const result = await TransactionUtils.decodeMemoIfNeeded(transfer as any, 'memo_key');
+      const result = await TransactionUtils.decodeMemoIfNeeded(
+        transfer as any,
+        'memo_key',
+      );
       expect(result.memo).toBe('#encrypted_memo'); // Should return original on error
     });
   });
@@ -928,7 +1086,10 @@ describe('transactions.utils', () => {
         },
       ];
       const afterDate = new Date('2023-01-01T00:00:00');
-      const result = await TransactionUtils.searchForTransaction(transfer, afterDate);
+      const result = await TransactionUtils.searchForTransaction(
+        transfer,
+        afterDate,
+      );
       expect(result).toBeDefined();
     });
 
@@ -962,7 +1123,10 @@ describe('transactions.utils', () => {
         },
       ];
       const afterDate = new Date('2023-01-01T00:00:00');
-      const result = await TransactionUtils.searchForTransaction(transfer, afterDate);
+      const result = await TransactionUtils.searchForTransaction(
+        transfer,
+        afterDate,
+      );
       expect(result).toBeUndefined();
     });
 
@@ -996,7 +1160,10 @@ describe('transactions.utils', () => {
         },
       ];
       const afterDate = new Date('2023-01-02T00:00:00');
-      const result = await TransactionUtils.searchForTransaction(transfer, afterDate);
+      const result = await TransactionUtils.searchForTransaction(
+        transfer,
+        afterDate,
+      );
       expect(result).toBeUndefined();
     });
   });
