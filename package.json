@@ -30,7 +30,8 @@
     "assets:usage": "node scripts/scan-asset-usage.js",
     "assets:clean": "node scripts/clean-unused-assets.js",
     "icons:unused": "node scripts/find-unused-icons.js",
-    "icons:prune": "node scripts/find-unused-icons.js --apply"
+    "icons:prune": "node scripts/find-unused-icons.js --apply",
+    "git:archive": "rm -rf keychain*.zip; sh -c 'uploadStash=$(git stash create); git archive -o \"keychain-$(date +%Y%m%d-%H%M%S).zip\" ${uploadStash:-HEAD}'"
   },
   "dependencies": {
     "@bittingz/expo-widgets": "3.0.2",
