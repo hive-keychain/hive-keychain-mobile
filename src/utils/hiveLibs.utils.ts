@@ -364,7 +364,6 @@ export const post = async (
 };
 
 export const signTx = (key: string, tx: object) => {
-  console.log('tx', key, JSON.stringify(tx));
   const trx = new hiveTx.Transaction(tx);
   const signed = trx.sign(hiveTx.PrivateKey.from(key));
   return signed;
@@ -633,14 +632,14 @@ export const broadcast = async (
         result: object;
       };
       if (error) {
-        console.log(error);
+        console.log('Hive broadcast error');
         throw error;
       } else {
         return result;
       }
     }
   } catch (e) {
-    console.log('hive-tx error', JSON.stringify(e));
+    console.log('hive-tx error');
     throw e;
   }
 };
@@ -674,12 +673,12 @@ export const broadcastAndConfirmTransactionWithSignature = async (
       } as TransactionResult;
     }
   } catch (err) {
-    console.error(err);
+    console.error('Error while broadcasting signed transaction');
     throw new Error('html_popup_error_while_broadcasting');
   }
   response = response as HiveTxBroadcastErrorResponse;
   if (response.error) {
-    console.error('Error during broadcast', response.error);
+    console.error('Error during broadcast');
     throw response.error;
   }
 };

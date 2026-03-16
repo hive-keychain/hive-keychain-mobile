@@ -30,7 +30,6 @@ const Delegation = ({
   const {delegatee, unit, amount} = data;
   const {getUsername, getAccountKey, RequestUsername} =
     usePotentiallyAnonymousRequest(request, accounts);
-  console.log(request);
   const successMessage = translate(
     `request.success.${parseFloat(amount) === 0 ? 'undelegate' : 'delegate'}`,
     {

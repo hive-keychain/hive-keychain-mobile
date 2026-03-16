@@ -76,6 +76,11 @@ import {saveRequestedOperation} from 'actions/hive-uri';
 import {validateAuthority} from 'utils/keychain.utils';
 import {Linking} from 'react-native';
 
+const getSendResponse = () => {
+  const navigateCalls = (navigate as jest.Mock).mock.calls;
+  return navigateCalls[navigateCalls.length - 1][1].data.sendResponse;
+};
+
 describe('hiveUri.utils', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -433,7 +438,7 @@ describe('hiveUri.utils', () => {
     });
 
     describe('callback handling', () => {
-      it('should open callback URL after successful operation', async () => {
+      it('should open https callback URL after successful operation', async () => {
         const mockDecoded = {
           params: {
             signer: 'user1',
@@ -444,8 +449,67 @@ describe('hiveUri.utils', () => {
           },
         };
         await processQRCodeOp(HiveUriOpType.op, mockDecoded as any);
-        expect(navigate).toHaveBeenCalled();
-        // Callback will be called when sendResponse is invoked
+        await getSendResponse()({
+          result: {signatures: ['sig123'], tx_id: 'tx123'},
+        } as any);
+
+        expect(Linking.openURL).toHaveBeenCalledWith(
+          'https://example.com/callback?sig=sig123',
+        );
+      });
+
+      it('should reject non-https callback URLs', async () => {
+        const mockDecoded = {
+          params: {
+            signer: 'user1',
+            callback: 'http://example.com/callback',
+          },
+          tx: {
+            operations: [['transfer', {from: 'user1', to: 'user2', amount: '1 HIVE'}]],
+          },
+        };
+        await processQRCodeOp(HiveUriOpType.op, mockDecoded as any);
+        await getSendResponse()({
+          result: {signatures: ['sig123'], tx_id: 'tx123'},
+        } as any);
+
+        expect(Linking.openURL).not.toHaveBeenCalled();
+      });
+
+      it('should reject custom-scheme callback URLs', async () => {
+        const mockDecoded = {
+          params: {
+            signer: 'user1',
+            callback: 'javascript:alert(1)',
+          },
+          tx: {
+            operations: [['transfer', {from: 'user1', to: 'user2', amount: '1 HIVE'}]],
+          },
+        };
+        await processQRCodeOp(HiveUriOpType.op, mockDecoded as any);
+        await getSendResponse()({
+          result: {signatures: ['sig123'], tx_id: 'tx123'},
+        } as any);
+
+        expect(Linking.openURL).not.toHaveBeenCalled();
+      });
+
+      it('should reject malformed callback URLs', async () => {
+        const mockDecoded = {
+          params: {
+            signer: 'user1',
+            callback: 'not a url',
+          },
+          tx: {
+            operations: [['transfer', {from: 'user1', to: 'user2', amount: '1 HIVE'}]],
+          },
+        };
+        await processQRCodeOp(HiveUriOpType.op, mockDecoded as any);
+        await getSendResponse()({
+          result: {signatures: ['sig123'], tx_id: 'tx123'},
+        } as any);
+
+        expect(Linking.openURL).not.toHaveBeenCalled();
       });
     });
   });

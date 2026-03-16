@@ -74,13 +74,8 @@ const downloadTransactions = async (
         )[0];
 
         console.log('rawTransactionsLength', rawTransactions.length);
-        console.log(
-          'rawTransactions',
-          JSON.stringify(rawTransactions, null, 2),
-        );
         for (let i = 0; i <= rawTransactions.length - 1; i++) {
           const tx = rawTransactions[i];
-          console.log('tx', JSON.stringify(tx, null, 2));
           const operationPayload = tx;
           const operationType = tx['type'];
           const transactionInfo = tx;

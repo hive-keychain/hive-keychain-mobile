@@ -84,7 +84,6 @@ const Multisig = ({active}: PropsFromRedux) => {
       ...multisigAccountConfig!,
       active: {isEnabled: isEnabled, message: message, publicKey: publicKey},
     };
-    console.log({newConfig}); //TODO remove line
 
     setMultisigAccountConfig(newConfig);
     await MultisigUtils.saveMultisigConfig(active.name!, newConfig);

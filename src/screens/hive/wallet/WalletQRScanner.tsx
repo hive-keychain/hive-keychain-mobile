@@ -98,7 +98,7 @@ const WalletQRScanner = ({navigation}: {navigation: NavigationProp<any>}) => {
         handleAddAccountQR(data, wallet, true);
       } else handleUrl(data, true);
     } catch (e) {
-      console.log(e, data);
+      console.log('Error processing wallet QR scan');
     }
   };
 
