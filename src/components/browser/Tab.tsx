@@ -37,6 +37,7 @@ import {runOnJS} from 'react-native-reanimated';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
+  ShouldStartLoadRequest,
   WebViewMessageEvent,
   WebViewNativeEvent,
   WebViewProgressEvent,
@@ -50,7 +51,10 @@ import {RequestError, RequestSuccess} from 'src/interfaces/keychain.interface';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_small} from 'src/styles/typography';
 import {store} from 'store';
-import {urlTransformer} from 'utils/browser.utils';
+import {
+  getAllowedBrowserNavigationUrl,
+  urlTransformer,
+} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
 import {getAccount} from 'utils/hive.utils';
 import {downloadFromUrl} from 'utils/image.utils';
@@ -251,6 +255,13 @@ export default memo(
 
     // Debounced URL update to handle redirects
     const debouncedUpdateUrl = (newUrl: string) => {
+      const allowedNavigationUrl = getAllowedBrowserNavigationUrl(newUrl);
+      if (!allowedNavigationUrl) {
+        setPendingUrl('');
+        setIsLoading(false);
+        return;
+      }
+
       // Clear any existing timeout
       if (urlUpdateTimeoutRef.current) {
         clearTimeout(urlUpdateTimeoutRef.current);
@@ -258,8 +269,8 @@ export default memo(
 
       // Set a new timeout to update the URL after a short delay
       urlUpdateTimeoutRef.current = setTimeout(() => {
-        if (!areEquivalentUrls(newUrl, url)) {
-          updateTab(id, {url: newUrl});
+        if (!areEquivalentUrls(allowedNavigationUrl.url, url)) {
+          updateTab(id, {url: allowedNavigationUrl.url});
         }
         setPendingUrl('');
         setIsLoading(false);
@@ -267,9 +278,17 @@ export default memo(
     };
 
     const onLoadStart = ({nativeEvent}: {nativeEvent: WebViewNativeEvent}) => {
-      const {url} = nativeEvent;
+      const allowedNavigationUrl = getAllowedBrowserNavigationUrl(
+        nativeEvent.url,
+      );
+      if (!allowedNavigationUrl) {
+        setIsLoading(false);
+        setPendingUrl('');
+        return;
+      }
+
       setIsLoading(true);
-      setPendingUrl(url);
+      setPendingUrl(allowedNavigationUrl.url);
       setLinkTooltip(null);
 
       // Clear any pending URL update
@@ -284,7 +303,10 @@ export default memo(
       }
     };
     const updateTabUrl = (link: string) => {
-      updateTab(id, {url: link});
+      const allowedNavigationUrl = getAllowedBrowserNavigationUrl(link);
+      if (allowedNavigationUrl) {
+        updateTab(id, {url: allowedNavigationUrl.url});
+      }
     };
     const onLoadProgress = ({
       nativeEvent: {progress},
@@ -297,6 +319,7 @@ export default memo(
     }: {
       nativeEvent: WebViewNativeEvent;
     }) => {
+      const allowedNavigationUrl = getAllowedBrowserNavigationUrl(url);
       const {current} = tabRef;
       setProgress(0);
       setIsLoading(false);
@@ -305,14 +328,19 @@ export default memo(
         return;
       }
 
+      if (!allowedNavigationUrl) {
+        setPendingUrl('');
+        return;
+      }
+
       // If the final URL is different from what we started loading, it might be a redirect
-      if (url !== pendingUrl && pendingUrl !== '') {
+      if (allowedNavigationUrl.url !== pendingUrl && pendingUrl !== '') {
         // Use debounced update for potential redirects
-        debouncedUpdateUrl(url);
+        debouncedUpdateUrl(allowedNavigationUrl.url);
       } else {
         // Normal navigation, update immediately
-        if (!areEquivalentUrls(url, data.url)) {
-          updateTab(id, {url});
+        if (!areEquivalentUrls(allowedNavigationUrl.url, data.url)) {
+          updateTab(id, {url: allowedNavigationUrl.url});
         }
         setPendingUrl('');
       }
@@ -607,13 +635,20 @@ export default memo(
 
     const openLinkInCurrentTab = (nextUrl: string) => {
       setLinkTooltip(null);
-      updateTab(id, {url: nextUrl});
+      const allowedNavigationUrl = getAllowedBrowserNavigationUrl(nextUrl);
+      if (allowedNavigationUrl) {
+        updateTab(id, {url: allowedNavigationUrl.url});
+      }
     };
 
     const openLinkInAnotherTab = (nextUrl: string) => {
       setLinkTooltip(null);
+      const allowedNavigationUrl = getAllowedBrowserNavigationUrl(nextUrl);
+      if (!allowedNavigationUrl) {
+        return;
+      }
       setTimeout(() => {
-        addTab(false, {url, icon, id}, tabParentRef, nextUrl);
+        addTab(false, {url, icon, id}, tabParentRef, allowedNavigationUrl.url);
       }, 0);
     };
 
@@ -636,6 +671,20 @@ export default memo(
       } catch (error) {
         console.error('Error sharing URL:', error);
       }
+    };
+
+    const onShouldStartLoadWithRequest = ({
+      url: requestUrl,
+    }: ShouldStartLoadRequest) => {
+      const allowedNavigationUrl = getAllowedBrowserNavigationUrl(requestUrl);
+      if (allowedNavigationUrl) {
+        return true;
+      }
+
+      setLinkTooltip(null);
+      setPendingUrl('');
+      setIsLoading(false);
+      return false;
     };
 
     const tooltipLeft = linkTooltip
@@ -720,10 +769,14 @@ export default memo(
               }>
               {url !== BrowserConfig.HOMEPAGE_URL ? (
                 <WebView
+                  originWhitelist={['*']}
                   source={{
                     uri: url,
                   }}
                   domStorageEnabled={true}
+                  allowFileAccess={true}
+                  allowUniversalAccessFromFileURLs={true}
+                  mixedContentMode={'always'}
                   ref={tabRef}
                   injectedJavaScriptBeforeContentLoaded={
                     injectedJavaScriptBeforeContentLoaded
@@ -741,15 +794,21 @@ export default memo(
                   onLoadEnd={onLoadEnd}
                   onLoadStart={onLoadStart}
                   onLoadProgress={onLoadProgress}
+                  onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
                   onNavigationStateChange={(navigationState) => {
+                    const allowedNavigationUrl = getAllowedBrowserNavigationUrl(
+                      navigationState.url,
+                    );
                     nativeCanGoBackRef.current = navigationState.canGoBack;
                     nativeCanGoForwardRef.current =
                       navigationState.canGoForward;
+                    if (!allowedNavigationUrl) {
+                      return;
+                    }
                     if (
-                      navigationState.url &&
-                      !areEquivalentUrls(navigationState.url, data.url)
+                      !areEquivalentUrls(allowedNavigationUrl.url, data.url)
                     ) {
-                      updateTab(id, {url: navigationState.url});
+                      updateTab(id, {url: allowedNavigationUrl.url});
                     }
                   }}
                   onError={(error) => {
@@ -759,11 +818,17 @@ export default memo(
                     // console.log('HttpError', error);
                   }}
                   onOpenWindow={(event) => {
+                    const allowedNavigationUrl = getAllowedBrowserNavigationUrl(
+                      event.nativeEvent.targetUrl,
+                    );
+                    if (!allowedNavigationUrl) {
+                      return;
+                    }
                     addTab(
                       false,
                       {url, icon, id},
                       tabParentRef,
-                      event.nativeEvent.targetUrl,
+                      allowedNavigationUrl.url,
                     );
                   }}
                   useWebView2

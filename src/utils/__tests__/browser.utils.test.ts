@@ -1,5 +1,9 @@
-import {BrowserUtils, urlTransformer} from '../browser.utils';
-import URL from 'url-parse';
+import {
+  BrowserUtils,
+  getAllowedBrowserNavigationUrl,
+  isInsecureBrowserUrl,
+  urlTransformer,
+} from '../browser.utils';
 
 describe('browser.utils', () => {
   describe('urlTransformer', () => {
@@ -31,6 +35,60 @@ describe('browser.utils', () => {
     });
   });
 
+  describe('getAllowedBrowserNavigationUrl', () => {
+    it('allows https urls', () => {
+      expect(
+        getAllowedBrowserNavigationUrl('https://example.com/path'),
+      ).toEqual({
+        protocol: 'https:',
+        url: 'https://example.com/path',
+      });
+    });
+
+    it('allows http urls for local development', () => {
+      expect(
+        getAllowedBrowserNavigationUrl('http://localhost:3000'),
+      ).toEqual({
+        protocol: 'http:',
+        url: 'http://localhost:3000',
+      });
+    });
+
+    it('allows about blank', () => {
+      expect(getAllowedBrowserNavigationUrl('about:blank')).toEqual({
+        protocol: 'about:',
+        url: 'about:blank',
+      });
+    });
+
+    it('blocks unsupported custom schemes', () => {
+      expect(
+        getAllowedBrowserNavigationUrl('intent://scan/#Intent;scheme=zxing;end'),
+      ).toBeNull();
+      expect(getAllowedBrowserNavigationUrl('javascript:alert(1)')).toBeNull();
+      expect(getAllowedBrowserNavigationUrl('file:///tmp/test.html')).toBeNull();
+      expect(getAllowedBrowserNavigationUrl('content://downloads/test')).toBeNull();
+    });
+
+    it('blocks malformed or empty urls', () => {
+      expect(getAllowedBrowserNavigationUrl('')).toBeNull();
+      expect(getAllowedBrowserNavigationUrl('   ')).toBeNull();
+      expect(getAllowedBrowserNavigationUrl('example.com')).toBeNull();
+      expect(getAllowedBrowserNavigationUrl('https://')).toBeNull();
+    });
+  });
+
+  describe('isInsecureBrowserUrl', () => {
+    it('flags http urls as insecure', () => {
+      expect(isInsecureBrowserUrl('http://127.0.0.1:8080')).toBe(true);
+    });
+
+    it('does not flag https or about blank urls', () => {
+      expect(isInsecureBrowserUrl('https://example.com')).toBe(false);
+      expect(isInsecureBrowserUrl('about:blank')).toBe(false);
+    });
+  });
+
   describe('BrowserUtils.findTabById', () => {
     it('should find tab by id', () => {
       const tabs = [
@@ -54,7 +112,6 @@ describe('browser.utils', () => {
     });
   });
 });
-
 
 
 
