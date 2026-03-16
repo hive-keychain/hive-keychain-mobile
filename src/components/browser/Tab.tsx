@@ -214,9 +214,6 @@ export default memo(
                   originWhitelist={['*']}
                   source={{uri: url}}
                   domStorageEnabled={true}
-                  allowFileAccess={true}
-                  allowUniversalAccessFromFileURLs={true}
-                  mixedContentMode={'always'}
                   ref={tabRef}
                   injectedJavaScriptBeforeContentLoaded={
                     injectedJavaScriptBeforeContentLoaded
