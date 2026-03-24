@@ -76,7 +76,7 @@
     "hive-tx": "github:hive-keychain/hive-tx-js",
     "hive-uri": "0.2.8",
     "i18n-js": "4.5.1",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "md5": "2.3.0",
     "moment": "2.30.1",
     "path": "0.12.7",
@@ -137,13 +137,21 @@
     "jest-expo": "^51.0.4",
     "patch-package": "^8.0.1",
     "react-native-svg-transformer": "^1.5.1",
-    "react-test-renderer": "^19.1.0",
+    "react-test-renderer": "19.1.0",
     "ts-jest": "^29.4.5",
     "typescript": "~5.9.2",
     "url-parse": "^1.5.10"
   },
   "private": true,
   "overrides": {
-    "axios": "1.12.0"
+    "ajv": "8.18.0",
+    "axios": "1.13.5",
+    "http-proxy-agent": "7.0.2",
+    "eas-cli": {
+      "diff": "8.0.3",
+      "minimatch": "5.1.9",
+      "node-forge": "1.3.3",
+      "tar": "7.5.12"
+    }
   }
 }

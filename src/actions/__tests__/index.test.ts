@@ -30,6 +30,7 @@ jest.mock('utils/storage/storage.utils', () => ({
   getAccounts: jest.fn(),
   getAccountStorageVersion: jest.fn(),
   migrateAccountsToV3: jest.fn(),
+  recoverFromFailedPinDecrypt: jest.fn(),
 }));
 
 jest.mock('utils/authentication.utils', () => ({
@@ -232,18 +233,11 @@ describe('actions/index', () => {
       (StorageUtils.getAccounts as jest.Mock).mockRejectedValue(error);
       (LockoutUtils.recordFailure as jest.Mock).mockRejectedValue(recordError);
 
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-
       const unlockAction = actions.unlock(mk, errorCallback);
       await unlockAction(mockDispatch, mockGetState);
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to update unlock lockout state',
-        recordError,
-      );
+      expect(LockoutUtils.recordFailure).toHaveBeenCalled();
       expect(errorCallback).toHaveBeenCalled();
-
-      consoleSpy.mockRestore();
     });
 
     it('should handle error when errorCallback is not provided', async () => {
@@ -291,6 +285,7 @@ describe('actions/index', () => {
     const mockDispatch = jest.fn();
 
     beforeEach(() => {
+      (LockoutUtils.checkActiveLockout as jest.Mock).mockResolvedValue(false);
       (StorageUtils.getAccountStorageVersion as jest.Mock).mockResolvedValue(3);
       (AuthUtils.verifyPin as jest.Mock).mockResolvedValue(true);
       (AuthUtils.ensureMasterKey as jest.Mock).mockResolvedValue(
@@ -305,6 +300,7 @@ describe('actions/index', () => {
       expect(AuthUtils.verifyPin).toHaveBeenCalledWith('123456');
       expect(mockDispatch).toHaveBeenCalled();
       expect(unlockSpy).toHaveBeenCalled();
+      unlockSpy.mockRestore();
     });
 
     it('should record failure on invalid PIN', async () => {
@@ -312,6 +308,80 @@ describe('actions/index', () => {
       const thunk = actions.unlockWithPin('badpin');
       await thunk(mockDispatch);
       expect(LockoutUtils.recordFailure).toHaveBeenCalled();
+    });
+
+    it('should call errorCallback when lockout is active', async () => {
+      (LockoutUtils.checkActiveLockout as jest.Mock).mockResolvedValue(true);
+      const cb = jest.fn();
+      await actions.unlockWithPin('1', cb)(mockDispatch);
+      expect(cb).toHaveBeenCalled();
+      expect(AuthUtils.verifyPin).not.toHaveBeenCalled();
+    });
+
+    it('migrates legacy accounts when storage version is below 3', async () => {
+      (StorageUtils.getAccountStorageVersion as jest.Mock).mockResolvedValue(2);
+      (StorageUtils.getAccounts as jest.Mock).mockResolvedValue({
+        list: [{name: 'alice'}],
+      });
+      (AuthUtils.persistPinSecret as jest.Mock).mockResolvedValue(undefined);
+      (StorageUtils.migrateAccountsToV3 as jest.Mock).mockResolvedValue(
+        undefined,
+      );
+
+      const unlockSpy = jest.spyOn(actions, 'unlock');
+      await actions.unlockWithPin('9999')(mockDispatch);
+
+      expect(AuthUtils.persistPinSecret).toHaveBeenCalledWith('9999');
+      expect(StorageUtils.migrateAccountsToV3).toHaveBeenCalledWith(
+        '9999',
+        'generated-master-key',
+        {list: [{name: 'alice'}]},
+      );
+      expect(unlockSpy).toHaveBeenCalled();
+      unlockSpy.mockRestore();
+    });
+
+    it('uses recovered master key when legacy decrypt fails', async () => {
+      (StorageUtils.getAccountStorageVersion as jest.Mock).mockResolvedValue(2);
+      (StorageUtils.getAccounts as jest.Mock).mockRejectedValue(
+        new Error('decrypt'),
+      );
+      (StorageUtils.recoverFromFailedPinDecrypt as jest.Mock).mockResolvedValue(
+        'recovered-mk',
+      );
+
+      const unlockSpy = jest.spyOn(actions, 'unlock');
+      await actions.unlockWithPin('8888')(mockDispatch);
+
+      expect(StorageUtils.recoverFromFailedPinDecrypt).toHaveBeenCalledWith(
+        '8888',
+      );
+      expect(unlockSpy).toHaveBeenCalledWith('recovered-mk', undefined);
+      expect(AuthUtils.persistPinSecret).not.toHaveBeenCalled();
+      unlockSpy.mockRestore();
+    });
+
+    it('shows toast when legacy account cannot be recovered', async () => {
+      (StorageUtils.getAccountStorageVersion as jest.Mock).mockResolvedValue(2);
+      (StorageUtils.getAccounts as jest.Mock).mockResolvedValue(null);
+      (StorageUtils.recoverFromFailedPinDecrypt as jest.Mock).mockResolvedValue(
+        null,
+      );
+
+      await actions.unlockWithPin('7777')(mockDispatch);
+
+      expect(Toast.show).toHaveBeenCalled();
+      expect(LockoutUtils.recordFailure).toHaveBeenCalled();
+    });
+
+    it('records failure on unexpected error', async () => {
+      (LockoutUtils.checkActiveLockout as jest.Mock).mockRejectedValue(
+        new Error('unexpected'),
+      );
+      const cb = jest.fn();
+      await actions.unlockWithPin('1', cb)(mockDispatch);
+      expect(LockoutUtils.recordFailure).toHaveBeenCalled();
+      expect(cb).toHaveBeenCalled();
     });
   });
 });
