@@ -16,10 +16,6 @@ jest.mock('@hiveio/dhive', () => ({
   },
 }));
 
-jest.mock('utils/hive.utils', () => ({
-  getHardforkVersion: jest.fn().mockResolvedValue(27),
-}));
-
 jest.mock('utils/config.utils', () => ({
   hiveEngine: {
     CHAIN_ID: 'ssc-mainnet-hive',

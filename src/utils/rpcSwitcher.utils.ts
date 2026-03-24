@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setRpc} from 'actions/index';
+import {setRpc} from 'actions/settings';
 import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import {rpcList} from 'lists/rpc.list';

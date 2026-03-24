@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import './global';
+import './src/initRpcFallback';
 
 import ErrorBoundary from 'components/errors/ErrorBoundary';
 import {registerRootComponent} from 'expo';

@@ -2,7 +2,7 @@ import {useWorkingRPC} from '../rpcSwitcher.utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {checkRpcStatus} from '../rpc.utils';
-import {setRpc} from 'actions/index';
+import {setRpc} from 'actions/settings';
 import {setSwitchToRpc, setDisplayChangeRpcPopup} from 'actions/rpc-switcher';
 import {store} from 'store';
 import {Rpc} from 'actions/interfaces';
@@ -11,7 +11,7 @@ jest.mock('../rpc.utils', () => ({
   checkRpcStatus: jest.fn(),
 }));
 
-jest.mock('actions/index', () => ({
+jest.mock('actions/settings', () => ({
   setRpc: jest.fn(() => ({type: 'SET_RPC'})),
 }));
 
