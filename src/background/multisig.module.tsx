@@ -197,7 +197,6 @@ const requestSignatures = async (
     await createConnectionIfNeeded(data);
     const message = await getRequestSignatureMessage(data);
     try {
-      console.log('emitting message', message);
       socket.volatile.emit(
         SocketMessageCommand.REQUEST_SIGNATURE,
         message,
@@ -219,7 +218,7 @@ const requestSignatures = async (
                   resolve(txId);
                 }
               } catch (err) {
-                console.log('catching error', err);
+                console.log('Caught multisig broadcast error');
                 resolve({error: {message: err}});
               }
             }
@@ -230,7 +229,7 @@ const requestSignatures = async (
         ),
       );
     } catch (err) {
-      console.error({err});
+      console.error('Multisig signature request failed');
     }
   });
 };
@@ -287,9 +286,7 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
             signatureRequestId: signatureRequest.id,
           } as SignTransactionMessage,
           async (signatures: string[]) => {
-            console.info(
-              `Should try to broadcast ${JSON.stringify(signedTransaction)}`,
-            );
+            console.info('Attempting multisig broadcast');
             const txResult = await broadcastAndConfirmTransactionWithSignature(
               {
                 expiration: signedTransaction.expiration,

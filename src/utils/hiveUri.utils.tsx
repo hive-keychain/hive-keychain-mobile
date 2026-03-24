@@ -41,6 +41,17 @@ export enum HiveUriOpType {
   tx = 'tx',
   msg = 'msg',
 }
+
+const openHttpsCallbackUrl = (callbackUrl: string) => {
+  try {
+    const parsedCallbackUrl = new URL(callbackUrl);
+    if (parsedCallbackUrl.protocol !== 'https:') return;
+    Linking.openURL(parsedCallbackUrl.toString());
+  } catch {
+    return;
+  }
+};
+
 export const processQRCodeOp = async (
   opType: HiveUriOpType,
   qrRequest: DecodeResult,
@@ -239,7 +250,7 @@ export const processQRCodeOp = async (
               id: response.result.tx_id || res?.result?.tx_id,
             });
 
-            Linking.openURL(callbackUrl);
+            openHttpsCallbackUrl(callbackUrl);
           }
         },
         sendError: () => {},

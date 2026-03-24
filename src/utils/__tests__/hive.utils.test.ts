@@ -21,6 +21,10 @@ const mockGetData = jest.fn();
 jest.mock('utils/hiveLibs.utils', () => ({
   getClient: jest.fn(() => mockClientInstance),
   getData: jest.fn((...args) => mockGetData(...args)),
+  getHardforkVersion: jest.fn(async () => {
+    const v = await mockDatabaseCall('get_hardfork_version', []);
+    return parseInt(String(v).split('.')[1], 10);
+  }),
 }));
 
 jest.mock('api/keychain.api', () => ({

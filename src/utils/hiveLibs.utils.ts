@@ -43,11 +43,17 @@ import {
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
 } from '../interfaces/keychain.interface';
-import {getHardforkVersion} from './hive.utils';
 import {sleep} from './keychain.utils';
-import {useWorkingRPC} from './rpcSwitcher.utils';
 
 type BroadcastResult = {id: string; tx_id: string};
+
+type RpcFailureHandler = () => Promise<void>;
+let rpcFailureHandler: RpcFailureHandler | undefined;
+
+/** Wired from `initRpcFallback.ts` so hiveLibs does not import rpcSwitcher/store at module load (breaks Metro cycles). */
+export const registerRpcFailureHandler = (handler: RpcFailureHandler) => {
+  rpcFailureHandler = handler;
+};
 
 const DEFAULT_CHAIN_ID =
   'beeab0de00000000000000000000000000000000000000000000000000000000';
@@ -81,6 +87,12 @@ export const getCurrency = (baseCurrency: 'HIVE' | 'HBD' | 'HP') => {
 };
 
 export const getClient = () => client;
+
+export const getHardforkVersion = async () => {
+  return parseInt(
+    (await getClient().database.call('get_hardfork_version', [])).split('.')[1],
+  );
+};
 
 export const transfer = async (
   key: string,
@@ -364,7 +376,6 @@ export const post = async (
 };
 
 export const signTx = (key: string, tx: object) => {
-  console.log('tx', key, JSON.stringify(tx));
   const trx = new hiveTx.Transaction(tx);
   const signed = trx.sign(hiveTx.PrivateKey.from(key));
   return signed;
@@ -633,14 +644,14 @@ export const broadcast = async (
         result: object;
       };
       if (error) {
-        console.log(error);
+        console.log('Hive broadcast error');
         throw error;
       } else {
         return result;
       }
     }
   } catch (e) {
-    console.log('hive-tx error', JSON.stringify(e));
+    console.log('hive-tx error');
     throw e;
   }
 };
@@ -674,12 +685,12 @@ export const broadcastAndConfirmTransactionWithSignature = async (
       } as TransactionResult;
     }
   } catch (err) {
-    console.error(err);
+    console.error('Error while broadcasting signed transaction');
     throw new Error('html_popup_error_while_broadcasting');
   }
   response = response as HiveTxBroadcastErrorResponse;
   if (response.error) {
-    console.error('Error during broadcast', response.error);
+    console.error('Error during broadcast');
     throw response.error;
   }
 };
@@ -722,8 +733,8 @@ export const getData = async (
       return key ? response.result[key] : response.result;
     } else {
       try {
-        await useWorkingRPC();
-      } catch (e) {
+        await rpcFailureHandler?.();
+      } catch {
         // ignore fallback errors
       }
     }
@@ -734,7 +745,11 @@ export const getData = async (
     );
   } catch (e) {
     console.log('error', e.message);
-    await useWorkingRPC();
+    try {
+      await rpcFailureHandler?.();
+    } catch {
+      // ignore fallback errors
+    }
     throw new Error(e.message);
   }
 };

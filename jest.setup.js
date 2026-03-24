@@ -118,16 +118,20 @@ jest.mock('utils/localize', () => ({
 }));
 
 // -----------------------------------------
-// expo-constants
+// expo-constants (virtual: not always hoisted to top-level node_modules)
 // -----------------------------------------
-jest.mock('expo-constants', () => ({
-  __esModule: true,
-  default: {
-    expoConfig: {
-      version: '2.10.1',
+jest.mock(
+  'expo-constants',
+  () => ({
+    __esModule: true,
+    default: {
+      expoConfig: {
+        version: '2.10.1',
+      },
     },
-  },
-}));
+  }),
+  { virtual: true },
+);
 
 // -----------------------------------------
 // package.json

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -39,7 +39,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
@@ -132,29 +132,15 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -163,11 +149,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,6 +208,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import {KeyTypes} from 'actions/interfaces';</span>
+<span class="cstat-no" title="statement not covered" >import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';</span>
 <span class="cstat-no" title="statement not covered" >import React from 'react';</span>
 <span class="cstat-no" title="statement not covered" >import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';</span>
 import {RequestId, RequestPowerUp} from 'src/interfaces/keychain.interface';
@@ -222,14 +229,14 @@ type Props = {
   sendError,
 }: Props) =&gt; {
   const {request_id, ...data} = <span class="cstat-no" title="statement not covered" >request;</span>
-  const {username, recipient: to, steem: hive} = <span class="cstat-no" title="statement not covered" >data;</span>
+  const {recipient: to, steem: hive} = <span class="cstat-no" title="statement not covered" >data;</span>
+  const {getUsername, getAccountKey, RequestUsername} =
+<span class="cstat-no" title="statement not covered" >    usePotentiallyAnonymousRequest(request, accounts);</span>
   const performOperation = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async </span>(options: TransactionOptions) =&gt; {</span>
-    const account = <span class="cstat-no" title="statement not covered" >accounts.find(<span class="fstat-no" title="function not covered" >(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >e.name === request.username)</span>;</span>
-    const key = <span class="cstat-no" title="statement not covered" >account.keys.active;</span>
 <span class="cstat-no" title="statement not covered" >    return await powerUp(</span>
-      key,
+      getAccountKey(),
       {
-        from: username,
+        from: getUsername(),
         to,
         amount: `${hive} HIVE`,
       },
@@ -248,12 +255,14 @@ type Props = {
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
+      selectedUsername={getUsername()}
+      RequestUsername={RequestUsername}
       performOperation={performOperation}
       confirmationData={[
         {
           title: 'request.item.username',
-          value: username,
-          tag: ConfirmationDataTag.USERNAME,
+          value: '',
+          tag: ConfirmationDataTag.REQUEST_USERNAME,
         },
         {
           title: 'request.item.to',
@@ -277,7 +286,7 @@ type Props = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-25T03:18:05.861Z
+                at 2026-03-24T03:02:48.951Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

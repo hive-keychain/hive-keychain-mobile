@@ -33,12 +33,21 @@ import {
   button_link_primary_small,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {urlTransformer} from 'utils/browser.utils';
+import {isInsecureBrowserUrl, urlTransformer} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
 import {translate} from 'utils/localize';
 
 const HEART_PNG = require('assets/images/browser/heart.png');
 const HEART_EMPTY_PNG = require('assets/images/browser/heart-empty.png');
+
+const getDisplayUrl = (url: string) => {
+  try {
+    const {hostname, pathname} = urlTransformer(url);
+    return `${hostname}${pathname}`;
+  } catch (error) {
+    return url;
+  }
+};
 
 type Props = {
   browser: Browser;
@@ -85,6 +94,7 @@ const BrowserHeader = ({
   ) {
     const active = tabs.find((e) => e.id === activeTab);
     const activeUrl = active.url;
+    const isInsecureConnection = isInsecureBrowserUrl(activeUrl);
 
     const renderFavoritesButton = () => {
       if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
@@ -149,8 +159,7 @@ const BrowserHeader = ({
                 }
                 value={
                   activeUrl !== BrowserConfig.HOMEPAGE_URL
-                    ? urlTransformer(activeUrl).hostname +
-                      urlTransformer(activeUrl).pathname
+                    ? getDisplayUrl(activeUrl)
                     : translate('browser.search')
                 }
                 onChangeText={(text) => {}}
@@ -162,6 +171,11 @@ const BrowserHeader = ({
                 additionalContainerStyle={styles.searchBarContainer}
                 additionalCustomInputStyle={{fontSize: 13, marginLeft: 0}}
               />
+              {isInsecureConnection ? (
+                <View style={styles.insecureBadge}>
+                  <Text style={styles.insecureBadgeText}>HTTP</Text>
+                </View>
+              ) : null}
               {renderFavoritesButton()}
             </>
           ) : (
@@ -287,6 +301,21 @@ const getStyles = (
       paddingRight: 16,
       flex: 1,
       fontSize: 13,
+    },
+    insecureBadge: {
+      borderWidth: 1,
+      borderColor: PRIMARY_RED_COLOR,
+      borderRadius: 999,
+      paddingHorizontal: 8,
+      paddingVertical: 5,
+      marginLeft: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    insecureBadgeText: {
+      ...button_link_primary_small,
+      color: PRIMARY_RED_COLOR,
+      fontSize: 10,
     },
     fakeSearchBar: {
       borderRadius: 30,

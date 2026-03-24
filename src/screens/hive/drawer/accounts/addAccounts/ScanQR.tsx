@@ -26,7 +26,7 @@ const ScanQR = () => {
         handleAddAccountQR(data, wallet);
       }
     } catch (e) {
-      console.log(e, data);
+      console.log('Error processing add-account QR scan');
     }
   };
   return <QRCode onSuccess={onSuccess} />;

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.23% </span>
+                <span class="strong">67.94% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>54/78</span>
+                <span class='fraction'>53/78</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">48.27% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/29</span>
+                <span class='fraction'>15/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/5</span>
+                <span class='fraction'>3/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.56% </span>
+                <span class="strong">66.21% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>50/74</span>
+                <span class='fraction'>49/74</span>
             </div>
         
             
@@ -214,8 +214,7 @@
 <a name='L149'></a><a href='#L149'>149</a>
 <a name='L150'></a><a href='#L150'>150</a>
 <a name='L151'></a><a href='#L151'>151</a>
-<a name='L152'></a><a href='#L152'>152</a>
-<a name='L153'></a><a href='#L153'>153</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L152'></a><a href='#L152'>152</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -229,13 +228,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -245,10 +237,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -365,7 +361,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {treatHASRequest} from 'actions/hiveAuthenticationService';
 import {addAccount, addTabFromLinking} from 'actions/index';
@@ -383,24 +381,21 @@ import {validateFromObject} from './keyValidation.utils';
 import {translate} from './localize';
 import {goBack, goBackAndNavigate} from './navigation.utils';
 &nbsp;
-let flagCurrentlyProcessing = false;
-let qrDataAccounts: {
-  data: string;
-  index: number;
-  total: number;
-}[] = [];
-&nbsp;
-export default <span class="fstat-no" title="function not covered" >async </span>() =&gt; {
-<span class="cstat-no" title="statement not covered" >  Linking.addEventListener('url', <span class="fstat-no" title="function not covered" >({</span>url}) =&gt; {</span>
+export default <span class="fstat-no" title="function not covered" >() =</span>&gt; {
+  const subscription = <span class="cstat-no" title="statement not covered" >Linking.addEventListener('url', <span class="fstat-no" title="function not covered" >({</span>url}) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (url) {</span>
 <span class="cstat-no" title="statement not covered" >      handleUrl(url);</span>
     }
   });
 &nbsp;
-  const initialUrl = <span class="cstat-no" title="statement not covered" >await Linking.getInitialURL();</span>
-<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (initialUrl) {</span>
-<span class="cstat-no" title="statement not covered" >    handleUrl(initialUrl);</span>
-  }
+  // Handle initial URL asynchronously
+<span class="cstat-no" title="statement not covered" >  Linking.getInitialURL().then(<span class="fstat-no" title="function not covered" >(i</span>nitialUrl) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (initialUrl) {</span>
+<span class="cstat-no" title="statement not covered" >      handleUrl(initialUrl);</span>
+    }
+  });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return subscription;</span>
 };
 &nbsp;
 export const handleUrl = async (url: string, qr: boolean = <span class="branch-0 cbranch-no" title="branch not covered" >false)</span> =&gt; {
@@ -474,7 +469,7 @@ export const handleAddAccountQR = async (
     const jsonCandidate = data.replace('keychain://add_account=', '');
     obj = JSON.parse(jsonCandidate);
   } catch (error) {
-<span class="cstat-no" title="statement not covered" >    console.log('Invalid add_account payload, expected JSON', {error, data});</span>
+<span class="cstat-no" title="statement not covered" >    console.log('Invalid add_account payload, expected JSON');</span>
 <span class="cstat-no" title="statement not covered" >    return;</span>
   }
   let keys = {};
@@ -516,8 +511,10 @@ export const handleAddAccountQR = async (
   }
 };
 &nbsp;
-export const clearLinkingListeners = () =&gt; {
-  Linking.removeAllListeners('url');
+export const clearLinkingListeners = (subscription?: {remove: () =&gt; void}) =&gt; {
+  if (subscription) {
+    subscription.remove();
+  }
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -526,7 +523,7 @@ export const clearLinkingListeners = () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-25T03:18:05.861Z
+                at 2026-03-24T03:02:48.951Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

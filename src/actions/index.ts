@@ -70,13 +70,10 @@ export const unlock =
         Toast.show(`${translate('toast.authFailed')}: ${e.message}`, {
           duration: Toast.durations.LONG,
         });
-        console.log(e.message);
         // Increment failure count and set lockout if thresholds reached
         try {
           await LockoutUtils.recordFailure();
-        } catch (err) {
-          console.log('Failed to update unlock lockout state', err);
-        }
+        } catch {}
 
         errorCallback?.();
       }
@@ -94,11 +91,9 @@ export const unlockWithPin =
       }
 
       const version = await StorageUtils.getAccountStorageVersion();
-      console.log('[auth] unlockWithPin version', version);
 
       if (version >= 3) {
         const isValid = await AuthUtils.verifyPin(pin);
-        console.log('[auth] v3 pin validation', {isValid});
         if (!isValid) {
           Toast.show(translate('toast.authFailed'), {
             duration: Toast.durations.LONG,
@@ -108,7 +103,6 @@ export const unlockWithPin =
           return;
         }
         const masterKey = await AuthUtils.ensureMasterKey();
-        console.log('[auth] v3 master key retrieved');
         await dispatch(unlock(masterKey, errorCallback));
         return;
       }
@@ -116,13 +110,7 @@ export const unlockWithPin =
       let legacyAccounts: any = null;
       try {
         legacyAccounts = await StorageUtils.getAccounts(pin);
-        console.log('[auth] legacy accounts fetched', {
-          hasAccounts: !!legacyAccounts,
-          count: legacyAccounts?.list?.length,
-        });
-      } catch (error: any) {
-        console.log('[auth] legacy accounts decrypt failed', error?.message);
-      }
+      } catch {}
 
       if (!legacyAccounts || !legacyAccounts.list) {
         const fallbackMasterKey =
@@ -141,13 +129,11 @@ export const unlockWithPin =
       }
 
       const masterKey = await AuthUtils.ensureMasterKey();
-      console.log('[auth] generated master key for migration');
       await AuthUtils.persistPinSecret(pin);
       await StorageUtils.migrateAccountsToV3(pin, masterKey, legacyAccounts);
 
       await dispatch(unlock(masterKey, errorCallback));
     } catch (e) {
-      console.log('Failed to unlock with PIN', e);
       await LockoutUtils.recordFailure();
       errorCallback?.();
     }

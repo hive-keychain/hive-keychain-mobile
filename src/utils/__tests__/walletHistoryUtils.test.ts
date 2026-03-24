@@ -2,6 +2,9 @@ jest.mock('components/bridge', () => ({
   decodeMemo: jest.fn(),
 }));
 
+import {ActiveAccount} from 'actions/interfaces';
+import {DEFAULT_WALLET_FILTER} from 'reducers/historyFilters';
+import {WalletHistoryFilter} from 'src/interfaces/walletHistory.interface';
 import {WalletHistoryUtils} from '../walletHistoryUtils';
 import {
   Transfer,
@@ -16,6 +19,7 @@ import {
   EscrowDispute,
   EscrowRelease,
   EscrowTransfer,
+  Transaction,
 } from 'src/interfaces/transaction.interface';
 
 describe('walletHistoryUtils', () => {
@@ -171,6 +175,107 @@ describe('walletHistoryUtils', () => {
       } as EscrowRelease;
       const result = WalletHistoryUtils.filterEscrowRelease(escrow, '10');
       expect(result).toBe(true);
+    });
+  });
+
+  describe('applyAllFilters — escrow category', () => {
+    const baseTx = {
+      blockNumber: 1,
+      txId: 'x',
+      index: 0,
+      key: 'k',
+      timestamp: '2020-01-01T00:00:00',
+      url: '',
+    };
+
+    const activeAccount = {name: 'user1'} as ActiveAccount;
+
+    it('includes all escrow op types when the unified escrow filter is selected', () => {
+      const transfer = {
+        ...baseTx,
+        type: 'transfer',
+        amount: '1 HIVE',
+        from: 'a',
+        to: 'user1',
+        memo: '',
+      } as Transfer;
+
+      const escrowTransfer = {
+        ...baseTx,
+        txId: 'e1',
+        type: 'escrow_transfer',
+        from: 'user1',
+        to: 'user2',
+        hive_amount: '1.000 HIVE',
+        hbd_amount: '0.000 HBD',
+        fee: '0.010 HIVE',
+        agent: 'agent',
+        escrow_id: 1,
+      } as EscrowTransfer;
+
+      const escrowApprove = {
+        ...baseTx,
+        txId: 'e2',
+        type: 'escrow_approve',
+        from: 'user1',
+        to: 'user2',
+        who: 'user1',
+        agent: 'agent',
+        escrow_id: 2,
+        approve: true,
+      } as EscrowApprove;
+
+      const list: Transaction[] = [transfer, escrowTransfer, escrowApprove];
+
+      const out = WalletHistoryUtils.applyAllFilters(
+        list,
+        {
+          ...DEFAULT_WALLET_FILTER,
+          selectedTransactionTypes: {
+            ...DEFAULT_WALLET_FILTER.selectedTransactionTypes,
+            escrow: true,
+          },
+        },
+        activeAccount,
+      );
+
+      expect(out).toHaveLength(2);
+      expect(out.map((t) => t.type).sort()).toEqual(
+        ['escrow_approve', 'escrow_transfer'].sort(),
+      );
+    });
+
+    it('maps legacy per-op escrow filter keys to the unified escrow category', () => {
+      const escrowRelease = {
+        ...baseTx,
+        type: 'escrow_release',
+        from: 'user1',
+        to: 'user2',
+        who: 'user1',
+        receiver: 'user2',
+        agent: 'agent',
+        hive_amount: '1.000 HIVE',
+        hbd_amount: '0.000 HBD',
+        escrow_id: 3,
+      } as EscrowRelease;
+
+      const selectedTransactionTypes: WalletHistoryFilter['selectedTransactionTypes'] =
+        {
+          ...DEFAULT_WALLET_FILTER.selectedTransactionTypes,
+          escrow_approve: true,
+        };
+
+      const out = WalletHistoryUtils.applyAllFilters(
+        [escrowRelease],
+        {
+          ...DEFAULT_WALLET_FILTER,
+          selectedTransactionTypes,
+        },
+        activeAccount,
+      );
+
+      expect(out).toHaveLength(1);
+      expect(out[0].type).toBe('escrow_release');
     });
   });
 });

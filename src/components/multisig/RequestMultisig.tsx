@@ -44,7 +44,6 @@ const RequestMultisig = ({
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getStyles(theme, width);
-  console.log('request', {signer, signatureRequest, decodedTransaction, key});
   const renderOperationDetails = () => {
     return (
       <View>

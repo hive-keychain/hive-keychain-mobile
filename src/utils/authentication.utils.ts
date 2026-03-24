@@ -5,12 +5,7 @@ import SecureStoreUtils from './storage/secureStore.utils';
 const PIN_PEPPER =
   process.env.EXPO_PUBLIC_PIN_PEPPER || process.env.PIN_PEPPER || '';
 
-const getPepper = () => {
-  if (!PIN_PEPPER) {
-    console.warn('[auth] Missing PIN pepper env (EXPO_PUBLIC_PIN_PEPPER/PIN_PEPPER)');
-  }
-  return PIN_PEPPER;
-};
+const getPepper = () => PIN_PEPPER;
 
 const generateSalt = () =>
   CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
@@ -133,4 +128,3 @@ export const AuthUtils = {
 };
 
 export default AuthUtils;
-

@@ -102,7 +102,7 @@ export const handleAddAccountQR = async (
     const jsonCandidate = data.replace('keychain://add_account=', '');
     obj = JSON.parse(jsonCandidate);
   } catch (error) {
-    console.log('Invalid add_account payload, expected JSON', {error, data});
+    console.log('Invalid add_account payload, expected JSON');
     return;
   }
   let keys = {};

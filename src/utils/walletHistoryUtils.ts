@@ -27,6 +27,67 @@ import {
   TRANSFER_TYPE_TRANSACTIONS,
 } from './transactions.utils';
 
+/** Hive op types grouped under the single wallet history filter category "Escrow". */
+export const ESCROW_TRANSACTION_TYPES = [
+  'escrow_transfer',
+  'escrow_approve',
+  'escrow_dispute',
+  'escrow_release',
+] as const;
+
+/**
+ * Builds the list of selected category keys for filtering, including legacy
+ * persisted keys (per-op escrow types) mapped to the unified `escrow` category.
+ */
+const getSelectedTransactionTypesForFiltering = (
+  selectedTransactionTypes: WalletHistoryFilter['selectedTransactionTypes'],
+): string[] => {
+  const selected = Object.keys(selectedTransactionTypes).filter(
+    (key) => selectedTransactionTypes[key],
+  );
+
+  const legacyEscrowSelected = ESCROW_TRANSACTION_TYPES.some((type) =>
+    selected.includes(type),
+  );
+  const escrowSelected =
+    selected.includes('escrow') || legacyEscrowSelected;
+
+  const cleaned = selected.filter(
+    (k) =>
+      k !== 'escrow' &&
+      !ESCROW_TRANSACTION_TYPES.includes(
+        k as (typeof ESCROW_TRANSACTION_TYPES)[number],
+      ),
+  );
+
+  if (escrowSelected) {
+    cleaned.push('escrow');
+  }
+
+  return cleaned;
+};
+
+const transactionMatchesSelectedType = (
+  transactionType: string,
+  selectedTypes: string[],
+): boolean => {
+  if (selectedTypes.length === 0) {
+    return true;
+  }
+  if (selectedTypes.includes(transactionType)) {
+    return true;
+  }
+  if (
+    selectedTypes.includes('escrow') &&
+    ESCROW_TRANSACTION_TYPES.includes(
+      transactionType as (typeof ESCROW_TRANSACTION_TYPES)[number],
+    )
+  ) {
+    return true;
+  }
+  return false;
+};
+
 const filterTransfer = (
   transfer: Transfer,
   filterValue: string,
@@ -117,18 +178,13 @@ const applyAllFilters = (
   filter: WalletHistoryFilter,
   activeAccount: ActiveAccount,
 ) => {
-  const selectedTransactionsTypes = Object.keys(
+  const selectedTransactionsTypes = getSelectedTransactionTypesForFiltering(
     filter.selectedTransactionTypes,
-  ).filter(
-    (transactionName) => filter.selectedTransactionTypes[transactionName],
   );
   let filteredTransactions = transactionsList.filter(
     (transaction: Transaction) => {
       const isInOrOutSelected = filter.inSelected || filter.outSelected;
-      if (
-        selectedTransactionsTypes.includes(transaction.type) ||
-        selectedTransactionsTypes.length === 0
-      ) {
+      if (transactionMatchesSelectedType(transaction.type, selectedTransactionsTypes)) {
         if (
           HAS_IN_OUT_TRANSACTIONS.includes(transaction.type) &&
           isInOrOutSelected

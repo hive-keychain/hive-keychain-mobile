@@ -8,6 +8,7 @@ import {BrowserPropsFromRedux} from 'screens/Browser';
 import {useOrientation} from 'src/context/orientation.context';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
+import {getAllowedBrowserNavigationUrl} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
 import Header from './Header';
 import Tab from './Tab';
@@ -94,7 +95,15 @@ const Browser = ({
   };
 
   const onNewSearch = (url: string) => {
-    updateTab(activeTab, {...currentActiveTabData, url}, true);
+    const allowedNavigationUrl = getAllowedBrowserNavigationUrl(url);
+    if (!allowedNavigationUrl) {
+      return;
+    }
+    updateTab(
+      activeTab,
+      {...currentActiveTabData, url: allowedNavigationUrl.url},
+      true,
+    );
   };
 
   const swipeToTab = (right: boolean) => {

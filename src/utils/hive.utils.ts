@@ -6,7 +6,9 @@ import {
 } from 'actions/interfaces';
 import api from 'api/keychain.api';
 import {PendingOutgoingUndelegation} from 'src/interfaces/delegations.interface';
-import {getClient, getData} from './hiveLibs.utils';
+import {getClient, getData, getHardforkVersion} from './hiveLibs.utils';
+
+export {getHardforkVersion};
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
 const HIVE_100_PERCENT = 10000;
@@ -205,10 +207,4 @@ export const getAccountPrice = async () => {
 export const getAccount = async (username: string) => {
   const accounts = await getClient().database.getAccounts([username]);
   return accounts[0];
-};
-
-export const getHardforkVersion = async () => {
-  return parseInt(
-    (await getClient().database.call('get_hardfork_version', [])).split('.')[1],
-  );
 };

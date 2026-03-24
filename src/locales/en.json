@@ -567,6 +567,7 @@
       "power_up_down": "Power up/down",
       "convert": "Conversion",
       "account_create": "Account Creation",
+      "escrow": "Escrow",
       "filter_in": "In",
       "filter_out": "Out",
       "filters_title": "Filters",
@@ -1121,6 +1122,11 @@
         "part_1": "Can't see your favorite Hive dApp in here?",
         "part_2": "Contact us on "
       }
+    },
+    "link_long_press": {
+      "open": "Open",
+      "open_in_another_tab": "Open in another tab",
+      "copy_link": "Copy link"
     },
     "switch_tabs_tip": "Switch between tabs by swiping left or right on the url bar."
   },
