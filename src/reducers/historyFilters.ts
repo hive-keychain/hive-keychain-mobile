@@ -16,10 +16,7 @@ export const DEFAULT_WALLET_FILTER: WalletHistoryFilter = {
     power_up_down: false,
     convert: false,
     account_create: false,
-    escrow_transfer: false,
-    escrow_approve: false,
-    escrow_dispute: false,
-    escrow_release: false,
+    escrow: false,
   },
 };
 
