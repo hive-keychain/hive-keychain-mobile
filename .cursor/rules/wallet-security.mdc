@@ -1,0 +1,15 @@
+---
+description: Security rules for wallet, auth, and browser flows
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Wallet Security Rules
+
+- Treat auth, secure storage, key handling, signing, browser requests, HAS flows, and deep links as security-critical.
+- Never log or persist master keys, private keys, memo keys, auth tokens, raw signing payloads, or sensitive account state.
+- Preserve the persist whitelist and `getSafeState()` redaction behavior in `src/store/index.ts`.
+- Treat WebView, browser, deep link, and HAS data as untrusted input. Validate, sanitize, and fail closed.
+- Do not weaken biometric, secure-store, or keychain protections for convenience.
+- Prefer minimal-disclosure errors over verbose debug output on sensitive paths.
+- If a change alters trust boundaries, persistence behavior, or request validation, add a targeted test or ask for review before broadening scope.
