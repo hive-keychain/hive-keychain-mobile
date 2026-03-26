@@ -194,24 +194,23 @@ const ConfirmationCard = ({
         {marginBottom: 0, flexShrink: 1},
       ]}>
       {data.map((e, i) => (
-        <View
-          style={[styles.confirmItem, styles.justifyContent]}
-          key={`${e.title}-${i}`}>
-          <View style={[styles.flexRowBetween]}>
-            {![ConfirmationDataTag.REQUEST_USERNAME].includes(e.tag) && (
-              <Text
-                style={[
-                  getFormFontStyle(width, theme).title,
-                  {
-                    paddingRight: 4,
-                    fontFamily: FontPoppinsName.SEMI_BOLD,
-                  },
-                ]}>
-                {translate(e.title)}
-              </Text>
-            )}
-            {renderConfirmationValue(e)}
-          </View>
+        <View style={[styles.confirmItem, styles.justifyContent]} key={`${e.title}-${i}`}>
+          {e.tag === ConfirmationDataTag.COLLAPSIBLE ? (
+            renderConfirmationValue(e)
+          ) : (
+            <View style={[styles.flexRowBetween]}>
+              {![ConfirmationDataTag.REQUEST_USERNAME].includes(e.tag) && (
+                <Text
+                  style={[
+                    getFormFontStyle(width, theme).title,
+                    styles.confirmationLabel,
+                  ]}>
+                  {translate(e.title)}
+                </Text>
+              )}
+              {renderConfirmationValue(e)}
+            </View>
+          )}
           {i !== data.length - 1 && (
             <Separator
               drawLine
@@ -230,6 +229,10 @@ const getDimensionedStyles = (width: number, theme: Theme) =>
     confirmItem: {
       marginVertical: 8,
       flexShrink: 1,
+    },
+    confirmationLabel: {
+      paddingRight: 4,
+      fontFamily: FontPoppinsName.SEMI_BOLD,
     },
     warning: {color: 'red'},
     flexRowBetween: {

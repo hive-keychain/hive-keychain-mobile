@@ -329,6 +329,15 @@ describe('format.utils', () => {
       const result = beautifyIfJSON(json);
       expect(result).toContain('key');
       expect(result).toContain('value');
+      expect(result).toContain('\n');
+    });
+
+    it('should format double-encoded JSON strings', () => {
+      const json = '"{\\"key\\":\\"value\\"}"';
+      const result = beautifyIfJSON(json);
+      expect(result).toContain('key');
+      expect(result).toContain('value');
+      expect(result).toContain('\n');
     });
 
     it('should return original string if not JSON', () => {

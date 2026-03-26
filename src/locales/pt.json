@@ -972,6 +972,7 @@
       "weight": "Peso",
       "data": "Dados",
       "hidden_data": "Clique para ver",
+      "hide_data": "Clique para ocultar",
       "to": "Para",
       "amount": "Quantidade",
       "memo": "Memo",
