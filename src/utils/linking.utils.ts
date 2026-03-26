@@ -8,7 +8,13 @@ import {RootState, store} from 'store';
 import isURL from 'validator/lib/isURL';
 import AccountUtils from './account.utils';
 import {HASConfig} from './config.utils';
-import {HiveUriOpType, processQRCodeOp} from './hiveUri.utils';
+import {processQRCodeOp} from './hiveUri.utils';
+import {
+  extractHiveUriOpType,
+  parseAddAccountPayload,
+  parseBase64Json,
+  parseCreateAccountLinkPayload,
+} from './linkingParsers.utils';
 import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation.utils';
 import {translate} from './localize';
@@ -34,8 +40,10 @@ export default () => {
 export const handleUrl = async (url: string, qr: boolean = false) => {
   if (url.startsWith(HASConfig.protocol)) {
     if (url.startsWith(HASConfig.auth_req)) {
-      const buf = Buffer.from(url.replace(HASConfig.auth_req, ''), 'base64');
-      const data = JSON.parse(buf.toString());
+      const data = parseBase64Json(url.replace(HASConfig.auth_req, ''));
+      if (!data) {
+        return;
+      }
       if (qr) {
         goBack();
       }
@@ -47,32 +55,20 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
     }
     if (url.startsWith('hive://sign/')) {
       const res = hiveUri.decode(url);
-      const opType = url.match(/^hive:\/\/sign\/([^\/]+)/)[1] as HiveUriOpType;
-      processQRCodeOp(opType, res);
+      const opType = extractHiveUriOpType(url);
+      if (opType) {
+        processQRCodeOp(opType, res);
+      }
     }
   } else if (url.startsWith('keychain://create_account=')) {
-    const buf = url.replace('keychain://create_account=', '');
-    try {
-      const data = JSON.parse(Buffer.from(buf, 'base64').toString());
-      const {n, o, a, p, m} = data;
+    const createAccountData = parseCreateAccountLinkPayload(url);
+    if (createAccountData) {
       goBackAndNavigate('Accounts', {
         screen: 'CreateAccountFromWalletScreenPageOne',
         params: {
           wallet: true,
-          newPeerToPeerData: {
-            name: n,
-            publicKeys: {
-              owner: o,
-              active: a,
-              posting: p,
-              memo: m,
-            },
-          },
+          newPeerToPeerData: createAccountData,
         } as AddAccountFromWalletParamList['CreateAccountFromWalletScreenPageOne'],
-      });
-    } catch (error) {
-      console.log('Error processing QR Create Accounts data, please check!', {
-        error,
       });
     }
   } else if (isURL(url)) {
@@ -97,12 +93,8 @@ export const handleAddAccountQR = async (
   wallet = true,
   mainStack = false,
 ) => {
-  let obj: any;
-  try {
-    const jsonCandidate = data.replace('keychain://add_account=', '');
-    obj = JSON.parse(jsonCandidate);
-  } catch (error) {
-    console.log('Invalid add_account payload, expected JSON');
+  const obj = parseAddAccountPayload(data);
+  if (!obj) {
     return;
   }
   let keys = {};

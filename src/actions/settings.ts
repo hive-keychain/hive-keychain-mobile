@@ -1,5 +1,5 @@
 import KeychainApi from 'api/keychain.api';
-import {AppThunk} from 'hooks/redux';
+import {AppThunk} from 'src/hooks/redux';
 import {
   ActionPayload,
   MobileSettings,

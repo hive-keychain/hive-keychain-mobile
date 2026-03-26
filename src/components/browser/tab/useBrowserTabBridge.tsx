@@ -47,6 +47,7 @@ import MediaDownloadModal from '../MediaDownloadModal';
 import RequestModalContent from '../RequestModalContent';
 import RequestErr from '../requestOperations/components/RequestError';
 import {showFloatingBar} from 'actions/floatingBar';
+import {parseBrowserTabMessage} from './browserTabMessage.utils';
 import {LinkTooltipState} from './types';
 
 type Params = {
@@ -183,12 +184,33 @@ export const useBrowserTabBridge = ({
     }
   };
 
+  const showRequestValidationError = (
+    request_id: number,
+    data: any,
+    modalError: string,
+  ) => {
+    sendError(tabRef, {
+      error: 'user_cancel',
+      message: 'Request was canceled by the user.',
+      data,
+      request_id,
+    });
+    navigate('ModalScreen', {
+      name: `Operation_${data.type}`,
+      modalContent: (
+        <RequestErr
+          onClose={() => {
+            navigationGoBack();
+          }}
+          error={modalError}
+        />
+      ),
+    });
+  };
+
   const onMessage = ({nativeEvent}: WebViewMessageEvent) => {
-    let messageData;
-    try {
-      messageData = JSON.parse(nativeEvent.data);
-    } catch (error) {
-      console.error('Error parsing WebView message:', error);
+    const messageData = parseBrowserTabMessage(nativeEvent.data);
+    if (!messageData) {
       return;
     }
 
@@ -235,23 +257,11 @@ export const useBrowserTabBridge = ({
           if (validateAuth.valid) {
             showOperationRequestModal(request_id, data);
           } else {
-            sendError(tabRef, {
-              error: 'user_cancel',
-              message: 'Request was canceled by the user.',
-              data,
+            showRequestValidationError(
               request_id,
-            });
-            navigate('ModalScreen', {
-              name: `Operation_${data.type}`,
-              modalContent: (
-                <RequestErr
-                  onClose={() => {
-                    navigationGoBack();
-                  }}
-                  error={validateAuth.error}
-                />
-              ),
-            });
+              data,
+              validateAuth.error ?? 'Request was canceled by the user.',
+            );
           }
         } else {
           sendError(tabRef, {

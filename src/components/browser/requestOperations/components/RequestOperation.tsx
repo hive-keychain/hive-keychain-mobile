@@ -32,6 +32,10 @@ import {beautifyErrorMessage} from 'utils/keychain.utils';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation.utils';
 import RequestMessage from './RequestMessage';
+import {
+  executeRequestOperation,
+  executeRequestOperationWithoutConfirmation,
+} from './requestOperation.utils';
 
 type Props = {
   confirmationData?: ConfirmationData[];
@@ -164,52 +168,24 @@ const RequestOperation = ({
           setLoading(true);
           let msg: string;
           try {
-            const result = await Promise.race([
-              performOperation({
-                metaData: {twoFACodes: twoFABots},
-                multisig: isMultisig,
-                fromWallet: false,
-              }),
-              new Promise((_, reject) =>
-                setTimeout(() => reject('REQ_TIMEOUT'), 30000),
-              ),
-            ]);
-            if (result && result.error) throw result.error;
-            msg = successMessage;
-            const obj = {
-              data,
-              request_id,
-              result,
-              message: msg,
-              ...additionalData,
-            };
-            if (selectedUsername) obj.data.username = selectedUsername;
-            if (keep && !has) {
-              addPreference(username, domain, type);
-            }
-            sendResponse(obj, keep);
-          } catch (e) {
-            console.log('error', e);
-            if (e === 'REQ_TIMEOUT') {
-              msg = isMultisig
-                ? translate('multisig.pending')
-                : translate('request.error.timeout');
-            } else {
-              if (!beautifyError) {
-                if (typeof errorMessage === 'function') {
-                  msg = errorMessage(e as any, data);
-                } else {
-                  msg = errorMessage;
-                }
-              } else {
-                msg = beautifyErrorMessage(e as any);
-              }
-            }
-            sendError({
-              data,
-              request_id,
-              error: e === 'timeout' ? 'pending_multisig' : {},
-              message: msg,
+            msg = await executeRequestOperation({
+              request,
+              performOperation,
+              sendResponse,
+              sendError,
+              successMessage,
+              errorMessage,
+              additionalData,
+              beautifyError,
+              selectedUsername,
+              keep,
+              addPreference,
+              domain,
+              type,
+              username,
+              has,
+              isMultisig,
+              twoFABots,
             });
           } finally {
             goBack();
@@ -266,7 +242,7 @@ export default connector(RequestOperation);
 // signTx
 
 export const processOperationWithoutConfirmation = async (
-  performOperation: () => void,
+  performOperation: () => Promise<any>,
   request: KeychainRequest & RequestId,
   sendResponse: (msg: RequestSuccess, keep?: boolean) => void,
   sendError: (msg: RequestError) => void,
@@ -275,29 +251,14 @@ export const processOperationWithoutConfirmation = async (
   errorMessage?: string,
   additionalData?: any,
 ) => {
-  const {request_id, ...data} = request;
-  try {
-    const result = await performOperation();
-    let msg = successMessage;
-    const obj = {
-      data,
-      request_id,
-      result,
-      message: msg,
-      ...additionalData,
-    };
-    sendResponse(obj);
-  } catch (e) {
-    let msg;
-    if (!beautifyError) {
-      // if (typeof errorMessage === 'function') {
-      //   msg = errorMessage(e, data);
-      // } else {
-      msg = errorMessage;
-      //}
-    } else {
-      msg = beautifyErrorMessage(e as any);
-    }
-    sendError({data, request_id, error: {}, message: msg});
-  }
+  await executeRequestOperationWithoutConfirmation({
+    performOperation,
+    request,
+    sendResponse,
+    sendError,
+    beautifyError,
+    successMessage,
+    errorMessage,
+    additionalData,
+  });
 };

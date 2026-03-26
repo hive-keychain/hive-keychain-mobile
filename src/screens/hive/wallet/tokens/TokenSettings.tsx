@@ -5,6 +5,7 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import RpcErrorBanner from 'components/ui/RpcErrorBanner';
 import Separator from 'components/ui/Separator';
+import {useAppSelector} from 'hooks/redux';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
@@ -14,14 +15,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
-import {ConnectedProps, connect, useSelector} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {HiddenTokens, Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {fields_primary_text_1} from 'src/styles/typography';
-import {RootState} from 'store';
 import {hiveEngineWebsiteURL} from 'utils/config.utils';
 import {getHiddenTokens} from 'utils/hiveEngine.utils';
 import {translate} from 'utils/localize';
@@ -111,7 +111,7 @@ const TokenSettings = ({
   const {theme} = useThemeContext();
   const {height, width} = useWindowDimensions();
   const styles = getStyles(theme, height);
-  const colors = useSelector((state: RootState) => state.colors);
+  const colors = useAppSelector((state) => state.colors);
 
   const renderTokenSettingsItem = useCallback(
     ({item}: {item: Token}) => (

@@ -1,5 +1,6 @@
 import {
   validateAuthority,
+  validateRequest,
   getValidAuthorityAccounts,
   getRequestTitle,
   getRequiredWifType,
@@ -67,6 +68,46 @@ describe('keychain.utils', () => {
         username: 'user1',
       } as any);
       expect(result.valid).toBe(true);
+    });
+  });
+
+  describe('validateRequest', () => {
+    it('should reject sendToken requests with empty amount', () => {
+      expect(
+        validateRequest({
+          type: KeychainRequestTypes.sendToken,
+          amount: '',
+          to: 'user2',
+          currency: 'BEE',
+        } as any),
+      ).toBe(false);
+    });
+
+    it('should reject malformed proposal id payloads', () => {
+      expect(
+        validateRequest({
+          type: KeychainRequestTypes.updateProposalVote,
+          username: 'user1',
+          proposal_ids: 'not-json',
+          approve: true,
+        } as any),
+      ).toBe(false);
+    });
+
+    it('should reject invalid comment options payloads', () => {
+      expect(
+        validateRequest({
+          type: KeychainRequestTypes.post,
+          username: 'user1',
+          body: 'body',
+          title: 'title',
+          permlink: 'permlink',
+          parent_perm: 'test',
+          parent_username: '',
+          json_metadata: '{}',
+          comment_options: 'not-json',
+        } as any),
+      ).toBe(false);
     });
   });
 

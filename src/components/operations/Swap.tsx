@@ -12,9 +12,8 @@ import Loader from 'components/ui/Loader';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import RpcErrorBanner from 'components/ui/RpcErrorBanner';
 import Separator from 'components/ui/Separator';
-import {IStep} from 'hive-keychain-commons';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
-import {ThrottleSettings, throttle} from 'lodash';
+import {useSwapEstimate} from 'hooks/useSwapEstimate';
 // import {TemplateStackProps} from 'navigators/Root.types';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo, useState} from 'react';
@@ -52,14 +51,12 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {SwapsConfig} from 'utils/config.utils';
-import {capitalize, withCommas} from 'utils/format.utils';
-import {getHiveEngineTokenPrice} from 'utils/hiveEngine.utils';
+import {capitalize} from 'utils/format.utils';
 import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import {goBackAndNavigate, navigate} from 'utils/navigation.utils';
 import {SwapTokenUtils} from 'utils/swapToken.utils';
-import {getAllTokens, getTokenPrecision} from 'utils/tokens.utils';
+import {getAllTokens} from 'utils/tokens.utils';
 import OperationThemed from './OperationThemed';
 
 export interface OptionItem {
@@ -104,17 +101,26 @@ const Swap = ({
   const [endTokenListOptions, setEndTokenListOptions] = useState<OptionItem[]>(
     [],
   );
-  const [loadingEstimate, setLoadingEstimate] = useState(false);
-  const [estimate, setEstimate] = useState<IStep[]>();
-  const [estimateValue, setEstimateValue] = useState<string | undefined>();
-  const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
-    number | null
-  >(null);
   const [disableProcessButton, setDisableProcessButton] = useState(false);
   const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultisig(
     KeyTypes.active,
     activeAccount,
   );
+  const {
+    autoRefreshCountdown,
+    estimate,
+    estimateValue,
+    getTokenUSDPrice,
+    loadingEstimate,
+    refreshEstimate,
+  } = useSwapEstimate({
+    amount,
+    startToken,
+    endToken,
+    swapConfig,
+    price,
+    tokenMarket,
+  });
   useEffect(() => {
     init();
   }, []);
@@ -268,142 +274,6 @@ const Swap = ({
       : findDifferentToken(list[0]) ?? endList[1];
     setEndToken(endTokenToSet);
     setEndTokenListOptions(endList);
-  };
-
-  const calculateEstimate = async (
-    amount: string,
-    startToken: OptionItem,
-    endToken: OptionItem,
-    swapConfig: SwapConfig,
-  ) => {
-    if (!startToken || !endToken || !startToken.value || !endToken.value) {
-      return;
-    }
-    if (startToken === endToken) {
-      SimpleToast.show(
-        translate(
-          'wallet.operations.swap.swap_start_end_token_should_be_different',
-        ),
-        {
-          duration: SimpleToast.durations.LONG,
-        },
-      );
-      return;
-    }
-
-    try {
-      setLoadingEstimate(true);
-      setEstimate(undefined);
-      setEstimateValue(undefined);
-      const result: IStep[] = await SwapTokenUtils.getEstimate(
-        startToken.value.symbol,
-        endToken.value.symbol,
-        amount,
-        () => {
-          setAutoRefreshCountdown(null);
-        },
-      );
-
-      if (result.length) {
-        const precision = await getTokenPrecision(
-          result[result.length - 1].endToken,
-        );
-        const value = Number(result[result.length - 1].estimate);
-        const fee =
-          (Number(result[result.length - 1].estimate) * swapConfig.fee.amount) /
-          100;
-        const finalValue = Number(value - fee).toFixed(precision);
-        setEstimate(result);
-        setEstimateValue(finalValue);
-      } else {
-        setEstimateValue(undefined);
-      }
-    } catch (err) {
-      setEstimate(undefined);
-      SimpleToast.show(
-        translate(`wallet.operations.swap.${err.reason.template}`, {
-          currently: Number(err.reason.params[0]).toFixed(3),
-        }),
-        {
-          duration: SimpleToast.durations.LONG,
-        },
-      );
-    } finally {
-      setLoadingEstimate(false);
-    }
-  };
-
-  const throttledRefresh = useMemo(() => {
-    return throttle(
-      (newAmount, newEndToken, newStartToken, swapConfig) => {
-        if (parseFloat(newAmount) > 0 && newEndToken && newStartToken) {
-          calculateEstimate(newAmount, newStartToken, newEndToken, swapConfig);
-          setAutoRefreshCountdown(SwapsConfig.autoRefreshPeriodSec);
-        }
-      },
-      1000,
-      {leading: false} as ThrottleSettings,
-    );
-  }, []);
-
-  useEffect(() => {
-    if (startToken && endToken) {
-      throttledRefresh(amount, endToken, startToken, swapConfig);
-    }
-  }, [amount, endToken, startToken, swapConfig]);
-
-  useEffect(() => {
-    if (autoRefreshCountdown === null) {
-      return;
-    }
-
-    if (autoRefreshCountdown === 0 && startToken && endToken) {
-      calculateEstimate(amount, startToken, endToken, swapConfig);
-      setAutoRefreshCountdown(SwapsConfig.autoRefreshPeriodSec);
-      return;
-    }
-
-    const a = setTimeout(() => {
-      setAutoRefreshCountdown(autoRefreshCountdown! - 1);
-    }, 1000);
-
-    return () => {
-      clearTimeout(a);
-    };
-  }, [autoRefreshCountdown]);
-
-  const onHandleRequestEstimate = () => {
-    if (!estimate || !startToken || !endToken || !swapConfig) return;
-    calculateEstimate(amount, startToken, endToken, swapConfig);
-    setAutoRefreshCountdown(SwapsConfig.autoRefreshPeriodSec);
-  };
-
-  const getTokenUSDPrice = (
-    estimateValue: string | undefined,
-    symbol: string,
-  ) => {
-    if (!estimateValue) return undefined;
-    else {
-      let tokenPrice;
-      if (symbol === getCurrency('HIVE')) {
-        tokenPrice = price.hive.usd!;
-      } else if (symbol === getCurrency('HBD')) {
-        tokenPrice = price.hive_dollar.usd!;
-      } else {
-        tokenPrice =
-          getHiveEngineTokenPrice(
-            {
-              symbol,
-            },
-            tokenMarket,
-          ) * price.hive.usd!;
-      }
-      const tokenPriceUSD = `≈ $${withCommas(
-        Number.parseFloat(estimateValue) * tokenPrice + '',
-        2,
-      )}`;
-      return tokenPriceUSD;
-    }
   };
 
   const swapStartAndEnd = () => {
@@ -802,7 +672,7 @@ const Swap = ({
                         <RotationIconAnimated
                           theme={theme}
                           animate={loadingEstimate}
-                          onPressIcon={onHandleRequestEstimate}
+                          onPressIcon={refreshEstimate}
                           color={PRIMARY_RED_COLOR}
                         />
                       </View>

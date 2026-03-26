@@ -38,17 +38,15 @@ import Separator from 'components/ui/Separator';
 import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
+import {useWalletWidgetCommands} from 'hooks/useWalletWidgetCommands';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
   FlatList,
-  NativeEventEmitter,
-  NativeModules,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  Platform,
   RefreshControl,
   StyleSheet,
   Text,
@@ -84,7 +82,6 @@ import {getCurrency} from 'utils/hiveLibs.utils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation.utils';
 import {VestingRoutesUtils} from 'utils/vestingRoutes.utils';
-import {WidgetUtils} from 'utils/widget.utils';
 
 const Main = ({
   loadAccount,
@@ -131,62 +128,21 @@ const Main = ({
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
   const [isHiveEngineLoading, setIsHiveEngineLoading] = useState(true);
   const mainScrollRef = useRef<FlatList<TokenBalance>>(null);
-
-  const [eventReceived, setEventReceived] = useState(null);
-  const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const [vestingRoutesDifferences, setVestingRoutesDifferences] = useState<
     AccountVestingRoutesDifferences[] | undefined
   >();
+  const {
+    showWidgetConfiguration,
+    setShowWidgetConfiguration,
+    readPendingWidgetCommand,
+  } = useWalletWidgetCommands(navigation);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     updateUserWallet(user.name);
   }, [user.name]);
-
-  useEffect(() => {
-    if (Platform.OS === 'ios') return;
-    const eventEmitter = new NativeEventEmitter(NativeModules.WidgetBridge);
-    let eventListener = eventEmitter.addListener('command_event', (event) => {
-      if (event && Object.values(event).length >= 1) {
-        setEventReceived(event);
-      }
-    });
-    // Fallback: read any pending command persisted by the widget
-    const readPending = async () => {
-      try {
-        if (NativeModules.WidgetBridge?.readAndClearPendingCommand) {
-          const pending =
-            await NativeModules.WidgetBridge.readAndClearPendingCommand();
-          if (pending && Object.values(pending).length >= 1) {
-            setEventReceived(pending);
-          }
-        }
-      } catch (e) {
-        console.log('readAndClearPendingCommand error', e);
-      }
-    };
-    readPending();
-    if (eventReceived) {
-      if (eventReceived.currency) {
-        const {currency: command} = eventReceived;
-        if (command === 'update_values_currency_list') {
-          WidgetUtils.sendWidgetData('currency_list');
-        }
-      } else if (eventReceived.navigateTo) {
-        //IF implementation needed in the future
-        const {navigateTo: route} = eventReceived;
-        navigation.navigate(route);
-      } else if (eventReceived.configureWidgets) {
-        const {configureWidgets} = eventReceived;
-        setShowWidgetConfiguration(Boolean(configureWidgets));
-      }
-    }
-    return () => {
-      eventListener.remove();
-    };
-  }, [eventReceived]);
 
   useEffect(() => {
     // Stop the page refreshing after all is fetched
@@ -313,21 +269,7 @@ const Main = ({
           ) {
             restartHASSockets();
           }
-          // Also check for any pending widget command when app becomes active
-          try {
-            if (
-              Platform.OS === 'android' &&
-              NativeModules.WidgetBridge?.readAndClearPendingCommand
-            ) {
-              NativeModules.WidgetBridge.readAndClearPendingCommand().then(
-                (pending: any) => {
-                  if (pending && Object.values(pending).length >= 1) {
-                    setEventReceived(pending);
-                  }
-                },
-              );
-            }
-          } catch (e) {}
+          readPendingWidgetCommand();
         }
 
         appState.current = nextAppState;
@@ -336,7 +278,7 @@ const Main = ({
       return () => {
         state.remove();
       };
-    }, [hive_authentication_service.instances]),
+    }, [hive_authentication_service.instances, readPendingWidgetCommand]),
   );
 
   const initCheckVestingRoutes = async () => {

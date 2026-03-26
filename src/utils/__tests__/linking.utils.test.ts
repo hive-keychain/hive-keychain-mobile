@@ -86,10 +86,17 @@ describe('linking.utils', () => {
       expect(store.dispatch).toHaveBeenCalled();
     });
 
+    it('should ignore malformed HAS auth payloads', async () => {
+      await handleUrl(`${HASConfig.auth_req}not-base64`, false);
+
+      expect(treatHASRequest).not.toHaveBeenCalled();
+      expect(store.dispatch).not.toHaveBeenCalled();
+    });
+
     it('should handle hive://sign URL', async () => {
       const mockDecoded = {operation: 'transfer'};
       (hiveUri.decode as jest.Mock).mockReturnValue(mockDecoded);
-      const url = 'hive://sign/transfer/testdata';
+      const url = 'hive://sign/op/testdata';
 
       await handleUrl(url, false);
 
@@ -156,6 +163,13 @@ describe('linking.utils', () => {
 
       expect(validateFromObject).toHaveBeenCalledWith(accountData);
       expect(store.dispatch).toHaveBeenCalled();
+    });
+
+    it('should ignore malformed add account payloads', async () => {
+      await handleAddAccountQR('keychain://add_account=not-json', true, false);
+
+      expect(store.dispatch).not.toHaveBeenCalled();
+      expect(validateFromObject).not.toHaveBeenCalled();
     });
   });
 
