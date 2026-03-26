@@ -993,6 +993,7 @@
       "data": "Data",
       "pair_id": "Pair ID",
       "hidden_data": "Click to show",
+      "hide_data": "Click to hide",
       "to": "To",
       "amount": "Amount",
       "memo": "Memo",

@@ -65,9 +65,9 @@ export default ({
         },
         {
           title: 'request.item.message',
-          value: beautifyIfJSON(
-            message.length > 500 ? message.substring(0, 500) + ' ...' : message,
-          ),
+          value: beautifyIfJSON(message),
+          hidden: translate('request.item.hidden_data'),
+          tag: ConfirmationDataTag.COLLAPSIBLE,
         },
       ]}
       performOperation={async () => {

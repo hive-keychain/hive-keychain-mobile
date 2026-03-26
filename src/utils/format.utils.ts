@@ -178,8 +178,17 @@ export const getOrdinalLabelTranslation = (active_rank: string) => {
 };
 
 export const beautifyIfJSON = (message: any) => {
+  const formatJSON = (value: unknown) => JSON.stringify(value, null, 2);
+
   try {
-    return JSON.stringify(JSON.parse(message), null, 1);
+    const parsedMessage =
+      typeof message === 'string' ? JSON.parse(message) : message;
+
+    if (typeof parsedMessage === 'string') {
+      return formatJSON(JSON.parse(parsedMessage));
+    }
+
+    return formatJSON(parsedMessage);
   } catch (e) {
     return message;
   }

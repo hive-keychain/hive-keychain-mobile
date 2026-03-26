@@ -972,6 +972,7 @@
       "weight": "Verhältnis",
       "data": "Daten",
       "hidden_data": "Klicken zum Anzeigen",
+      "hide_data": "Klicken zum Ausblenden",
       "to": "An",
       "amount": "Betrag",
       "memo": "Memo",

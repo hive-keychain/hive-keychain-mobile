@@ -972,6 +972,7 @@
       "weight": "Bobot",
       "data": "Data",
       "hidden_data": "Klik untuk menampilkan",
+      "hide_data": "Klik untuk menyembunyikan",
       "to": "Untuk",
       "amount": "Jumlah",
       "memo": "memo",

@@ -1,0 +1,16 @@
+---
+description: Core repo rules for Hive Keychain Mobile
+alwaysApply: true
+---
+
+# Core Repo Rules
+
+- Make the smallest safe change that solves the user's request.
+- Do not add adjacent features, speculative abstractions, or dependency churn.
+- Follow the existing Expo + React Native + Redux structure under `src/`.
+- Keep Redux patterns consistent: action constants in `src/actions/types.ts`, named thunk exports, default-export reducers registered in `src/reducers/index.ts`.
+- Reuse the repo's alias imports from `tsconfig.json` and `babel.config.js`.
+- Match existing naming patterns such as `use*.ts`, `*.utils.ts`, and `*.test.ts(x)`.
+- Prefer typed Redux hooks from `src/hooks/redux.ts`.
+- Add or update tests for behavior changes when feasible.
+- Keep comments focused on why a boundary exists, not what the code already says.

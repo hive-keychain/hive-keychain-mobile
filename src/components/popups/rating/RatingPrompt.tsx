@@ -1,4 +1,4 @@
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
@@ -79,8 +79,9 @@ const RatingPrompt = ({
               {translate('popup.rating.negative')}
             </Text>
           </View>
-          <ActiveOperationButton
+          <EllipticButton
             isLoading={false}
+            isWarningButton
             style={{width: 160}}
             title={translate('popup.rating.positive')}
             onPress={async () => {
