@@ -116,6 +116,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@expo/config-plugins": "^10.1.2",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^12.9.0",
     "@types/crypto-js": "^4.2.2",
