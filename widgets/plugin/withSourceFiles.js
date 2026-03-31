@@ -1,4 +1,4 @@
-const {AndroidConfig, withDangerousMod} = require('@expo/config-plugins');
+const {AndroidConfig, withDangerousMod} = require('expo/config-plugins');
 const fs = require('fs-extra');
 const path = require('path');
 
