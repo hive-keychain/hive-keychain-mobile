@@ -11,7 +11,7 @@ import {TransferOperationProps} from 'components/operations/transfer/Transfer';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import SquareButton from 'components/ui/SquareButton';
 import React from 'react';
-import {useWindowDimensions} from 'react-native';
+import {Platform, useWindowDimensions} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enum';
 import {getButtonStyle} from 'src/styles/button';
@@ -74,30 +74,34 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
       }
       primaryLabel={translate('wallet.operations.powerup.title')}
     />,
-    <SquareButton
-      additionalButtonContainerStyle={styles.buttonContainer}
-      additionalSquareButtonText={styles.buttonText}
-      key={'square-button-convert-hive'}
-      onPress={() => {
-        navigate('Operation', {
-          operation: 'convert',
-          props: {
-            currency: getCurrency('HIVE'),
-          } as ConvertOperationProps,
-        });
-      }}
-      icon={
-        <Icon
-          theme={theme}
-          name={Icons.CONVERT}
-          additionalContainerStyle={styles.buttonMarginRight}
-          width={25}
-          height={25}
-          color={PRIMARY_RED_COLOR}
-        />
-      }
-      primaryLabel={translate('wallet.operations.convert.button')}
-    />,
+    ...(Platform.OS !== 'ios'
+      ? [
+          <SquareButton
+            additionalButtonContainerStyle={styles.buttonContainer}
+            additionalSquareButtonText={styles.buttonText}
+            key={'square-button-convert-hive'}
+            onPress={() => {
+              navigate('Operation', {
+                operation: 'convert',
+                props: {
+                  currency: getCurrency('HIVE'),
+                } as ConvertOperationProps,
+              });
+            }}
+            icon={
+              <Icon
+                theme={theme}
+                name={Icons.CONVERT}
+                additionalContainerStyle={styles.buttonMarginRight}
+                width={25}
+                height={25}
+                color={PRIMARY_RED_COLOR}
+              />
+            }
+            primaryLabel={translate('wallet.operations.convert.button')}
+          />,
+        ]
+      : []),
     <SquareButton
       additionalButtonContainerStyle={styles.buttonContainer}
       additionalSquareButtonText={styles.buttonText}
