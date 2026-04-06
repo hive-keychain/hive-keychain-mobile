@@ -7,13 +7,14 @@ import HASInfo from 'components/hive_authentication_service/Info';
 import CustomModal from 'components/modals/CustomModal';
 import EnableIosBiometrics from 'components/modals/EnableIosBiometrics';
 import {ModalNavigationProps} from 'navigators/Root.types';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   LayoutChangeEvent,
   StatusBar,
   StyleProp,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
 import {ModalComponent} from 'src/enums/modal.enum';
@@ -34,8 +35,13 @@ export default ({navigation, route}: ModalNavigationProps) => {
   const [operationModalHeight, setOperationModalHeight] = useState<
     number | undefined
   >(undefined);
+  const {width, height} = useWindowDimensions();
   const shouldLockOperationHeight =
     !!name && name.toLowerCase().includes('operation');
+
+  useEffect(() => {
+    setOperationModalHeight(undefined);
+  }, [width, height]);
 
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
