@@ -120,7 +120,7 @@ const ProposalReminder = ({
             }}
             onPress={() => {
               addTab(`https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`);
-              navigate('Browser');
+              goBack();
             }}>
             here
           </Text>
