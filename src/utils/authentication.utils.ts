@@ -7,6 +7,19 @@ const PIN_PEPPER =
 
 const getPepper = () => PIN_PEPPER;
 
+export enum PinVerificationStatus {
+  MATCHED_PEPPERED = 'MATCHED_PEPPERED',
+  MATCHED_LEGACY_UNPEPPERED = 'MATCHED_LEGACY_UNPEPPERED',
+  MISSING_SECRETS = 'MISSING_SECRETS',
+  MISMATCH = 'MISMATCH',
+}
+
+export interface PinVerificationResult {
+  status: PinVerificationStatus;
+  isValid: boolean;
+  shouldMigrateToPeppered: boolean;
+}
+
 const generateSalt = () =>
   CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
 
@@ -33,7 +46,9 @@ const persistPinSecret = async (pin: string) => {
   return {salt, hash};
 };
 
-const verifyPin = async (pin: string): Promise<boolean> => {
+const verifyPinWithCompatibility = async (
+  pin: string,
+): Promise<PinVerificationResult> => {
   const [salt, storedHash] = await Promise.all([
     SecureStoreUtils.getFromSecureStore(
       KeychainStorageKeyEnum.PIN_SALT,
@@ -46,11 +61,45 @@ const verifyPin = async (pin: string): Promise<boolean> => {
   ]);
 
   if (!salt || !storedHash) {
-    return false;
+    return {
+      status: PinVerificationStatus.MISSING_SECRETS,
+      isValid: false,
+      shouldMigrateToPeppered: false,
+    };
   }
 
-  const computed = hashPin(pin, salt, getPepper());
-  return storedHash === computed;
+  const pepper = getPepper();
+  const pepperedHash = hashPin(pin, salt, pepper);
+
+  if (storedHash === pepperedHash) {
+    return {
+      status: PinVerificationStatus.MATCHED_PEPPERED,
+      isValid: true,
+      shouldMigrateToPeppered: false,
+    };
+  }
+
+  if (pepper !== '') {
+    const unpepperedHash = hashPin(pin, salt, '');
+    if (storedHash === unpepperedHash) {
+      return {
+        status: PinVerificationStatus.MATCHED_LEGACY_UNPEPPERED,
+        isValid: true,
+        shouldMigrateToPeppered: true,
+      };
+    }
+  }
+
+  return {
+    status: PinVerificationStatus.MISMATCH,
+    isValid: false,
+    shouldMigrateToPeppered: false,
+  };
+};
+
+const verifyPin = async (pin: string): Promise<boolean> => {
+  const result = await verifyPinWithCompatibility(pin);
+  return result.isValid;
 };
 
 const ensurePinSecrets = async (pin: string) => {
@@ -125,6 +174,7 @@ export const AuthUtils = {
   persistMasterKey,
   persistPinSecret,
   verifyPin,
+  verifyPinWithCompatibility,
 };
 
 export default AuthUtils;

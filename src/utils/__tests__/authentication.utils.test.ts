@@ -1,5 +1,5 @@
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
-import AuthUtils from '../authentication.utils';
+import AuthUtils, {PinVerificationStatus} from '../authentication.utils';
 import SecureStoreUtils from '../storage/secureStore.utils';
 
 jest.mock('../storage/secureStore.utils', () => ({
@@ -91,6 +91,88 @@ describe('authentication.utils', () => {
       );
 
       await expect(AuthUtils.verifyPin('4242')).resolves.toBe(true);
+    });
+  });
+
+  describe('verifyPinWithCompatibility', () => {
+    it('returns missing secrets when salt or hash is missing', async () => {
+      (SecureStoreUtils.getFromSecureStore as jest.Mock).mockImplementation(
+        (key: string) =>
+          key === KeychainStorageKeyEnum.PIN_SALT
+            ? Promise.resolve(null)
+            : Promise.resolve('hash'),
+      );
+
+      await expect(AuthUtils.verifyPinWithCompatibility('1')).resolves.toEqual({
+        status: PinVerificationStatus.MISSING_SECRETS,
+        isValid: false,
+        shouldMigrateToPeppered: false,
+      });
+    });
+
+    it('returns peppered match when current pepper hash matches', async () => {
+      const salt = 'peppered-salt';
+      const hash = AuthUtils.hashPin('4242', salt, pepper());
+      (SecureStoreUtils.getFromSecureStore as jest.Mock).mockImplementation(
+        (key: string) =>
+          key === KeychainStorageKeyEnum.PIN_SALT
+            ? Promise.resolve(salt)
+            : Promise.resolve(hash),
+      );
+
+      await expect(
+        AuthUtils.verifyPinWithCompatibility('4242'),
+      ).resolves.toEqual({
+        status: PinVerificationStatus.MATCHED_PEPPERED,
+        isValid: true,
+        shouldMigrateToPeppered: false,
+      });
+    });
+
+    it('accepts legacy unpeppered hash and signals migration when pepper exists', async () => {
+      const salt = 'legacy-salt';
+      const hash = AuthUtils.hashPin('4242', salt, '');
+      (SecureStoreUtils.getFromSecureStore as jest.Mock).mockImplementation(
+        (key: string) =>
+          key === KeychainStorageKeyEnum.PIN_SALT
+            ? Promise.resolve(salt)
+            : Promise.resolve(hash),
+      );
+
+      const expectedWithPepper = pepper()
+        ? {
+            status: PinVerificationStatus.MATCHED_LEGACY_UNPEPPERED,
+            isValid: true,
+            shouldMigrateToPeppered: true,
+          }
+        : {
+            status: PinVerificationStatus.MATCHED_PEPPERED,
+            isValid: true,
+            shouldMigrateToPeppered: false,
+          };
+
+      await expect(
+        AuthUtils.verifyPinWithCompatibility('4242'),
+      ).resolves.toEqual(expectedWithPepper);
+    });
+
+    it('returns mismatch when neither peppered nor legacy hash matches', async () => {
+      const salt = 'mismatch-salt';
+      const hash = AuthUtils.hashPin('9999', salt, '');
+      (SecureStoreUtils.getFromSecureStore as jest.Mock).mockImplementation(
+        (key: string) =>
+          key === KeychainStorageKeyEnum.PIN_SALT
+            ? Promise.resolve(salt)
+            : Promise.resolve(hash),
+      );
+
+      await expect(
+        AuthUtils.verifyPinWithCompatibility('4242'),
+      ).resolves.toEqual({
+        status: PinVerificationStatus.MISMATCH,
+        isValid: false,
+        shouldMigrateToPeppered: false,
+      });
     });
   });
 
