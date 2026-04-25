@@ -48,15 +48,19 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
     this.theme = props.theme;
   }
   render() {
-    let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
+    const {height, width} = Dimensions.get('window');
+    const fixedHeight = this.props.fixedHeight;
+    const theme = this.props.theme;
+    const modalHeight = this.props.bottomHalf ? height / 2 : height;
 
     let styles = StyleSheetFactory.getSheet({
-      modalHeight: modalHeight,
-      height: this.height,
-      width: this.width,
-      fixedHeight: this.fixedHeight,
+      modalHeight,
+      height,
+      width,
+      fixedHeight,
       modalPosition: this.props.modalPosition,
-      theme: this.theme,
+      theme,
+      bottomHalf: this.props.bottomHalf,
     });
     return (
       <KeyboardAvoidingView
@@ -97,10 +101,12 @@ class StyleSheetFactory {
     fixedHeight,
     modalPosition,
     theme,
+    bottomHalf,
   }: Dim & {
     modalHeight: number;
     fixedHeight: number;
     theme: Theme;
+    bottomHalf: boolean;
   } & {modalPosition: ModalPosition}) {
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
@@ -115,8 +121,14 @@ class StyleSheetFactory {
         right: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: modalHeight,
-        maxHeight: 0.95 * height,
+        ...(bottomHalf
+          ? {
+              minHeight: modalHeight,
+              maxHeight: 0.95 * height,
+            }
+          : {
+              height: 0.95 * height,
+            }),
       },
       modalWrapperFixed: {
         position: 'absolute',

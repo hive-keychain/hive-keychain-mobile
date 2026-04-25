@@ -11,7 +11,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
@@ -36,6 +36,7 @@ export default ({
   additionalContentStyle,
 }: Props) => {
   const {theme} = useThemeContext();
+  const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
 
   return (
@@ -43,6 +44,8 @@ export default ({
       style={{
         justifyContent: 'space-between',
         flex: 1,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
       }}>
       <FocusAwareStatusBar />
       <View style={[styles.header, additionalHeaderContainerStyle]}>
@@ -54,9 +57,10 @@ export default ({
         />
       </View>
       <ScrollView
+        style={styles.contentScroll}
         contentContainerStyle={[additionalContentStyle, {flexGrow: 1}]}>
         {children}
-        <Separator height={initialWindowMetrics.insets.bottom} />
+        <Separator height={insets.bottom} />
       </ScrollView>
     </View>
   );
@@ -85,4 +89,5 @@ const getStyles = (theme: Theme) =>
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
     },
+    contentScroll: {flex: 1},
   });

@@ -40,6 +40,7 @@ jest.mock('utils/authentication.utils', () => ({
   persistMasterKey: jest.fn(),
   persistPinSecret: jest.fn(),
   verifyPin: jest.fn(),
+  verifyPinWithCompatibility: jest.fn(),
 }));
 
 jest.mock('src/background', () => ({
@@ -287,7 +288,10 @@ describe('actions/index', () => {
     beforeEach(() => {
       (LockoutUtils.checkActiveLockout as jest.Mock).mockResolvedValue(false);
       (StorageUtils.getAccountStorageVersion as jest.Mock).mockResolvedValue(3);
-      (AuthUtils.verifyPin as jest.Mock).mockResolvedValue(true);
+      (AuthUtils.verifyPinWithCompatibility as jest.Mock).mockResolvedValue({
+        isValid: true,
+        shouldMigrateToPeppered: false,
+      });
       (AuthUtils.ensureMasterKey as jest.Mock).mockResolvedValue(
         'generated-master-key',
       );
@@ -297,17 +301,38 @@ describe('actions/index', () => {
       const unlockSpy = jest.spyOn(actions, 'unlock');
       const thunk = actions.unlockWithPin('123456');
       await thunk(mockDispatch);
-      expect(AuthUtils.verifyPin).toHaveBeenCalledWith('123456');
+      expect(AuthUtils.verifyPinWithCompatibility).toHaveBeenCalledWith('123456');
+      expect(AuthUtils.persistPinSecret).not.toHaveBeenCalled();
       expect(mockDispatch).toHaveBeenCalled();
       expect(unlockSpy).toHaveBeenCalled();
       unlockSpy.mockRestore();
     });
 
+    it('should migrate PIN hash when a legacy unpeppered hash matches', async () => {
+      (AuthUtils.verifyPinWithCompatibility as jest.Mock).mockResolvedValue({
+        isValid: true,
+        shouldMigrateToPeppered: true,
+      });
+
+      const unlockSpy = jest.spyOn(actions, 'unlock');
+      const thunk = actions.unlockWithPin('123456');
+      await thunk(mockDispatch);
+
+      expect(AuthUtils.verifyPinWithCompatibility).toHaveBeenCalledWith('123456');
+      expect(AuthUtils.persistPinSecret).toHaveBeenCalledWith('123456');
+      expect(unlockSpy).toHaveBeenCalled();
+      unlockSpy.mockRestore();
+    });
+
     it('should record failure on invalid PIN', async () => {
-      (AuthUtils.verifyPin as jest.Mock).mockResolvedValue(false);
+      (AuthUtils.verifyPinWithCompatibility as jest.Mock).mockResolvedValue({
+        isValid: false,
+        shouldMigrateToPeppered: false,
+      });
       const thunk = actions.unlockWithPin('badpin');
       await thunk(mockDispatch);
       expect(LockoutUtils.recordFailure).toHaveBeenCalled();
+      expect(AuthUtils.persistPinSecret).not.toHaveBeenCalled();
     });
 
     it('should call errorCallback when lockout is active', async () => {
@@ -315,7 +340,7 @@ describe('actions/index', () => {
       const cb = jest.fn();
       await actions.unlockWithPin('1', cb)(mockDispatch);
       expect(cb).toHaveBeenCalled();
-      expect(AuthUtils.verifyPin).not.toHaveBeenCalled();
+      expect(AuthUtils.verifyPinWithCompatibility).not.toHaveBeenCalled();
     });
 
     it('migrates legacy accounts when storage version is below 3', async () => {
