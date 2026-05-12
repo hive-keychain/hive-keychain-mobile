@@ -49,6 +49,13 @@ jest.mock('react-native-keychain', () => ({
   resetGenericPassword: jest.fn(),
 }));
 
+jest.mock('@react-native-cookies/cookies', () => ({
+  __esModule: true,
+  default: {
+    clearAll: jest.fn(() => Promise.resolve(true)),
+  },
+}));
+
 // -----------------------------------------
 // expo-device (FIX for requireNativeModule error)
 // -----------------------------------------

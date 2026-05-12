@@ -1,4 +1,5 @@
 import MaterialIcon from '@expo/vector-icons/MaterialIcons';
+import CookieManager from '@react-native-cookies/cookies';
 import {showFloatingBar} from 'actions/floatingBar';
 import {
   addTab,
@@ -9,6 +10,7 @@ import {
 } from 'actions/index';
 import {Tab} from 'actions/interfaces';
 import FindInPageModal from 'components/browser/FindInPageModal';
+import {CLEAR_WEBVIEW_SITE_DATA_SCRIPT} from 'components/browser/bridges/ClearWebViewSiteData';
 import {
   FIND_IN_PAGE_CLEAR,
   FIND_IN_PAGE_NEXT,
@@ -135,6 +137,29 @@ const BottomNavigation = ({
       }
     };
   }, [setCloseFindInPage]);
+
+  const clearActiveWebViewCache = () => {
+    const webView = webViewRef.current;
+    if (!webView) return;
+
+    try {
+      webView.injectJavaScript(CLEAR_WEBVIEW_SITE_DATA_SCRIPT);
+    } catch (error) {}
+
+    setTimeout(async () => {
+      try {
+        webView.clearCache?.(true);
+      } catch (error) {}
+
+      try {
+        await CookieManager.clearAll(true);
+      } catch (error) {}
+
+      try {
+        webView.reload();
+      } catch (error) {}
+    }, 750);
+  };
 
   const onHandlePressButton = (link: BottomBarLink) => {
     let screen = '';
@@ -313,10 +338,7 @@ const BottomNavigation = ({
                   <TouchableOpacity
                     style={styles.menuItem}
                     onPress={() => {
-                      if (webViewRef.current) {
-                        webViewRef.current.clearCache(true);
-                        webViewRef.current.reload();
-                      }
+                      clearActiveWebViewCache();
                       setShowContextMenu(false);
                     }}>
                     <View style={styles.menuIconContainer}>
