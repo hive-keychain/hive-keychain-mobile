@@ -43,12 +43,6 @@ jest.mock('react-native-root-toast', () => ({
   hide: jest.fn(),
 }));
 
-jest.mock('react-native-keychain', () => ({
-  setGenericPassword: jest.fn(),
-  getGenericPassword: jest.fn(),
-  resetGenericPassword: jest.fn(),
-}));
-
 jest.mock('@react-native-cookies/cookies', () => ({
   __esModule: true,
   default: {

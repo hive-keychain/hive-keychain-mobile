@@ -5,11 +5,9 @@ import {Platform} from 'react-native';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {ModalComponent} from 'src/enums/modal.enum';
 import AuthUtils from 'utils/authentication.utils';
-import {decryptToJson} from 'utils/encrypt.utils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation.utils';
 import {EncryptedStorageUtils} from './encryptedStorage.utils';
-import {clearKeychain, getFromKeychain} from './keychainStorage.utils';
 import SecureStoreUtils from './secureStore.utils';
 
 const ACCOUNT_STORAGE_TARGET_VERSION = 3;
@@ -37,14 +35,9 @@ const getAccounts = async (mk: string) => {
     );
   }
 
-  const accountsEncrypted = await getFromKeychain('accounts');
-  await AsyncStorage.multiSet([
-    [KeychainStorageKeyEnum.ACCOUNT_STORAGE_VERSION, '2'],
-    [KeychainStorageKeyEnum.ACCOUNTS, accountsEncrypted],
-  ]);
-  await clearKeychain('accounts');
-  await requireBiometricsLogin(mk, 'encryption.save');
-  return decryptToJson(accountsEncrypted, mk);
+  // Pre-v2 accounts required React Native Keychain's Facebook Conceal backend.
+  // That native library is no longer shipped because it is not 16 KB page safe.
+  return null;
 };
 
 const requireBiometricsLogin = async (mk: string, title: string) => {
