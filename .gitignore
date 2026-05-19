@@ -49,6 +49,6 @@ eas.json
 gplay-account.json
 
 #building
-builds
+builds*
 keychain*.zip
 coverage

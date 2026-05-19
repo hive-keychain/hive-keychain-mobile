@@ -1,18 +1,18 @@
 import {
+  BrowserConfig,
   ClaimsConfig,
   HASConfig,
-  hiveEngineWebsiteURL,
-  tutorialBaseUrl,
-  hiveEngine,
   hiveConfig,
-  TransakConfig,
-  BrowserConfig,
+  hiveEngine,
+  hiveEngineWebsiteURL,
   KeychainConfig,
   MultisigConfig,
-  WitnessesConfig,
-  SwapsConfig,
-  ProposalConfig,
   PeakdNotificationsConfig,
+  ProposalConfig,
+  SwapsConfig,
+  TransakConfig,
+  tutorialBaseUrl,
+  WitnessesConfig,
 } from '../config.utils';
 
 describe('config.utils', () => {
@@ -173,7 +173,7 @@ describe('config.utils', () => {
 
   describe('ProposalConfig', () => {
     it('should have KEYCHAIN_PROPOSAL', () => {
-      expect(ProposalConfig.KEYCHAIN_PROPOSAL).toBe(341);
+      expect(ProposalConfig.KEYCHAIN_PROPOSAL).toBe(373);
       expect(typeof ProposalConfig.KEYCHAIN_PROPOSAL).toBe('number');
     });
 

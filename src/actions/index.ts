@@ -93,8 +93,8 @@ export const unlockWithPin =
       const version = await StorageUtils.getAccountStorageVersion();
 
       if (version >= 3) {
-        const isValid = await AuthUtils.verifyPin(pin);
-        if (!isValid) {
+        const pinVerification = await AuthUtils.verifyPinWithCompatibility(pin);
+        if (!pinVerification.isValid) {
           Toast.show(translate('toast.authFailed'), {
             duration: Toast.durations.LONG,
           });
@@ -102,6 +102,11 @@ export const unlockWithPin =
           errorCallback?.();
           return;
         }
+
+        if (pinVerification.shouldMigrateToPeppered) {
+          await AuthUtils.persistPinSecret(pin);
+        }
+
         const masterKey = await AuthUtils.ensureMasterKey();
         await dispatch(unlock(masterKey, errorCallback));
         return;

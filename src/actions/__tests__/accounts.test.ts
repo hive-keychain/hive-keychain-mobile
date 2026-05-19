@@ -15,6 +15,13 @@ jest.mock('utils/storage/encryptedStorage.utils', () => ({
   },
 }));
 
+jest.mock('utils/storage/secureStore.utils', () => ({
+  __esModule: true,
+  default: {
+    clearSecureStore: jest.fn(),
+  },
+}));
+
 jest.mock('utils/storage/storage.utils', () => ({
   __esModule: true,
   default: {
@@ -72,6 +79,7 @@ import Toast from 'react-native-root-toast';
 import {getClient} from 'utils/hiveLibs.utils';
 import {goBack, navigate, resetStackAndNavigate} from 'utils/navigation.utils';
 import {EncryptedStorageUtils} from 'utils/storage/encryptedStorage.utils';
+import SecureStoreUtils from 'utils/storage/secureStore.utils';
 import StorageUtils from 'utils/storage/storage.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 
@@ -213,6 +221,7 @@ describe('accounts actions', () => {
       await thunk(mockDispatch, mockGetState, undefined);
       expect(mockDispatch).toHaveBeenCalled();
       expect(EncryptedStorageUtils.clearEncryptedStorage).toHaveBeenCalled();
+      expect(SecureStoreUtils.clearSecureStore).toHaveBeenCalled();
       expect(WidgetUtils.clearAccountBalanceList).toHaveBeenCalled();
     });
   });
