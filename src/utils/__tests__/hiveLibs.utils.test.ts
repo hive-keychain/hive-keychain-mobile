@@ -17,6 +17,9 @@ jest.mock('@hiveio/dhive', () => ({
 }));
 
 jest.mock('utils/config.utils', () => ({
+  HiveRpcConfig: {
+    REQUEST_TIMEOUT_MS: 5000,
+  },
   hiveEngine: {
     CHAIN_ID: 'ssc-mainnet-hive',
   },
@@ -114,9 +117,13 @@ describe('hiveLibs.utils', () => {
 
   describe('setRpc', () => {
     it('should set RPC with string', async () => {
+      const {Client} = require('@hiveio/dhive');
       await setRpc('https://api.hive.blog');
       const client = getClient();
       expect(client).toBeDefined();
+      expect(Client).toHaveBeenLastCalledWith('https://api.hive.blog', {
+        timeout: 5000,
+      });
     });
 
     it('should set RPC with Rpc object', async () => {
@@ -889,6 +896,13 @@ describe('hiveLibs.utils', () => {
       const {call} = require('hive-tx');
       call.mockResolvedValueOnce({error: 'RPC Error'});
       await expect(getData('test.method', [])).rejects.toThrow();
+    });
+
+    it('should use app RPC timeout for hive-tx calls', async () => {
+      const {call} = require('hive-tx');
+      call.mockResolvedValueOnce({result: {data: 'test'}});
+      await getData('test.method', []);
+      expect(call).toHaveBeenCalledWith('test.method', [], 5);
     });
   });
 
