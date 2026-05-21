@@ -33,7 +33,7 @@ import {
   TransactionResult,
 } from 'src/interfaces/hiveTx.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {hiveEngine} from 'utils/config.utils';
+import {HiveRpcConfig, hiveEngine} from 'utils/config.utils';
 import {
   KeychainKeyTypes,
   KeychainKeyTypesLC,
@@ -57,13 +57,16 @@ export const registerRpcFailureHandler = (handler: RpcFailureHandler) => {
 
 const DEFAULT_CHAIN_ID =
   'beeab0de00000000000000000000000000000000000000000000000000000000';
-let client = new Client('https://api.hive.blog');
+const createClient = (rpc: string) =>
+  new Client(rpc, {timeout: HiveRpcConfig.REQUEST_TIMEOUT_MS});
+const HIVE_TX_RPC_TIMEOUT = HiveRpcConfig.REQUEST_TIMEOUT_MS / 1000;
+let client = createClient('https://api.hive.blog');
 let testnet = false;
 
 export const setRpc = async (rpcObj: Rpc | string) => {
   let rpc = typeof rpcObj === 'string' ? rpcObj : rpcObj.uri;
   testnet = typeof rpcObj === 'string' ? false : rpcObj.testnet || false;
-  client = new Client(rpc);
+  client = createClient(rpc);
   hiveTx.config.node = rpc;
   if (typeof rpcObj !== 'string') {
     //@ts-ignore
@@ -700,9 +703,13 @@ const confirmTransaction = async (transactionId: string) => {
   const MAX_RETRY_COUNT = 6;
   let retryCount = 0;
   do {
-    response = await call('transaction_status_api.find_transaction', {
-      transaction_id: transactionId,
-    });
+    response = await call(
+      'transaction_status_api.find_transaction',
+      {
+        transaction_id: transactionId,
+      },
+      HIVE_TX_RPC_TIMEOUT,
+    );
     await sleep(1000);
     retryCount++;
   } while (
@@ -728,7 +735,7 @@ export const getData = async (
   key?: string,
 ) => {
   try {
-    const response = await call(method, params);
+    const response = await call(method, params, HIVE_TX_RPC_TIMEOUT);
     if (response?.result) {
       return key ? response.result[key] : response.result;
     } else {

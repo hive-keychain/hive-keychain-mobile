@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 import {Rpc} from 'actions/interfaces';
 import axios from 'axios';
+import {HiveRpcConfig} from '../config.utils';
 
 jest.mock('axios');
 
@@ -92,29 +93,50 @@ describe('rpc.utils', () => {
 
   describe('checkRpcStatus', () => {
     it('should return true for healthy RPC', async () => {
-      (axios.get as jest.Mock).mockResolvedValueOnce({data: {}});
+      (axios.post as jest.Mock).mockResolvedValueOnce({
+        data: {result: {head_block_number: 1}},
+      });
       const result = await checkRpcStatus('https://rpc.com');
       expect(result).toBe(true);
     });
 
     it('should return false for RPC with error', async () => {
-      (axios.get as jest.Mock).mockResolvedValueOnce({data: {error: true}});
+      (axios.post as jest.Mock).mockResolvedValueOnce({data: {error: true}});
+      const result = await checkRpcStatus('https://rpc.com');
+      expect(result).toBe(false);
+    });
+
+    it('should return false if RPC does not return JSON-RPC result', async () => {
+      (axios.post as jest.Mock).mockResolvedValueOnce({data: {}});
       const result = await checkRpcStatus('https://rpc.com');
       expect(result).toBe(false);
     });
 
     it('should return false on request failure', async () => {
-      (axios.get as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+      (axios.post as jest.Mock).mockRejectedValueOnce(
+        new Error('Network error'),
+      );
       const result = await checkRpcStatus('https://rpc.com');
       expect(result).toBe(false);
     });
 
     it('should use default URL for DEFAULT or api.hive.blog', async () => {
-      (axios.get as jest.Mock).mockResolvedValueOnce({data: {}});
-      await checkRpcStatus('DEFAULT');
-      expect(axios.get).toHaveBeenCalledWith('https://api.hive.blog', {
-        timeout: 10000,
+      (axios.post as jest.Mock).mockResolvedValueOnce({
+        data: {result: {head_block_number: 1}},
       });
+      await checkRpcStatus('DEFAULT');
+      expect(axios.post).toHaveBeenCalledWith(
+        'https://api.hive.blog',
+        {
+          jsonrpc: '2.0',
+          method: 'condenser_api.get_dynamic_global_properties',
+          params: [],
+          id: 1,
+        },
+        {
+          timeout: HiveRpcConfig.REQUEST_TIMEOUT_MS,
+        },
+      );
     });
   });
 });

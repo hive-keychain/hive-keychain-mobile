@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Rpc} from 'actions/interfaces';
 import axios from 'axios';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
+import {HiveRpcConfig} from './config.utils';
 
 export const getCustomRpcs = async (): Promise<Rpc[]> => {
   let customRpcs: Rpc[];
@@ -41,30 +42,28 @@ export const getRPCUri = (rpcObj: string | Rpc) => {
   return typeof rpcObj === 'object' ? rpcObj.uri : rpcObj;
 };
 
+const getRpcStatusUri = (uri: string) =>
+  ['DEFAULT', 'https://api.hive.blog'].includes(uri)
+    ? 'https://api.hive.blog'
+    : uri;
+
 export const checkRpcStatus = async (uri: string) => {
-  axios.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    (error) => {
-      throw new Error('RPC NOK' + uri);
-    },
-  );
   try {
-    const result = await axios.get(
-      ['DEFAULT', 'https://api.hive.blog'].includes(uri)
-        ? 'https://api.hive.blog'
-        : `${uri}/health`,
+    const result = await axios.post(
+      getRpcStatusUri(uri),
       {
-        timeout: 10000,
+        jsonrpc: '2.0',
+        method: 'condenser_api.get_dynamic_global_properties',
+        params: [],
+        id: 1,
+      },
+      {
+        timeout: HiveRpcConfig.REQUEST_TIMEOUT_MS,
       },
     );
-    if (result?.data?.error) {
-      return false;
-    }
-    return true;
+    return !!result?.data?.result && !result?.data?.error;
   } catch (err) {
-    console.log('Error RPC check health: ', {err});
+    console.log('Error RPC status check: ', {err});
     return false;
   }
 };

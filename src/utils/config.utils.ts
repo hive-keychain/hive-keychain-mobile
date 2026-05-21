@@ -11,6 +11,10 @@ export const hiveConfig = {
   CREATE_ACCOUNT_URL: 'https://signup.hive.io/',
 };
 
+export const HiveRpcConfig = {
+  REQUEST_TIMEOUT_MS: 5000,
+};
+
 export const HASConfig = {
   protocol: 'has://',
   auth_req: 'has://auth_req/',
