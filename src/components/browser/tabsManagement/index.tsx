@@ -18,6 +18,7 @@ import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {BORDERWHITISH, DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
+import {BrowserUtils} from 'utils/browser.utils';
 
 // Maintain the previous visual ratio: height ≈ width * 1.3
 const CARD_ASPECT_RATIO = 1 / 1.3; // width / height
@@ -47,51 +48,58 @@ export default ({
       <ScrollView>
         <Caption text="browser.switch_tabs_tip" hideSeparator />
         <View style={styles.subcontainer}>
-          {tabs.map(({icon, image, name, id}) => (
-            <TouchableOpacity
-              activeOpacity={1}
-              key={id}
-              style={[
-                getCardStyle(theme).defaultCardItem,
-                styles.tabWrapper,
-                id === activeTab ? styles.activeTab : null,
-              ]}
-              onPress={() => {
-                onSelectTab(id);
-              }}>
-              <View style={styles.titleContainer}>
-                <View style={styles.nameContainer}>
-                  <FastImageComponent style={[styles.icon]} source={icon} />
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      styles.textBase,
-                      styles.name,
-                      styles.contrastColor,
-                      {marginBottom: -4},
-                    ]}>
-                    {name}
-                  </Text>
+          {tabs.map(({icon, image, name, id}) => {
+            const previewUri = BrowserUtils.resolveTabPreviewUri(image);
+            return (
+              <TouchableOpacity
+                activeOpacity={1}
+                key={id}
+                style={[
+                  getCardStyle(theme).defaultCardItem,
+                  styles.tabWrapper,
+                  id === activeTab ? styles.activeTab : null,
+                ]}
+                onPress={() => {
+                  onSelectTab(id);
+                }}>
+                <View style={styles.titleContainer}>
+                  <View style={styles.nameContainer}>
+                    <FastImageComponent style={[styles.icon]} source={icon} />
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        styles.textBase,
+                        styles.name,
+                        styles.contrastColor,
+                        {marginBottom: -4},
+                      ]}>
+                      {name}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    style={styles.closeIconContainer}
+                    onPress={() => {
+                      onCloseTab(id);
+                    }}>
+                    <Icon
+                      name="close"
+                      style={[styles.closeIcon, styles.contrastColor]}
+                    />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  style={styles.closeIconContainer}
-                  onPress={() => {
-                    onCloseTab(id);
-                  }}>
-                  <Icon
-                    name="close"
-                    style={[styles.closeIcon, styles.contrastColor]}
+                {previewUri ? (
+                  <Image
+                    style={styles.screenshot}
+                    source={{uri: previewUri}}
+                    contentFit="cover"
                   />
-                </TouchableOpacity>
-              </View>
-              <Image
-                style={styles.screenshot}
-                source={{uri: image}}
-                contentFit="cover"
-              />
-            </TouchableOpacity>
-          ))}
+                ) : (
+                  <View style={styles.screenshot} />
+                )}
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </ScrollView>
     </View>

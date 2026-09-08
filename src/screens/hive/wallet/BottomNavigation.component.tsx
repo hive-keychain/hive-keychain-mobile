@@ -247,7 +247,7 @@ const BottomNavigation = ({
   ) => {
     if (!isManagingTab) {
       const {id, url, icon} = tab;
-      const uri = await BrowserUtils.captureTab(view);
+      const uri = await BrowserUtils.captureTab(view, id);
       updateTab(id, {id, url, icon, image: uri});
       addTab(newUrl);
     } else {
@@ -284,7 +284,7 @@ const BottomNavigation = ({
             browser.tabs,
             browser.activeTab,
           );
-          const uri = await BrowserUtils.captureTab(tabViewRef);
+          const uri = await BrowserUtils.captureTab(tabViewRef, id);
           updateTab(id, {id, url, icon, image: uri, name});
           showManagementScreen(true);
         }}

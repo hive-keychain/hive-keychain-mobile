@@ -1,9 +1,19 @@
+import * as FileSystem from 'expo-file-system/legacy';
+import {captureRef} from 'react-native-view-shot';
 import {
   BrowserUtils,
   getAllowedBrowserNavigationUrl,
   isInsecureBrowserUrl,
   urlTransformer,
 } from '../browser.utils';
+
+jest.mock('expo-file-system/legacy', () => ({
+  documentDirectory: 'file:///docs/',
+  getInfoAsync: jest.fn(async () => ({exists: false})),
+  makeDirectoryAsync: jest.fn(async () => undefined),
+  copyAsync: jest.fn(async () => undefined),
+  deleteAsync: jest.fn(async () => undefined),
+}));
 
 describe('browser.utils', () => {
   describe('urlTransformer', () => {
@@ -109,6 +119,76 @@ describe('browser.utils', () => {
     it('should handle empty array', () => {
       const result = BrowserUtils.findTabById([], 1);
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe('tab previews', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      (FileSystem.getInfoAsync as jest.Mock).mockResolvedValue({exists: false});
+    });
+
+    it('persists a capture to the documents directory and returns a relative key', async () => {
+      const result = await BrowserUtils.captureTab({current: {}}, 123);
+
+      expect(captureRef).toHaveBeenCalledWith(
+        {},
+        {format: 'jpg', quality: 0.2},
+      );
+      expect(FileSystem.makeDirectoryAsync).toHaveBeenCalledWith(
+        'file:///docs/tab-previews',
+        {intermediates: true},
+      );
+      expect(FileSystem.deleteAsync).toHaveBeenCalledWith(
+        'file:///docs/tab-previews/123.jpg',
+        {idempotent: true},
+      );
+      expect(FileSystem.copyAsync).toHaveBeenCalledWith({
+        from: 'mock-uri',
+        to: 'file:///docs/tab-previews/123.jpg',
+      });
+      expect(result).toBe('tab-previews/123.jpg');
+    });
+
+    it('does not recreate the preview directory when it already exists', async () => {
+      (FileSystem.getInfoAsync as jest.Mock).mockResolvedValue({exists: true});
+
+      await BrowserUtils.captureTab({current: {}}, 1);
+
+      expect(FileSystem.makeDirectoryAsync).not.toHaveBeenCalled();
+    });
+
+    it('resolves relative preview keys against documentDirectory', () => {
+      expect(BrowserUtils.resolveTabPreviewUri('tab-previews/1.jpg')).toBe(
+        'file:///docs/tab-previews/1.jpg',
+      );
+    });
+
+    it('ignores legacy tmpfile preview URIs', () => {
+      expect(
+        BrowserUtils.resolveTabPreviewUri(
+          'file:///tmp/ReactNative-snapshot-image123.jpg',
+        ),
+      ).toBeUndefined();
+      expect(BrowserUtils.resolveTabPreviewUri(undefined)).toBeUndefined();
+    });
+
+    it('deletes a single tab preview idempotently', async () => {
+      await BrowserUtils.deleteTabPreview(5);
+
+      expect(FileSystem.deleteAsync).toHaveBeenCalledWith(
+        'file:///docs/tab-previews/5.jpg',
+        {idempotent: true},
+      );
+    });
+
+    it('deletes all tab previews idempotently', async () => {
+      await BrowserUtils.deleteAllTabPreviews();
+
+      expect(FileSystem.deleteAsync).toHaveBeenCalledWith(
+        'file:///docs/tab-previews',
+        {idempotent: true},
+      );
     });
   });
 });

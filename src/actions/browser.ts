@@ -1,4 +1,5 @@
 import {AppThunk} from 'src/hooks/redux';
+import {BrowserUtils} from 'utils/browser.utils';
 import {EcosystemUtils} from 'utils/ecosystem.utils';
 import {navigate} from 'utils/navigation.utils';
 import {ActionPayload, BrowserPayload, Page, Tab} from './interfaces';
@@ -105,6 +106,7 @@ export const addTab = (url: string) => {
 };
 
 export const closeTab = (id: number) => {
+  void BrowserUtils.deleteTabPreview(id);
   const action: ActionPayload<BrowserPayload> = {
     type: CLOSE_BROWSER_TAB,
     payload: {id},
@@ -113,6 +115,7 @@ export const closeTab = (id: number) => {
 };
 
 export const closeAllTabs = () => {
+  void BrowserUtils.deleteAllTabPreviews();
   return {
     type: CLOSE_ALL_BROWSER_TABS,
   };
