@@ -85,6 +85,14 @@ jest.mock('react-native-view-shot', () => ({
   releaseCapture: jest.fn(),
 }));
 
+jest.mock('expo-file-system/legacy', () => ({
+  documentDirectory: 'file:///docs/',
+  getInfoAsync: jest.fn(async () => ({exists: false})),
+  makeDirectoryAsync: jest.fn(async () => undefined),
+  copyAsync: jest.fn(async () => undefined),
+  deleteAsync: jest.fn(async () => undefined),
+}));
+
 // -----------------------------------------
 // Firebase
 // -----------------------------------------
