@@ -50,6 +50,9 @@ export default ({
   const renderCustomInput = () => (
     <CustomInput
       {...props}
+      autoComplete={autoComplete}
+      autoCapitalize={autoCapitalize}
+      autoCorrect={autoCorrect}
       containerStyle={styles.container}
       additionalInputContainerStyle={props.additionalInputContainerStyle}
       inputColor={getColors(theme).secondaryText}
