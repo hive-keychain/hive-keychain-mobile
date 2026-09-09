@@ -136,6 +136,8 @@ jest.mock(
     default: {
       expoConfig: {
         version: '2.10.1',
+        android: {package: 'com.test.app'},
+        ios: {bundleIdentifier: 'com.test.app'},
       },
     },
   }),

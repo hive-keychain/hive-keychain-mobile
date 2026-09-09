@@ -1,7 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as StoreReview from 'expo-store-review';
-import {Linking} from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import {RatingsUtils} from '../ratings.utils';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 
@@ -19,10 +17,6 @@ jest.mock('react-native', () => ({
     OS: 'ios',
   },
 }));
-jest.mock('react-native-device-info', () => ({
-  getBundleId: jest.fn(() => 'com.test.app'),
-  getFirstInstallTime: jest.fn(() => Promise.resolve(Date.now() - 35 * 24 * 60 * 60 * 1000)),
-}));
 
 global.fetch = jest.fn();
 
@@ -34,14 +28,16 @@ describe('RatingsUtils', () => {
   describe('seedInstallTimeIfMissing', () => {
     it('should seed install time if missing', async () => {
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
-      (DeviceInfo.getFirstInstallTime as jest.Mock).mockResolvedValue(Date.now());
 
       await RatingsUtils.seedInstallTimeIfMissing();
 
       expect(AsyncStorage.getItem).toHaveBeenCalledWith(
         KeychainStorageKeyEnum.INSTALL_TIME_MS,
       );
-      expect(AsyncStorage.setItem).toHaveBeenCalled();
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        KeychainStorageKeyEnum.INSTALL_TIME_MS,
+        expect.stringMatching(/^\d+$/),
+      );
     });
 
     it('should not seed if install time exists', async () => {
