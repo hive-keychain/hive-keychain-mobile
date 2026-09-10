@@ -1,14 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import * as StoreReview from 'expo-store-review';
 import {Linking, Platform} from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import {KeychainStorageKeyEnum} from 'src/enums/keychainStorageKey.enum';
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 const openStoreListing = async (): Promise<boolean> => {
   try {
-    const bundleId = DeviceInfo.getBundleId();
+    const bundleId =
+      Platform.OS === 'ios'
+        ? Constants.expoConfig?.ios?.bundleIdentifier
+        : Constants.expoConfig?.android?.package;
+    if (!bundleId) return false;
     if (Platform.OS === 'android') {
       const marketUrl = `market://details?id=${bundleId}`;
       const webUrl = `https://play.google.com/store/apps/details?id=${bundleId}`;
@@ -37,14 +41,9 @@ const seedInstallTimeIfMissing = async () => {
     KeychainStorageKeyEnum.INSTALL_TIME_MS,
   );
   if (!existing) {
-    const firstInstall = await DeviceInfo.getFirstInstallTime();
-    const installMs =
-      typeof firstInstall === 'number'
-        ? firstInstall
-        : new Date(firstInstall as any).getTime();
     await AsyncStorage.setItem(
       KeychainStorageKeyEnum.INSTALL_TIME_MS,
-      String(installMs),
+      String(Date.now()),
     );
   }
 };

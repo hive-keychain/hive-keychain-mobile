@@ -74,6 +74,41 @@ interface Props {
   theme: Theme;
 }
 
+const SWAP_END_EXCLUDED_TOKENS = new Set([
+  'SWAP.ETH',
+  'SWAP.BNB',
+  'SWAP.SOL',
+  'SWAP.USDT',
+  'SWAP.UNI',
+  'SWAP.USDC',
+  'SWAP.GIFU',
+  'SWAP.GALA',
+  'SWAP.BAT',
+  'SWAP.DAI',
+  'SWAP.LINK',
+  'SWAP.CUB',
+  'SWAP.POLY',
+  'SWAP.ENJ',
+  'SWAP.BUSD',
+  'SWAP.MATIC',
+  'SWAP.AAVE',
+  'SWAP.CRV',
+  'SWAP.AXS',
+  'SWAP.SLP',
+  'SWAP.DFY',
+  'SWAP.STATE',
+  'SWAP.KELP',
+  'SWAP.SIGNA',
+  'SWAP.SKP',
+  'SWAP.BZB',
+  'SWAP.PEPET',
+  'SWAP.VG',
+  'SWAP.PEPE',
+  'SWAP.TRUMP',
+  'SWAP.PUMP',
+  'SWAP.ETHER',
+]);
+
 const Swap = ({
   theme,
   loadTokensMarket,
@@ -203,7 +238,11 @@ const Swap = ({
         img: 'will_fire_default',
       },
       ...allTokens
-        .filter((token: Token) => token.precision !== 0) // Remove token that doesn't allow decimals
+        .filter(
+          (token: Token) =>
+            token.precision !== 0 &&
+            !SWAP_END_EXCLUDED_TOKENS.has(token.symbol),
+        )
         .map((token: Token) => {
           let img = '';
           img =
@@ -265,7 +304,7 @@ const Swap = ({
       ? endList.find((t) => t.value.symbol === lastUsed.to.symbol) ||
         findDifferentToken(list[0]) ||
         endList[1]
-      : findDifferentToken(list[0]) ?? endList[1];
+      : (findDifferentToken(list[0]) ?? endList[1]);
     setEndToken(endTokenToSet);
     setEndTokenListOptions(endList);
   };

@@ -2,13 +2,14 @@ import {Tab as TabType} from 'actions/interfaces';
 import {BrowserScreenProps} from 'navigators/mainDrawerStacks/Browser.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import {KeyboardAvoidingView, ScrollView, StyleSheet, View} from 'react-native';
-import {captureRef} from 'react-native-view-shot';
-import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
 import {useOrientation} from 'src/context/orientation.context';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
-import {getAllowedBrowserNavigationUrl} from 'utils/browser.utils';
+import {
+  BrowserUtils,
+  getAllowedBrowserNavigationUrl,
+} from 'utils/browser.utils';
 import {BrowserConfig} from 'utils/config.utils';
 import Header from './Header';
 import Tab from './Tab';
@@ -82,10 +83,7 @@ const Browser = ({
   ) => {
     if (!isManagingTab) {
       const {id, url, icon} = tab;
-      const uri = await captureRef(view, {
-        format: 'jpg',
-        quality: 0.2,
-      });
+      const uri = await BrowserUtils.captureTab(view, id);
       updateTab(id, {id, url, icon, image: uri});
       addTab(newUrl);
     } else {

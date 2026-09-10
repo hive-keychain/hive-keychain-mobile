@@ -84,7 +84,7 @@ export const useBrowserTabBridge = ({
   setLinkTooltip,
 }: Params) => {
   const {url, id, icon, name} = data;
-  const [canRefresh, setCanRefresh] = useState(true);
+  const [canRefresh, setCanRefresh] = useState(false);
   const [isFlutterApp, setIsFlutterApp] = useState(false);
   const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
   const [flutterDomain, setFlutterDomain] = useState('');

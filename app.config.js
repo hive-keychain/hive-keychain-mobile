@@ -68,6 +68,21 @@ export default ({config}) => ({
         'RECORD_AUDIO',
         'MODIFY_AUDIO_SETTINGS',
       ],
+      // Strip telephony/SMS permissions if a library tries to merge them.
+      blockedPermissions: [
+        'android.permission.READ_PHONE_STATE',
+        'android.permission.READ_PHONE_NUMBERS',
+        'android.permission.READ_SMS',
+        'android.permission.RECEIVE_SMS',
+        'android.permission.SEND_SMS',
+        'android.permission.RECEIVE_MMS',
+        'android.permission.RECEIVE_WAP_PUSH',
+        'android.permission.READ_CALL_LOG',
+        'android.permission.WRITE_CALL_LOG',
+        'android.permission.PROCESS_OUTGOING_CALLS',
+        'android.permission.CALL_PHONE',
+        'android.permission.ANSWER_PHONE_CALLS',
+      ],
       softwareKeyboardLayoutMode: 'pan',
       adaptiveIcon: {
         resizeMode: 'contain',
@@ -131,6 +146,7 @@ export default ({config}) => ({
       ],
       '@react-native-firebase/app',
       '@react-native-firebase/crashlytics',
+      './plugins/withAndroidNoPhoneApis.js',
       [
         'expo-secure-store',
         {

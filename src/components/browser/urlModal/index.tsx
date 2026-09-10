@@ -5,6 +5,7 @@ import React, {MutableRefObject, useRef} from 'react';
 import {
   KeyboardAvoidingView,
   NativeSyntheticEvent,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -95,7 +96,7 @@ const UrlModal = ({
       <KeyboardAvoidingView style={{flex: 1}} behavior={'padding'}>
         <View style={styles.urlModalContent}>
           <OperationInput
-            keyboardType="web-search"
+            keyboardType={Platform.OS === 'android' ? 'url' : 'web-search'}
             ref={urlInput}
             autoCapitalize="none"
             autoCorrect={false}

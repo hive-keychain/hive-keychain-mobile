@@ -168,18 +168,28 @@ export default memo(
       }
     }, [active, setTabViewRef, setWebViewRef, url]);
 
+    const isPullToRefreshEnabled =
+      !isFlutterApp && !canRefreshCanvas && canRefresh;
+
+    const onEnabledPullToRefresh = () => {
+      if (!isPullToRefreshEnabled) {
+        return;
+      }
+      onPullToRefresh();
+    };
+
     const refreshControl =
       Platform.OS === 'ios' ? (
         <CustomRefreshControl
           refreshing={refreshing}
-          onRefresh={onPullToRefresh}
-          enabled={!isFlutterApp && !canRefreshCanvas && canRefresh}
+          onRefresh={onEnabledPullToRefresh}
+          enabled={isPullToRefreshEnabled}
         />
       ) : (
         <RefreshControl
           refreshing={refreshing}
-          onRefresh={onPullToRefresh}
-          enabled={!isFlutterApp && !canRefreshCanvas && canRefresh}
+          onRefresh={onEnabledPullToRefresh}
+          enabled={isPullToRefreshEnabled}
         />
       );
 
@@ -224,6 +234,10 @@ export default memo(
                   javaScriptEnabled
                   bounces={false}
                   pullToRefreshEnabled={false}
+                  nestedScrollEnabled={!isPullToRefreshEnabled}
+                  overScrollMode={
+                    isPullToRefreshEnabled ? 'always' : 'never'
+                  }
                   geolocationEnabled
                   allowsLinkPreview={false}
                   allowsInlineMediaPlayback

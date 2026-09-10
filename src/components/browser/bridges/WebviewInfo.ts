@@ -10,6 +10,9 @@ const getWebviewInfo = `
 	if (window._keychainScrollHandler) {
 		window.removeEventListener('scroll', window._keychainScrollHandler);
 	}
+	if (window._keychainScrollCaptureHandler) {
+		document.removeEventListener('scroll', window._keychainScrollCaptureHandler, true);
+	}
 	if (window._keychainTouchStartHandler) {
 		window.removeEventListener('touchstart', window._keychainTouchStartHandler);
 	}
@@ -84,6 +87,17 @@ const getWebviewInfo = `
     return maxScroll;
   }
 
+  function maxScrollTopFrom(el) {
+    let maxScroll = 0;
+    while (el && el !== document) {
+      if (typeof el.scrollTop === 'number' && el.scrollTop > 0) {
+        maxScroll = Math.max(maxScroll, el.scrollTop);
+      }
+      el = el.parentElement;
+    }
+    return maxScroll;
+  }
+
   function getGlobalCanScrollUp() {
     const anyIframeScrolled = Object.values(iframeScrollY).some(y => y > 0);
     return windowScrollY > 0 || parentScrollY > 0 || anyIframeScrolled;
@@ -122,9 +136,18 @@ const getWebviewInfo = `
     windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
     postScrollStatus({ source: 'main' });
   };
+
+  window._keychainScrollCaptureHandler = function (e) {
+    windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    parentScrollY = maxScrollTopFrom(e.target);
+    postScrollStatus({ source: 'capture' });
+  };
   
   window._keychainTouchStartHandler = function (e) {
     lastTouchY = e.touches[0].clientY;
+    windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    parentScrollY = maxScrollTopFrom(e.target);
+    postScrollStatus({ source: 'touchstart' });
   };
   
   window._keychainTouchEndHandler = function (e) {
@@ -132,7 +155,10 @@ const getWebviewInfo = `
     lastTouchY = e.changedTouches[0].clientY;
 
     windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-    parentScrollY = getDeepestScrollableParentScroll();
+    parentScrollY = Math.max(
+      maxScrollTopFrom(e.target),
+      getDeepestScrollableParentScroll(),
+    );
 
     postScrollStatus({
       source: 'main',
@@ -140,9 +166,13 @@ const getWebviewInfo = `
     });
   };
 
-  window.addEventListener('scroll', window._keychainScrollHandler, { passive: true });
-  window.addEventListener('touchstart', window._keychainTouchStartHandler);
-  window.addEventListener('touchend', window._keychainTouchEndHandler);
+  document.addEventListener('scroll', window._keychainScrollCaptureHandler, { capture: true, passive: true });
+  window.addEventListener('touchstart', window._keychainTouchStartHandler, {passive: true});
+  window.addEventListener('touchend', window._keychainTouchEndHandler, {passive: true});
+
+  windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  parentScrollY = getDeepestScrollableParentScroll();
+  postScrollStatus({ source: 'init' });
 
   // ===== IFRAME SUPPORT =====
   function injectIframeListeners(iframe, index) {
